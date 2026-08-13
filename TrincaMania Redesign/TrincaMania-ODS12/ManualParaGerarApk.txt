@@ -1,0 +1,41 @@
+1 PASSO :
+
+cd D:\projetos\trincaMania
+$env:NODE_OPTIONS='--use-system-ca'
+npx.cmd expo-doctor
+
+2 PASSO : 
+
+cd D:\projetos\trincaMania
+Remove-Item -Recurse -Force .\dist-test -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force .\build-local -ErrorAction SilentlyContinue
+npx.cmd tsc --noEmit --pretty false
+$env:NODE_OPTIONS='--use-system-ca'; npx.cmd expo export --platform android --clear --output-dir dist-test
+
+3 PASSO :
+ 
+cd D:\projetos\trincaMania
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+java -version
+
+4 PASSO : 
+
+cd D:\projetos\trincaMania\android
+
+.\gradlew.bat --stop
+
+Remove-Item -Recurse -Force .\app\.cxx -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force .\app\build -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force .\build -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force ..\node_modules\@react-native-async-storage\async-storage\android\build -ErrorAction SilentlyContinue
+
+.\gradlew.bat assembleRelease
+
+5 PASSO : 
+
+cd D:\projetos\trincaMania
+
+New-Item -ItemType Directory -Force -Path .\build-local
+
+Copy-Item .\android\app\build\outputs\apk\release\app-release.apk .\build-local\app-trincaMania.apk -Force

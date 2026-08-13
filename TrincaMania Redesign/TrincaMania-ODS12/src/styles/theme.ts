@@ -1,0 +1,98 @@
+export const colors = {
+  background: '#102E3A',
+  backgroundDeep: '#071820',
+  backgroundAlt: '#174E55',
+  backgroundSoft: '#2E8B70',
+  dark: '#071820',
+  panel: '#3842B8',
+  panelDark: '#122B3A',
+  cream: '#FFF4C9',
+  creamLight: '#FFF8E8',
+  gold: '#FFD35A',
+  goldDark: '#A55D00',
+  surface: '#FFF8E8',
+  surfaceTint: '#E6F3EC',
+  surfaceWarm: '#FFE6A6',
+  ink: '#16262F',
+  inkOnDark: '#FFFFFF',
+  muted: '#52636A',
+  primary: '#FFD35A',
+  primaryDark: '#A55D00',
+  secondary: '#42E5A7',
+  accent: '#FF6D9E',
+  action: '#5968FF',
+  actionDark: '#2E3499',
+  bonusPink: '#FF8BC1',
+  mountainBlue: '#5E82DE',
+  danger: '#F05278',
+  dangerDark: '#A9274A',
+  success: '#24D889',
+  successDark: '#087A54',
+  border: '#E4D0A0',
+  borderStrong: '#D6A744',
+  tile: '#FFF1C9',
+  tileInner: '#FFFFFF',
+  tileBlocked: '#536169',
+  tileShadow: '#04131A',
+  locked: '#81909A',
+  overlay: 'rgba(4, 16, 24, 0.76)',
+};
+
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+  xxl: 32,
+  xxxl: 44,
+};
+
+export const radii = {
+  sm: 8,
+  md: 10,
+  card: 8,
+  button: 22,
+  pill: 999,
+};
+
+export const fontSizes = {
+  xs: 11,
+  sm: 13,
+  md: 15,
+  lg: 17,
+  xl: 22,
+  xxl: 32,
+  hero: 52,
+};
+
+export const shadows = {
+  card: {
+    elevation: 6,
+    shadowColor: colors.backgroundDeep,
+    shadowOffset: { height: 5, width: 0 },
+    shadowOpacity: 0.24,
+    shadowRadius: 9,
+  },
+  button: {
+    elevation: 8,
+    shadowColor: colors.backgroundDeep,
+    shadowOffset: { height: 5, width: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  glow: {
+    elevation: 10,
+    shadowColor: colors.primary,
+    shadowOffset: { height: 0, width: 0 },
+    shadowOpacity: 0.58,
+    shadowRadius: 12,
+  },
+  tile: {
+    elevation: 7,
+    shadowColor: colors.tileShadow,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.32,
+    shadowRadius: 7,
+  },
+};
