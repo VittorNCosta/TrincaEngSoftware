@@ -1,0 +1,11 @@
+node_modules
+.expo
+dist
+dist-test
+web-build
+android
+ios
+package-lock.json
+
+# Pasta de terceiros (não é código do jogo, desatada do git).
+agency-agents-main
