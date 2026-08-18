@@ -70,10 +70,10 @@ export function BonusWorldAchievementModal({
           <GameIcon name="bonus" size={72} tone="pink" />
           <Text style={styles.kicker}>Conquista desbloqueada!</Text>
           <Text style={styles.title}>Mundo bônus desbloqueado!</Text>
-          <Text style={styles.subtitle}>Reino Açucarado está disponível.</Text>
+          <Text style={styles.subtitle}>Jardim Renascido está disponível.</Text>
           <View style={styles.rewardBox}>
             <Text style={styles.rewardText}>
-              Você conquistou 3 estrelas em todas as fases do Bosque das Trincas.
+              Você conquistou 3 estrelas em todas as fases do Parque da Coleta Seletiva.
             </Text>
           </View>
           <View style={styles.actions}>

@@ -225,7 +225,7 @@ export function RewardsScreen({
     ? `Disponível - ${progress.keys} chave${progress.keys === 1 ? '' : 's'}`
     : bonusWorldChest.claimed
       ? 'Recompensa coletada'
-      : `Reino Açucarado ${bonusWorldChest.completedCount}/${bonusWorldChest.totalCount}`;
+      : `Jardim Renascido ${bonusWorldChest.completedCount}/${bonusWorldChest.totalCount}`;
   const bonusSlotStatus = bonusSlotActive
     ? `Ativo: ${formatTrayBoostRemaining(bonusTraySlotRemainingMs)}`
     : 'Bônus de bandeja';

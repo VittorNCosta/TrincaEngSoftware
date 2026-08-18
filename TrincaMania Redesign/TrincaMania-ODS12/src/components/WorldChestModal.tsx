@@ -114,7 +114,7 @@ export function WorldChestModal({
             {opened
               ? 'Você abriu um Baú Especial!'
               : isBonusChest
-                ? 'Recompensa do Reino Açucarado. Use uma chave para abrir agora.'
+                ? 'Recompensa do Jardim Renascido. Use uma chave para abrir agora.'
                 : 'Use uma chave para abrir agora ou volte depois.'}
           </Text>
 
@@ -181,7 +181,7 @@ export function WorldChestModal({
         animationKey={revealKey}
         kicker={isBonusChest ? 'Baú Especial' : 'Baú de Mundo'}
         rewardItems={rewardItems}
-        title={isBonusChest ? 'Recompensa do Reino Açucarado' : 'Recompensa Especial'}
+        title={isBonusChest ? 'Recompensa do Jardim Renascido' : 'Recompensa Especial'}
         variant="world"
         visible={isRevealVisible && rewardItems.length > 0}
         coinCollectTarget={coinCollectTarget}

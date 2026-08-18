@@ -54,8 +54,16 @@ import {
 } from '../types/game';
 import { buildCardAssignment } from '../domain/recycling/services/LevelCompositionService';
 import { TRIPLE_SIZE } from '../domain/recycling/value-objects/CardRole';
-import { MATERIAL_TYPES, MaterialType } from '../domain/recycling/value-objects/MaterialType';
-import { createSeededRandom, mixSeed, stableHash } from '../utils/deterministicRandom';
+import {
+  MATERIAL_TYPES,
+  MaterialType,
+} from '../domain/recycling/value-objects/MaterialType';
+import {
+  createSeededRandom,
+  mixSeed,
+  stableHash,
+} from '../utils/deterministicRandom';
+import { curveProgress, DifficultyCurve } from '../utils/difficultyCurve';
 import { generatePlayableLevelFrom } from '../utils/levelGenerator';
 import { MAX_TILE_POSITIONS, takeTilePositions } from './boardPositions';
 import {
@@ -91,6 +99,8 @@ const MYSTERY_SHARE_DIVISOR = 6;
 type ChapterBlueprint = {
   focusMaterial: MaterialType;
   id: ChapterId;
+  /** Forma da rampa de dificuldade dentro do capítulo — ver `difficultyCurve.ts`. */
+  difficultyCurve: DifficultyCurve;
   lockedText: string;
   /** Banda de peças [primeiro mapa, mapa 100]. Ambos múltiplos de 3. */
   maxTileCount: number;
@@ -102,6 +112,16 @@ type ChapterBlueprint = {
   subtitle: string;
   theme: ChapterTheme;
 };
+
+/**
+ * Cada bloco de 10 mapas (o mesmo tamanho do marco descanso/loja) pesa mais
+ * que o anterior, e escala entre capítulos: o capítulo 10 já entra com uma
+ * rampa mais agressiva do que o capítulo 1 usa do início ao fim dele. Os
+ * valores de `difficultyCurve` em cada `CHAPTER_BLUEPRINTS` são escolhidos a
+ * dedo, não derivados desta escala — é o ponto de a curva ser por capítulo:
+ * dá pra retunar um capítulo sozinho sem recalcular os outros nove.
+ */
+const CHAPTER_DIFFICULTY_BLOCK_SIZE = 10;
 
 /**
  * Sufixos compartilhados por todos os capítulos. 10 prefixos x 10 sufixos = 100
@@ -129,13 +149,15 @@ const MILESTONE_TITLE_PREFIX: Record<ChapterMilestone, string> = {
 const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   {
     id: 1,
+    difficultyCurve: { gamma: 1.2, blockGrowth: 1.1 },
     name: 'Aterro Adormecido',
     subtitle: 'Onde o descarte parou',
     theme: 'aterro',
     focusMaterial: 'plastico',
     minTileCount: 18,
     maxTileCount: 48,
-    lockedText: 'Conclua o Bosque das Trincas para abrir o Aterro Adormecido.',
+    lockedText:
+      'Conclua o Parque da Coleta Seletiva para abrir o Aterro Adormecido.',
     titlePrefixes: [
       'Vala',
       'Encosta',
@@ -157,6 +179,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 2,
+    difficultyCurve: { gamma: 1.3, blockGrowth: 1.12 },
     name: 'Rio de Plástico',
     subtitle: 'A correnteza devolve tudo',
     theme: 'rio',
@@ -185,13 +208,15 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 3,
+    difficultyCurve: { gamma: 1.4, blockGrowth: 1.14 },
     name: 'Feira do Reaproveitamento',
     subtitle: 'Nada aqui vira lixo',
     theme: 'feira',
     focusMaterial: 'organico',
     minTileCount: 30,
     maxTileCount: 60,
-    lockedText: 'Conclua o Rio de Plástico para abrir a Feira do Reaproveitamento.',
+    lockedText:
+      'Conclua o Rio de Plástico para abrir a Feira do Reaproveitamento.',
     titlePrefixes: [
       'Banca',
       'Caixote',
@@ -213,13 +238,15 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 4,
+    difficultyCurve: { gamma: 1.5, blockGrowth: 1.16 },
     name: 'Galpão da Triagem',
     subtitle: 'A esteira não para',
     theme: 'triagem',
     focusMaterial: 'papel',
     minTileCount: 36,
     maxTileCount: 66,
-    lockedText: 'Conclua a Feira do Reaproveitamento para abrir o Galpão da Triagem.',
+    lockedText:
+      'Conclua a Feira do Reaproveitamento para abrir o Galpão da Triagem.',
     titlePrefixes: [
       'Esteira',
       'Baia',
@@ -241,6 +268,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 5,
+    difficultyCurve: { gamma: 1.6, blockGrowth: 1.18 },
     name: 'Forno de Vidro',
     subtitle: 'Reciclável infinitas vezes',
     theme: 'vidro',
@@ -269,6 +297,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 6,
+    difficultyCurve: { gamma: 1.7, blockGrowth: 1.2 },
     name: 'Pátio do Metal',
     subtitle: 'Energia que volta inteira',
     theme: 'metal',
@@ -297,6 +326,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 7,
+    difficultyCurve: { gamma: 1.8, blockGrowth: 1.22 },
     name: 'Horta de Compostagem',
     subtitle: 'Resto de comida vira adubo',
     theme: 'compostagem',
@@ -325,13 +355,15 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 8,
+    difficultyCurve: { gamma: 1.9, blockGrowth: 1.24 },
     name: 'Biblioteca de Papel',
     subtitle: 'Uma tonelada, vinte árvores',
     theme: 'papel',
     focusMaterial: 'papel',
     minTileCount: 60,
     maxTileCount: 90,
-    lockedText: 'Conclua a Horta de Compostagem para abrir a Biblioteca de Papel.',
+    lockedText:
+      'Conclua a Horta de Compostagem para abrir a Biblioteca de Papel.',
     titlePrefixes: [
       'Estante',
       'Resma',
@@ -353,13 +385,15 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 9,
+    difficultyCurve: { gamma: 2.0, blockGrowth: 1.26 },
     name: 'Oficina do Conserto',
     subtitle: 'Consertar antes de descartar',
     theme: 'oficina',
     focusMaterial: 'metal',
     minTileCount: 66,
     maxTileCount: 96,
-    lockedText: 'Conclua a Biblioteca de Papel para abrir a Oficina do Conserto.',
+    lockedText:
+      'Conclua a Biblioteca de Papel para abrir a Oficina do Conserto.',
     titlePrefixes: [
       // "Peça" fica de fora de propósito: no vocabulário do domínio peça é uma
       // carta posicionada, e usar a palavra como topônimo confundiria a leitura.
@@ -383,6 +417,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
   {
     id: 10,
+    difficultyCurve: { gamma: 2.2, blockGrowth: 1.3 },
     name: 'Cidade Circular',
     subtitle: 'O ciclo fecha aqui',
     theme: 'circular',
@@ -411,9 +446,17 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   },
 ];
 
-const POWER_ROTATION: PowerUpType[] = ['hint', 'shuffle', 'undo', 'shuffle', 'hint', 'undo'];
+const POWER_ROTATION: PowerUpType[] = [
+  'hint',
+  'shuffle',
+  'undo',
+  'shuffle',
+  'hint',
+  'undo',
+];
 
-const toMultipleOfThree = (value: number) => Math.max(TRIPLE_SIZE, Math.floor(value / 3) * 3);
+const toMultipleOfThree = (value: number) =>
+  Math.max(TRIPLE_SIZE, Math.floor(value / 3) * 3);
 
 const getMilestone = (mapNumber: number): ChapterMilestone | undefined => {
   if (mapNumber === CHAPTER_MAPS_PER_CHAPTER) {
@@ -434,15 +477,20 @@ const MILESTONE_TIME_FACTOR: Record<ChapterMilestone, number> = {
 };
 
 /**
- * Carga do mapa em [0, 1]. 60% vem do capítulo e 40% da posição dentro dele —
- * assim todo capítulo tem movimento interno de dificuldade e, ainda assim, o
- * capítulo 10 inteiro pesa mais que o capítulo 1 inteiro.
+ * Carga do mapa em [0, 1]. 60% vem do capítulo (sempre linear: cada capítulo é
+ * uma unidade de conteúdo já nomeada e balanceada à parte) e 40% da posição
+ * dentro dele — essa parte já entra curvada (`curvedMapProgress`), então todo
+ * capítulo tem uma rampa interna que acelera perto do fim de cada bloco de 10
+ * mapas, e ainda assim o capítulo 10 inteiro pesa mais que o capítulo 1
+ * inteiro.
  */
-const getDifficultyScore = (chapterId: ChapterId, mapNumber: number) => {
+const getDifficultyScore = (
+  chapterId: ChapterId,
+  curvedMapProgress: number,
+) => {
   const chapterProgress = (chapterId - 1) / (CHAPTER_COUNT - 1);
-  const mapProgress = (mapNumber - 1) / (CHAPTER_MAPS_PER_CHAPTER - 1);
 
-  return chapterProgress * 0.6 + mapProgress * 0.4;
+  return chapterProgress * 0.6 + curvedMapProgress * 0.4;
 };
 
 const buildTitle = (
@@ -452,34 +500,46 @@ const buildTitle = (
 ) => {
   const slot = mapNumber - 1;
   const composed = `${blueprint.titlePrefixes[slot % blueprint.titlePrefixes.length]} ${
-    TITLE_SUFFIXES[Math.floor(slot / blueprint.titlePrefixes.length) % TITLE_SUFFIXES.length]
+    TITLE_SUFFIXES[
+      Math.floor(slot / blueprint.titlePrefixes.length) % TITLE_SUFFIXES.length
+    ]
   }`;
 
-  return milestone ? `${MILESTONE_TITLE_PREFIX[milestone]}: ${composed}` : composed;
+  return milestone
+    ? `${MILESTONE_TITLE_PREFIX[milestone]}: ${composed}`
+    : composed;
 };
 
 const createChapterLevelSummary = (
   blueprint: ChapterBlueprint,
   mapNumber: number,
 ): ChapterLevelSummary => {
-  const mapProgress = (mapNumber - 1) / (CHAPTER_MAPS_PER_CHAPTER - 1);
-  const score = getDifficultyScore(blueprint.id, mapNumber);
+  const curvedMapProgress = curveProgress(
+    mapNumber,
+    CHAPTER_MAPS_PER_CHAPTER,
+    CHAPTER_DIFFICULTY_BLOCK_SIZE,
+    blueprint.difficultyCurve,
+  );
+  const score = getDifficultyScore(blueprint.id, curvedMapProgress);
   const milestone = getMilestone(mapNumber);
 
   const tileCount = toMultipleOfThree(
     Math.min(
       blueprint.maxTileCount,
       blueprint.minTileCount +
-        (blueprint.maxTileCount - blueprint.minTileCount) * mapProgress,
+        (blueprint.maxTileCount - blueprint.minTileCount) * curvedMapProgress,
     ),
   );
   const kindCount = Math.min(
     MAX_KIND_COUNT,
-    MIN_KIND_COUNT + Math.floor(mapProgress * 2) + (blueprint.id >= 6 ? 1 : 0),
+    MIN_KIND_COUNT +
+      Math.floor(curvedMapProgress * 2) +
+      (blueprint.id >= 6 ? 1 : 0),
   );
   const mysteryTileCount = Math.min(
     Math.floor(tileCount / MYSTERY_SHARE_DIVISOR),
-    Math.floor((blueprint.id - 1) / 2) + Math.floor(mapProgress * (3 + blueprint.id)),
+    Math.floor((blueprint.id - 1) / 2) +
+      Math.floor(curvedMapProgress * (3 + blueprint.id)),
   );
 
   // Segundos por peça caem de 7.2 a 4.2 conforme a carga sobe: é assim que o
@@ -509,7 +569,9 @@ const createChapterLevelSummary = (
     mysteryTileCount,
     number: mapNumber,
     objectiveText: `Objetivo: ${
-      blueprint.objectivePatterns[(mapNumber - 1) % blueprint.objectivePatterns.length]
+      blueprint.objectivePatterns[
+        (mapNumber - 1) % blueprint.objectivePatterns.length
+      ]
     }`,
     recommendedPower: POWER_ROTATION[(mapNumber - 1) % POWER_ROTATION.length],
     starTimeLimits: { threeStars, twoStars },
@@ -519,10 +581,11 @@ const createChapterLevelSummary = (
   };
 };
 
-export const CHAPTER_LEVELS: ChapterLevelSummary[] = CHAPTER_BLUEPRINTS.flatMap((blueprint) =>
-  Array.from({ length: CHAPTER_MAPS_PER_CHAPTER }, (_, index) =>
-    createChapterLevelSummary(blueprint, index + 1),
-  ),
+export const CHAPTER_LEVELS: ChapterLevelSummary[] = CHAPTER_BLUEPRINTS.flatMap(
+  (blueprint) =>
+    Array.from({ length: CHAPTER_MAPS_PER_CHAPTER }, (_, index) =>
+      createChapterLevelSummary(blueprint, index + 1),
+    ),
 );
 
 export const CHAPTERS: Chapter[] = CHAPTER_BLUEPRINTS.map((blueprint) => ({
@@ -538,29 +601,33 @@ export const CHAPTERS: Chapter[] = CHAPTER_BLUEPRINTS.map((blueprint) => ({
   worldId: (100 + blueprint.id) as ChapterWorldId,
 }));
 
-const SUMMARY_BY_ID = new Map(CHAPTER_LEVELS.map((summary) => [summary.id, summary]));
-const CHAPTER_BY_ID = new Map(CHAPTERS.map((chapter) => [chapter.id, chapter]));
-const SUMMARIES_BY_CHAPTER = CHAPTER_LEVELS.reduce<Map<ChapterId, ChapterLevelSummary[]>>(
-  (index, summary) => {
-    const bucket = index.get(summary.chapterId);
-
-    if (bucket) {
-      bucket.push(summary);
-    } else {
-      index.set(summary.chapterId, [summary]);
-    }
-
-    return index;
-  },
-  new Map<ChapterId, ChapterLevelSummary[]>(),
+const SUMMARY_BY_ID = new Map(
+  CHAPTER_LEVELS.map((summary) => [summary.id, summary]),
 );
+const CHAPTER_BY_ID = new Map(CHAPTERS.map((chapter) => [chapter.id, chapter]));
+const SUMMARIES_BY_CHAPTER = CHAPTER_LEVELS.reduce<
+  Map<ChapterId, ChapterLevelSummary[]>
+>((index, summary) => {
+  const bucket = index.get(summary.chapterId);
 
-export const getChapter = (chapterId: ChapterId) => CHAPTER_BY_ID.get(chapterId);
+  if (bucket) {
+    bucket.push(summary);
+  } else {
+    index.set(summary.chapterId, [summary]);
+  }
 
-export const getChapterLevelSummary = (mapId: string) => SUMMARY_BY_ID.get(mapId);
+  return index;
+}, new Map<ChapterId, ChapterLevelSummary[]>());
 
-export const getChapterLevelSummaries = (chapterId: ChapterId): ChapterLevelSummary[] =>
-  SUMMARIES_BY_CHAPTER.get(chapterId) ?? [];
+export const getChapter = (chapterId: ChapterId) =>
+  CHAPTER_BY_ID.get(chapterId);
+
+export const getChapterLevelSummary = (mapId: string) =>
+  SUMMARY_BY_ID.get(mapId);
+
+export const getChapterLevelSummaries = (
+  chapterId: ChapterId,
+): ChapterLevelSummary[] => SUMMARIES_BY_CHAPTER.get(chapterId) ?? [];
 
 export const isChapterMapId = (mapId: string) => SUMMARY_BY_ID.has(mapId);
 
@@ -628,7 +695,9 @@ export const buildChapterLevel = (
     difficulty: summary.difficulty,
     displayLabel: summary.displayLabel,
     id: summary.id,
-    ...(summary.mysteryTileCount ? { mysteryTileCount: summary.mysteryTileCount } : {}),
+    ...(summary.mysteryTileCount
+      ? { mysteryTileCount: summary.mysteryTileCount }
+      : {}),
     number: summary.number,
     objectiveText: summary.objectiveText,
     recommendedPower: summary.recommendedPower,
@@ -643,7 +712,9 @@ export const buildChapterLevel = (
     preserveOpeningTriple: false,
     random:
       options.random ??
-      createSeededRandom(mixSeed(stableHash(summary.id), identity.cardVariantSeed)),
+      createSeededRandom(
+        mixSeed(stableHash(summary.id), identity.cardVariantSeed),
+      ),
   });
 };
 
@@ -673,7 +744,9 @@ export const validateChapters = (): ChapterValidationIssue[] => {
     const summaries = getChapterLevelSummaries(chapter.id);
 
     if (summaries.length !== CHAPTER_MAPS_PER_CHAPTER) {
-      issues.push(`chapter-${chapter.id}:expected-${CHAPTER_MAPS_PER_CHAPTER}-maps`);
+      issues.push(
+        `chapter-${chapter.id}:expected-${CHAPTER_MAPS_PER_CHAPTER}-maps`,
+      );
     }
 
     let previousTileCount = 0;
@@ -705,11 +778,16 @@ export const validateChapters = (): ChapterValidationIssue[] => {
         issues.push(`${position}:tileCount-exceeds-board-positions`);
       }
 
-      if (summary.starTimeLimits.threeStars >= summary.starTimeLimits.twoStars) {
+      if (
+        summary.starTimeLimits.threeStars >= summary.starTimeLimits.twoStars
+      ) {
         issues.push(`${position}:threeStars-must-be-below-twoStars`);
       }
 
-      if (summary.kindCount < MIN_KIND_COUNT || summary.kindCount > MAX_KIND_COUNT) {
+      if (
+        summary.kindCount < MIN_KIND_COUNT ||
+        summary.kindCount > MAX_KIND_COUNT
+      ) {
         issues.push(`${position}:kindCount-out-of-range`);
       }
 

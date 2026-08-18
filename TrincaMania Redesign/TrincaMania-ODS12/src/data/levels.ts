@@ -1,7 +1,17 @@
-import { CampaignWorldId, Level, LevelDifficulty, PowerUpType, Tile } from '../types/game';
+import {
+  CampaignWorldId,
+  Level,
+  LevelDifficulty,
+  PowerUpType,
+  Tile,
+} from '../types/game';
 import { buildCardAssignment } from '../domain/recycling/services/LevelCompositionService';
 import { TRIPLE_SIZE } from '../domain/recycling/value-objects/CardRole';
-import { MATERIAL_TYPES, MaterialType } from '../domain/recycling/value-objects/MaterialType';
+import {
+  MATERIAL_TYPES,
+  MaterialType,
+} from '../domain/recycling/value-objects/MaterialType';
+import { curveProgress, DifficultyCurve } from '../utils/difficultyCurve';
 import { getTilePosition } from './boardPositions';
 
 /**
@@ -23,7 +33,10 @@ type GeneratedWorldId = 4 | 5 | 6 | 7 | 8;
  * empilhadas em sequência no tabuleiro.
  */
 const distributeMaterials = (groups: MaterialGroup[]) => {
-  const remainingGroups = groups.map(([material, count]) => ({ count, material }));
+  const remainingGroups = groups.map(([material, count]) => ({
+    count,
+    material,
+  }));
   const materials: MaterialType[] = [];
 
   while (remainingGroups.some((group) => group.count > 0)) {
@@ -38,7 +51,10 @@ const distributeMaterials = (groups: MaterialGroup[]) => {
   return materials;
 };
 
-export const createTileGroups = (tileCount: number, kindCount: number): MaterialGroup[] => {
+export const createTileGroups = (
+  tileCount: number,
+  kindCount: number,
+): MaterialGroup[] => {
   const tripleCount = tileCount / TRIPLE_SIZE;
   const selectedMaterials = MATERIAL_TYPES.slice(
     0,
@@ -157,6 +173,15 @@ const createBonusLevel = (
 });
 
 type GeneratedWorldConfig = {
+  /**
+   * Forma da rampa de dificuldade dentro do mundo — ver `difficultyCurve.ts`.
+   * Escolhida a dedo por mundo, não derivada de fórmula: é o ponto de ter uma
+   * curva por mundo em vez de uma só pro jogo inteiro — cada entrada pode ser
+   * retunada sozinha sem recalcular as outras.
+   */
+  difficultyCurve: DifficultyCurve;
+  /** Banda [primeira fase, fase 25] de peças-mistério, também a dedo por mundo. */
+  mysteryRange: { max: number; min: number };
   objectivePatterns: string[];
   timeBase: {
     threeStars: number;
@@ -166,73 +191,81 @@ type GeneratedWorldConfig = {
   worldId: GeneratedWorldId;
 };
 
+/** Fases por mundo e tamanho do bloco da curva de dificuldade (o mesmo dos marcos de descanso/loja). */
+const WORLD_LEVELS_PER_MAP = 25;
+const WORLD_DIFFICULTY_BLOCK_SIZE = 5;
+
 const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
   {
     worldId: 4,
+    difficultyCurve: { gamma: 1.3, blockGrowth: 1.15 },
+    mysteryRange: { min: 4, max: 6 },
     timeBase: { threeStars: 740, twoStars: 1080 },
     titles: [
-      'Areia Reluzente',
-      'Conchas Cruzadas',
-      'Marola de Espuma',
-      'Ponte do Recife',
-      'Descanso do Pier',
-      'Caverna de Perolas',
-      'Rede de Tesouros',
-      'Farol Dourado',
-      'Corais Trancados',
-      'Mercado da Praia',
-      'Ilha das Chaves',
-      'Baia dos Cristais',
-      'Trilha das Ondas',
-      'Deck das Trincas',
-      'Tesouro Enterrado',
-      'Nuvens de Sal',
-      'Gruta Azul',
-      'Porto Secreto',
-      'Pedras da Mare',
-      'Loja do Farol',
-      'Costa Profunda',
-      'Rota dos Mapas',
-      'Arquipelago Vivo',
-      'Ultima Mare',
-      'Guardiao da Praia',
+      'Entrada do Viveiro',
+      'Canteiro Novo',
+      'Trilha das Mudas',
+      'Cerca Viva',
+      'Descanso do Jardineiro',
+      'Caminho das Abelhas',
+      'Rede de Sementes',
+      'Estufa Dourada',
+      'Composto Fresco',
+      'Mercado da Horta',
+      'Ilha de Flores',
+      'Colmeia Ativa',
+      'Trilha das Borboletas',
+      'Deck do Viveiro',
+      'Canteiro Escondido',
+      'Nuvem de Polen',
+      'Horta Azul',
+      'Portao do Viveiro',
+      'Fileira de Mudas',
+      'Loja do Jardineiro',
+      'Viveiro Novo',
+      'Rota das Sementes',
+      'Estufa Comunitaria',
+      'Ultima Muda',
+      'Guardiao do Viveiro',
     ],
     objectivePatterns: [
-      'Limpe as camadas do recife sem encher a bandeja.',
-      'Revele tesouros na ordem certa e mantenha espaco para trincas.',
+      'Limpe as camadas do viveiro sem encher a bandeja.',
+      'Revele as mudas na ordem certa e mantenha espaco para trincas.',
       'Use as pecas livres para abrir as laterais antes do centro.',
       'Planeje a sequencia das camadas e segure poderes para emergencias.',
     ],
   },
   {
     worldId: 5,
+    difficultyCurve: { gamma: 1.5, blockGrowth: 1.2 },
+    mysteryRange: { min: 5, max: 6 },
     timeBase: { threeStars: 780, twoStars: 1140 },
     titles: [
-      'Base Caramelizada',
-      'Cinzas Doces',
-      'Trilha Quente',
-      'Rochas de Acucar',
-      'Descanso da Caldeira',
-      'Rio de Calda',
-      'Pontes de Fogo',
-      'Cristais Quentes',
-      'Bolhas de Mel',
-      'Mercado da Lava',
-      'Fornalha Serena',
-      'Gotas Flamejantes',
-      'Corredor Rubi',
-      'Parede de Calda',
-      'Forja de Trincas',
-      'Camadas Derretidas',
-      'Caverna Morna',
-      'Pico Caramelo',
-      'Chaves de Brasa',
-      'Loja da Cratera',
-      'Anel do Vulcao',
-      'Escada de Fogo',
-      'Camara Incandescente',
-      'Boca da Montanha',
-      'Guardiao Doce',
+      'Entrada da Usina',
+      'Composteira Nova',
+      'Trilha do Vapor',
+      'Leira Quente',
+      'Descanso do Biodigestor',
+      'Rio de Adubo',
+      'Pontes Organicas',
+      'Camadas Mornas',
+      'Bolhas de Biogas',
+      'Mercado do Adubo',
+      'Fornalha Organica',
+      'Gotas de Umidade',
+      'Corredor Termico',
+      'Parede de Humus',
+      'Camara de Fermentacao',
+      'Camadas Decompostas',
+      'Sala Aquecida',
+      'Pico do Composto',
+      'Chaves do Vapor',
+      'Loja da Composteira',
+      'Anel do Biodigestor',
+      'Escada da Fermentacao',
+      'Camara Termica',
+      'Boca da Usina',
+      'Guardiao da Usina',
     ],
     objectivePatterns: [
       'Abra espaco nas camadas quentes antes de revelar misterios.',
@@ -243,33 +276,35 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
   },
   {
     worldId: 6,
+    difficultyCurve: { gamma: 1.7, blockGrowth: 1.25 },
+    mysteryRange: { min: 5, max: 7 },
     timeBase: { threeStars: 820, twoStars: 1200 },
     titles: [
-      'Avenida Lunar',
-      'Praca dos Astros',
-      'Janelas Brilhantes',
-      'Ponte Neon',
-      'Descanso Central',
-      'Torres Gemeas',
-      'Relogio Estelar',
-      'Beco Luminoso',
-      'Galeria Noturna',
-      'Mercado das Luzes',
-      'Observatorio Baixo',
-      'Fios de Cristal',
-      'Escadas da Cidade',
-      'Viaduto Dourado',
-      'Sinal das Trincas',
-      'Jardim Suspenso',
-      'Tunel Radiante',
-      'Telhados Azuis',
-      'Portal Urbano',
-      'Loja do Observatorio',
-      'Constelacao Sul',
-      'Distrito Alto',
-      'Prisma Central',
-      'Ultima Avenida',
-      'Guardiao Estelar',
+      'Entrada da Cooperativa',
+      'Praca dos Catadores',
+      'Carrinho de Coleta',
+      'Rua da Reciclagem',
+      'Descanso do Galpao',
+      'Associacao Unida',
+      'Balanca Comunitaria',
+      'Beco dos Fardos',
+      'Galeria da Cooperativa',
+      'Mercado dos Catadores',
+      'Carroca Cheia',
+      'Fios e Fardos',
+      'Escadas do Galpao',
+      'Viaduto Movimentado',
+      'Sinal Verde',
+      'Jardim da Cooperativa',
+      'Tunel de Passagem',
+      'Telhados da Vila',
+      'Portal da Comunidade',
+      'Loja da Cooperativa',
+      'Distrito dos Catadores',
+      'Prensa Comunitaria',
+      'Cracha Dourado',
+      'Ultima Rua',
+      'Guardiao dos Catadores',
     ],
     objectivePatterns: [
       'Leia o tabuleiro por setores e libere as rotas principais.',
@@ -280,33 +315,35 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
   },
   {
     worldId: 7,
+    difficultyCurve: { gamma: 1.9, blockGrowth: 1.3 },
+    mysteryRange: { min: 6, max: 7 },
     timeBase: { threeStars: 860, twoStars: 1260 },
     titles: [
-      'Entrada Nevada',
-      'Flocos Cruzados',
-      'Lago Congelado',
-      'Ponte de Gelo',
-      'Descanso da Neve',
-      'Pedras Frias',
-      'Vale Branco',
-      'Caverna Gelida',
-      'Sinos de Gelo',
-      'Mercado Polar',
-      'Nuvem Cristalina',
-      'Trilha Azul',
-      'Bosque Branco',
-      'Mirante Frio',
-      'Chave Congelada',
-      'Colina de Neve',
-      'Teto de Cristal',
-      'Passagem Polar',
-      'Marcas na Neve',
-      'Loja do Refugio',
-      'Noite Boreal',
-      'Cume Silencioso',
-      'Escada Gelada',
-      'Ultimo Floco',
-      'Guardiao da Neve',
+      'Entrada da Rota',
+      'Pontos Cruzados',
+      'Rota de Volta',
+      'Ponte da Devolucao',
+      'Descanso do Motorista',
+      'Paradas Frequentes',
+      'Vale dos Pontos',
+      'Caverna de Estoque',
+      'Sinais Luminosos',
+      'Mercado de Trocas',
+      'Nuvem de Etiquetas',
+      'Trilha de Volta',
+      'Deposito Compartilhado',
+      'Mirante da Expedicao',
+      'Chave da Devolucao',
+      'Colina dos Pontos',
+      'Teto da Transportadora',
+      'Passagem Reversa',
+      'Marcas do Caminho',
+      'Loja do Distribuidor',
+      'Noite da Expedicao',
+      'Cume do Trajeto',
+      'Escada da Fabrica',
+      'Ultima Parada',
+      'Guardiao da Rota',
     ],
     objectivePatterns: [
       'Priorize pecas que liberam camadas altas e reduzem o risco da bandeja.',
@@ -317,33 +354,35 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
   },
   {
     worldId: 8,
+    difficultyCurve: { gamma: 2.2, blockGrowth: 1.4 },
+    mysteryRange: { min: 6, max: 8 },
     timeBase: { threeStars: 900, twoStars: 1320 },
     titles: [
-      'Portao Celestial',
-      'Nuvens Douradas',
-      'Ilhas Suspensas',
-      'Caminho Solar',
-      'Descanso das Asas',
-      'Jardim do Ceu',
-      'Colunas de Luz',
-      'Orbe Azul',
-      'Ponte Celeste',
-      'Mercado das Nuvens',
-      'Templo Claro',
-      'Ecos do Alto',
-      'Escada Brilhante',
-      'Mosaico Final',
-      'Chaves do Ceu',
-      'Trono de Luz',
-      'Rota das Estrelas',
-      'Camara Serena',
-      'Selo Antigo',
-      'Loja Celestial',
-      'Aurora Final',
-      'Arco Supremo',
-      'Constelacao Real',
-      'Ultima Trinca',
-      'Guardiao Celestial',
+      'Portao do Forum',
+      'Praca Central',
+      'Distrito das Ideias',
+      'Caminho Iluminado',
+      'Descanso dos Delegados',
+      'Jardim do Forum',
+      'Colunas Verdes',
+      'Praca das Bandeiras',
+      'Ponte da Assembleia',
+      'Mercado Circular',
+      'Auditorio Claro',
+      'Ecos da Conferencia',
+      'Escada da Tribuna',
+      'Painel Final',
+      'Chaves do Forum',
+      'Torre da Inovacao',
+      'Rota das Parcerias',
+      'Camara de Debates',
+      'Selo Verde',
+      'Loja do Forum',
+      'Aurora do Futuro',
+      'Arco Principal',
+      'Distrito Circular',
+      'Ultima Assembleia',
+      'Guardiao do Forum',
     ],
     objectivePatterns: [
       'Resolva as camadas finais com planejamento e poucos movimentos vazios.',
@@ -365,7 +404,10 @@ const getGeneratedDifficulty = (
   return 'master';
 };
 
-const getGeneratedTileCount = (worldId: GeneratedWorldId, worldLevelNumber: number) => {
+const getGeneratedTileCount = (
+  worldId: GeneratedWorldId,
+  worldLevelNumber: number,
+) => {
   if (worldId === 4) {
     return worldLevelNumber <= 8 ? 54 : worldLevelNumber <= 16 ? 57 : 60;
   }
@@ -378,46 +420,62 @@ const getGeneratedTileCount = (worldId: GeneratedWorldId, worldLevelNumber: numb
 };
 
 const getGeneratedMysteryCount = (
-  worldId: GeneratedWorldId,
+  config: GeneratedWorldConfig,
   worldLevelNumber: number,
+  curved: number,
 ) => {
   const usesMystery =
-    worldLevelNumber % 5 === 0 || (worldLevelNumber >= 12 && worldLevelNumber % 4 === 0);
+    worldLevelNumber % 5 === 0 ||
+    (worldLevelNumber >= 12 && worldLevelNumber % 4 === 0);
 
   if (!usesMystery) {
     return undefined;
   }
 
-  if (worldId === 4) {
-    return Math.min(6, 4 + Math.floor(worldLevelNumber / 10));
-  }
+  const { min, max } = config.mysteryRange;
 
-  if (worldId === 5) {
-    return worldLevelNumber < 15 ? 5 : 6;
-  }
-
-  if (worldId === 6) {
-    return worldLevelNumber < 20 ? 5 : 6;
-  }
-
-  return 6;
+  return Math.round(min + (max - min) * curved);
 };
 
-const getGeneratedRecommendedPower = (worldLevelNumber: number): PowerUpType => {
-  const rotation: PowerUpType[] = ['shuffle', 'hint', 'undo', 'shuffle', 'undo'];
+const getGeneratedRecommendedPower = (
+  worldLevelNumber: number,
+): PowerUpType => {
+  const rotation: PowerUpType[] = [
+    'shuffle',
+    'hint',
+    'undo',
+    'shuffle',
+    'undo',
+  ];
 
   return rotation[(worldLevelNumber - 1) % rotation.length];
 };
 
+/**
+ * Ponto de partida (fase 1) e faixa percorrida até a fase 25, calculados a
+ * partir do formato antigo (linear em `worldLevelNumber`, com empurrão de
+ * marco a cada bloco de 5) para os dois extremos continuarem no mesmo lugar
+ * de antes — só o meio do caminho passa a seguir `config.difficultyCurve` em
+ * vez de uma reta.
+ */
+const WORLD_STAR_TIME_BASE_OFFSET = { threeStars: 5, twoStars: 8 };
+const WORLD_STAR_TIME_SPAN = { threeStars: 144, twoStars: 240 };
+
 const getGeneratedStarTimes = (
   config: GeneratedWorldConfig,
-  worldLevelNumber: number,
+  curved: number,
 ) => {
-  const milestonePressure = Math.floor((worldLevelNumber - 1) / 5) * 6;
-
   return {
-    threeStars: config.timeBase.threeStars + worldLevelNumber * 5 + milestonePressure,
-    twoStars: config.timeBase.twoStars + worldLevelNumber * 8 + milestonePressure * 2,
+    threeStars: Math.round(
+      config.timeBase.threeStars +
+        WORLD_STAR_TIME_BASE_OFFSET.threeStars +
+        WORLD_STAR_TIME_SPAN.threeStars * curved,
+    ),
+    twoStars: Math.round(
+      config.timeBase.twoStars +
+        WORLD_STAR_TIME_BASE_OFFSET.twoStars +
+        WORLD_STAR_TIME_SPAN.twoStars * curved,
+    ),
   };
 };
 
@@ -426,9 +484,20 @@ const createGeneratedCampaignLevels = (): LevelSeed[] =>
     config.titles.map((title, index) => {
       const worldLevelNumber = index + 1;
       const displayNumber = (config.worldId - 1) * 25 + worldLevelNumber;
-      const starTimes = getGeneratedStarTimes(config, worldLevelNumber);
+      // Uma curva por fase, reaproveitada pelo tempo de estrela e pela
+      // contagem de mistério — os dois só precisam de onde a fase cai na
+      // rampa de dificuldade do mundo, não de recalculá-la cada um.
+      const curved = curveProgress(
+        worldLevelNumber,
+        WORLD_LEVELS_PER_MAP,
+        WORLD_DIFFICULTY_BLOCK_SIZE,
+        config.difficultyCurve,
+      );
+      const starTimes = getGeneratedStarTimes(config, curved);
       const objectiveText =
-        config.objectivePatterns[(worldLevelNumber - 1) % config.objectivePatterns.length];
+        config.objectivePatterns[
+          (worldLevelNumber - 1) % config.objectivePatterns.length
+        ];
 
       return createMainLevel(
         config.worldId,
@@ -442,7 +511,7 @@ const createGeneratedCampaignLevels = (): LevelSeed[] =>
         starTimes.threeStars,
         starTimes.twoStars,
         getGeneratedRecommendedPower(worldLevelNumber),
-        getGeneratedMysteryCount(config.worldId, worldLevelNumber),
+        getGeneratedMysteryCount(config, worldLevelNumber, curved),
       );
     }),
   );
@@ -452,9 +521,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     1,
     1,
-    'Clareira inicial',
+    'Entrada do Parque',
     'easy',
-    'Objetivo: Forme a primeira trinca livre para abrir o Bosque das Trincas.',
+    'Objetivo: Forme a primeira trinca livre para abrir o Parque da Coleta Seletiva.',
     9,
     3,
     45,
@@ -465,7 +534,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     2,
     2,
-    'Coleta na trilha',
+    'Trilha dos Recicláveis',
     'easy',
     'Objetivo: Limpe uma mesa aberta e avance pela trilha principal.',
     12,
@@ -478,7 +547,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     3,
     3,
-    'Primeiras copas',
+    'Primeiro Ecoponto',
     'easy',
     'Objetivo: Observe as primeiras camadas e libere o caminho com calma.',
     15,
@@ -491,7 +560,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     4,
     4,
-    'Pedras do bosque',
+    'Banco das Latas',
     'normal',
     'Objetivo: Encontre trincas enquanto algumas peças bloqueiam a passagem.',
     18,
@@ -504,7 +573,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     5,
     5,
-    'Ponte de folhas',
+    'Descanso do Parque',
     'normal',
     'Objetivo: Controle a bandeja enquanto as camadas ficam mais espertas.',
     21,
@@ -517,7 +586,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     6,
     6,
-    'Riacho brilhante',
+    'Riacho Limpo',
     'normal',
     'Objetivo: Abra espaço antes de acumular peças soltas demais.',
     21,
@@ -530,7 +599,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     7,
     7,
-    'Trincas escondidas',
+    'Gramado das Trincas',
     'normal',
     'Objetivo: Planeje a ordem das camadas para não lotar a bandeja.',
     24,
@@ -543,7 +612,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     8,
     8,
-    'Copa fechada',
+    'Quiosque Verde',
     'hard',
     'Objetivo: Use o topo para destravar uma mesa cheia sem pressa.',
     27,
@@ -556,7 +625,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     9,
     9,
-    'Colina das estrelas',
+    'Colina das Lixeiras',
     'hard',
     'Objetivo: Avance por camadas altas segurando espaço para combos.',
     36,
@@ -569,7 +638,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     10,
     10,
-    'Portal do bosque',
+    'Feira do Parque',
     'hard',
     'Objetivo: Limpe a mesa final do mundo com ordem e estratégia.',
     42,
@@ -582,7 +651,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     11,
     11,
-    'Clareira Secreta',
+    'Caminho das Mudas',
     'hard',
     'Objetivo: Abra caminho pelas trincas escondidas.',
     42,
@@ -595,7 +664,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     12,
     12,
-    'Raízes Antigas',
+    'Raízes Renovadas',
     'hard',
     'Objetivo: Libere as peças presas entre as raízes.',
     45,
@@ -608,7 +677,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     13,
     13,
-    'Flores Luminosas',
+    'Canteiro Florido',
     'hard',
     'Objetivo: Planeje antes de encher a bandeja.',
     45,
@@ -621,7 +690,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     14,
     14,
-    'Tronco Encantado',
+    'Tronco Reaproveitado',
     'hard',
     'Objetivo: Remova as peças do topo para abrir o centro.',
     48,
@@ -634,7 +703,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     15,
     15,
-    'Caminho das Folhas',
+    'Trilha das Folhas',
     'hard',
     'Objetivo: Algumas peças misteriosas revelam quando ficam livres.',
     48,
@@ -648,7 +717,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     16,
     16,
-    'Lago dos Reflexos',
+    'Lago da Reciclagem',
     'hard',
     'Objetivo: Cuidado com as peças escondidas no fundo.',
     51,
@@ -661,7 +730,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     17,
     17,
-    'Ponte Verde',
+    'Ponte dos Materiais',
     'hard',
     'Objetivo: Mantenha espaço livre na bandeja.',
     51,
@@ -674,7 +743,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     18,
     18,
-    'Jardim das Trincas',
+    'Playground Sustentável',
     'expert',
     'Objetivo: Encontre combinações antes de avançar.',
     54,
@@ -687,7 +756,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     19,
     19,
-    'Ninho de Luz',
+    'Viveiro de Mudas',
     'expert',
     'Objetivo: Priorize peças que liberam várias camadas.',
     54,
@@ -700,7 +769,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     20,
     20,
-    'Mercado do Bosque',
+    'Mercado do Parque',
     'expert',
     'Objetivo: Revele as peças misteriosas sem encher a bandeja.',
     57,
@@ -714,7 +783,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     21,
     21,
-    'Floresta Profunda',
+    'Gramado Extenso',
     'expert',
     'Objetivo: As trincas certas abrem novos caminhos.',
     57,
@@ -727,7 +796,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     22,
     22,
-    'Pedras Musgosas',
+    'Pedras do Caminho',
     'expert',
     'Objetivo: Controle a bandeja nas camadas mais difíceis.',
     60,
@@ -740,7 +809,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     23,
     23,
-    'Portal das Folhas',
+    'Portal do Ecoponto',
     'expert',
     'Objetivo: Libere o centro sem travar os cantos.',
     60,
@@ -753,7 +822,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     24,
     24,
-    'Trilha Final',
+    'Última Trilha',
     'expert',
     'Objetivo: Planeje cada trinca antes de tocar.',
     60,
@@ -766,7 +835,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     1,
     25,
     25,
-    'Guardião do Bosque',
+    'Guardião do Parque',
     'expert',
     'Objetivo: Use estratégia para revelar as peças misteriosas no momento certo.',
     60,
@@ -780,7 +849,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     1,
     26,
-    'Entrada do vale',
+    'Portão do Vale',
     'hard',
     'Objetivo: Conheça o caminho das montanhas.',
     45,
@@ -793,7 +862,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     2,
     27,
-    'Pedras antigas',
+    'Estrada de Terra',
     'hard',
     'Objetivo: Abra caminho entre as pedras.',
     48,
@@ -806,7 +875,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     3,
     28,
-    'Ponte suspensa',
+    'Ponte da Carga',
     'hard',
     'Objetivo: Planeje antes de encher a bandeja.',
     51,
@@ -819,7 +888,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     4,
     29,
-    'Caverna brilhante',
+    'Caverna de Apoio',
     'hard',
     'Objetivo: Libere peças escondidas.',
     54,
@@ -832,7 +901,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     5,
     30,
-    'Topo do vale',
+    'Descanso na Estrada',
     'hard',
     'Objetivo: Complete este desafio do vale.',
     57,
@@ -845,7 +914,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     6,
     31,
-    'Descida do Vale',
+    'Descida Íngreme',
     'hard',
     'Objetivo: Continue abrindo caminho pelas montanhas.',
     51,
@@ -858,7 +927,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     7,
     32,
-    'Rochedos Azuis',
+    'Curva dos Caminhões',
     'hard',
     'Objetivo: Remova as peças do topo para liberar o centro.',
     51,
@@ -871,7 +940,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     8,
     33,
-    'Nuvens Baixas',
+    'Neblina da Estrada',
     'hard',
     'Objetivo: Planeje as trincas antes de encher a bandeja.',
     54,
@@ -884,7 +953,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     9,
     34,
-    'Gruta do Vento',
+    'Posto de Troca',
     'hard',
     'Objetivo: Cuidado com as peças escondidas nas camadas.',
     54,
@@ -897,7 +966,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     10,
     35,
-    'Mercado da Montanha',
+    'Feira da Estrada',
     'hard',
     'Objetivo: As pilhas misteriosas começam a testar sua estratégia.',
     54,
@@ -911,7 +980,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     11,
     36,
-    'Ponte dos Ventos',
+    'Ponte de Ferro',
     'expert',
     'Objetivo: Mantenha espaço na bandeja para as próximas trincas.',
     57,
@@ -924,7 +993,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     12,
     37,
-    'Lago Suspenso',
+    'Terminal Suspenso',
     'expert',
     'Objetivo: Libere as laterais antes de avançar no centro.',
     57,
@@ -937,7 +1006,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     13,
     38,
-    'Pedras Cantantes',
+    'Pedras do Trajeto',
     'expert',
     'Objetivo: Escolha peças que abrem múltiplos caminhos.',
     57,
@@ -950,7 +1019,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     14,
     39,
-    'Trilha Estreita',
+    'Trilha Sinuosa',
     'expert',
     'Objetivo: Não deixe a bandeja travar nas últimas peças.',
     60,
@@ -963,7 +1032,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     15,
     40,
-    'Refúgio dos Picos',
+    'Refúgio dos Motoristas',
     'expert',
     'Objetivo: Planeje suas jogadas para revelar as peças certas.',
     60,
@@ -977,7 +1046,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     16,
     41,
-    'Caverna Alta',
+    'Galpão Provisório',
     'expert',
     'Objetivo: Remova camadas superiores para liberar os blocos presos.',
     60,
@@ -990,7 +1059,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     17,
     42,
-    'Pico Partida',
+    'Parada Obrigatória',
     'expert',
     'Objetivo: Use estratégia para abrir o tabuleiro por partes.',
     60,
@@ -1003,7 +1072,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     18,
     43,
-    'Vale Nebuloso',
+    'Vale Extenso',
     'expert',
     'Objetivo: Encontre as trincas escondidas entre as camadas.',
     60,
@@ -1016,7 +1085,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     19,
     44,
-    'Escarpa Antiga',
+    'Trevo Antigo',
     'expert',
     'Objetivo: Priorize peças que destravam o maior caminho.',
     60,
@@ -1029,7 +1098,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     20,
     45,
-    'Loja do Penhasco',
+    'Loja da Frota',
     'expert',
     'Objetivo: Controle a bandeja enquanto revela novos símbolos.',
     60,
@@ -1043,7 +1112,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     21,
     46,
-    'Caminho Congelado',
+    'Estrada Congelada',
     'expert',
     'Objetivo: Mantenha a bandeja limpa nas decisões finais.',
     60,
@@ -1056,7 +1125,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     22,
     47,
-    'Ruído das Rochas',
+    'Ruído dos Motores',
     'expert',
     'Objetivo: Não repita o mesmo papel do ciclo antes de abrir o caminho.',
     60,
@@ -1069,7 +1138,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     23,
     48,
-    'Portão das Montanhas',
+    'Portão de Carga',
     'expert',
     'Objetivo: Libere o portão removendo as camadas certas.',
     60,
@@ -1082,7 +1151,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     24,
     49,
-    'Última Travessia',
+    'Travessia Final',
     'expert',
     'Objetivo: Controle cada movimento antes da fase final.',
     60,
@@ -1095,9 +1164,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     2,
     25,
     50,
-    'Guardião dos Vales',
+    'Guardião do Trajeto',
     'expert',
-    'Objetivo: Vença o Guardião dos Vales revelando as pilhas misteriosas.',
+    'Objetivo: Vença o Guardião do Trajeto revelando as pilhas misteriosas.',
     60,
     8,
     720,
@@ -1109,9 +1178,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     1,
     51,
-    'Entrada das Ruínas',
+    'Entrada da Central',
     'hard',
-    'Objetivo: Comece a explorar as Ruínas de Cristal.',
+    'Objetivo: Comece a explorar a Central de Materiais.',
     48,
     8,
     300,
@@ -1122,9 +1191,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     2,
     52,
-    'Pátio dos Cristais',
+    'Pátio de Materiais',
     'hard',
-    'Objetivo: Abra caminho entre os primeiros cristais.',
+    'Objetivo: Abra caminho entre os primeiros materiais.',
     48,
     8,
     320,
@@ -1135,7 +1204,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     3,
     53,
-    'Colunas Partidas',
+    'Colunas de Aço',
     'hard',
     'Objetivo: Remova as peças do topo para liberar as colunas.',
     51,
@@ -1148,7 +1217,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     4,
     54,
-    'Escadaria Roxa',
+    'Escadaria Operária',
     'hard',
     'Objetivo: Planeje as trincas antes de avançar pela escadaria.',
     51,
@@ -1161,9 +1230,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     5,
     55,
-    'Loja dos Artefatos',
+    'Loja de Suprimentos',
     'hard',
-    'Objetivo: As Ruínas de Cristal escondem símbolos nas pilhas.',
+    'Objetivo: A Central de Materiais esconde símbolos nas pilhas.',
     51,
     8,
     385,
@@ -1175,7 +1244,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     6,
     56,
-    'Salão Azul',
+    'Salão de Triagem',
     'expert',
     'Objetivo: Libere o centro sem travar os cantos.',
     54,
@@ -1188,7 +1257,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     7,
     57,
-    'Altar Luminoso',
+    'Galpão Iluminado',
     'expert',
     'Objetivo: Priorize peças que abrem várias camadas.',
     54,
@@ -1201,9 +1270,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     8,
     58,
-    'Galeria Perdida',
+    'Galeria de Estoque',
     'expert',
-    'Objetivo: Encontre as trincas escondidas nas ruínas.',
+    'Objetivo: Encontre as trincas escondidas no estoque.',
     54,
     8,
     450,
@@ -1214,7 +1283,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     9,
     59,
-    'Câmara dos Ecos',
+    'Câmara das Prensas',
     'expert',
     'Objetivo: Evite encher a bandeja antes de abrir caminho.',
     57,
@@ -1227,9 +1296,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     10,
     60,
-    'Mercado Submerso',
+    'Mercado Interno',
     'expert',
-    'Objetivo: Revele os cristais certos para seguir pelas ruínas.',
+    'Objetivo: Revele os materiais certos para seguir pela central.',
     57,
     8,
     495,
@@ -1241,7 +1310,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     11,
     61,
-    'Ponte de Cristal',
+    'Fardos em Fila',
     'expert',
     'Objetivo: Escolha peças que liberam o caminho central.',
     57,
@@ -1254,7 +1323,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     12,
     62,
-    'Jardim das Relíquias',
+    'Pátio das Docas',
     'expert',
     'Objetivo: Abra espaço antes de formar trincas arriscadas.',
     60,
@@ -1267,7 +1336,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     13,
     63,
-    'Torre Quebrada',
+    'Torre de Contêineres',
     'expert',
     'Objetivo: Remova as camadas altas para revelar as peças presas.',
     60,
@@ -1280,7 +1349,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     14,
     64,
-    'Fonte Estelar',
+    'Fonte de Energia',
     'expert',
     'Objetivo: Controle a bandeja nas combinações finais.',
     60,
@@ -1293,7 +1362,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     15,
     65,
-    'Descanso das Ruínas',
+    'Descanso da Central',
     'expert',
     'Objetivo: Use estratégia para lidar com peças ocultas.',
     60,
@@ -1307,7 +1376,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     16,
     66,
-    'Corredor Violeta',
+    'Corredor dos Fardos',
     'expert',
     'Objetivo: Não repita o mesmo papel do ciclo sem liberar o tabuleiro.',
     60,
@@ -1320,9 +1389,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     17,
     67,
-    'Templo Esquecido',
+    'Depósito Central',
     'expert',
-    'Objetivo: Domine as camadas para avançar no templo.',
+    'Objetivo: Domine as camadas para avançar no depósito.',
     60,
     8,
     640,
@@ -1333,7 +1402,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     18,
     68,
-    'Núcleo de Luz',
+    'Núcleo Operacional',
     'expert',
     'Objetivo: Libere o núcleo removendo as peças certas.',
     60,
@@ -1346,7 +1415,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     19,
     69,
-    'Passagem Secreta',
+    'Passagem dos Operários',
     'expert',
     'Objetivo: Use cada movimento para abrir uma nova rota.',
     60,
@@ -1359,9 +1428,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     20,
     70,
-    'Loja do Guardião',
+    'Loja do Supervisor',
     'expert',
-    'Objetivo: As pilhas misteriosas dominam as ruínas.',
+    'Objetivo: As pilhas misteriosas dominam a central.',
     60,
     8,
     700,
@@ -1373,7 +1442,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     21,
     71,
-    'Salão das Estrelas',
+    'Salão das Máquinas',
     'master',
     'Objetivo: Mantenha espaço livre até as últimas camadas.',
     60,
@@ -1386,7 +1455,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     22,
     72,
-    'Relicário Azul',
+    'Setor Azul',
     'master',
     'Objetivo: Priorize peças que destravam múltiplos grupos.',
     60,
@@ -1399,7 +1468,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     23,
     73,
-    'Cristal Ancestral',
+    'Bloco Principal',
     'master',
     'Objetivo: Não deixe a bandeja travar no final.',
     60,
@@ -1412,9 +1481,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     24,
     74,
-    'Portal Brilhante',
+    'Portal de Saída',
     'master',
-    'Objetivo: Complete a última travessia das ruínas.',
+    'Objetivo: Complete a última travessia da central.',
     60,
     8,
     780,
@@ -1425,9 +1494,9 @@ const LEVEL_SEEDS: LevelSeed[] = [
     3,
     25,
     75,
-    'Guardião de Cristal',
+    'Guardião da Central',
     'master',
-    'Objetivo: Complete o desafio final revelando os mistérios de cristal.',
+    'Objetivo: Complete o desafio final revelando as últimas peças misteriosas.',
     60,
     8,
     810,
@@ -1439,7 +1508,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
   createBonusLevel(
     1,
     '25.1',
-    'Entrada açucarada',
+    'Jardim em Flor',
     'Objetivo: Complete o bônus revelando as peças escondidas.',
     48,
     8,
@@ -1451,7 +1520,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
   createBonusLevel(
     2,
     '25.2',
-    'Jardim de glacê',
+    'Broto Dourado',
     'Objetivo: Resolva o bônus revelando as peças escondidas.',
     54,
     8,
@@ -1463,7 +1532,7 @@ const LEVEL_SEEDS: LevelSeed[] = [
   createBonusLevel(
     3,
     '25.3',
-    'Castelo confeitado',
+    'Renascer Verde',
     'Objetivo: Domine as pilhas misteriosas para conquistar o bônus final.',
     60,
     8,

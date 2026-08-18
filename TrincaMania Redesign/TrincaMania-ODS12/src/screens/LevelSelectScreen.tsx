@@ -159,23 +159,23 @@ const getShortObjective = (level: Level) =>
 const getWorldSelectorSubtitle = (worldId: WorldId) => {
   switch (worldId) {
     case 1:
-      return 'Bosque';
+      return 'Parque';
     case 2:
-      return 'Vales';
+      return 'Vale';
     case 3:
-      return 'Ruínas';
+      return 'Central';
     case 4:
-      return 'Praia';
+      return 'Viveiro';
     case 5:
-      return 'Vulcao';
+      return 'Usina';
     case 6:
-      return 'Estrelas';
+      return 'Cooperativa';
     case 7:
-      return 'Neve';
+      return 'Rota';
     case 8:
-      return 'Celestial';
+      return 'Fórum';
     case 21:
-      return 'Reino Açucarado';
+      return 'Jardim Renascido';
     default:
       return '';
   }
@@ -674,7 +674,7 @@ export function LevelSelectScreen({
           {selectedWorldId === 21 ? (
             <View pointerEvents="none" style={styles.bonusMapBadge}>
               <Text style={styles.bonusMapBadgeText}>Bônus</Text>
-              <Text style={styles.bonusMapBadgeName}>Reino Açucarado</Text>
+              <Text style={styles.bonusMapBadgeName}>Jardim Renascido</Text>
             </View>
           ) : null}
           {selectedMapBackground ? (
@@ -1097,8 +1097,8 @@ export function LevelSelectScreen({
                     </Text>
                     <Text numberOfLines={2} style={styles.panelDescription}>
                       {bonusWorldChest.claimed
-                        ? 'A recompensa do Reino Açucarado já foi coletada.'
-                        : 'Conclua as 3 fases do Reino Açucarado para liberar.'}
+                        ? 'A recompensa do Jardim Renascido já foi coletada.'
+                        : 'Conclua as 3 fases do Jardim Renascido para liberar.'}
                     </Text>
                   </View>
                   <View style={styles.panelButton}>
@@ -1261,7 +1261,7 @@ export function LevelSelectScreen({
                       {selectedPortalLocked
                         ? selectedPortalWorld.lockedText
                         : selectedPortalWorld.isBonus
-                          ? 'Reino Açucarado liberado.'
+                          ? 'Jardim Renascido liberado.'
                           : `${selectedPortalWorld.name} liberado.`}
                     </Text>
                   </View>
