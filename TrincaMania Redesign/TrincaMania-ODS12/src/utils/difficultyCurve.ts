@@ -11,11 +11,17 @@
  * o anterior a ele — dois blocos idênticos em tamanho, mas o de trás sente
  * mais apertado.
  *
- * Em `gamma = 1` e `blockGrowth = 1` isto se reduz exatamente ao progresso
- * linear de sempre (`(posição - 1) / (total - 1)`) — é uma generalização,
- * não uma substituição. E o resultado é estritamente monotônico em
- * `position` para `gamma > 0`, então qualquer fórmula que já garantia "nunca
- * regride" com progresso linear continua garantindo com a curva.
+ * Em `gamma = 1` e `blockGrowth = 1` isto se APROXIMA do progresso linear de
+ * sempre (`(posição - 1) / (total - 1)`), mas não é idêntico fora das
+ * fronteiras de bloco: cada bloco pesa igual e a fração dentro dele usa
+ * `(blockSpan - 1)` como base, não `(total - 1)` global — então o valor pode
+ * divergir do linear puro em até ~1/blockSize no meio de cada bloco (ex.:
+ * blockSize=10 em total=100 chega a ~0.5% de diferença na posição 50). Nas
+ * bordas (position=1 e position=total) os dois sempre coincidem. É uma
+ * generalização no espírito do progresso linear, não uma substituição
+ * bit-exata — e o resultado é estritamente monotônico em `position` para
+ * `gamma > 0`, então qualquer fórmula que já garantia "nunca regride" com
+ * progresso linear continua garantindo com a curva.
  */
 export type DifficultyCurve = {
   /** Expoente dentro do bloco. 1 = linear. Maior que 1 = achata o início do bloco e acelera o fim. */
@@ -24,7 +30,7 @@ export type DifficultyCurve = {
   blockGrowth: number;
 };
 
-/** Curva neutra: reproduz o progresso linear de sempre. Útil como valor-base/fallback. */
+/** Curva neutra: aproxima o progresso linear de sempre (ver ressalva acima). Útil como valor-base/fallback. */
 export const LINEAR_DIFFICULTY_CURVE: DifficultyCurve = {
   gamma: 1,
   blockGrowth: 1,
