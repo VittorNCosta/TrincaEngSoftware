@@ -13,6 +13,7 @@ type SettingsModalProps = {
   onResetProgress: () => void;
   onToggleHaptics: () => void;
   onToggleSound: () => void;
+  onUnlockAllForDevMode: () => void;
 };
 
 type SettingsActionProps = {
@@ -67,6 +68,31 @@ function SettingsAction({
   );
 }
 
+/**
+ * Confirmação com cancelar + ação, seguida de fechar o modal — mesmo formato
+ * para reset de progresso e modo dev, só muda o texto/estilo do botão.
+ */
+const confirmAction = (
+  title: string,
+  message: string,
+  confirmText: string,
+  onConfirm: () => void,
+  onClose: () => void,
+  destructive = false,
+) => {
+  Alert.alert(title, message, [
+    { text: 'Cancelar', style: 'cancel' },
+    {
+      text: confirmText,
+      style: destructive ? 'destructive' : undefined,
+      onPress: () => {
+        onConfirm();
+        onClose();
+      },
+    },
+  ]);
+};
+
 export function SettingsModal({
   settings,
   visible,
@@ -75,25 +101,27 @@ export function SettingsModal({
   onResetProgress,
   onToggleHaptics,
   onToggleSound,
+  onUnlockAllForDevMode,
 }: SettingsModalProps) {
   const silentModeActive = !settings.soundEnabled && !settings.hapticsEnabled;
-  const handleResetProgress = () => {
-    Alert.alert(
+  const handleResetProgress = () =>
+    confirmAction(
       'Resetar progresso?',
       'Esta ação apaga fases, moedas, poderes, vidas, baús, chaves e progresso salvo. Use apenas se tiver certeza.',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Resetar tudo',
-          style: 'destructive',
-          onPress: () => {
-            onResetProgress();
-            onClose();
-          },
-        },
-      ],
+      'Resetar tudo',
+      onResetProgress,
+      onClose,
+      true,
     );
-  };
+
+  const handleUnlockAllForDevMode = () =>
+    confirmAction(
+      'Liberar todas as fases?',
+      'Modo dev: desbloqueia as 203 fases da campanha (incluindo as bônus) e os 1000 mapas de capítulo para teste. Não afeta moedas, vidas nem estrelas já salvas.',
+      'Liberar tudo',
+      onUnlockAllForDevMode,
+      onClose,
+    );
 
   return (
     <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
@@ -154,6 +182,15 @@ export function SettingsModal({
             >
               <Text style={styles.resetButtonText}>Resetar progresso</Text>
             </Pressable>
+            {__DEV__ ? (
+              <Pressable
+                accessibilityRole="button"
+                onPress={handleUnlockAllForDevMode}
+                style={({ pressed }) => [styles.devButton, pressed ? styles.pressed : null]}
+              >
+                <Text style={styles.devButtonText}>Modo dev: liberar todas as fases</Text>
+              </Pressable>
+            ) : null}
           </View>
 
           <Pressable
@@ -276,6 +313,22 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     width: 36,
+  },
+  devButton: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    borderColor: 'rgba(154, 224, 255, 0.42)',
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    minHeight: 48,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.sm,
+  },
+  devButtonText: {
+    color: '#B9ECFF',
+    fontSize: fontSizes.xs,
+    fontWeight: '900',
+    textTransform: 'uppercase',
   },
   doneButton: {
     alignItems: 'center',

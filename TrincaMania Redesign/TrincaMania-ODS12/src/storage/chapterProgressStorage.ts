@@ -150,6 +150,29 @@ export const applyChapterMapCompletion = (
   };
 };
 
+/**
+ * Modo dev: libera todos os 1000 mapas de capítulo para teste.
+ *
+ * `isChapterMapUnlocked` deriva o desbloqueio da existência de uma entrada em
+ * `mapStars` no mapa ANTERIOR — não há uma lista de desbloqueados separada
+ * para setar direto, como na campanha. Por isso todo mapa exceto o último
+ * recebe uma estrela mínima aqui: é o que faz o próximo mapa da cadeia se
+ * abrir, sem precisar tocar o mapa final (que não teria "próximo" a abrir).
+ * Estrela já existente (mapa realmente jogado) é preservada.
+ */
+export const unlockAllChapterMapsForDevMode = (
+  progress: ChapterProgressState,
+): ChapterProgressState => {
+  const currentProgress = normalizeChapterProgress(progress);
+  const mapStars = { ...currentProgress.mapStars };
+
+  CHAPTER_MAP_IDS.slice(0, -1).forEach((mapId) => {
+    mapStars[mapId] = Math.max(mapStars[mapId] ?? 0, 1);
+  });
+
+  return normalizeChapterProgress({ mapStars });
+};
+
 export const loadChapterProgress = async (): Promise<ChapterProgressState> => {
   const rawProgress = await AsyncStorage.getItem(STORAGE_KEY);
 

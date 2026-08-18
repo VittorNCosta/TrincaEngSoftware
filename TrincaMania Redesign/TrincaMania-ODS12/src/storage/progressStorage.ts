@@ -273,6 +273,30 @@ export const normalizeProgress = (progress: Partial<ProgressState>): ProgressSta
   };
 };
 
+/**
+ * Modo dev: libera todas as fases da campanha (incluindo o mundo bônus) para
+ * teste, sem passar pelo fluxo normal de conclusão.
+ *
+ * `canUnlockLevel` só deixa `unlockedLevelIds` conter fases bônus quando o
+ * mundo 1 tem três estrelas em toda fase (`hasThreeStarsInWorldByStars`) — por
+ * isso a estrela de cada fase do mundo 1 é forçada para 3 aqui, senão
+ * `normalizeProgress` continuaria filtrando o bônus fora da lista liberada.
+ */
+export const unlockAllLevelsForDevMode = (progress: ProgressState): ProgressState => {
+  const currentProgress = normalizeProgress(progress);
+  const levelStars = { ...currentProgress.levelStars };
+
+  LEVELS.filter((level) => level.worldId === 1).forEach((level) => {
+    levelStars[level.id] = Math.max(levelStars[level.id] ?? 0, 3);
+  });
+
+  return normalizeProgress({
+    ...currentProgress,
+    levelStars,
+    unlockedLevelIds: LEVEL_IDS,
+  });
+};
+
 export const applyLevelCompletion = (
   progress: ProgressState,
   levelId: string,
@@ -380,7 +404,7 @@ export const getWorldChestIdForLevel = (_levelId: string) => undefined;
 
 export const getWorldChestLabel = (worldChestId: string) => {
   if (worldChestId === BONUS_WORLD_CHEST_ID) {
-    return 'Reino Açucarado: Baú Especial';
+    return 'Jardim Renascido: Baú Especial';
   }
 
   const world = WORLDS.find((knownWorld) => `world-${knownWorld.id}` === worldChestId);
@@ -570,7 +594,7 @@ export const buyPowerUpItem = (
   });
 };
 
-export const usePowerUpItem = (
+export const consumePowerUpItem = (
   progress: ProgressState,
   powerType: PowerUpType,
 ): ProgressState => {
@@ -624,7 +648,7 @@ export const purchasePowerUpTransaction = (
   const purchasedProgress = buyPowerUpItem(currentProgress, powerType, cost);
 
   return useImmediately
-    ? usePowerUpItem(purchasedProgress, powerType)
+    ? consumePowerUpItem(purchasedProgress, powerType)
     : purchasedProgress;
 };
 

@@ -21,6 +21,7 @@ import {
   applyLevelCompletion,
   buyPowerUpItem,
   collectRestCheckpoint,
+  consumePowerUpItem,
   createChestProgressSummary,
   createInitialProgress,
   grantChestCoinReward,
@@ -38,7 +39,7 @@ import {
   saveProgress,
   saveTutorialSeen,
   spendCoins,
-  usePowerUpItem,
+  unlockAllLevelsForDevMode,
 } from './src/storage/progressStorage';
 import {
   ChapterProgressState,
@@ -49,6 +50,7 @@ import {
   isChapterMapUnlocked,
   loadChapterProgress,
   saveChapterProgress,
+  unlockAllChapterMapsForDevMode,
 } from './src/storage/chapterProgressStorage';
 import {
   MagicTripleRescueState,
@@ -462,7 +464,7 @@ export default function App() {
       return false;
     }
 
-    const nextProgress = usePowerUpItem(currentProgress, powerType);
+    const nextProgress = consumePowerUpItem(currentProgress, powerType);
     void commitProgress(nextProgress).catch(() => undefined);
 
     return true;
@@ -573,6 +575,16 @@ export default function App() {
     setIsPracticalTutorialSeen(false);
     saveTutorialSeen(false).catch(() => undefined);
     savePracticalTutorialSeen(false).catch(() => undefined);
+  };
+
+  // Só existe em build de desenvolvimento (__DEV__): libera todas as fases da
+  // campanha e todos os mapas de capítulo, sem passar pelo fluxo normal de
+  // conclusão — é o que deixa testar fases avançadas sem jogar as anteriores.
+  const handleUnlockAllForDevMode = () => {
+    void commitProgress(unlockAllLevelsForDevMode(progressRef.current)).catch(() => undefined);
+    void commitChapterProgress(unlockAllChapterMapsForDevMode(chapterProgressRef.current)).catch(
+      () => undefined,
+    );
   };
 
   const handleFinishTutorial = () => {
@@ -1121,6 +1133,7 @@ export default function App() {
         onResetProgress={handleResetProgress}
         onToggleHaptics={handleToggleHaptics}
         onToggleSound={handleToggleSound}
+        onUnlockAllForDevMode={handleUnlockAllForDevMode}
       />
       <NoLivesModal
         timeUntilNextLifeMs={timeUntilNextLifeMs}
