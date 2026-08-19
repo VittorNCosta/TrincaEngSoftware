@@ -51,43 +51,49 @@ save, isso exige reescrever a leitura de desbloqueio em
 `LevelSelectScreen`/`ChaptersScreen`, não só a escrita — avaliar custo antes
 de assumir que é troca simples.
 
-## Workflow obrigatório: sempre agente/skill, nunca inline às cegas
+## Roteamento — qual agente usar
 
-- **Pesquisa/exploração de código** (mapear onde algo é usado, auditar tema
-  visual, achar todas as ocorrências de um padrão): use o agente `Explore`
-  antes de editar. Não confie em uma única busca — o projeto tem dois
-  registros paralelos de fase (`WORLDS`/`LEVELS`, 203 fases canônicas via
-  `LevelSelectScreen`, e `CHAPTERS`, 1000 mapas via `ChaptersScreen`) e é fácil
-  editar um e esquecer o outro.
-  - Exceção explícita: pesquisa que exige RODAR código para responder (ex.:
-    "esse solver realmente resolve as 1000 fases?", "quanto tempo isso
-    leva?") não delega para `Explore` — ele não tem Bash/execução. Nesse
-    caso, prototipar inline com o Bash tool é o caminho certo; só a busca
-    puramente navegacional (grep/leitura, sem rodar nada) tem que ir para o
-    `Explore`.
-- **Reescrita de conteúdo em massa** (título de fase, texto de tela, mais de
-  ~5 arquivos): delegue a um agente `general-purpose` com instruções
-  explícitas (mapeamento exato de troca, arquivos, o que NÃO tocar) em vez de
-  editar tudo inline — mantém o contexto principal livre e permite rodar
-  typecheck/testes de forma isolada antes de reportar.
-- **Antes de declarar QUALQUER tarefa não trivial concluída**: rode a skill
-  `code-review` (ou `simplify` para limpeza). Isso é um passo obrigatório do
-  checklist de fechamento, não uma sugestão condicionada a "se sobrar tempo"
-  — typecheck e testes verdes não substituem essa revisão. (Gap admitido:
-  na sessão de 2026-08-15 que criou o Modo Dev e a simulação de partida
-  completa, esse passo foi pulado — não repetir.)
-- Isso vale para qualquer chat futuro neste projeto — não é preciso o usuário
-  pedir de novo para usar agente/skill; é o padrão de trabalho aqui.
-- **O que isso NÃO significa**: não existe aqui um "Orchestrator" nem
-  agentes especialistas fictícios (UI Agent, Economy Agent, Audio Agent,
-  QA Agent, Security Agent...) — o catálogo real de agentes deste ambiente é
-  fixo (`Explore`, `general-purpose`, `Plan`, `claude-code-guide` e o
-  genérico `claude`), e skills vêm de um catálogo do usuário, não algo que se
-  cria por projeto sob demanda. Um pipeline obrigatório de
-  auditoria→skills→agentes→implementação→QA→code-review→regressão para
-  TODA tarefa (inclusive "corrigir um typo") foi proposto e rejeitado em
-  2026-08-15 por custo/latência desproporcional — a escala do pipeline deve
-  seguir a escala real da tarefa.
+Delegue por padrão quando a tarefa cair numa destas faixas. Use `Agent` com o
+`subagent_type` correspondente.
+
+| Se a tarefa é… | Agente |
+|---|---|
+| Implementar/alterar componente, tela, hook, storage, áudio, haptics | `react-native-engineer` |
+| Mecânica, economia (moedas/chaves/baús), progressão, balanceamento | `game-designer` |
+| Revisar diff pronto, auditar drift entre docs e código (somente leitura) | `code-reviewer` |
+| Escrever/atualizar teste, investigar bug reproduzível | `qa-engineer` |
+| Sintoma concreto de lentidão/jank/memória (nunca preventivo) | `performance-engineer` |
+| Revisar interface, feedback, acessibilidade, "sensação" de recompensa | `ui-ux-engineer` |
+
+Composição usual: `game-designer` decide o **quê** → `react-native-engineer`
+implementa o **como** → `qa-engineer` cobre com teste → `code-reviewer` fecha.
+Rodar agentes em paralelo exige **escopos de arquivo disjuntos** — dois
+agentes editando o mesmo arquivo conflitam.
+
+Skills: `/code-review` para revisão de correção antes de declarar qualquer
+tarefa não trivial concluída; `/security-review` antes de release;
+`/simplify` para limpeza de qualidade (não caça bugs).
+
+## Invariantes que já quebraram — nunca reintroduza
+
+1. **Progresso** só é gravado por `commitProgress` / `commitChapterProgress` (fila serializada em `App.tsx`, com guarda de geração). Chamar `saveProgress` direto já apagou progresso de jogador.
+2. **Vidas** só mudam por `mutateLives` (`src/storage/livesStorage.ts`). Chamada direta a `saveLivesState` já perdeu vida premiada.
+3. **Campanha e capítulos têm storages separados.** `normalizeProgress` descarta ids `chNN-NNN` **em silêncio** — nunca passe id de capítulo ao storage da campanha.
+4. **As 203 fases canônicas de `src/data/levels.ts` são congeladas.** Existe teste travando o hash de `JSON.stringify(LEVELS)`. Se mexer no arquivo, prove que a saída não mudou.
+5. **Guarda de idempotência vai depois do `await`**, lendo o ref atual — antes do `await` abre janela de duplo toque.
+6. **`tileCount` sempre múltiplo de 3.** Senão sobra ciclo pela metade e a fase fica invencível.
+7. Parâmetro declarado no tipo mas **não desestruturado** já virou bug real (`activeTrayCapacity`). Se declarou, use.
+
+## Arquitetura
+
+- **Regra de jogo**: `src/domain/recycling/` — `services/`, `policies/`, `value-objects/`. É aqui que lógica nova entra.
+- **`src/utils/gameLogic.ts` é fachada anticorrupção** ([ADR 0002](docs/adr/0002-dominio-atras-de-uma-fachada.md)), não a casa da lógica. Código novo importa do domínio direto.
+- **Persistência**: `src/storage/*.ts`, um arquivo por domínio.
+- **Apresentação**: `src/screens/`, `src/components/`. `GameScreen.tsx` já tem ~3000 linhas — não deixe crescer com lógica que pertence ao domínio.
+
+Duas trilhas de conteúdo, não confunda:
+- **Campanha** — 203 fases em `src/data/levels.ts` (mundos 1–8 × 25 + bônus 21 × 3). Tabuleiro varia a cada tentativa.
+- **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o *retry* re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
 
 ## Verificação (sempre antes de reportar terminado)
 
