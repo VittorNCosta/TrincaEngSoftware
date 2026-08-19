@@ -110,7 +110,7 @@ test('as 203 fases canonicas continuam byte-identicas', () => {
   assert.equal(LEVELS.reduce((total, level) => total + level.tiles.length, 0), 11415);
   assert.equal(
     sha256(JSON.stringify(LEVELS)),
-    '2191c8d3c80f9c5dde88882027223e8d3553d2567fe34a7967247ff4f11b668d',
+    'b1a762759e537452db9c465071bd3946b9ce8ff7f8fa512857e2a0a4c3e66bfa',
   );
 });
 

@@ -116,7 +116,11 @@ const solve = (board, tray, removedMask, trayMask, capacity, rule, budget, idToB
     return { path: [], solved: true };
   }
 
-  const stateKey = removedMask * 1000000000n + trayMask;
+  // Chaves de até CHAPTER_MAX_SUPPORTED_TILE_COUNT (102) bits cada; deslocar
+  // por 128 em vez de multiplicar por 1e9 (~30 bits) evita colisão entre
+  // estados diferentes assim que algum tabuleiro passa de ~30 peças, o que
+  // é o caso comum (capítulos chegam a 102).
+  const stateKey = (removedMask << 128n) | trayMask;
   if (deadStates.has(stateKey)) {
     return { reason: 'memo', solved: false };
   }

@@ -11,17 +11,27 @@
  * o anterior a ele — dois blocos idênticos em tamanho, mas o de trás sente
  * mais apertado.
  *
- * Em `gamma = 1` e `blockGrowth = 1` isto se APROXIMA do progresso linear de
- * sempre (`(posição - 1) / (total - 1)`), mas não é idêntico fora das
- * fronteiras de bloco: cada bloco pesa igual e a fração dentro dele usa
- * `(blockSpan - 1)` como base, não `(total - 1)` global — então o valor pode
- * divergir do linear puro em até ~1/blockSize no meio de cada bloco (ex.:
- * blockSize=10 em total=100 chega a ~0.5% de diferença na posição 50). Nas
- * bordas (position=1 e position=total) os dois sempre coincidem. É uma
- * generalização no espírito do progresso linear, não uma substituição
- * bit-exata — e o resultado é estritamente monotônico em `position` para
- * `gamma > 0`, então qualquer fórmula que já garantia "nunca regride" com
- * progresso linear continua garantindo com a curva.
+ * Dentro de cada bloco, a posição ocupa uma fatia
+ * `[withinBlock/blockSpan, (withinBlock+1)/blockSpan)` — não `[0, 1]`
+ * fechado —, então a última posição de um bloco fica sempre estritamente
+ * abaixo do valor bruto acumulado do bloco, que é onde a primeira posição do
+ * bloco seguinte começa. Isso evita que os dois empatem (uma versão anterior
+ * usava `blockSpan - 1` como base, fechava em 1 exatamente na última posição
+ * de cada bloco e colidia com o começo do próximo — dois níveis adjacentes
+ * saíam com a mesma dificuldade em toda fronteira de bloco).
+ *
+ * Só que esse valor bruto, sozinho, também não fecha em 1 na ÚLTIMA posição
+ * de todas (`position = total`) — mesmo motivo, um bloco a menos. Como o
+ * restante do código (tempo de estrela, contagem de mistério, faixa de
+ * peças) foi calibrado assumindo que a fase/mapa final de cada mundo/
+ * capítulo bate o teto exato, a função normaliza o bruto pelo seu próprio
+ * valor em `position = total`: `curveProgress(total, total, blockSize,
+ * curve)` vale exatamente 1 por construção (dividido por si mesmo), e todo
+ * o resto da curva escala junto — preserva a ordem estrita (dividir por uma
+ * constante positiva não inverte comparação) e ainda cobre os dois extremos
+ * exatos: `position = 1` sempre 0, `position = total` sempre 1.
+ * `tests/difficultyCurve.test.cjs` trava as duas garantias (monotonicidade
+ * estrita e os extremos exatos).
  */
 export type DifficultyCurve = {
   /** Expoente dentro do bloco. 1 = linear. Maior que 1 = achata o início do bloco e acelera o fim. */
@@ -37,26 +47,23 @@ export const LINEAR_DIFFICULTY_CURVE: DifficultyCurve = {
 };
 
 /**
- * Progresso curvado no intervalo [0, 1] para a `position` (1-indexada) de
- * `total` fases, com blocos de `blockSize` fases.
+ * Valor bruto (não normalizado no topo — ver `curveProgress`) da mesma
+ * curva. Isolado só para a normalização em `curveProgress` poder chamar de
+ * novo com `position = total` sem duplicar a lógica.
  */
-export const curveProgress = (
+const rawCurveProgress = (
   position: number,
   total: number,
   blockSize: number,
   curve: DifficultyCurve,
 ): number => {
-  if (total <= 1) {
-    return 0;
-  }
-
   const safeBlockSize = Math.max(1, Math.min(blockSize, total));
   const blockCount = Math.ceil(total / safeBlockSize);
   const blockIndex = Math.floor((position - 1) / safeBlockSize);
   const withinBlock = (position - 1) % safeBlockSize;
   // O último bloco pode ser mais curto quando blockSize não divide total.
   const blockSpan = Math.min(safeBlockSize, total - blockIndex * safeBlockSize);
-  const localFrac = blockSpan > 1 ? withinBlock / (blockSpan - 1) : 0;
+  const localFrac = withinBlock / blockSpan;
   const localCurved = localFrac ** curve.gamma;
 
   let cumulativeBefore = 0;
@@ -71,4 +78,26 @@ export const curveProgress = (
   const thisBlockWeight = curve.blockGrowth ** blockIndex;
 
   return (cumulativeBefore + localCurved * thisBlockWeight) / totalWeight;
+};
+
+/**
+ * Progresso curvado no intervalo [0, 1] para a `position` (1-indexada) de
+ * `total` fases, com blocos de `blockSize` fases. `position = 1` vale
+ * exatamente 0, `position = total` vale exatamente 1, estritamente
+ * crescente entre os dois — inclusive nas fronteiras de bloco.
+ */
+export const curveProgress = (
+  position: number,
+  total: number,
+  blockSize: number,
+  curve: DifficultyCurve,
+): number => {
+  if (total <= 1) {
+    return 0;
+  }
+
+  const raw = rawCurveProgress(position, total, blockSize, curve);
+  const rawMax = rawCurveProgress(total, total, blockSize, curve);
+
+  return rawMax > 0 ? raw / rawMax : raw;
 };
