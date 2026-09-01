@@ -138,6 +138,7 @@ const BONUS_FEEDBACK_VISIBLE_MS = 1050;
 const TILE_INSERT_POP_MS = 110;
 
 const gameWorld1Bg = require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
+const gameWorld1SceneBg = require('../../assets/map/map_world1_scene_bg.png') as ImageSourcePropType;
 const gameWorld2Bg = require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
 const gameWorld3Bg = require('../../assets/map/map_world3_game_bg.png') as ImageSourcePropType;
 const gameBonusBg = require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType;
@@ -326,6 +327,7 @@ const getGameBackground = (worldId: WorldId) => {
     case 21:
       return gameBonusBg;
     case 1:
+      return gameWorld1SceneBg;
     default:
       return gameWorld1Bg;
   }

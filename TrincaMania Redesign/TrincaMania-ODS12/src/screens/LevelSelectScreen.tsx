@@ -22,7 +22,10 @@ import { MapStoneTrail, TrailPoint } from '../components/MapStoneTrail';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { ScreenShell } from '../components/ScreenShell';
 import { ShopMapMarker } from '../components/ShopMapMarker';
-import { resolveLegacyCampaignMapAsset } from '../data/campaignMapAssets';
+import {
+  resolveLegacyCampaignMapAsset,
+  WORLD1_SCENE_BACKGROUND,
+} from '../data/campaignMapAssets';
 import { LEVELS } from '../data/levels';
 import { getWorldMapConfig } from '../data/worldMapConfigs';
 import { WORLDS, getWorldById } from '../data/worlds';
@@ -228,8 +231,14 @@ export function LevelSelectScreen({
     : segmentedMapConfig
       ? segmentedMapConfig.designSize.height
       : getWorldMapHeight(worldLevels.length);
-  const selectedMapBackground =
-    selectedMapConfig?.mode === 'legacy'
+  // Mundo 1 usa a arte de cena única no lugar dos blocos de floresta
+  // ilustrados: os blocos são opacos e cobrem qualquer fundo colocado atrás
+  // deles, então a troca precisa desligar os blocos (abaixo) e não só somar
+  // uma camada por trás.
+  const useWorld1SceneBackground = selectedWorldId === 1;
+  const selectedMapBackground = useWorld1SceneBackground
+    ? WORLD1_SCENE_BACKGROUND
+    : selectedMapConfig?.mode === 'legacy'
       ? resolveLegacyCampaignMapAsset(selectedMapConfig.rendererKey)
       : undefined;
   const bonusWorldChest = getBonusWorldChestProgress(progress);
@@ -725,10 +734,12 @@ export function LevelSelectScreen({
                   },
                 ]}
               >
-                <CampaignMapSegments
-                  segments={segmentedMapConfig.segments}
-                  transform={segmentedMapTransform}
-                />
+                {useWorld1SceneBackground ? null : (
+                  <CampaignMapSegments
+                    segments={segmentedMapConfig.segments}
+                    transform={segmentedMapTransform}
+                  />
+                )}
                 {segmentedMapConfig.levelAnchors.map((anchor) => {
                   const level = worldLevelById.get(anchor.levelId);
 

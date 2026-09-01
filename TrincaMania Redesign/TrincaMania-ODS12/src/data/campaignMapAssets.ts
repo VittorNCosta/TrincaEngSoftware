@@ -10,6 +10,8 @@ export const CAMPAIGN_MAP_SEGMENT_ASSETS = {
   'forest-trailhead': require('../../assets/map/world1/forest_06_trailhead.png') as ImageSourcePropType,
 } as const;
 
+export const WORLD1_SCENE_BACKGROUND = require('../../assets/map/map_world1_scene_bg.png') as ImageSourcePropType;
+
 export const LEGACY_CAMPAIGN_MAP_ASSETS = {
   'legacy-world-2': require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
   'legacy-world-3': require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
