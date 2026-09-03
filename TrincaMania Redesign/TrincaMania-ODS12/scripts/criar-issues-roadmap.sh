@@ -68,8 +68,8 @@ mk open --title 'F0-02 · Expor `node` no PATH não-interativo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P0,humano' --milestone 'Fundação'
-mk open --title 'F0-03 · Fixar a versão de Node do projeto' \
-  --body '`.nvmrc` com 20 + campo `engines`. O CI já usa Node 20; falta alinhar o local.
+mk done --title 'F0-03 · Fixar a versão de Node do projeto' \
+  --body '**Feito 03/09** (commit `c8311ab`). `.nvmrc` com `20` e `engines: node >=20.19.0`. O `engines` e que revelou o bug do CI-06: se a versao minima e a 20, o `npm test` tinha de funcionar da 20 em diante — e nao funcionava da 22.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1005,8 +1005,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
-mk open --title 'G-01 · Adotar Conventional Commits formalmente' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
+  --body '**Feito 03/09** (commit `c8311ab`). O historico ja seguia a convencao na pratica; isto trava o habito, porque o `release-please` versiona lendo o log — sem tipo confiavel na mensagem nao da para decidir entre major, minor e patch.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1014,8 +1014,8 @@ mk open --title 'G-01 · Adotar Conventional Commits formalmente' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-02 · `commitlint` + config convencional' \
-  --body 'Rejeita mensagem fora do padrão.
+mk done --title 'G-02 · `commitlint` + config convencional' \
+  --body '**Feito 03/09** (commit `c8311ab`). `commitlint.config.js` estendendo `config-conventional`, com `scope-enum` nas fatias reais do projeto (campanha, capitulos, dominio, ui, storage, audio, mapa, ci, deps, roadmap, testes) em vez de uma lista generica. Escopo segue **opcional**: obrigar em todo commit gera escopo inventado, que e pior que nenhum.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1023,8 +1023,8 @@ mk open --title 'G-02 · `commitlint` + config convencional' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-03 · `husky` com hook `commit-msg`' \
-  --body 'Depende de F0-02 — sem node no PATH o hook não roda.
+mk done --title 'G-03 · Hook `commit-msg` rodando o commitlint' \
+  --body '**Feito 03/09** (commit `c8311ab`). **Sem husky, de proposito:** o husky espera o `.git` no diretorio de onde roda, e aqui nao esta — o repositorio e `TrincaEngSoftware/` e o projeto vive dois niveis abaixo. O que o husky faria de util e um `git config core.hooksPath`, entao `scripts/instalar-hooks.js` faz essa linha com o calculo de caminho certo, no `prepare`. Hooks versionados em `.githooks/`. O que travava era F0-02: hook roda em shell nao-interativo, que nao le o `.zshrc` onde o nvm vive — o `common.sh` procura no nvm a versao do `.nvmrc` antes de desistir. Testado com `env -i PATH=/usr/bin:/bin`.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1032,8 +1032,8 @@ mk open --title 'G-03 · `husky` com hook `commit-msg`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-04 · `lint-staged` no `pre-commit`' \
-  --body 'eslint + prettier só nos arquivos staged.
+mk done --title 'G-04 · `lint-staged` no `pre-commit`' \
+  --body '**Feito 03/09** (commit `c8311ab`). `eslint --fix` e `prettier --write` so nos arquivos staged.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1041,8 +1041,8 @@ mk open --title 'G-04 · `lint-staged` no `pre-commit`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-05 · Hook `pre-push` com typecheck' \
-  --body 'Barato e evita CI vermelho.
+mk done --title 'G-05 · Hook `pre-push` com typecheck' \
+  --body '**Feito 03/09** (commit `c8311ab`). Barato e evita CI vermelho por erro de tipo.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1068,8 +1068,8 @@ mk open --title 'G-07 · Criar o `CHANGELOG.md`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-08 · Alinhar `package.json:version` com `app.json:version`' \
-  --body 'Hoje ambos 1.0.0, mas sem sincronia automática.
+mk done --title 'G-08 · Versão num lugar só' \
+  --body '**Feito 03/09** (commit `c8311ab`). `app.config.js` deriva `version` do `package.json`, e o campo saiu do `app.json`. Sem isso o release-please bumparia o `package.json` e o APK sairia com a versao anterior — **sem quebrar nada**, que e o pior tipo de erro. `versionCode`/`buildNumber` ficam com o EAS. De tabela, o `app.json` ainda publicava `TileAdventure-ODS`, sobra do jogo pre-redesign.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1131,8 +1131,8 @@ mk open --title 'G-14 · Padronizar as labels' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-15 · Revisar o `.gitattributes`' \
-  --body 'Faltam `*.ttf`, `*.otf`, `*.aab`, `*.keystore`.
+mk done --title 'G-15 · Revisar o `.gitattributes`' \
+  --body '**Feito 03/09** (commit `c8311ab`). `*.ttf`, `*.otf`, `*.aab` e `*.keystore` marcados como binario.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1149,8 +1149,8 @@ mk open --title 'G-16 · Decidir sobre Git LFS para os PNGs' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,humano' --milestone 'Git e versionamento'
-mk open --title 'G-17 · `.gitignore`: `.eas/`, `*.aab`, `coverage/`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-17 · `.gitignore`: build do EAS, `*.aab`, `coverage/`' \
+  --body '**Feito 03/09** (commit `c8311ab`). **Divergencia do texto original:** pedia ignorar `.eas/` inteiro, mas CI-23 quer `.eas/workflows/` versionado — ignora `.eas/build-cache/` no lugar.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1304,8 +1304,8 @@ mk open --title 'CI-14 · Criar o secret `EXPO_TOKEN`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,humano' --milestone 'CI/CD'
-mk open --title 'CI-15 · Migrar `eas.json` para `appVersionSource: "remote"`' \
-  --body 'Hoje é `local`. Remote é o recomendado e habilita o auto-incremento.
+mk done --title 'CI-15 · Migrar `eas.json` para `appVersionSource: "remote"`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Sai de tabela com G-08: com a versao derivada do `package.json`, `versionCode` e `buildNumber` precisam de dono, e o dono e o EAS.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1313,8 +1313,8 @@ mk open --title 'CI-15 · Migrar `eas.json` para `appVersionSource: "remote"`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-16 · `autoIncrement: true` no perfil de produção' \
-  --body 'Incrementa `versionCode` sozinho.
+mk done --title 'CI-16 · `autoIncrement: true` no perfil de produção' \
+  --body '**Feito 03/09** (commit `c8311ab`).
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1322,8 +1322,8 @@ mk open --title 'CI-16 · `autoIncrement: true` no perfil de produção' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
-  --body 'Hoje só existem `preview` e `production`.
+mk done --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Com `developmentClient: true` e APK de distribuicao interna. O `preview` tambem ganhou `distribution: internal`.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1486,8 +1486,8 @@ mk open --title 'SEC-10 · OpenSSF Scorecard' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-11 · Auditar `android.permissions`' \
-  --body 'Hoje é `[]` — confirmar que continua assim depois de cada lib nova.
+mk done --title 'SEC-11 · Auditar `android.permissions`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Continua `[]`, e agora `tests/appConfig.test.cjs` reprova se deixar de ser — que era a parte que faltava, porque o risco nao e o valor de hoje, e a lib nova de amanha.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1495,8 +1495,8 @@ mk open --title 'SEC-11 · Auditar `android.permissions`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-12 · Travar a config do `expo-audio` em teste' \
-  --body '`microphonePermission: false`, `recordAudioAndroid: false` — está certo hoje.
+mk done --title 'SEC-12 · Travar a config do `expo-audio` em teste' \
+  --body '**Feito 03/09** (commit `c8311ab`). `microphonePermission: false` e `recordAudioAndroid: false` travados em teste.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1504,8 +1504,8 @@ mk open --title 'SEC-12 · Travar a config do `expo-audio` em teste' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-13 · Confirmar que não há segredo em `app.json`/`eas.json`' \
-  --body 'O `projectId` é público; conferir o resto.
+mk done --title 'SEC-13 · Confirmar que não há segredo em `app.json`/`eas.json`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Conferido e travado em teste. O `projectId` e publico por definicao; o resto esta limpo.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -1842,4 +1842,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 197 issues (19 já criadas fechadas) =="
+echo "== pronto: 197 issues (34 já criadas fechadas) =="
