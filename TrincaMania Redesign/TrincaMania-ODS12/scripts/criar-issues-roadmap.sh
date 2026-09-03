@@ -1331,8 +1331,8 @@ mk done --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-18 · Workflow de build de preview em PR' \
-  --body 'APK por PR para testar no aparelho.
+mk done --title 'CI-18 · Workflow de build de preview em PR' \
+  --body '**Feito 03/09.** `.github/workflows/build.yml`, separado do `ci.yml`: o CI verifica todo push e tem de ser rapido e gratuito, isto gasta minuto de build de terceiro. **Divergencia:** o texto pedia APK por PR, e saiu APK por PR **rotulado** com `build:preview` — buildar todo push de todo PR queimaria a cota do EAS em troca de APKs que ninguem instala. Com o rotulo o build sai quando alguem de fato quer testar no aparelho, e `synchronize` faz o PR rotulado rebuildar a cada push. Enquanto CI-14 nao existir, o job `checagem` devolve um aviso e os builds sao pulados: o workflow fica **verde e inerte** em vez de vermelho.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1340,8 +1340,8 @@ mk open --title 'CI-18 · Workflow de build de preview em PR' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-19 · Workflow de build de produção em tag' \
-  --body 'Dispara na tag do release-please.
+mk done --title 'CI-19 · Workflow de build de produção em tag' \
+  --body '**Feito 03/09.** Dispara em `push` de tag `v*` — a que o release-please cria — e tambem por `workflow_dispatch` com escolha de perfil. Usa `--no-wait`: esperar o build custa 15 a 30 min de runner do GitHub olhando uma fila que nao e nossa, e o link no resumo do job resolve. Nao usa `expo/expo-github-action` — o que ela faz de essencial e exportar o `EXPO_TOKEN`, que o `env:` ja faz, e uma action a menos e um terceiro a menos com acesso ao token (CI-05).
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1842,4 +1842,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 197 issues (34 já criadas fechadas) =="
+echo "== pronto: 197 issues (36 já criadas fechadas) =="
