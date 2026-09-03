@@ -1241,8 +1241,17 @@ mk done --title 'CI-08 · Rodar `npx expo-doctor` no CI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-09 · Cobertura de teste com threshold' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-09 · Cobertura de teste com threshold' \
+  --body '**Feito 03/09.** `npm run cobertura` (`scripts/cobertura.js`), job proprio no CI. **Nao e `jest --coverage`, de proposito:** o Jest aqui roda 4 smoke tests de componente, e as 128 assercoes de regra de jogo, storage e dominio sao `node:test` em `tests/*.test.cjs`, que ele nao coleta — um threshold sobre o Jest mediria 4 arquivos de UI e chamaria isso de cobertura do projeto. O piso usa a cobertura nativa do `node:test` e segue o idioma dos outros guardas: e o que a suite cobre hoje (85,70% linha / 87,42% ramo / 87,03% funcao), gravado em `scripts/cobertura-minima.json`, e cair reprova. Baixar exige `--atualizar --permitir-queda`, para afrouxar a regua aparecer no diff. A conta e nossa porque o Node 20 nao tem `--test-coverage-lines` — so o 22+ tem — e a matrix roda os dois.
+
+**Responsável:** Claude Code
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
+mk done --title 'CI-09a · Fixar o job de cobertura numa versao de Node' \
+  --body '**Feito 03/09.** Saiu de CI-09. O mesmo codigo e os mesmos 128 testes medem 85,70% de linha no Node 20 e 79,57% no Node 24: seis pontos que nao tem nada a ver com teste, e sim com o que cada V8 instrumenta. Entao o job de cobertura fica fora da matrix, no Node 20 do `engines`, e o piso grava o `nodeMajor` em que foi medido — rodar noutra versao devolve a explicacao em vez de um vermelho falso.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1833,4 +1842,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 196 issues (15 já criadas fechadas) =="
+echo "== pronto: 197 issues (17 já criadas fechadas) =="
