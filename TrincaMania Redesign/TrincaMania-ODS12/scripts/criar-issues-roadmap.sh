@@ -388,12 +388,12 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'C-30 · Decidir e implementar o destino dos Capítulos' \
   --body 'Esconder do menu, manter como modo infinito pós-jogo, ou remover. Hoje `ChaptersScreen` é acessível.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,humano' --milestone 'Conteúdo 10×10'
 
 # --- Arte ---
 mk open --title 'A-01 · Escrever o art bible' \
@@ -435,255 +435,255 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-09 · Mundo 3 · Central de Materiais — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-10 · Mundo 3 · Central de Materiais — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-19 · Mundo 8 · Fórum da Economia Circular — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-21 · Mundo 9 · Oficina do Reparo — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-22 · Mundo 9 · Oficina do Reparo — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-23 · Mundo 10 · Cidade Circular — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-24 · Mundo 10 · Cidade Circular — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-25 · Ícone do app 1024×1024' \
   --body 'Hoje 1254×1254, fora do padrão Expo. Símbolo de reciclagem + trinca, sem texto.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-26 · Adaptive icon Android 1024×1024' \
   --body 'Elemento dentro do círculo de 66%. O `backgroundColor` hoje é `#4B148C` — roxo, fora da paleta CONAMA.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-27 · Splash screen' \
   --body '`SplashIntroScreen.tsx` tem 537 linhas — conferir o que já é desenhado em código.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-28 · Selo de marco “Descanso” 320×320' \
   --body 'Substitui `forest_rest_cart.png`, que é carrinho de floresta do tema antigo. Proposta: carrinho de catador.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-29 · Selo de marco “Loja” 320×320' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-30 · Selo de marco “Guardião” 320×320' \
   --body 'Não existe hoje.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-31 · Marcador de portal entre mundos 320×320' \
   --body 'Hoje é `forest-portal-rune` — runa é fantasia. Proposta: seta de ciclo.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-32 · Nós de fase: bloqueado, atual, completo' \
   --body 'Avaliar se vira SVG em código, como as peças já são.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P2
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P2,' --milestone 'Arte'
+  --label 'arte,P2,claude-code,humano' --milestone 'Arte'
 mk open --title 'A-33 · Comprimir todos os PNGs para ≤ 400 KB' \
   --body '`assets/` tem ~50 MB hoje. pngquant, oxipng ou TinyPNG.
 
@@ -714,104 +714,104 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-36 · Integrar cada asset entregue no código' \
   --body '`campaignMapAssets.ts` e `getGameBackground`.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano' --milestone 'Arte'
 
 # --- Som ---
 mk open --title 'S-01 · `ambient_parque.mp3` — Mundo 1' \
   --body 'Pássaros distantes, folhas, passos ocasionais.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-02 · `ambient_vale.mp3` — Mundo 2' \
   --body 'Esteira ao longe, vento de vale, maquinário abafado.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-03 · `ambient_central.mp3` — Mundo 3' \
   --body 'Galpão amplo com eco, prensa distante, ventilação.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-04 · `ambient_viveiro.mp3` — Mundo 4' \
   --body 'Regador, insetos, lona ao vento.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-05 · `ambient_usina.mp3` — Mundo 5' \
   --body 'Zumbido grave de biodigestor, vapor, pá revolvendo.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-06 · `ambient_cooperativa.mp3` — Mundo 6' \
   --body 'Carrinho de metal, fardos, vozes distantes indistintas.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-07 · `ambient_rota.mp3` — Mundo 7' \
   --body 'Rodovia distante, caminhão manobrando, engradado.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-08 · `ambient_forum.mp3` — Mundo 8' \
   --body 'Praça aberta, murmúrio cívico, bandeira ao vento.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-09 · `ambient_oficina.mp3` — Mundo 9' \
   --body 'Chave de fenda, gaveta de peças, ferro de solda.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-10 · `ambient_cidade.mp3` — Mundo 10' \
   --body 'Bonde, cidade calma, folhagem urbana, sem buzina.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
   --body '`beach | celestial | crystal | forest | mountain | snow | stars | volcano`.
 
@@ -833,12 +833,12 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'S-13 · Integrar os 10 ambientes em `sounds.ts`' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,' --milestone 'Som'
+  --label 'som,P0,claude-code,humano' --milestone 'Som'
 mk open --title 'S-14 · Revisar os SFX de voz' \
   --body '`voice_amazing`, `voice_excellent` e afins — conferir se o tom bate com o tema.
 
@@ -1691,12 +1691,12 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'R-04 · Escrever a ficha da loja' \
   --body 'Título, descrição curta e longa, com o enquadramento ODS 12.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,' --milestone 'Release'
+  --label 'release,P0,claude-code,humano' --milestone 'Release'
 mk open --title 'R-05 · Capturar 8 screenshots de telefone' \
   --body 'Mínimo 2, ideal 8.
 
@@ -1709,21 +1709,21 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'R-06 · Feature graphic 1024×500' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,' --milestone 'Release'
+  --label 'release,P0,claude-code,humano' --milestone 'Release'
 mk open --title 'R-07 · Ícone da loja 512×512' \
   --body '_Sem detalhe adicional no roadmap._
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,' --milestone 'Release'
+  --label 'release,P0,claude-code,humano' --milestone 'Release'
 mk open --title 'R-08 · Vídeo de preview' \
   --body 'Opcional.
 
@@ -1736,12 +1736,12 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'R-09 · Hospedar a política de privacidade' \
   --body 'Obrigatória. Como o jogo é offline, é curta.
 
-**Responsável:** undefined
+**Responsável:** Claude Code + Você
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,' --milestone 'Release'
+  --label 'release,P0,claude-code,humano' --milestone 'Release'
 mk open --title 'R-10 · Responder o questionário de classificação etária' \
   --body '_Sem detalhe adicional no roadmap._
 

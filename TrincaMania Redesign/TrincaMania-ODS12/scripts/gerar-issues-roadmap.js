@@ -74,6 +74,7 @@ const MILESTONE = {
 const WHO_LABEL = {
   cc: 'claude-code',
   voce: 'humano',
+  both: 'claude-code,humano',
   'cc-voce': 'claude-code',
   'voce-cc': 'humano',
 };
@@ -81,6 +82,7 @@ const WHO_LABEL = {
 const WHO_TEXT = {
   cc: 'Claude Code',
   voce: 'Você',
+  both: 'Claude Code + Você',
   'cc-voce': 'Claude Code → você',
   'voce-cc': 'Você → Claude Code',
 };
@@ -166,6 +168,9 @@ BLOCKS.forEach((block) => {
       '',
       'Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.',
     ].join('\n');
+    if (!WHO_LABEL[who] || !WHO_TEXT[who]) {
+      throw new Error(`"${id}": valor de "quem" sem mapeamento em WHO_LABEL/WHO_TEXT: ${JSON.stringify(who)}`);
+    }
     const labels = [STREAM_LABEL[block.k], `P${prio}`, WHO_LABEL[who]].join(',');
 
     lines.push(
