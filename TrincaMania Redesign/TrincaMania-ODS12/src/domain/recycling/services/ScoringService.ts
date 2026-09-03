@@ -24,7 +24,10 @@ const normalizeElapsedSeconds = (elapsedSeconds: number) =>
 const normalizePreviousBestStars = (stars: number) =>
   Number.isFinite(stars) ? Math.max(0, Math.min(3, Math.floor(stars))) : 0;
 
-export const calculateStarsByTime = (elapsedSeconds: number, level: Level): StarRating => {
+export const calculateStarsByTime = (
+  elapsedSeconds: number,
+  level: Level,
+): StarRating => {
   const frozenElapsedSeconds = normalizeElapsedSeconds(elapsedSeconds);
 
   if (frozenElapsedSeconds <= level.starTimeLimits.threeStars) {
@@ -44,7 +47,8 @@ export const createVictoryResultSnapshot = ({
   previousBestStars = 0,
 }: VictoryResultSnapshotInput): VictoryResultSnapshot => {
   const frozenElapsedSeconds = normalizeElapsedSeconds(elapsedSeconds);
-  const normalizedPreviousBestStars = normalizePreviousBestStars(previousBestStars);
+  const normalizedPreviousBestStars =
+    normalizePreviousBestStars(previousBestStars);
   const earnedStars = calculateStarsByTime(frozenElapsedSeconds, level);
 
   return {
@@ -52,7 +56,10 @@ export const createVictoryResultSnapshot = ({
     elapsedSeconds: frozenElapsedSeconds,
     isNewRecord: earnedStars > normalizedPreviousBestStars,
     previousBestStars: normalizedPreviousBestStars,
-    savedStars: Math.max(earnedStars, normalizedPreviousBestStars) as StarRating,
+    savedStars: Math.max(
+      earnedStars,
+      normalizedPreviousBestStars,
+    ) as StarRating,
   };
 };
 
@@ -98,14 +105,18 @@ export const isBonusLevel = (level: Pick<Level, 'id' | 'worldId'>) =>
 export const getCoinRewardForLevel = (
   stars: number,
   level?: Pick<Level, 'id' | 'worldId'>,
-) => (level && isBonusLevel(level) ? calculateBonusCoinReward(stars) : calculateCoinReward(stars));
+) =>
+  level && isBonusLevel(level)
+    ? calculateBonusCoinReward(stars)
+    : calculateCoinReward(stars);
 
 export const getIncrementalCoinRewardForLevel = (
   previousStars: number,
   newStars: number,
   level?: Pick<Level, 'id' | 'worldId'>,
 ) => {
-  const previousReward = previousStars > 0 ? getCoinRewardForLevel(previousStars, level) : 0;
+  const previousReward =
+    previousStars > 0 ? getCoinRewardForLevel(previousStars, level) : 0;
   const newReward = getCoinRewardForLevel(newStars, level);
 
   return Math.max(0, newReward - previousReward);

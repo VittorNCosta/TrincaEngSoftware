@@ -32,7 +32,7 @@ sombra por cima — é por isso que o fundo do jogo parece outro.
 
 No `render`, dentro de `<View pointerEvents="none" style={styles.sceneOverlay}>`, procure:
 
-~~~tsx
+```tsx
           <View
             style={[
               styles.sceneWash,
@@ -53,7 +53,7 @@ No `render`, dentro de `<View pointerEvents="none" style={styles.sceneOverlay}>`
               level.worldId === 21 ? styles.sceneWashBottomBonus : null,
             ]}
           />
-~~~
+```
 
 Remova esse trecho inteiro. Depois remova do `StyleSheet.create` os estilos que ficam sem
 uso: `sceneWash`, `sceneWashMountain`, `sceneWashCrystal`, `sceneWashBottom`,
@@ -75,8 +75,8 @@ A edição pedia bolha de 70 → 56dp, wrapper de 98×88 → 84×76 e `MAP_NODE_
 para caber 7 bolhas por tela em vez de 6.
 
 Os alvos numéricos ainda batem, mas o `MapLevelNode` foi redesenhado depois que o patch foi
-escrito e ganhou um `innerDisc` de 50×50, com o comentário: *"50 de 70 mantém a proporção do
-3b — o aro colorido precisa desse peso para a bolha ler como verde/dourada de longe"*. Numa
+escrito e ganhou um `innerDisc` de 50×50, com o comentário: _"50 de 70 mantém a proporção do
+3b — o aro colorido precisa desse peso para a bolha ler como verde/dourada de longe"_. Numa
 bolha de 56dp com borda de 3dp a caixa interna tem exatamente 50dp: o disco creme preenche a
 bolha toda e o aro colorido some. Os selos de check/cadeado (22–23dp) também ficam
 desproporcionais.

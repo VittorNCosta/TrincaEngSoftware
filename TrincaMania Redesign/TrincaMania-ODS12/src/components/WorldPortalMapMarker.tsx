@@ -24,7 +24,10 @@ function WorldPortalMapMarkerBase({
       accessibilityState={{ disabled: locked, selected }}
       hitSlop={6}
       onPress={onPress}
-      style={({ pressed }) => [styles.pressable, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [
+        styles.pressable,
+        pressed ? styles.pressed : null,
+      ]}
     >
       <View pointerEvents="none" style={styles.marker}>
         <View style={styles.groundShadow} />
@@ -38,7 +41,9 @@ function WorldPortalMapMarkerBase({
         {selected ? <View style={styles.selectedGround} /> : null}
 
         <View style={[styles.runeRing, locked ? styles.runeRingLocked : null]}>
-          <View style={[styles.runeInner, locked ? styles.runeInnerLocked : null]} />
+          <View
+            style={[styles.runeInner, locked ? styles.runeInnerLocked : null]}
+          />
           <View style={styles.iconDisc}>
             <GameIcon
               muted={locked}
@@ -56,7 +61,12 @@ function WorldPortalMapMarkerBase({
           ) : null}
         </View>
 
-        <View style={[styles.labelSupport, locked ? styles.labelSupportLocked : null]} />
+        <View
+          style={[
+            styles.labelSupport,
+            locked ? styles.labelSupportLocked : null,
+          ]}
+        />
         <View
           style={[
             styles.labelStone,

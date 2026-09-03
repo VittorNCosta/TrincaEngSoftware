@@ -18,7 +18,10 @@ require.extensions['.ts'] = (module, filename) => {
 };
 
 const { LEVELS } = require('../src/data/levels.ts');
-const { CHAPTER_LEVELS, buildChapterLevel } = require('../src/data/chapters.ts');
+const {
+  CHAPTER_LEVELS,
+  buildChapterLevel,
+} = require('../src/data/chapters.ts');
 const { generatePlayableLevel } = require('../src/utils/levelGenerator.ts');
 const {
   countRemainingTiles,
@@ -26,9 +29,14 @@ const {
   revealAvailableMysteryTiles,
 } = require('../src/domain/recycling/services/BoardService.ts');
 const { playTile } = require('../src/domain/recycling/services/PlayService.ts');
-const { activeMatchRule } = require('../src/domain/recycling/policies/MatchRuleRegistry.ts');
+const {
+  activeMatchRule,
+} = require('../src/domain/recycling/policies/MatchRuleRegistry.ts');
 const { BASE_TRAY_CAPACITY } = require('../src/storage/trayBoostStorage.ts');
-const { createSeededRandom, stableHash } = require('../src/utils/deterministicRandom.ts');
+const {
+  createSeededRandom,
+  stableHash,
+} = require('../src/utils/deterministicRandom.ts');
 
 /**
  * "Jogador simulado": não é um teste unitário, é uma automação que joga o
@@ -89,8 +97,12 @@ const scoreCandidates = (board, tray, capacity, rule) => {
       // Avança um material que já está na bandeja em vez de abrir outro.
       score = 500;
     } else {
-      const sameMaterialPlayable = playable.filter((candidate) => candidate.kind === tile.kind);
-      const rolesPresent = new Set(sameMaterialPlayable.map((candidate) => candidate.role));
+      const sameMaterialPlayable = playable.filter(
+        (candidate) => candidate.kind === tile.kind,
+      );
+      const rolesPresent = new Set(
+        sameMaterialPlayable.map((candidate) => candidate.role),
+      );
       const isSafeToOpen = tripleRoles.every((role) => rolesPresent.has(role));
       // "Abertura segura": as outras duas peças do material já estão
       // jogáveis agora, então dá para fechar em até dois lances sem
@@ -111,7 +123,17 @@ const scoreCandidates = (board, tray, capacity, rule) => {
   return scored;
 };
 
-const solve = (board, tray, removedMask, trayMask, capacity, rule, budget, idToBit, deadStates) => {
+const solve = (
+  board,
+  tray,
+  removedMask,
+  trayMask,
+  capacity,
+  rule,
+  budget,
+  idToBit,
+  deadStates,
+) => {
   if (countRemainingTiles(board) === 0) {
     return { path: [], solved: true };
   }
@@ -180,10 +202,22 @@ const simulateLevel = (level, trayCapacity, rule) => {
   const board = revealAvailableMysteryTiles(
     level.tiles.map((tile) => ({ ...tile, removed: false })),
   );
-  const idToBit = new Map(level.tiles.map((tile, index) => [tile.id, 1n << BigInt(index)]));
+  const idToBit = new Map(
+    level.tiles.map((tile, index) => [tile.id, 1n << BigInt(index)]),
+  );
   const budget = { count: NODE_BUDGET };
   const deadStates = new Set();
-  const result = solve(board, [], 0n, 0n, trayCapacity, rule, budget, idToBit, deadStates);
+  const result = solve(
+    board,
+    [],
+    0n,
+    0n,
+    trayCapacity,
+    rule,
+    budget,
+    idToBit,
+    deadStates,
+  );
 
   return { ...result, nodesUsed: NODE_BUDGET - budget.count };
 };
@@ -211,10 +245,21 @@ test('todas as 203 fases da campanha são vencíveis por um jogador simulado, ba
   const failures = [];
 
   LEVELS.forEach((baseLevel, index) => {
-    for (let seedIndex = 0; seedIndex < CAMPAIGN_SEEDS_PER_LEVEL; seedIndex += 1) {
-      const random = createSeededRandom(stableHash(`${baseLevel.id}:playthrough:${seedIndex}`));
+    for (
+      let seedIndex = 0;
+      seedIndex < CAMPAIGN_SEEDS_PER_LEVEL;
+      seedIndex += 1
+    ) {
+      const random = createSeededRandom(
+        stableHash(`${baseLevel.id}:playthrough:${seedIndex}`),
+      );
       const level = generatePlayableLevel(baseLevel.id, { random });
-      const failure = playSession(`${baseLevel.id} (sessão ${seedIndex + 1})`, level, BASE_TRAY_CAPACITY, activeMatchRule);
+      const failure = playSession(
+        `${baseLevel.id} (sessão ${seedIndex + 1})`,
+        level,
+        BASE_TRAY_CAPACITY,
+        activeMatchRule,
+      );
       if (failure) {
         failures.push(failure);
       }
@@ -233,22 +278,38 @@ test('todos os 1000 mapas de capítulo são vencíveis por um jogador simulado, 
 
   CHAPTER_LEVELS.forEach(({ id }, index) => {
     const defaultLevel = buildChapterLevel(id);
-    const defaultFailure = playSession(`${id} (abrir)`, defaultLevel, BASE_TRAY_CAPACITY, activeMatchRule);
+    const defaultFailure = playSession(
+      `${id} (abrir)`,
+      defaultLevel,
+      BASE_TRAY_CAPACITY,
+      activeMatchRule,
+    );
     if (defaultFailure) {
       failures.push(defaultFailure);
     }
 
-    for (let seedIndex = 0; seedIndex < CHAPTER_RETRY_SEEDS_PER_MAP; seedIndex += 1) {
+    for (
+      let seedIndex = 0;
+      seedIndex < CHAPTER_RETRY_SEEDS_PER_MAP;
+      seedIndex += 1
+    ) {
       const random = createSeededRandom(stableHash(`${id}:retry:${seedIndex}`));
       const level = buildChapterLevel(id, { random });
-      const failure = playSession(`${id} (retry ${seedIndex + 1})`, level, BASE_TRAY_CAPACITY, activeMatchRule);
+      const failure = playSession(
+        `${id} (retry ${seedIndex + 1})`,
+        level,
+        BASE_TRAY_CAPACITY,
+        activeMatchRule,
+      );
       if (failure) {
         failures.push(failure);
       }
     }
 
     if ((index + 1) % 200 === 0) {
-      console.log(`  ...capítulos: ${index + 1}/${CHAPTER_LEVELS.length} mapas jogados`);
+      console.log(
+        `  ...capítulos: ${index + 1}/${CHAPTER_LEVELS.length} mapas jogados`,
+      );
     }
   });
 

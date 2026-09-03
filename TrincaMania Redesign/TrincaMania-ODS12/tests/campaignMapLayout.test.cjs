@@ -71,8 +71,14 @@ test('frame visual e toque compartilham exatamente o mesmo centro', () => {
     assert.ok(frames.touch.height >= 44);
     assert.ok(frames.touch.left <= frames.visual.left);
     assert.ok(frames.touch.top <= frames.visual.top);
-    assert.ok(frames.touch.left + frames.touch.width >= frames.visual.left + frames.visual.width);
-    assert.ok(frames.touch.top + frames.touch.height >= frames.visual.top + frames.visual.height);
+    assert.ok(
+      frames.touch.left + frames.touch.width >=
+        frames.visual.left + frames.visual.width,
+    );
+    assert.ok(
+      frames.touch.top + frames.touch.height >=
+        frames.visual.top + frames.visual.height,
+    );
   });
 });
 
@@ -89,8 +95,14 @@ test('nós usam a âncora de contato no solo sem separar arte e hitbox', () => {
   const transformedAnchor = transformCampaignMapPoint(anchor.point, transform);
 
   closeTo(frames.visual.top + frames.visual.height, transformedAnchor.y);
-  closeTo(getCampaignMapFrameCenter(frames.touch).x, getCampaignMapFrameCenter(frames.visual).x);
-  closeTo(getCampaignMapFrameCenter(frames.touch).y, getCampaignMapFrameCenter(frames.visual).y);
+  closeTo(
+    getCampaignMapFrameCenter(frames.touch).x,
+    getCampaignMapFrameCenter(frames.visual).x,
+  );
+  closeTo(
+    getCampaignMapFrameCenter(frames.touch).y,
+    getCampaignMapFrameCenter(frames.visual).y,
+  );
 });
 
 test('overlap visual dos segmentos também escala proporcionalmente', () => {
@@ -101,9 +113,13 @@ test('overlap visual dos segmentos também escala proporcionalmente', () => {
       const previous = BOSQUE_MAP_CONFIG.segments[index - 1];
       const current = BOSQUE_MAP_CONFIG.segments[index];
       const renderedOverlap =
-        (previous.top + previous.height) * transform.scale - current.top * transform.scale;
+        (previous.top + previous.height) * transform.scale -
+        current.top * transform.scale;
 
-      closeTo(renderedOverlap, BOSQUE_MAP_CONFIG.segmentOverlap * transform.scale);
+      closeTo(
+        renderedOverlap,
+        BOSQUE_MAP_CONFIG.segmentOverlap * transform.scale,
+      );
     }
   });
 });
@@ -124,7 +140,8 @@ test('abertura respeita HUD, começo, meio e fim nas três telas alvo', () => {
         fixedBottomInset: BOSQUE_MAP_CONFIG.openingInsets.bottom,
         fixedTopInset: BOSQUE_MAP_CONFIG.openingInsets.top,
         focusRatio: BOSQUE_MAP_CONFIG.openingFocusRatio,
-        focusY: BOSQUE_MAP_CONFIG.levelAnchors[levelIndex].point.y * transform.scale,
+        focusY:
+          BOSQUE_MAP_CONFIG.levelAnchors[levelIndex].point.y * transform.scale,
         viewportHeight: height,
       });
 
@@ -174,7 +191,10 @@ test('primeira fase e conjunto final permanecem fora dos overlays fixos', () => 
 });
 
 test('conteúdo menor que a viewport possui scroll e abertura zerados', () => {
-  assert.deepEqual(getCampaignMapScrollBounds(500, 800), { maximum: 0, minimum: 0 });
+  assert.deepEqual(getCampaignMapScrollBounds(500, 800), {
+    maximum: 0,
+    minimum: 0,
+  });
   assert.equal(
     getCampaignMapOpeningScrollOffset({
       contentHeight: 500,
@@ -205,7 +225,10 @@ test('foco preserva primeira desbloqueada incompleta e final do mundo concluído
     'w1-025',
   );
   assert.equal(
-    getCampaignMapFocusLevelId(levelIds, { completedLevelIds: [], unlockedLevelIds: [] }),
+    getCampaignMapFocusLevelId(levelIds, {
+      completedLevelIds: [],
+      unlockedLevelIds: [],
+    }),
     'w1-001',
   );
 });
@@ -216,10 +239,22 @@ test('estado de fase mantém precedência completed, locked, current e available
     unlockedLevelIds: ['done', 'current', 'available'],
   };
 
-  assert.equal(deriveCampaignMapLevelState('done', 'done', progress), 'completed');
-  assert.equal(deriveCampaignMapLevelState('locked', 'locked', progress), 'locked');
-  assert.equal(deriveCampaignMapLevelState('current', 'current', progress), 'current');
-  assert.equal(deriveCampaignMapLevelState('available', 'current', progress), 'available');
+  assert.equal(
+    deriveCampaignMapLevelState('done', 'done', progress),
+    'completed',
+  );
+  assert.equal(
+    deriveCampaignMapLevelState('locked', 'locked', progress),
+    'locked',
+  );
+  assert.equal(
+    deriveCampaignMapLevelState('current', 'current', progress),
+    'current',
+  );
+  assert.equal(
+    deriveCampaignMapLevelState('available', 'current', progress),
+    'available',
+  );
 });
 
 test('seleção rejeita mundo bloqueado sem perder um fallback desbloqueado', () => {

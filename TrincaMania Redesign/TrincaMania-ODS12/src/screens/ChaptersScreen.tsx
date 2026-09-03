@@ -3,7 +3,11 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from '../components/GameIcon';
 import { ScreenShell } from '../components/ScreenShell';
-import { CHAPTERS, getChapter, getChapterLevelSummaries } from '../data/chapters';
+import {
+  CHAPTERS,
+  getChapter,
+  getChapterLevelSummaries,
+} from '../data/chapters';
 import { getChapterVisualIdentity } from '../data/chapterVisualIdentity';
 import {
   ChapterProgressState,
@@ -62,7 +66,10 @@ export function ChaptersScreen({
           <Pressable
             accessibilityRole="button"
             onPress={() => setOpenChapterId(undefined)}
-            style={({ pressed }) => [styles.backButton, pressed ? styles.pressed : null]}
+            style={({ pressed }) => [
+              styles.backButton,
+              pressed ? styles.pressed : null,
+            ]}
           >
             <GameIcon name="back" size={22} />
           </Pressable>
@@ -96,7 +103,9 @@ export function ChaptersScreen({
                 onPress={() => onSelectChapterLevel(item.id)}
                 style={({ pressed }) => [
                   styles.mapTile,
-                  locked ? styles.mapTileLocked : { borderColor: identity.accentColor },
+                  locked
+                    ? styles.mapTileLocked
+                    : { borderColor: identity.accentColor },
                   stars > 0 ? styles.mapTileDone : null,
                   pressed ? styles.pressed : null,
                 ]}
@@ -137,7 +146,10 @@ export function ChaptersScreen({
         <Pressable
           accessibilityRole="button"
           onPress={onBack}
-          style={({ pressed }) => [styles.backButton, pressed ? styles.pressed : null]}
+          style={({ pressed }) => [
+            styles.backButton,
+            pressed ? styles.pressed : null,
+          ]}
         >
           <GameIcon name="back" size={22} />
         </Pressable>
@@ -159,7 +171,9 @@ export function ChaptersScreen({
           // `chapterSummaries` sai de `CHAPTERS.map`, então o índice é o mesmo.
           const chapter = CHAPTERS[index];
           const identity = getChapterVisualIdentity(chapter.levelIds[0]);
-          const percent = Math.round((item.completedCount / item.totalCount) * 100);
+          const percent = Math.round(
+            (item.completedCount / item.totalCount) * 100,
+          );
 
           return (
             <Pressable
@@ -169,14 +183,22 @@ export function ChaptersScreen({
               onPress={() => setOpenChapterId(item.chapterId)}
               style={({ pressed }) => [
                 styles.chapterCard,
-                { borderColor: item.unlocked ? identity.accentColor : colors.locked },
+                {
+                  borderColor: item.unlocked
+                    ? identity.accentColor
+                    : colors.locked,
+                },
                 pressed ? styles.pressed : null,
               ]}
             >
               <View
                 style={[
                   styles.chapterBadge,
-                  { backgroundColor: item.unlocked ? identity.baseColor : colors.locked },
+                  {
+                    backgroundColor: item.unlocked
+                      ? identity.baseColor
+                      : colors.locked,
+                  },
                 ]}
               >
                 {item.unlocked ? (
@@ -196,7 +218,10 @@ export function ChaptersScreen({
                   <View
                     style={[
                       styles.progressFill,
-                      { backgroundColor: identity.accentColor, width: `${percent}%` },
+                      {
+                        backgroundColor: identity.accentColor,
+                        width: `${percent}%`,
+                      },
                     ]}
                   />
                 </View>

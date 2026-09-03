@@ -16,7 +16,8 @@ const pickOnePerRole = <TTile extends MatchableTile>(
 
   for (const role of CARD_ROLE_CYCLE) {
     const match = tiles.find(
-      (tile) => tile.role === role && !selected.some((chosen) => chosen.id === tile.id),
+      (tile) =>
+        tile.role === role && !selected.some((chosen) => chosen.id === tile.id),
     );
 
     if (!match) {
@@ -39,7 +40,9 @@ export const RecyclingCycleMatchRule: MatchRule = {
     return [...CARD_ROLE_CYCLE];
   },
 
-  findCompletedTriple<TTile extends MatchableTile>(tray: TTile[]): TTile[] | undefined {
+  findCompletedTriple<TTile extends MatchableTile>(
+    tray: TTile[],
+  ): TTile[] | undefined {
     for (const [, materialTiles] of groupByMaterial(tray)) {
       const triple = pickOnePerRole(materialTiles);
 
@@ -54,7 +57,9 @@ export const RecyclingCycleMatchRule: MatchRule = {
     return undefined;
   },
 
-  selectTripleFrom<TTile extends MatchableTile>(candidates: TTile[]): TTile[] | undefined {
+  selectTripleFrom<TTile extends MatchableTile>(
+    candidates: TTile[],
+  ): TTile[] | undefined {
     for (const [, materialTiles] of groupByMaterial(candidates)) {
       const triple = pickOnePerRole(materialTiles);
 

@@ -71,7 +71,10 @@ const createMoveQueueHarness = (initialBoard, initialTray = []) => {
     }
 
     const selectedTile = board.find((tile) => tile.id === entry.tileId);
-    assert.ok(selectedTile, `peca ${entry.tileId} precisa existir no tabuleiro`);
+    assert.ok(
+      selectedTile,
+      `peca ${entry.tileId} precisa existir no tabuleiro`,
+    );
     const result = playTile(board, tray, entry.tileId, 7);
     if (result.board === board && result.tray === tray) {
       settleActiveTileMove(queue, entry.token, 'cancelled');
@@ -80,7 +83,10 @@ const createMoveQueueHarness = (initialBoard, initialTray = []) => {
 
     board = result.board;
     activeMove = {
-      arrivalTray: insertTileGroupedInTray(tray, { ...selectedTile, removed: false }),
+      arrivalTray: insertTileGroupedInTray(tray, {
+        ...selectedTile,
+        removed: false,
+      }),
       entry,
       result,
     };
@@ -199,7 +205,10 @@ test('fase 64 mantém os dados de campanha esperados', () => {
   assert.equal(level.worldId, 3);
   assert.equal(level.worldLevelNumber, 14);
   assert.equal(level.tiles.length, 60);
-  assert.equal(new Set(level.tiles.map((tile) => tile.id)).size, level.tiles.length);
+  assert.equal(
+    new Set(level.tiles.map((tile) => tile.id)).size,
+    level.tiles.length,
+  );
 });
 
 test('o ciclo do plástico entra uma vez e reduz 54 peças para 51', () => {
@@ -217,7 +226,10 @@ test('o ciclo do plástico entra uma vez e reduz 54 peças para 51', () => {
   board = first.board;
   tray = first.tray;
   assert.equal(countRemainingTiles(board), 53);
-  assert.deepEqual(tray.map((tile) => tile.id), ['plastico-residuo']);
+  assert.deepEqual(
+    tray.map((tile) => tile.id),
+    ['plastico-residuo'],
+  );
   assert.equal(first.removedKind, undefined);
 
   const duplicate = playTile(board, tray, 'plastico-residuo', 7);
@@ -229,10 +241,10 @@ test('o ciclo do plástico entra uma vez e reduz 54 peças para 51', () => {
   board = second.board;
   tray = second.tray;
   assert.equal(countRemainingTiles(board), 52);
-  assert.deepEqual(tray.map((tile) => tile.id), [
-    'plastico-residuo',
-    'plastico-lixeira',
-  ]);
+  assert.deepEqual(
+    tray.map((tile) => tile.id),
+    ['plastico-residuo', 'plastico-lixeira'],
+  );
   assert.equal(second.removedKind, undefined);
 
   const third = playTile(board, tray, 'plastico-simbolo', 7);
@@ -258,7 +270,11 @@ test('três resíduos do mesmo material não fecham trinca', () => {
   const result = ['vidro-1', 'vidro-2', 'vidro-3'].reduce(
     (state, tileId) => {
       const next = playTile(state.board, state.tray, tileId, 7);
-      return { board: next.board, removedKind: next.removedKind, tray: next.tray };
+      return {
+        board: next.board,
+        removedKind: next.removedKind,
+        tray: next.tray,
+      };
     },
     { board, removedKind: undefined, tray },
   );
@@ -270,31 +286,45 @@ test('três resíduos do mesmo material não fecham trinca', () => {
 test('inserção agrupa por material e ordena pelo ciclo', () => {
   const plasticoResiduo = makeTile('plastico-residuo', 'plastico', 0);
   const papelResiduo = makeTile('papel-residuo', 'papel', 60);
-  const plasticoLixeira = makeTile('plastico-lixeira', 'plastico', 120, 0, 'lixeira');
+  const plasticoLixeira = makeTile(
+    'plastico-lixeira',
+    'plastico',
+    120,
+    0,
+    'lixeira',
+  );
 
   const result = insertTileGroupedInTray(
     [plasticoResiduo, papelResiduo],
     plasticoLixeira,
   );
 
-  assert.deepEqual(result.map((tile) => tile.id), [
-    'plastico-residuo',
-    'plastico-lixeira',
-    'papel-residuo',
-  ]);
-  assert.equal(result.filter((tile) => tile.id === plasticoLixeira.id).length, 1);
+  assert.deepEqual(
+    result.map((tile) => tile.id),
+    ['plastico-residuo', 'plastico-lixeira', 'papel-residuo'],
+  );
+  assert.equal(
+    result.filter((tile) => tile.id === plasticoLixeira.id).length,
+    1,
+  );
 });
 
 test('inserção coloca o resíduo antes da lixeira já na bandeja', () => {
-  const plasticoLixeira = makeTile('plastico-lixeira', 'plastico', 0, 0, 'lixeira');
+  const plasticoLixeira = makeTile(
+    'plastico-lixeira',
+    'plastico',
+    0,
+    0,
+    'lixeira',
+  );
   const plasticoResiduo = makeTile('plastico-residuo', 'plastico', 60);
 
   const result = insertTileGroupedInTray([plasticoLixeira], plasticoResiduo);
 
-  assert.deepEqual(result.map((tile) => tile.id), [
-    'plastico-residuo',
-    'plastico-lixeira',
-  ]);
+  assert.deepEqual(
+    result.map((tile) => tile.id),
+    ['plastico-residuo', 'plastico-lixeira'],
+  );
 });
 
 test('remoção de trinca elimina exatamente três peças e preserva excedentes', () => {
@@ -309,15 +339,21 @@ test('remoção de trinca elimina exatamente três peças e preserva excedentes'
   const result = removeCompletedTriple(tray, 'plastico');
 
   // Sai um de cada papel; o resíduo excedente do mesmo material permanece.
-  assert.deepEqual(result.map((tile) => tile.id), [
-    'plastico-residuo-2',
-    'papel-residuo',
-  ]);
+  assert.deepEqual(
+    result.map((tile) => tile.id),
+    ['plastico-residuo-2', 'papel-residuo'],
+  );
   assert.equal(result.length, 2);
 });
 
 test('trinca formada perto de 7/7 libera espaço sem declarar derrota', () => {
-  const incomingSimbolo = makeTile('plastico-board', 'plastico', 0, 0, 'simbolo');
+  const incomingSimbolo = makeTile(
+    'plastico-board',
+    'plastico',
+    0,
+    0,
+    'simbolo',
+  );
   const tray = [
     makeTile('plastico-residuo', 'plastico', 60),
     makeTile('plastico-lixeira', 'plastico', 120, 0, 'lixeira'),
@@ -337,7 +373,10 @@ test('trinca formada perto de 7/7 libera espaço sem declarar derrota', () => {
   assert.equal(result.status, 'playing');
   assert.equal(result.removedKind, 'plastico');
   assert.equal(result.tray.length, 4);
-  assert.equal(result.tray.some((tile) => tile.kind === 'plastico'), false);
+  assert.equal(
+    result.tray.some((tile) => tile.kind === 'plastico'),
+    false,
+  );
 });
 
 test('peça coberta continua bloqueada e não entra na bandeja', () => {
@@ -362,8 +401,14 @@ test('primeiro toque é aceito sem movimento ativo e terminais são bloqueados',
   };
 
   assert.equal(canQueueTilePress(baseGate), true);
-  assert.equal(canQueueTilePress({ ...baseGate, activeMoveStatus: 'playing' }), true);
-  assert.equal(canQueueTilePress({ ...baseGate, activeMoveStatus: 'lost' }), false);
+  assert.equal(
+    canQueueTilePress({ ...baseGate, activeMoveStatus: 'playing' }),
+    true,
+  );
+  assert.equal(
+    canQueueTilePress({ ...baseGate, activeMoveStatus: 'lost' }),
+    false,
+  );
   assert.equal(canQueueTilePress({ ...baseGate, blockedByUi: true }), false);
   assert.equal(canQueueTilePress({ ...baseGate, duplicate: true }), false);
 });
@@ -392,8 +437,14 @@ test('bandeja cheia perde, mas uma capacidade já expandida preserva a jogada', 
     makeTile('star-1', 'metal', 240),
   ];
 
-  assert.equal(playTile([incoming, remaining], tray, incoming.id, 5).status, 'lost');
-  assert.equal(playTile([incoming, remaining], tray, incoming.id, 6).status, 'playing');
+  assert.equal(
+    playTile([incoming, remaining], tray, incoming.id, 5).status,
+    'lost',
+  );
+  assert.equal(
+    playTile([incoming, remaining], tray, incoming.id, 6).status,
+    'playing',
+  );
 });
 
 test('última peça vence mesmo quando sua chegada preenche a bandeja', () => {
@@ -413,7 +464,12 @@ test('última peça vence mesmo quando sua chegada preenche a bandeja', () => {
 
 test('Undo nunca oferece um movimento que formou trinca', () => {
   const normalMove = { board: [], formedTriple: false, tray: [] };
-  const tripleMove = { board: [], formedTriple: true, removedKind: 'plastico', tray: [] };
+  const tripleMove = {
+    board: [],
+    formedTriple: true,
+    removedKind: 'plastico',
+    tray: [],
+  };
 
   assert.equal(getUndoableMove([normalMove]), normalMove);
   assert.equal(getUndoableMove([normalMove, tripleMove]), undefined);
@@ -473,7 +529,10 @@ test('regressao: papel na bandeja mais o ciclo do vidro concluem uma unica trinc
   assert.equal(harness.finishConsume(third.entry.token), true);
   assert.equal(harness.finishConsume(third.entry.token), false);
   assert.equal(harness.tripleCount, 1);
-  assert.deepEqual(harness.tray.map((tile) => tile.id), ['papel-tray']);
+  assert.deepEqual(
+    harness.tray.map((tile) => tile.id),
+    ['papel-tray'],
+  );
   assert.equal(harness.tray.length, 1);
   assert.equal(`${harness.tray.length}/7`, '1/7');
   assertEveryAcceptedMoveSettled(harness);
@@ -495,9 +554,11 @@ test('quatro IDs em FIFO continuam depois que o terceiro completa a trinca', () 
     [makeTile('unmatched-papel', 'papel', -60)],
   );
 
-  ['vidro-residuo', 'vidro-lixeira', 'vidro-simbolo', 'fourth'].forEach((tileId) => {
-    assert.ok(harness.enqueue(tileId));
-  });
+  ['vidro-residuo', 'vidro-lixeira', 'vidro-simbolo', 'fourth'].forEach(
+    (tileId) => {
+      assert.ok(harness.enqueue(tileId));
+    },
+  );
 
   harness.settleFlightAndConsume(harness.startNext());
   harness.settleFlightAndConsume(harness.startNext());
@@ -520,7 +581,10 @@ test('quatro IDs em FIFO continuam depois que o terceiro completa a trinca', () 
 });
 
 test('toque duplicado no mesmo ID cria somente uma entrada pendente', () => {
-  const board = [makeTile('same-id', 'vidro', 0), makeTile('still-on-board', 'metal', 60)];
+  const board = [
+    makeTile('same-id', 'vidro', 0),
+    makeTile('still-on-board', 'metal', 60),
+  ];
   const queue = createTileMoveQueue();
   const accepted = enqueueTileMove(queue, 'same-id');
 
@@ -545,7 +609,10 @@ test('callbacks muito proximos sao idempotentes e nao sobrescrevem o voo seguint
   assert.equal(harness.settleFlight(first.entry.token, true), 'completed');
   const second = harness.startNext();
 
-  assert.equal(settleActiveTileFlight(harness.queue, first.entry.token, false), undefined);
+  assert.equal(
+    settleActiveTileFlight(harness.queue, first.entry.token, false),
+    undefined,
+  );
   assert.equal(harness.settleFlight(second.entry.token, false), 'completed');
   assert.equal(harness.settleFlight(second.entry.token, true), false);
   assert.deepEqual(harness.arrivals, ['first-callback', 'second-callback']);
@@ -555,14 +622,20 @@ test('callbacks muito proximos sao idempotentes e nao sobrescrevem o voo seguint
 test('peca nao correspondente na bandeja permanece durante a fila', () => {
   const banana = makeTile('banana-existing', 'papel', -60);
   const harness = createMoveQueueHarness(
-    [makeTile('gem-single', 'vidro', 0), makeTile('remaining-single', 'metal', 60)],
+    [
+      makeTile('gem-single', 'vidro', 0),
+      makeTile('remaining-single', 'metal', 60),
+    ],
     [banana],
   );
 
   harness.enqueue('gem-single');
   const move = harness.startNext();
   assert.equal(harness.settleFlight(move.entry.token), 'completed');
-  assert.deepEqual(harness.tray.map((tile) => tile.id), ['banana-existing', 'gem-single']);
+  assert.deepEqual(
+    harness.tray.map((tile) => tile.id),
+    ['banana-existing', 'gem-single'],
+  );
   assertEveryAcceptedMoveSettled(harness);
 });
 
@@ -583,8 +656,14 @@ test('reinicio durante a fila cancela ativo e enfileirados e invalida callback a
 
   assert.equal(harness.queue.generation, previousGeneration + 1);
   assert.equal(cancelled.length, 4);
-  assert.equal(settleActiveTileFlight(harness.queue, active.entry.token, true), undefined);
-  assert.equal(settleActiveTileMove(harness.queue, active.entry.token, 'cancelled'), undefined);
+  assert.equal(
+    settleActiveTileFlight(harness.queue, active.entry.token, true),
+    undefined,
+  );
+  assert.equal(
+    settleActiveTileMove(harness.queue, active.entry.token, 'cancelled'),
+    undefined,
+  );
   assertEveryAcceptedMoveSettled(harness);
 });
 
@@ -596,7 +675,10 @@ test('toda selecao aceita termina exatamente uma vez como concluida ou cancelada
   assert.equal(activateNextTileMove(queue), completed);
   assert.ok(settleActiveTileFlight(queue, completed.token, true));
   assert.ok(settleActiveTileMove(queue, completed.token, 'completed'));
-  assert.equal(settleActiveTileMove(queue, completed.token, 'completed'), undefined);
+  assert.equal(
+    settleActiveTileMove(queue, completed.token, 'completed'),
+    undefined,
+  );
   assert.deepEqual(beginNextTileMoveGeneration(queue), [cancelled]);
   assert.equal(completed.stage, 'completed');
   assert.equal(cancelled.stage, 'cancelled');

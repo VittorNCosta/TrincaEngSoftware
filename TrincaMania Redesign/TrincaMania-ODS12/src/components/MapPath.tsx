@@ -56,7 +56,10 @@ export function MapPath({ nodeCount }: MapPathProps) {
       })}
 
       {FOOTPRINTS.map((footprint, index) => (
-        <View key={`footprint-${index}`} style={[styles.footprint, footprint]} />
+        <View
+          key={`footprint-${index}`}
+          style={[styles.footprint, footprint]}
+        />
       ))}
 
       {Array.from({ length: nodeCount * 2 }).map((_, index) => (

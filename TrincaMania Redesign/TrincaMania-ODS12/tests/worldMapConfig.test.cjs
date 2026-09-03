@@ -85,15 +85,38 @@ test('dados existentes continuam formando 203 fases canônicas sem lacunas', () 
 
 test('Bosque possui as 25 âncoras exatas e bijetivas em ordem de campanha', () => {
   const expectedPoints = [
-    [190, 2945], [180, 2850], [178, 2755], [188, 2660], [195, 2560],
-    [190, 2400], [180, 2305], [150, 2210], [180, 2115], [205, 2020],
-    [195, 1860], [200, 1765], [190, 1670], [170, 1575], [155, 1480],
-    [180, 1320], [160, 1225], [185, 1130], [175, 1035], [150, 940],
-    [185, 780], [180, 685], [155, 590], [170, 505], [180, 415],
+    [190, 2945],
+    [180, 2850],
+    [178, 2755],
+    [188, 2660],
+    [195, 2560],
+    [190, 2400],
+    [180, 2305],
+    [150, 2210],
+    [180, 2115],
+    [205, 2020],
+    [195, 1860],
+    [200, 1765],
+    [190, 1670],
+    [170, 1575],
+    [155, 1480],
+    [180, 1320],
+    [160, 1225],
+    [185, 1130],
+    [175, 1035],
+    [150, 940],
+    [185, 780],
+    [180, 685],
+    [155, 590],
+    [170, 505],
+    [180, 415],
   ];
 
   assert.equal(BOSQUE_LEVEL_ANCHORS.length, 25);
-  assert.deepEqual(BOSQUE_LEVEL_ANCHORS.map(({ levelId }) => levelId), worldOne.levelIds);
+  assert.deepEqual(
+    BOSQUE_LEVEL_ANCHORS.map(({ levelId }) => levelId),
+    worldOne.levelIds,
+  );
   assert.deepEqual(
     BOSQUE_LEVEL_ANCHORS.map(({ point }) => [point.x, point.y]),
     expectedPoints,
@@ -124,24 +147,41 @@ test('segmentos seguem a composição e o overlap canônico de 24 unidades', () 
     assert.equal(previous.top + previous.height - segment.top, 24);
   });
 
-  assert.ok(BOSQUE_MAP_CONFIG.segments.every(({ layers }) => layers.length > 0));
+  assert.ok(
+    BOSQUE_MAP_CONFIG.segments.every(({ layers }) => layers.length > 0),
+  );
   assert.ok(
     BOSQUE_MAP_CONFIG.segments.every(({ layers }) =>
-      layers.every(({ role }) => ['effect', 'foreground', 'terrain'].includes(role)),
+      layers.every(({ role }) =>
+        ['effect', 'foreground', 'terrain'].includes(role),
+      ),
     ),
   );
 });
 
 test('assets segmentados existem e respeitam o teto seguro de textura', () => {
-  assert.deepEqual(new Set(Object.keys(bosqueSegmentAssetFiles)), new Set(BOSQUE_MAP_ASSET_KEYS));
+  assert.deepEqual(
+    new Set(Object.keys(bosqueSegmentAssetFiles)),
+    new Set(BOSQUE_MAP_ASSET_KEYS),
+  );
 
   Object.values(bosqueSegmentAssetFiles).forEach((fileName) => {
-    const filePath = path.join(__dirname, '..', 'assets', 'map', 'world1', fileName);
+    const filePath = path.join(
+      __dirname,
+      '..',
+      'assets',
+      'map',
+      'world1',
+      fileName,
+    );
     const header = Buffer.alloc(24);
     const descriptor = fs.openSync(filePath, 'r');
 
     try {
-      assert.equal(fs.readSync(descriptor, header, 0, header.length, 0), header.length);
+      assert.equal(
+        fs.readSync(descriptor, header, 0, header.length, 0),
+        header.length,
+      );
     } finally {
       fs.closeSync(descriptor);
     }
@@ -155,9 +195,15 @@ test('assets segmentados existem e respeitam o teto seguro de textura', () => {
 });
 
 test('descansos e portal preservam checkpoints e usam posições distintas', () => {
-  const rests = BOSQUE_MAP_CONFIG.landmarks.filter(({ kind }) => kind === 'rest');
-  const portal = BOSQUE_MAP_CONFIG.landmarks.find(({ kind }) => kind === 'portal');
-  const positions = BOSQUE_MAP_CONFIG.landmarks.map(({ point }) => `${point.x}:${point.y}`);
+  const rests = BOSQUE_MAP_CONFIG.landmarks.filter(
+    ({ kind }) => kind === 'rest',
+  );
+  const portal = BOSQUE_MAP_CONFIG.landmarks.find(
+    ({ kind }) => kind === 'portal',
+  );
+  const positions = BOSQUE_MAP_CONFIG.landmarks.map(
+    ({ point }) => `${point.x}:${point.y}`,
+  );
 
   assert.deepEqual(
     rests.map(({ afterLevelId }) => afterLevelId),
@@ -169,7 +215,10 @@ test('descansos e portal preservam checkpoints e usam posições distintas', () 
 });
 
 test('configuração válida do Bosque não produz erros', () => {
-  assert.deepEqual(validateWorldMapConfig(BOSQUE_MAP_CONFIG, validationContext), []);
+  assert.deepEqual(
+    validateWorldMapConfig(BOSQUE_MAP_CONFIG, validationContext),
+    [],
+  );
 });
 
 test('validação inválida é determinística e denuncia a causa real', () => {
@@ -224,7 +273,9 @@ test('todos os mundos têm modo explícito e nenhum usa fallback visual do Bosqu
   assert.deepEqual(validateWorldMapRegistry(WORLD_MAP_CONFIGS, worldIds), []);
   assert.equal(getWorldMapConfig(1).mode, 'segmented');
 
-  const legacyConfigs = worldIds.slice(1).map((worldId) => getWorldMapConfig(worldId));
+  const legacyConfigs = worldIds
+    .slice(1)
+    .map((worldId) => getWorldMapConfig(worldId));
   legacyConfigs.forEach((config, index) => {
     assert.equal(config.mode, 'legacy');
     assert.equal(config.worldId, worldIds[index + 1]);
@@ -255,11 +306,15 @@ test('modelo de render contém somente níveis e segmentos do mundo escolhido', 
 test('registry incompleto ou cruzado falha sem cair silenciosamente no mundo 1', () => {
   const missing = { ...WORLD_MAP_CONFIGS };
   delete missing[2];
-  assert.deepEqual(validateWorldMapRegistry(missing, [1, 2]), ['registry:2:missing']);
+  assert.deepEqual(validateWorldMapRegistry(missing, [1, 2]), [
+    'registry:2:missing',
+  ]);
 
   const crossed = {
     ...WORLD_MAP_CONFIGS,
     2: { ...WORLD_MAP_CONFIGS[2], worldId: 3 },
   };
-  assert.deepEqual(validateWorldMapRegistry(crossed, [2]), ['registry:2:worldId-mismatch']);
+  assert.deepEqual(validateWorldMapRegistry(crossed, [2]), [
+    'registry:2:worldId-mismatch',
+  ]);
 });

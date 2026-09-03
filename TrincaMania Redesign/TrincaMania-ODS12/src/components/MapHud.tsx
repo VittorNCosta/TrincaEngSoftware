@@ -91,7 +91,10 @@ export function MapHud({
             playButtonSound();
             onOpenProfile();
           }}
-          style={({ pressed }) => [styles.topButtonTouch, pressed ? styles.pressed : null]}
+          style={({ pressed }) => [
+            styles.topButtonTouch,
+            pressed ? styles.pressed : null,
+          ]}
         >
           <View pointerEvents="none" style={styles.avatarButton}>
             <GameIcon name="avatar" size={36} variant="plain" />
@@ -104,7 +107,10 @@ export function MapHud({
             playButtonSound();
             onOpenSettings();
           }}
-          style={({ pressed }) => [styles.topButtonTouch, pressed ? styles.pressed : null]}
+          style={({ pressed }) => [
+            styles.topButtonTouch,
+            pressed ? styles.pressed : null,
+          ]}
         >
           <View pointerEvents="none" style={styles.settingsButton}>
             <GameIcon name="settings" size={28} tone="blue" variant="plain" />
@@ -116,14 +122,24 @@ export function MapHud({
             accessibilityLabel="Ganhar vidas"
             accessibilityRole="button"
             onPress={onAddLives}
-            style={({ pressed }) => [styles.pillTouch, pressed ? styles.pressed : null]}
+            style={({ pressed }) => [
+              styles.pillTouch,
+              pressed ? styles.pressed : null,
+            ]}
           >
             <View pointerEvents="none" style={styles.pill}>
               <GameIcon name="heart" size={24} tone="pink" />
-              <Text adjustsFontSizeToFit minimumFontScale={0.72} numberOfLines={1} style={styles.pillValue}>
+              <Text
+                adjustsFontSizeToFit
+                minimumFontScale={0.72}
+                numberOfLines={1}
+                style={styles.pillValue}
+              >
                 {lives}
               </Text>
-              <Text style={[styles.pillFooter, styles.pillFooterLives]}>{livesFooter}</Text>
+              <Text style={[styles.pillFooter, styles.pillFooterLives]}>
+                {livesFooter}
+              </Text>
               <View style={[styles.addButton, styles.addLives]}>
                 <Text style={styles.addLivesText}>+</Text>
               </View>
@@ -133,7 +149,10 @@ export function MapHud({
             accessibilityLabel="Ganhar moedas"
             accessibilityRole="button"
             onPress={onAddCoins}
-            style={({ pressed }) => [styles.pillTouch, pressed ? styles.pressed : null]}
+            style={({ pressed }) => [
+              styles.pillTouch,
+              pressed ? styles.pressed : null,
+            ]}
           >
             <View
               ref={coinPillRef}
@@ -142,7 +161,12 @@ export function MapHud({
               onLayout={reportCoinCounterLayout}
             >
               <GameIcon name="coin" size={24} tone="gold" />
-              <Text adjustsFontSizeToFit minimumFontScale={0.72} numberOfLines={1} style={styles.pillValue}>
+              <Text
+                adjustsFontSizeToFit
+                minimumFontScale={0.72}
+                numberOfLines={1}
+                style={styles.pillValue}
+              >
                 {coins}
               </Text>
               <View style={[styles.addButton, styles.addCoins]}>
@@ -172,19 +196,35 @@ export function MapHud({
             pointerEvents="none"
             style={[styles.arrow, hasPreviousWorld ? styles.arrowActive : null]}
           >
-            <GameIcon muted={!hasPreviousWorld} name="back" size={24} tone="gold" />
+            <GameIcon
+              muted={!hasPreviousWorld}
+              name="back"
+              size={24}
+              tone="gold"
+            />
           </View>
         </Pressable>
 
         <View style={styles.worldPlate}>
-          <View pointerEvents="none" style={[styles.plateNotch, styles.plateNotchLeft]} />
-          <View pointerEvents="none" style={[styles.plateNotch, styles.plateNotchRight]} />
+          <View
+            pointerEvents="none"
+            style={[styles.plateNotch, styles.plateNotchLeft]}
+          />
+          <View
+            pointerEvents="none"
+            style={[styles.plateNotch, styles.plateNotchRight]}
+          />
           <Text numberOfLines={1} style={styles.worldName}>
             {worldName}
           </Text>
           <View style={styles.progressRow}>
             <View style={styles.progressTrack}>
-              <View style={[styles.progressFill, { width: `${Math.max(0, Math.min(100, progressPercent))}%` }]} />
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${Math.max(0, Math.min(100, progressPercent))}%` },
+                ]}
+              />
             </View>
             <Text style={styles.progressLabel}>
               {completedCount}/{totalCount}
@@ -206,7 +246,10 @@ export function MapHud({
             pressed && hasNextWorld ? styles.pressed : null,
           ]}
         >
-          <View pointerEvents="none" style={[styles.arrow, hasNextWorld ? styles.arrowActive : null]}>
+          <View
+            pointerEvents="none"
+            style={[styles.arrow, hasNextWorld ? styles.arrowActive : null]}
+          >
             <GameIcon muted={!hasNextWorld} name="next" size={24} tone="gold" />
           </View>
         </Pressable>

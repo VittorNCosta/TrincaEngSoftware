@@ -16,7 +16,9 @@ const DEFAULT_SETTINGS: AppSettings = {
 let settingsCache: AppSettings | undefined;
 let settingsRequest: Promise<AppSettings> | undefined;
 
-export const createDefaultSettings = (): AppSettings => ({ ...DEFAULT_SETTINGS });
+export const createDefaultSettings = (): AppSettings => ({
+  ...DEFAULT_SETTINGS,
+});
 
 const normalizeSettings = (value: unknown): AppSettings => {
   if (!value || typeof value !== 'object') {
@@ -54,11 +56,15 @@ const readSettings = async () => {
       return settingsCache;
     }
 
-    const legacySoundValue = await AsyncStorage.getItem(LEGACY_SOUND_ENABLED_STORAGE_KEY);
+    const legacySoundValue = await AsyncStorage.getItem(
+      LEGACY_SOUND_ENABLED_STORAGE_KEY,
+    );
     const migratedSettings = {
       ...DEFAULT_SETTINGS,
       soundEnabled:
-        legacySoundValue === null ? DEFAULT_SETTINGS.soundEnabled : legacySoundValue !== 'false',
+        legacySoundValue === null
+          ? DEFAULT_SETTINGS.soundEnabled
+          : legacySoundValue !== 'false',
     };
 
     settingsCache = migratedSettings;

@@ -9,7 +9,7 @@ export { TRIPLE_SIZE };
 
 export type CardAssignment = Pick<Tile, 'cardId' | 'emoji' | 'kind' | 'role'>;
 
-const shuffleList = <T,>(items: T[], random: () => number) => {
+const shuffleList = <T>(items: T[], random: () => number) => {
   const shuffledItems = [...items];
 
   for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
@@ -23,7 +23,7 @@ const shuffleList = <T,>(items: T[], random: () => number) => {
   return shuffledItems;
 };
 
-const pickRandomItem = <T,>(items: T[], random: () => number) =>
+const pickRandomItem = <T>(items: T[], random: () => number) =>
   items[Math.floor(random() * items.length)];
 
 /**
@@ -99,11 +99,17 @@ export const assignCardsToRemovalOrder = <TTile extends Tile>({
 
   removalOrder.forEach((tile, index) => {
     const tripleIndex = Math.floor(index / TRIPLE_SIZE);
-    const material = materialSequence[tripleIndex] ?? materialSequence[0] ?? MATERIAL_TYPES[0];
+    const material =
+      materialSequence[tripleIndex] ?? materialSequence[0] ?? MATERIAL_TYPES[0];
 
     assignmentByTileId.set(
       tile.id,
-      buildCardAssignment(material, index % TRIPLE_SIZE, variantSeed + tripleIndex, rule),
+      buildCardAssignment(
+        material,
+        index % TRIPLE_SIZE,
+        variantSeed + tripleIndex,
+        rule,
+      ),
     );
   });
 

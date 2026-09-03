@@ -60,7 +60,10 @@ export function BottomNavBar({ activeIndex, onSelect }: BottomNavBarProps) {
               style={isActive ? undefined : styles.iconInactive}
               variant="plain"
             />
-            <Text numberOfLines={1} style={[styles.label, isActive ? styles.labelActive : null]}>
+            <Text
+              numberOfLines={1}
+              style={[styles.label, isActive ? styles.labelActive : null]}
+            >
               {item.label}
             </Text>
           </Pressable>

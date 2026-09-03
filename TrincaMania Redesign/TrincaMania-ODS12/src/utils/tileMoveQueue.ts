@@ -9,12 +9,7 @@ type TilePressGate = {
 };
 
 export type TileMoveStage =
-  | 'queued'
-  | 'flying'
-  | 'arrived'
-  | 'consuming'
-  | 'completed'
-  | 'cancelled';
+  'queued' | 'flying' | 'arrived' | 'consuming' | 'completed' | 'cancelled';
 
 export type TileMoveQueueEntry = {
   generation: number;
@@ -91,7 +86,11 @@ export const activateNextTileMove = (
   }
 
   const entry = state.entries.get(token);
-  if (!entry || entry.stage !== 'queued' || entry.generation !== state.generation) {
+  if (
+    !entry ||
+    entry.stage !== 'queued' ||
+    entry.generation !== state.generation
+  ) {
     return activateNextTileMove(state);
   }
 
@@ -147,7 +146,9 @@ export const settleActiveTileMove = (
     state.activeToken !== token ||
     !entry ||
     entry.generation !== state.generation ||
-    (entry.stage !== 'flying' && entry.stage !== 'arrived' && entry.stage !== 'consuming')
+    (entry.stage !== 'flying' &&
+      entry.stage !== 'arrived' &&
+      entry.stage !== 'consuming')
   ) {
     return undefined;
   }

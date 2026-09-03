@@ -22,6 +22,7 @@ Use o vocabulário do `CONTEXT.md`: **material** (plástico/papel/vidro/metal/or
 ## Como avaliar economia
 
 Pense em termos de fontes e drenos:
+
 - **Fontes de moeda**: recompensa por estrela (10/20/35 normal, 30/60/100 bônus — só a diferença incremental em replay), baús de mundo, pontos de descanso.
 - **Drenos de moeda**: power-ups (hint 120, shuffle 60, undo 45), "Bandeja Plus" (slot de moeda), compra de chave (100).
 - Antes de propor um número novo, verifique se ele desequilibra essa relação — um dreno caro demais deixa a moeda acumulada sem uso; uma fonte generosa demais deixa power-ups triviais de comprar. Diga explicitamente contra qual fonte/dreno existente você está comparando o número novo.
@@ -37,6 +38,7 @@ Pense em termos de fontes e drenos:
 ## Progressão e dificuldade
 
 O jogo tem duas trilhas paralelas — saiba em qual você está mexendo:
+
 - **Campanha**: 203 fases canônicas em `src/data/levels.ts` (mundos 1–8 com 25 cada + mundo bônus 21 com 3). Curva heurística; ao propor fase nova, siga o padrão numérico dos mundos vizinhos.
 - **Capítulos**: 1000 mapas em 10 capítulos de 100, gerados proceduralmente em `src/data/chapters.ts`. A curva é **monotônica por construção e validada em teste** (`validateChapters`) — `tileCount` múltiplo de 3, `threeStars < twoStars`, dificuldade não-decrescente. Se propuser mudança aqui, ela precisa passar nessas invariantes.
 

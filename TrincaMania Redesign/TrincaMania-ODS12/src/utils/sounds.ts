@@ -5,7 +5,10 @@ import {
   type AudioSource,
 } from 'expo-audio';
 
-import { getSettings, setSoundEnabledPreference } from '../storage/settingsStorage';
+import {
+  getSettings,
+  setSoundEnabledPreference,
+} from '../storage/settingsStorage';
 import { type WorldId } from '../types/game';
 
 type SoundKey =
@@ -61,7 +64,8 @@ const soundSources: Record<SoundKey, AudioSource | undefined> = {
   confetti: require('../../assets/sfx/confetti.wav') as AudioSource,
   lose: require('../../assets/sfx/lose.mp3') as AudioSource,
   match: require('../../assets/sfx/match.mp3') as AudioSource,
-  rewardSparkle: require('../../assets/sfx/voice/reward_sparkle.mp3') as AudioSource,
+  rewardSparkle:
+    require('../../assets/sfx/voice/reward_sparkle.mp3') as AudioSource,
   shopBuy: require('../../assets/sfx/shop_buy.mp3') as AudioSource,
   tap: require('../../assets/sfx/tap.mp3') as AudioSource,
   whoosh: require('../../assets/sfx/whoosh.wav') as AudioSource,
@@ -71,13 +75,17 @@ const soundSources: Record<SoundKey, AudioSource | undefined> = {
 
 const ambientSources: Record<AmbientKey, AudioSource | undefined> = {
   beach: require('../../assets/sfx/ambient/ambient_beach.mp3') as AudioSource,
-  celestial: require('../../assets/sfx/ambient/ambient_celestial.mp3') as AudioSource,
-  crystal: require('../../assets/sfx/ambient/ambient_crystal.mp3') as AudioSource,
+  celestial:
+    require('../../assets/sfx/ambient/ambient_celestial.mp3') as AudioSource,
+  crystal:
+    require('../../assets/sfx/ambient/ambient_crystal.mp3') as AudioSource,
   forest: require('../../assets/sfx/ambient/ambient_forest.mp3') as AudioSource,
-  mountain: require('../../assets/sfx/ambient/ambient_mountain.mp3') as AudioSource,
+  mountain:
+    require('../../assets/sfx/ambient/ambient_mountain.mp3') as AudioSource,
   snow: require('../../assets/sfx/ambient/ambient_snow.mp3') as AudioSource,
   stars: require('../../assets/sfx/ambient/ambient_stars.mp3') as AudioSource,
-  volcano: require('../../assets/sfx/ambient/ambient_volcano.mp3') as AudioSource,
+  volcano:
+    require('../../assets/sfx/ambient/ambient_volcano.mp3') as AudioSource,
 };
 
 // Expected files:
@@ -104,12 +112,20 @@ const SOUND_CONFIGS: Record<SoundKey, SoundConfig> = {
   lose: { cooldownMs: 700, source: soundSources.lose, volume: 0.46 },
   match: { cooldownMs: 180, source: soundSources.match, volume: 0.44 },
   // A voz de recompensa fica abaixo dos efeitos principais para não dominar a mixagem.
-  rewardSparkle: { cooldownMs: 700, source: soundSources.rewardSparkle, volume: 0.22 },
+  rewardSparkle: {
+    cooldownMs: 700,
+    source: soundSources.rewardSparkle,
+    volume: 0.22,
+  },
   shopBuy: { cooldownMs: 450, source: soundSources.shopBuy, volume: 0.46 },
   tap: { cooldownMs: 55, source: soundSources.tap, volume: 0.3 },
   whoosh: { cooldownMs: 60, source: soundSources.whoosh, volume: 0.26 },
   win: { cooldownMs: 700, source: soundSources.win, volume: 0.52 },
-  worldUnlock: { cooldownMs: 900, source: soundSources.worldUnlock, volume: 0.54 },
+  worldUnlock: {
+    cooldownMs: 900,
+    source: soundSources.worldUnlock,
+    volume: 0.54,
+  },
 };
 
 export const AMBIENT_VOLUME = 0.12;
@@ -284,10 +300,10 @@ const stopAllPlayers = () => {
       // no-op: disabling sound should never interrupt gameplay
     }
   });
-
 };
 
-export const getAmbientKeyForWorld = (worldId: WorldId) => AMBIENT_BY_WORLD_ID[worldId];
+export const getAmbientKeyForWorld = (worldId: WorldId) =>
+  AMBIENT_BY_WORLD_ID[worldId];
 
 export const getAmbientExpectedFiles = () =>
   Object.entries(AMBIENT_CONFIGS).map(([key, config]) => ({
@@ -337,7 +353,9 @@ const getPlayer = (key: SoundKey) => {
   }
 
   if (!players[key]) {
-    const player = createAudioPlayer(config.source, { keepAudioSessionActive: false });
+    const player = createAudioPlayer(config.source, {
+      keepAudioSessionActive: false,
+    });
     player.volume = config.volume;
     players[key] = player;
   }
@@ -383,7 +401,9 @@ const playAmbientForKey = async (key: AmbientKey) => {
   stopAmbientPlayback({ fadeMs: 0, keepTarget: true, release: true });
 
   try {
-    const player = createAudioPlayer(config.source, { keepAudioSessionActive: false });
+    const player = createAudioPlayer(config.source, {
+      keepAudioSessionActive: false,
+    });
     player.loop = true;
     player.volume = 0;
     currentAmbientKey = key;
@@ -476,7 +496,6 @@ export const releaseSoundPlayers = () => {
       // no-op: releasing sound resources is best-effort
     }
   });
-
 };
 
 export const playTapSound = () => playSound('tap');
@@ -522,7 +541,11 @@ export const unduckAmbient = (fadeMs = 400) => {
     return;
   }
 
-  fadeAmbientTo(currentAmbientPlayer, AMBIENT_CONFIGS[currentAmbientKey].volume, fadeMs);
+  fadeAmbientTo(
+    currentAmbientPlayer,
+    AMBIENT_CONFIGS[currentAmbientKey].volume,
+    fadeMs,
+  );
 };
 export const playWinSound = () => playSound('win');
 export const playLoseSound = () => playSound('lose');

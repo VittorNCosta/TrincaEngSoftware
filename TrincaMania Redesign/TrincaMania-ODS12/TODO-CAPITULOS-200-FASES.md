@@ -41,6 +41,7 @@ capítulo mostram o mesmo cenário de floresta antiga**, sem relação com o tem
 do capítulo.
 
 **Falta**: 1 imagem de fundo por capítulo-alvo —
+
 - Capítulo 1 (Aterro Adormecido): cenário de aterro sanitário/lixão, luz
   baixa, entulho coberto — combina com os textos de objetivo já escritos
   ("abra a camada de cobertura", "libere as peças presas nas bordas").
@@ -62,6 +63,7 @@ jogam em silêncio, sem ambiente nenhum.
 
 **Falta**: 2 arquivos `.mp3` curtos em loop, no padrão dos já existentes em
 `assets/sfx/ambient/` (ex. `ambient_forest.mp3`, `ambient_mountain.mp3`):
+
 - `ambient_aterro.mp3` — algo como vento sobre entulho, distante, sem trilha
   melódica forte (mesmo espírito de `ambient_mountain.mp3`).
 - `ambient_rio.mp3` — água corrente, tom parecido com `ambient_beach.mp3` mas
@@ -103,15 +105,15 @@ mas é o tipo de polimento visual que normalmente se pede depois que os itens
 
 ## Lista de arte a encomendar (mínimo viável — capítulos 1 e 2)
 
-| Arquivo sugerido | Uso | Prioridade |
-|---|---|---|
-| `assets/map/chapters/aterro_bg.png` | Fundo de jogo, Capítulo 1 | **Obrigatório** |
-| `assets/map/chapters/rio_bg.png` | Fundo de jogo, Capítulo 2 | **Obrigatório** |
-| `assets/sfx/ambient/ambient_aterro.mp3` | Som ambiente, Capítulo 1 | **Obrigatório** |
-| `assets/sfx/ambient/ambient_rio.mp3` | Som ambiente, Capítulo 2 | **Obrigatório** |
-| `assets/map/chapters/aterro_world_bg.png` | Fundo do mapa-múndi, Capítulo 1 | Opcional (só se o item 3 for conectado) |
-| `assets/map/chapters/rio_world_bg.png` | Fundo do mapa-múndi, Capítulo 2 | Opcional (só se o item 3 for conectado) |
-| Selo/ícone de marco (descanso/loja/guardião) | `ChaptersScreen` | Opcional, polimento |
+| Arquivo sugerido                             | Uso                             | Prioridade                              |
+| -------------------------------------------- | ------------------------------- | --------------------------------------- |
+| `assets/map/chapters/aterro_bg.png`          | Fundo de jogo, Capítulo 1       | **Obrigatório**                         |
+| `assets/map/chapters/rio_bg.png`             | Fundo de jogo, Capítulo 2       | **Obrigatório**                         |
+| `assets/sfx/ambient/ambient_aterro.mp3`      | Som ambiente, Capítulo 1        | **Obrigatório**                         |
+| `assets/sfx/ambient/ambient_rio.mp3`         | Som ambiente, Capítulo 2        | **Obrigatório**                         |
+| `assets/map/chapters/aterro_world_bg.png`    | Fundo do mapa-múndi, Capítulo 1 | Opcional (só se o item 3 for conectado) |
+| `assets/map/chapters/rio_world_bg.png`       | Fundo do mapa-múndi, Capítulo 2 | Opcional (só se o item 3 for conectado) |
+| Selo/ícone de marco (descanso/loja/guardião) | `ChaptersScreen`                | Opcional, polimento                     |
 
 A pasta `assets/map/chapters/` ainda não existe — é sugestão de organização,
 para não misturar arte nova com os PNGs legados de `assets/map/`.
@@ -121,7 +123,7 @@ para não misturar arte nova com os PNGs legados de `assets/map/`.
 1. `GameScreen.tsx`: `require()` dos 2 novos PNGs + `case 101` / `case 102` em
    `getGameBackground` (hoje só tem `case 2/5/7`, `3/6/8`, `4`, `21`, default).
 2. `sounds.ts`: entradas `aterro`/`rio` em `ambientSources` (perto da linha 73)
-   + `101: 'aterro'`, `102: 'rio'` em `AMBIENT_BY_WORLD_ID`.
+   - `101: 'aterro'`, `102: 'rio'` em `AMBIENT_BY_WORLD_ID`.
 3. Se o item 3 acima for conectado: trocar os `require()` de `chapter-map-1` e
    `chapter-map-2` em `campaignMapAssets.ts` pelos PNGs novos, e decidir como
    `ChaptersScreen` chega até `LevelSelectScreen` (hoje não chega).

@@ -56,14 +56,14 @@ de assumir que é troca simples.
 Delegue por padrão quando a tarefa cair numa destas faixas. Use `Agent` com o
 `subagent_type` correspondente.
 
-| Se a tarefa é… | Agente |
-|---|---|
-| Implementar/alterar componente, tela, hook, storage, áudio, haptics | `react-native-engineer` |
-| Mecânica, economia (moedas/chaves/baús), progressão, balanceamento | `game-designer` |
-| Revisar diff pronto, auditar drift entre docs e código (somente leitura) | `code-reviewer` |
-| Escrever/atualizar teste, investigar bug reproduzível | `qa-engineer` |
-| Sintoma concreto de lentidão/jank/memória (nunca preventivo) | `performance-engineer` |
-| Revisar interface, feedback, acessibilidade, "sensação" de recompensa | `ui-ux-engineer` |
+| Se a tarefa é…                                                           | Agente                  |
+| ------------------------------------------------------------------------ | ----------------------- |
+| Implementar/alterar componente, tela, hook, storage, áudio, haptics      | `react-native-engineer` |
+| Mecânica, economia (moedas/chaves/baús), progressão, balanceamento       | `game-designer`         |
+| Revisar diff pronto, auditar drift entre docs e código (somente leitura) | `code-reviewer`         |
+| Escrever/atualizar teste, investigar bug reproduzível                    | `qa-engineer`           |
+| Sintoma concreto de lentidão/jank/memória (nunca preventivo)             | `performance-engineer`  |
+| Revisar interface, feedback, acessibilidade, "sensação" de recompensa    | `ui-ux-engineer`        |
 
 Composição usual: `game-designer` decide o **quê** → `react-native-engineer`
 implementa o **como** → `qa-engineer` cobre com teste → `code-reviewer` fecha.
@@ -92,8 +92,9 @@ tarefa não trivial concluída; `/security-review` antes de release;
 - **Apresentação**: `src/screens/`, `src/components/`. `GameScreen.tsx` já tem ~3000 linhas — não deixe crescer com lógica que pertence ao domínio.
 
 Duas trilhas de conteúdo, não confunda:
+
 - **Campanha** — 203 fases em `src/data/levels.ts` (mundos 1–8 × 25 + bônus 21 × 3). Tabuleiro varia a cada tentativa.
-- **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o *retry* re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
+- **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o _retry_ re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
 
 ## Verificação (sempre antes de reportar terminado)
 

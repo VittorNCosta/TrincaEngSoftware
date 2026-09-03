@@ -33,7 +33,9 @@ type ChestOpeningModalProps = {
   onRewardMoment?: () => void;
 };
 
-const getRewardAssetForIcon = (iconName: GameIconName): RewardAssetName | undefined => {
+const getRewardAssetForIcon = (
+  iconName: GameIconName,
+): RewardAssetName | undefined => {
   switch (iconName) {
     case 'coin':
       return 'coin';
@@ -91,12 +93,19 @@ export function ChestOpeningModal({
     label: rewardText,
     tone: rewardType === 'life' ? 'pink' : 'gold',
   };
-  const visibleRewards = rewardItems?.length ? rewardItems : [fallbackRewardItem];
+  const visibleRewards = rewardItems?.length
+    ? rewardItems
+    : [fallbackRewardItem];
   const mainReward = visibleRewards[0] ?? fallbackRewardItem;
   const mainRewardAsset = getRewardAssetForIcon(mainReward.iconName);
   const kickerText = kicker ?? (isWorld ? 'Baú de Mundo' : 'Baú Comum');
-  const titleText = title ?? (isWorld ? 'Recompensa Especial' : 'Baú desbloqueado!');
-  const coinCollectAmount = getCoinCollectAmount(visibleRewards, rewardText, rewardType);
+  const titleText =
+    title ?? (isWorld ? 'Recompensa Especial' : 'Baú desbloqueado!');
+  const coinCollectAmount = getCoinCollectAmount(
+    visibleRewards,
+    rewardText,
+    rewardType,
+  );
 
   useEffect(() => {
     onOpenMomentRef.current = onOpenMoment;
@@ -120,15 +129,24 @@ export function ChestOpeningModal({
     progress.stopAnimation();
     progress.setValue(0);
 
-    const openTimer = setTimeout(() => {
-      onOpenMomentRef.current?.();
-    }, isWorld ? 560 : 650);
-    const rewardTimer = setTimeout(() => {
-      onRewardMomentRef.current?.();
-    }, isWorld ? 1020 : 1080);
-    const continueTimer = setTimeout(() => {
-      setCanContinue(true);
-    }, isWorld ? 1840 : 1720);
+    const openTimer = setTimeout(
+      () => {
+        onOpenMomentRef.current?.();
+      },
+      isWorld ? 560 : 650,
+    );
+    const rewardTimer = setTimeout(
+      () => {
+        onRewardMomentRef.current?.();
+      },
+      isWorld ? 1020 : 1080,
+    );
+    const continueTimer = setTimeout(
+      () => {
+        setCanContinue(true);
+      },
+      isWorld ? 1840 : 1720,
+    );
 
     const animation = Animated.timing(progress, {
       duration: isWorld ? 1900 : 1760,
@@ -190,11 +208,26 @@ export function ChestOpeningModal({
   });
   const chestRotate = progress.interpolate({
     inputRange: [0, 0.28, 0.36, 0.44, 0.52, 0.6, 0.7, 1],
-    outputRange: ['0deg', '0deg', isWorld ? '-5deg' : '-4deg', isWorld ? '5deg' : '4deg', '-3deg', '2deg', '-1deg', '0deg'],
+    outputRange: [
+      '0deg',
+      '0deg',
+      isWorld ? '-5deg' : '-4deg',
+      isWorld ? '5deg' : '4deg',
+      '-3deg',
+      '2deg',
+      '-1deg',
+      '0deg',
+    ],
   });
   const glowOpacity = progress.interpolate({
     inputRange: [0, 0.2, 0.54, 0.78, 1],
-    outputRange: [0, 0.18, isWorld ? 1 : 0.9, isWorld ? 0.78 : 0.68, isWorld ? 0.72 : 0.6],
+    outputRange: [
+      0,
+      0.18,
+      isWorld ? 1 : 0.9,
+      isWorld ? 0.78 : 0.68,
+      isWorld ? 0.72 : 0.6,
+    ],
   });
   const glowScale = progress.interpolate({
     inputRange: [0, 0.54, 1],
@@ -242,7 +275,12 @@ export function ChestOpeningModal({
   });
 
   return (
-    <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
+    <Modal
+      animationType="fade"
+      transparent
+      visible={visible}
+      onRequestClose={onClose}
+    >
       <View style={styles.modalRoot}>
         <SafeAreaView
           edges={['top', 'bottom', 'left', 'right']}
@@ -255,105 +293,163 @@ export function ChestOpeningModal({
               { opacity: modalOpacity, transform: [{ scale: stageScale }] },
             ]}
           >
-            <View pointerEvents="none" style={[styles.cardWash, isWorld ? styles.cardWashWorld : null]} />
-            <Text style={[styles.kicker, isWorld ? styles.kickerWorld : null]}>{kickerText}</Text>
+            <View
+              pointerEvents="none"
+              style={[styles.cardWash, isWorld ? styles.cardWashWorld : null]}
+            />
+            <Text style={[styles.kicker, isWorld ? styles.kickerWorld : null]}>
+              {kickerText}
+            </Text>
             <Text style={styles.title}>{titleText}</Text>
 
-          <View style={[styles.stage, isWorld ? styles.stageWorld : null]}>
-            <ChestGlow opacity={glowOpacity} scale={glowScale} variant={variant} />
+            <View style={[styles.stage, isWorld ? styles.stageWorld : null]}>
+              <ChestGlow
+                opacity={glowOpacity}
+                scale={glowScale}
+                variant={variant}
+              />
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  styles.flash,
+                  isWorld ? styles.flashWorld : null,
+                  { opacity: flashOpacity },
+                ]}
+              />
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  styles.openRing,
+                  isWorld ? styles.openRingWorld : null,
+                  {
+                    opacity: ringOpacity,
+                    transform: [{ scale: ringScale }],
+                  },
+                ]}
+              />
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  styles.rewardBeam,
+                  isWorld ? styles.rewardBeamWorld : null,
+                  {
+                    opacity: rewardBeamOpacity,
+                    transform: [
+                      { translateY: rewardBeamLift },
+                      { scale: rewardBeamScale },
+                    ],
+                  },
+                ]}
+              />
+              <RewardBurst progress={progress} variant={variant} />
+              <Animated.View
+                style={[
+                  styles.chestHolder,
+                  {
+                    transform: [
+                      { translateY: chestLift },
+                      { rotate: chestRotate },
+                      { scale: chestScale },
+                      { scaleY: chestSquash },
+                    ],
+                  },
+                ]}
+              >
+                <ChestArt
+                  openProgress={progress}
+                  size={isWorld ? 198 : 176}
+                  variant={variant}
+                />
+              </Animated.View>
+            </View>
+
             <Animated.View
-              pointerEvents="none"
-              style={[styles.flash, isWorld ? styles.flashWorld : null, { opacity: flashOpacity }]}
-            />
-            <Animated.View
-              pointerEvents="none"
               style={[
-                styles.openRing,
-                isWorld ? styles.openRingWorld : null,
+                styles.rewardPanel,
+                isWorld ? styles.rewardPanelWorld : null,
                 {
-                  opacity: ringOpacity,
-                  transform: [{ scale: ringScale }],
-                },
-              ]}
-            />
-            <Animated.View
-              pointerEvents="none"
-              style={[
-                styles.rewardBeam,
-                isWorld ? styles.rewardBeamWorld : null,
-                {
-                  opacity: rewardBeamOpacity,
-                  transform: [{ translateY: rewardBeamLift }, { scale: rewardBeamScale }],
-                },
-              ]}
-            />
-            <RewardBurst progress={progress} variant={variant} />
-            <Animated.View
-              style={[
-                styles.chestHolder,
-                {
-                  transform: [{ translateY: chestLift }, { rotate: chestRotate }, { scale: chestScale }, { scaleY: chestSquash }],
+                  opacity: rewardOpacity,
+                  transform: [
+                    { translateY: rewardLift },
+                    { scale: rewardScale },
+                  ],
                 },
               ]}
             >
-              <ChestArt openProgress={progress} size={isWorld ? 198 : 176} variant={variant} />
-            </Animated.View>
-          </View>
-
-          <Animated.View
-            style={[
-              styles.rewardPanel,
-              isWorld ? styles.rewardPanelWorld : null,
-              {
-                opacity: rewardOpacity,
-                transform: [{ translateY: rewardLift }, { scale: rewardScale }],
-              },
-            ]}
-          >
-            {isWorld ? (
-              <>
-                <View style={styles.rewardHeroRow}>
-                  {mainRewardAsset ? (
-                    <RewardAssetIcon name={mainRewardAsset} size={64} />
-                  ) : (
-                    <GameIcon name={mainReward.iconName} size={52} tone={mainReward.tone} />
-                  )}
-                  <View style={styles.rewardHeroCopy}>
-                    <Text numberOfLines={1} style={styles.rewardKicker}>
-                      Recompensa Especial
-                    </Text>
-                    <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.82} style={styles.rewardText}>
-                      {mainReward.label}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.rewardGrid}>
-                  {visibleRewards.map((item) => (
-                    <View key={`${item.iconName}-${item.label}`} style={styles.rewardChip}>
-                      <GameIcon name={item.iconName} size={24} tone={item.tone} />
-                      <Text numberOfLines={1} style={styles.rewardChipText}>
-                        {item.label}
+              {isWorld ? (
+                <>
+                  <View style={styles.rewardHeroRow}>
+                    {mainRewardAsset ? (
+                      <RewardAssetIcon name={mainRewardAsset} size={64} />
+                    ) : (
+                      <GameIcon
+                        name={mainReward.iconName}
+                        size={52}
+                        tone={mainReward.tone}
+                      />
+                    )}
+                    <View style={styles.rewardHeroCopy}>
+                      <Text numberOfLines={1} style={styles.rewardKicker}>
+                        Recompensa Especial
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.82}
+                        style={styles.rewardText}
+                      >
+                        {mainReward.label}
                       </Text>
                     </View>
-                  ))}
+                  </View>
+                  <View style={styles.rewardGrid}>
+                    {visibleRewards.map((item) => (
+                      <View
+                        key={`${item.iconName}-${item.label}`}
+                        style={styles.rewardChip}
+                      >
+                        <GameIcon
+                          name={item.iconName}
+                          size={24}
+                          tone={item.tone}
+                        />
+                        <Text numberOfLines={1} style={styles.rewardChipText}>
+                          {item.label}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                </>
+              ) : (
+                <View style={styles.rewardHeroRow}>
+                  {mainRewardAsset ? (
+                    <RewardAssetIcon name={mainRewardAsset} size={68} />
+                  ) : (
+                    <GameIcon
+                      name={mainReward.iconName}
+                      size={54}
+                      tone={mainReward.tone}
+                    />
+                  )}
+                  <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.82}
+                    style={styles.rewardText}
+                  >
+                    {mainReward.label}
+                  </Text>
                 </View>
-              </>
-            ) : (
-              <View style={styles.rewardHeroRow}>
-                {mainRewardAsset ? (
-                  <RewardAssetIcon name={mainRewardAsset} size={68} />
-                ) : (
-                  <GameIcon name={mainReward.iconName} size={54} tone={mainReward.tone} />
-                )}
-                <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.82} style={styles.rewardText}>
-                  {mainReward.label}
-                </Text>
-              </View>
-            )}
-          </Animated.View>
+              )}
+            </Animated.View>
 
             <View style={styles.statusShell}>
-              <Text style={[styles.statusText, isWorld ? styles.statusTextWorld : null]}>
+              <Text
+                style={[
+                  styles.statusText,
+                  isWorld ? styles.statusTextWorld : null,
+                ]}
+              >
                 {canContinue ? 'Recompensa!' : 'Abrindo baú...'}
               </Text>
             </View>

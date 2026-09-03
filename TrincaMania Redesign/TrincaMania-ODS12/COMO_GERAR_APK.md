@@ -3,7 +3,7 @@
 Guia prático para compilar o `.apk` localmente na sua máquina Windows.
 
 O projeto é **Expo (React Native)** compilado **localmente com Gradle** (não usa a
-nuvem do EAS). A pasta `android/` é código nativo *gerado* a partir do `app.json`
+nuvem do EAS). A pasta `android/` é código nativo _gerado_ a partir do `app.json`
 — por isso ela está no `.gitignore` e não vai para o Git.
 
 > **Sobre os caminhos deste guia:** onde aparecer `SEU_USUARIO`, troque pelo nome
@@ -37,12 +37,12 @@ android\app\build\outputs\apk\release\app-release.apk
 
 ## Pré-requisitos (configura só uma vez)
 
-| Ferramenta      | Onde costuma ficar / valor de exemplo                            |
-| --------------- | ---------------------------------------------------------------- |
+| Ferramenta      | Onde costuma ficar / valor de exemplo                                    |
+| --------------- | ------------------------------------------------------------------------ |
 | **JDK 21**      | `C:\Program Files\Android\Android Studio\jbr` (vem com o Android Studio) |
-| **Android SDK** | `C:\Users\SEU_USUARIO\AppData\Local\Android\Sdk`                 |
-| `JAVA_HOME`     | `C:\Program Files\Android\Android Studio\jbr`                    |
-| `ANDROID_HOME`  | `C:\Users\SEU_USUARIO\AppData\Local\Android\Sdk`                 |
+| **Android SDK** | `C:\Users\SEU_USUARIO\AppData\Local\Android\Sdk`                         |
+| `JAVA_HOME`     | `C:\Program Files\Android\Android Studio\jbr`                            |
+| `ANDROID_HOME`  | `C:\Users\SEU_USUARIO\AppData\Local\Android\Sdk`                         |
 
 > As duas variáveis de ambiente (`JAVA_HOME` e `ANDROID_HOME`) são usadas pelo
 > Gradle para achar o Java e o SDK. Se um dia der erro de "SDK not found" ou
@@ -136,18 +136,18 @@ Atualmente o APK de release é assinado com a **chave de debug**
 
 ## Alternativas ao build local
 
-| Comando                                        | O que faz                                                        |
-| ---------------------------------------------- | ---------------------------------------------------------------- |
-| `npx expo run:android`                         | Compila **e instala** direto num celular/emulador conectado. Bom para testar rápido. |
-| `eas build -p android --profile preview`       | Compila **na nuvem** do Expo (não usa sua máquina). O perfil `preview` já está configurado no `eas.json` para gerar `.apk`. |
+| Comando                                  | O que faz                                                                                                                   |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `npx expo run:android`                   | Compila **e instala** direto num celular/emulador conectado. Bom para testar rápido.                                        |
+| `eas build -p android --profile preview` | Compila **na nuvem** do Expo (não usa sua máquina). O perfil `preview` já está configurado no `eas.json` para gerar `.apk`. |
 
 ---
 
 ## Problemas comuns
 
-| Erro                                   | Solução                                                       |
-| -------------------------------------- | ------------------------------------------------------------- |
-| `JAVA_HOME is not set`                 | Definir `JAVA_HOME` = pasta do JDK (ex.: `C:\Program Files\Android\Android Studio\jbr`). |
+| Erro                                   | Solução                                                                                        |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `JAVA_HOME is not set`                 | Definir `JAVA_HOME` = pasta do JDK (ex.: `C:\Program Files\Android\Android Studio\jbr`).       |
 | `SDK location not found`               | Definir `ANDROID_HOME` = pasta do SDK (ex.: `C:\Users\SEU_USUARIO\AppData\Local\Android\Sdk`). |
-| Build trava / erros estranhos de cache | `cd android` → `.\gradlew.bat clean` e compilar de novo.       |
-| Caminho muito longo (Windows)          | Compilar num caminho curto (ex.: copiar o projeto para `C:\tm_build`). |
+| Build trava / erros estranhos de cache | `cd android` → `.\gradlew.bat clean` e compilar de novo.                                       |
+| Caminho muito longo (Windows)          | Compilar num caminho curto (ex.: copiar o projeto para `C:\tm_build`).                         |

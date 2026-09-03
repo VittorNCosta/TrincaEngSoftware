@@ -48,7 +48,10 @@ export const TRIPLE_SIZE = CARD_ROLE_CYCLE.length;
 export const isCardRole = (value: string): value is CardRole =>
   CARD_ROLE_CYCLE.includes(value as CardRole);
 
-export const getCardRole = (role: CardRole): CardRoleDefinition => CARD_ROLES[role];
+export const getCardRole = (role: CardRole): CardRoleDefinition =>
+  CARD_ROLES[role];
 
-export const compareRolesByCycleStep = (firstRole: CardRole, secondRole: CardRole) =>
-  CARD_ROLES[firstRole].step - CARD_ROLES[secondRole].step;
+export const compareRolesByCycleStep = (
+  firstRole: CardRole,
+  secondRole: CardRole,
+) => CARD_ROLES[firstRole].step - CARD_ROLES[secondRole].step;

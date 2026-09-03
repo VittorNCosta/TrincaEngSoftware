@@ -6,14 +6,24 @@ type ConfettiRainProps = {
   visible?: boolean;
 };
 
-const COLORS = ['#FFD35A', '#FF6D9E', '#42E5A7', '#FFF8E8', '#8FD8FF', '#B58BFF'];
+const COLORS = [
+  '#FFD35A',
+  '#FF6D9E',
+  '#42E5A7',
+  '#FFF8E8',
+  '#8FD8FF',
+  '#B58BFF',
+];
 const DEFAULT_COUNT = 22;
 
 /**
  * Chuva de confete do vídeo: retângulos girando enquanto caem. Um Animated.Value
  * por peça, todos no driver nativo. Substitui as partículas de emoji.
  */
-export function ConfettiRain({ count = DEFAULT_COUNT, visible = true }: ConfettiRainProps) {
+export function ConfettiRain({
+  count = DEFAULT_COUNT,
+  visible = true,
+}: ConfettiRainProps) {
   const window = useRef(Dimensions.get('window')).current;
   const pieces = useMemo(
     () =>
@@ -29,7 +39,10 @@ export function ConfettiRain({ count = DEFAULT_COUNT, visible = true }: Confetti
       })),
     [count, window.width],
   );
-  const progressValues = useMemo(() => pieces.map(() => new Animated.Value(0)), [pieces]);
+  const progressValues = useMemo(
+    () => pieces.map(() => new Animated.Value(0)),
+    [pieces],
+  );
 
   useEffect(() => {
     if (!visible) {

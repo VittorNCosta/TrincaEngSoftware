@@ -1,7 +1,10 @@
 import { World, WorldId } from '../types/game';
 
 const makeWorldLevelIds = (prefix: string, count: number) =>
-  Array.from({ length: count }, (_, index) => `${prefix}-${String(index + 1).padStart(3, '0')}`);
+  Array.from(
+    { length: count },
+    (_, index) => `${prefix}-${String(index + 1).padStart(3, '0')}`,
+  );
 
 export const WORLDS: World[] = [
   {

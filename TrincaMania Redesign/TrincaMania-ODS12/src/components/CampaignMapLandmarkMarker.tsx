@@ -21,7 +21,10 @@ export function CampaignMapLandmarkMarker({
   worldLabel,
   onPress,
 }: CampaignMapLandmarkMarkerProps) {
-  if ((kind === 'rest' || kind === 'shop') && visualKey === 'forest-rest-cart') {
+  if (
+    (kind === 'rest' || kind === 'shop') &&
+    visualKey === 'forest-rest-cart'
+  ) {
     if (!afterLevelLabel) {
       return null;
     }

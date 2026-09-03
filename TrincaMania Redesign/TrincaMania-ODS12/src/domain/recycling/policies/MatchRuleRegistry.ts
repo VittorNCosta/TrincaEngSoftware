@@ -16,7 +16,8 @@ export const MATCH_RULES: Record<MatchRuleId, MatchRule> = {
  */
 export const DEFAULT_MATCH_RULE_ID: MatchRuleId = 'recycling-cycle';
 
-export const getMatchRule = (ruleId: MatchRuleId = DEFAULT_MATCH_RULE_ID): MatchRule =>
-  MATCH_RULES[ruleId] ?? MATCH_RULES[DEFAULT_MATCH_RULE_ID];
+export const getMatchRule = (
+  ruleId: MatchRuleId = DEFAULT_MATCH_RULE_ID,
+): MatchRule => MATCH_RULES[ruleId] ?? MATCH_RULES[DEFAULT_MATCH_RULE_ID];
 
 export const activeMatchRule: MatchRule = getMatchRule();

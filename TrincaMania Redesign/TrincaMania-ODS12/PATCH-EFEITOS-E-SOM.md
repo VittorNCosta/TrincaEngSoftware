@@ -31,7 +31,7 @@ A sequência já é contada em `triggerMoveFeedback` (`moveFeedbackStreakRef`) �
 
 **Sobrescreva `src/components/MoveFeedbackEffect.tsx`** com:
 
-~~~tsx
+```tsx
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 
@@ -55,7 +55,9 @@ const MIN_MULTIPLIER = 2;
 export function MoveFeedbackEffect({ event }: MoveFeedbackEffectProps) {
   const anim = useRef(new Animated.Value(1)).current;
   const glow = useRef(new Animated.Value(0)).current;
-  const [visibleEvent, setVisibleEvent] = useState<MoveFeedbackEvent | undefined>();
+  const [visibleEvent, setVisibleEvent] = useState<
+    MoveFeedbackEvent | undefined
+  >();
 
   useEffect(() => {
     if (!event) {
@@ -76,8 +78,16 @@ export function MoveFeedbackEffect({ event }: MoveFeedbackEffectProps) {
     });
     const glowLoop = Animated.loop(
       Animated.sequence([
-        Animated.timing(glow, { duration: 260, toValue: 1, useNativeDriver: true }),
-        Animated.timing(glow, { duration: 260, toValue: 0, useNativeDriver: true }),
+        Animated.timing(glow, {
+          duration: 260,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(glow, {
+          duration: 260,
+          toValue: 0,
+          useNativeDriver: true,
+        }),
       ]),
     );
 
@@ -86,7 +96,9 @@ export function MoveFeedbackEffect({ event }: MoveFeedbackEffectProps) {
       glowLoop.stop();
 
       if (finished) {
-        setVisibleEvent((currentEvent) => (currentEvent?.id === event.id ? undefined : currentEvent));
+        setVisibleEvent((currentEvent) =>
+          currentEvent?.id === event.id ? undefined : currentEvent,
+        );
       }
     });
 
@@ -131,7 +143,10 @@ export function MoveFeedbackEffect({ event }: MoveFeedbackEffectProps) {
         ]}
       >
         {/* Halo pulsando: é o brilho rosa do vídeo, feito com View em vez de gradiente. */}
-        <Animated.View pointerEvents="none" style={[styles.halo, { opacity: glowOpacity }]} />
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.halo, { opacity: glowOpacity }]}
+        />
         <View style={styles.plate}>
           <Text adjustsFontSizeToFit numberOfLines={1} style={styles.label}>
             {visibleEvent.label}
@@ -140,7 +155,11 @@ export function MoveFeedbackEffect({ event }: MoveFeedbackEffectProps) {
             <View
               style={[
                 styles.chip,
-                multiplier >= 5 ? styles.chipGold : multiplier >= 3 ? styles.chipPink : styles.chipMint,
+                multiplier >= 5
+                  ? styles.chipGold
+                  : multiplier >= 3
+                    ? styles.chipPink
+                    : styles.chipMint,
               ]}
             >
               <Text
@@ -242,19 +261,23 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
 });
-~~~
+```
 
 Agora passe o multiplicador. Em `src/screens/GameScreen.tsx`, procure:
 
-~~~tsx
-    setMoveFeedbackEvent({ id: now + Math.random(), label: feedbackLabel });
-~~~
+```tsx
+setMoveFeedbackEvent({ id: now + Math.random(), label: feedbackLabel });
+```
 
 Troque por:
 
-~~~tsx
-    setMoveFeedbackEvent({ id: now + Math.random(), label: feedbackLabel, multiplier: nextStreak });
-~~~
+```tsx
+setMoveFeedbackEvent({
+  id: now + Math.random(),
+  label: feedbackLabel,
+  multiplier: nextStreak,
+});
+```
 
 ---
 
@@ -271,26 +294,26 @@ Todas as edições são em `src/components/TripleConsumeEffect.tsx`.
 
 Procure:
 
-~~~tsx
+```tsx
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
 import { TileIcon } from './TileIcon';
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
 import { TileIcon } from './TileIcon';
-~~~
+```
 
 ### E2.2 — partícula ganha forma
 
 Procure:
 
-~~~ts
+```ts
 type ParticleConfig = {
   color: string;
   dx: number;
@@ -298,11 +321,11 @@ type ParticleConfig = {
   rotate: number;
   size: number;
 };
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
 type ParticleConfig = {
   color: string;
   dx: number;
@@ -311,13 +334,13 @@ type ParticleConfig = {
   shape?: 'dot' | 'star';
   size: number;
 };
-~~~
+```
 
 ### E2.3 — a lista de partículas
 
 Procure a lista inteira:
 
-~~~ts
+```ts
 const PARTICLES: ParticleConfig[] = [
   { color: '#FFFFFF', dx: -82, dy: -64, rotate: -24, size: 10 },
   { color: '#FFE37A', dx: -42, dy: -96, rotate: 18, size: 8 },
@@ -329,11 +352,11 @@ const PARTICLES: ParticleConfig[] = [
   { color: '#FFFFFF', dx: -38, dy: 58, rotate: 42, size: 8 },
   { color: '#BDFBE4', dx: 40, dy: 62, rotate: -42, size: 8 },
 ];
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
 // Estrela grande para fora, poeirinha redonda para baixo: é a leitura padrão de
 // "coletou" em jogo de bandeja. A estrela é a mesma arte do GameIcon.
 const PARTICLES: ParticleConfig[] = [
@@ -350,205 +373,214 @@ const PARTICLES: ParticleConfig[] = [
 
 const STAR_PATH =
   'M32 8l6.7 14.2 15.3 2.2-11.1 10.8 2.6 15.2L32 43.2 18.5 50.4l2.6-15.2L10 24.4l15.3-2.2L32 8z';
-~~~
+```
 
 ### E2.4 — a estrela
 
 Procure:
 
-~~~tsx
+```tsx
 function ConsumeTileBody({ emoji, kind }: { emoji: string; kind: TileKind }) {
-~~~
+```
 
 E **acrescente logo acima**:
 
-~~~tsx
+```tsx
 function StarSpark({ color, size }: { color: string; size: number }) {
   return (
     <Svg height={size} viewBox="0 0 64 64" width={size}>
-      <Path d={STAR_PATH} fill="#7A4A0C" stroke="#7A4A0C" strokeLinejoin="round" strokeWidth={6} />
+      <Path
+        d={STAR_PATH}
+        fill="#7A4A0C"
+        stroke="#7A4A0C"
+        strokeLinejoin="round"
+        strokeWidth={6}
+      />
       <Path d={STAR_PATH} fill={color} />
     </Svg>
   );
 }
-
-~~~
+```
 
 ### E2.5 — desenhar a estrela e a segunda onda
 
 Procure o bloco das partículas no `return` (a `Animated.View` com `styles.particle`):
 
-~~~tsx
-        return (
-          <Animated.View
-            key={`${visibleEvent.id}-consume-particle-${index}`}
-            style={[
-              styles.particle,
-              {
-                backgroundColor: particle.color,
-                height: particle.size,
-                left: center.x - particle.size / 2,
-                opacity,
-                top: center.y - particle.size / 2,
-                transform: [
-                  { translateX },
-                  { translateY },
-                  { rotate: `${particle.rotate}deg` },
-                  { scale },
-                ],
-                width: particle.size,
-              },
-            ]}
-          />
-        );
-~~~
+```tsx
+return (
+  <Animated.View
+    key={`${visibleEvent.id}-consume-particle-${index}`}
+    style={[
+      styles.particle,
+      {
+        backgroundColor: particle.color,
+        height: particle.size,
+        left: center.x - particle.size / 2,
+        opacity,
+        top: center.y - particle.size / 2,
+        transform: [
+          { translateX },
+          { translateY },
+          { rotate: `${particle.rotate}deg` },
+          { scale },
+        ],
+        width: particle.size,
+      },
+    ]}
+  />
+);
+```
 
 Troque por:
 
-~~~tsx
-        const isStar = particle.shape === 'star';
+```tsx
+const isStar = particle.shape === 'star';
 
-        return (
-          <Animated.View
-            key={`${visibleEvent.id}-consume-particle-${index}`}
-            style={[
-              styles.particle,
-              isStar ? null : { backgroundColor: particle.color, borderRadius: radii.pill },
-              {
-                height: particle.size,
-                left: center.x - particle.size / 2,
-                opacity,
-                top: center.y - particle.size / 2,
-                transform: [
-                  { translateX },
-                  { translateY },
-                  { rotate: `${particle.rotate}deg` },
-                  { scale },
-                ],
-                width: particle.size,
-              },
-            ]}
-          >
-            {isStar ? <StarSpark color={particle.color} size={particle.size} /> : null}
-          </Animated.View>
-        );
-~~~
+return (
+  <Animated.View
+    key={`${visibleEvent.id}-consume-particle-${index}`}
+    style={[
+      styles.particle,
+      isStar
+        ? null
+        : { backgroundColor: particle.color, borderRadius: radii.pill },
+      {
+        height: particle.size,
+        left: center.x - particle.size / 2,
+        opacity,
+        top: center.y - particle.size / 2,
+        transform: [
+          { translateX },
+          { translateY },
+          { rotate: `${particle.rotate}deg` },
+          { scale },
+        ],
+        width: particle.size,
+      },
+    ]}
+  >
+    {isStar ? <StarSpark color={particle.color} size={particle.size} /> : null}
+  </Animated.View>
+);
+```
 
 No `StyleSheet.create`, o `particle` tem `borderRadius: radii.pill` — tire de lá (agora ele
 vem no estilo inline só para a poeirinha, para a estrela não sair recortada). Procure:
 
-~~~ts
+```ts
   particle: {
     borderRadius: radii.pill,
     position: 'absolute',
     zIndex: 45,
   },
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   particle: {
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
     zIndex: 45,
   },
-~~~
+```
 
 Agora a segunda onda. Procure o anel que já existe:
 
-~~~tsx
-      <Animated.View
-        style={[
-          styles.ring,
-          {
-            left: center.x - 50,
-            opacity: ringOpacity,
-            top: center.y - 50,
-            transform: [{ scale: ringScale }],
-          },
-        ]}
-      />
-~~~
+```tsx
+<Animated.View
+  style={[
+    styles.ring,
+    {
+      left: center.x - 50,
+      opacity: ringOpacity,
+      top: center.y - 50,
+      transform: [{ scale: ringScale }],
+    },
+  ]}
+/>
+```
 
 Troque por:
 
-~~~tsx
-      <Animated.View
-        style={[
-          styles.ring,
-          {
-            left: center.x - 50,
-            opacity: ringOpacity,
-            top: center.y - 50,
-            transform: [{ scale: ringScale }],
-          },
-        ]}
-      />
-      {/* Segunda onda, defasada e rosa: o "duplo estouro" do padrão de mercado. */}
-      <Animated.View
-        style={[
-          styles.ring,
-          styles.ringEcho,
-          {
-            left: center.x - 50,
-            opacity: ringEchoOpacity,
-            top: center.y - 50,
-            transform: [{ scale: ringEchoScale }],
-          },
-        ]}
-      />
-~~~
+```tsx
+<Animated.View
+  style={[
+    styles.ring,
+    {
+      left: center.x - 50,
+      opacity: ringOpacity,
+      top: center.y - 50,
+      transform: [{ scale: ringScale }],
+    },
+  ]}
+/>;
+{
+  /* Segunda onda, defasada e rosa: o "duplo estouro" do padrão de mercado. */
+}
+<Animated.View
+  style={[
+    styles.ring,
+    styles.ringEcho,
+    {
+      left: center.x - 50,
+      opacity: ringEchoOpacity,
+      top: center.y - 50,
+      transform: [{ scale: ringEchoScale }],
+    },
+  ]}
+/>;
+```
 
 As duas interpolações novas vão junto das outras. Procure:
 
-~~~tsx
+```tsx
   const flashOpacity = consume.interpolate({
-~~~
+```
 
 E **acrescente logo acima**:
 
-~~~tsx
-  const ringEchoOpacity = consume.interpolate({
-    inputRange: [0, 0.2, 0.8, 1],
-    outputRange: [0, 0.7, 0.12, 0],
-  });
-  const ringEchoScale = consume.interpolate({
-    inputRange: [0, 0.26, 1],
-    outputRange: [0.44, 1, 1.9],
-  });
-~~~
+```tsx
+const ringEchoOpacity = consume.interpolate({
+  inputRange: [0, 0.2, 0.8, 1],
+  outputRange: [0, 0.7, 0.12, 0],
+});
+const ringEchoScale = consume.interpolate({
+  inputRange: [0, 0.26, 1],
+  outputRange: [0.44, 1, 1.9],
+});
+```
 
 E no `StyleSheet.create` acrescente:
 
-~~~ts
+```ts
   ringEcho: {
     borderColor: 'rgba(255, 109, 158, 0.8)',
     zIndex: 44,
   },
-~~~
+```
 
 ### E2.6 — selo "TRINCA!" no impacto
 
 Ainda no `return`, procure o flash central:
 
-~~~tsx
-      <Animated.View
-        style={[
-          styles.flash,
-          {
-            left: center.x - 44,
-            opacity: flashOpacity,
-            top: center.y - 44,
-          },
-        ]}
-      />
-~~~
+```tsx
+<Animated.View
+  style={[
+    styles.flash,
+    {
+      left: center.x - 44,
+      opacity: flashOpacity,
+      top: center.y - 44,
+    },
+  ]}
+/>
+```
 
 Troque por:
 
-~~~tsx
+```tsx
       <Animated.View
         style={[
           styles.flash,
@@ -575,28 +607,28 @@ Troque por:
           <Text style={styles.stampChipText}>+3</Text>
         </View>
       </Animated.View>
-~~~
+```
 
 As interpolações do selo, junto das outras (logo depois de `ringEchoScale`):
 
-~~~tsx
-  const stampOpacity = consume.interpolate({
-    inputRange: [0, 0.16, 0.24, 0.78, 1],
-    outputRange: [0, 0, 1, 1, 0],
-  });
-  const stampScale = consume.interpolate({
-    inputRange: [0, 0.2, 0.3, 1],
-    outputRange: [0.7, 1.16, 1, 1],
-  });
-  const stampLift = consume.interpolate({
-    inputRange: [0, 1],
-    outputRange: [8, -34],
-  });
-~~~
+```tsx
+const stampOpacity = consume.interpolate({
+  inputRange: [0, 0.16, 0.24, 0.78, 1],
+  outputRange: [0, 0, 1, 1, 0],
+});
+const stampScale = consume.interpolate({
+  inputRange: [0, 0.2, 0.3, 1],
+  outputRange: [0.7, 1.16, 1, 1],
+});
+const stampLift = consume.interpolate({
+  inputRange: [0, 1],
+  outputRange: [8, -34],
+});
+```
 
 E os estilos:
 
-~~~ts
+```ts
   stamp: {
     alignItems: 'center',
     backgroundColor: 'rgba(36, 16, 68, 0.96)',
@@ -636,7 +668,7 @@ E os estilos:
     textShadowOffset: { height: 2, width: 0 },
     textShadowRadius: 4,
   },
-~~~
+```
 
 > O `+3` é a contagem de peças da trinca (sempre 3), não moeda — o jogo não paga moeda por
 > trinca e eu não inventei economia nova. Se quiser o selo sem o chip, é só remover o
@@ -646,7 +678,7 @@ E os estilos:
 
 **Crie `src/components/ScreenFlash.tsx`:**
 
-~~~tsx
+```tsx
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet } from 'react-native';
 
@@ -663,7 +695,11 @@ const FLASH_OUT_MS = 280;
  * Clarão de tela inteira, disparado por mudança de `triggerKey`. Só `opacity`,
  * driver nativo — não custa nada na thread JS.
  */
-export function ScreenFlash({ color = '#FFFFFF', peak = 0.24, triggerKey }: ScreenFlashProps) {
+export function ScreenFlash({
+  color = '#FFFFFF',
+  peak = 0.24,
+  triggerKey,
+}: ScreenFlashProps) {
   const flash = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -701,7 +737,11 @@ export function ScreenFlash({ color = '#FFFFFF', peak = 0.24, triggerKey }: Scre
   return (
     <Animated.View
       pointerEvents="none"
-      style={[StyleSheet.absoluteFill, styles.flash, { backgroundColor: color, opacity }]}
+      style={[
+        StyleSheet.absoluteFill,
+        styles.flash,
+        { backgroundColor: color, opacity },
+      ]}
     />
   );
 }
@@ -711,52 +751,52 @@ const styles = StyleSheet.create({
     zIndex: 60,
   },
 });
-~~~
+```
 
 Ligue no `src/screens/GameScreen.tsx`.
 
 **1)** no import dos componentes, junto dos outros, acrescente:
 
-~~~tsx
+```tsx
 import { ScreenFlash } from '../components/ScreenFlash';
-~~~
+```
 
 **2)** junto dos outros `useState` do componente, acrescente:
 
-~~~tsx
-  const [screenFlashKey, setScreenFlashKey] = useState(0);
-~~~
+```tsx
+const [screenFlashKey, setScreenFlashKey] = useState(0);
+```
 
 **3)** dispare na trinca. Procure:
 
-~~~tsx
+```tsx
     if (result.removedKind) {
       mediumImpact();
       startTripleConsume(consumeTiles, result.removedKind);
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
     if (result.removedKind) {
       mediumImpact();
       setScreenFlashKey((currentKey) => currentKey + 1);
       startTripleConsume(consumeTiles, result.removedKind);
-~~~
+```
 
 **4)** monte a camada. Procure:
 
-~~~tsx
-        <MoveFeedbackEffect event={moveFeedbackEvent} />
-~~~
+```tsx
+<MoveFeedbackEffect event={moveFeedbackEvent} />
+```
 
 Troque por:
 
-~~~tsx
+```tsx
         <ScreenFlash peak={0.22} triggerKey={screenFlashKey} />
 
         <MoveFeedbackEffect event={moveFeedbackEvent} />
-~~~
+```
 
 ---
 
@@ -764,7 +804,7 @@ Troque por:
 
 **Crie `src/components/ConfettiRain.tsx`:**
 
-~~~tsx
+```tsx
 import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Dimensions, Easing, StyleSheet, View } from 'react-native';
 
@@ -773,14 +813,24 @@ type ConfettiRainProps = {
   visible?: boolean;
 };
 
-const COLORS = ['#FFD35A', '#FF6D9E', '#42E5A7', '#FFF8E8', '#8FD8FF', '#B58BFF'];
+const COLORS = [
+  '#FFD35A',
+  '#FF6D9E',
+  '#42E5A7',
+  '#FFF8E8',
+  '#8FD8FF',
+  '#B58BFF',
+];
 const DEFAULT_COUNT = 22;
 
 /**
  * Chuva de confete do vídeo: retângulos girando enquanto caem. Um Animated.Value
  * por peça, todos no driver nativo. Substitui as partículas de emoji.
  */
-export function ConfettiRain({ count = DEFAULT_COUNT, visible = true }: ConfettiRainProps) {
+export function ConfettiRain({
+  count = DEFAULT_COUNT,
+  visible = true,
+}: ConfettiRainProps) {
   const window = useRef(Dimensions.get('window')).current;
   const pieces = useMemo(
     () =>
@@ -796,7 +846,10 @@ export function ConfettiRain({ count = DEFAULT_COUNT, visible = true }: Confetti
       })),
     [count, window.width],
   );
-  const progressValues = useMemo(() => pieces.map(() => new Animated.Value(0)), [pieces]);
+  const progressValues = useMemo(
+    () => pieces.map(() => new Animated.Value(0)),
+    [pieces],
+  );
 
   useEffect(() => {
     if (!visible) {
@@ -884,11 +937,11 @@ const styles = StyleSheet.create({
     top: 0,
   },
 });
-~~~
+```
 
 **Crie `src/components/LightRays.tsx`:**
 
-~~~tsx
+```tsx
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
@@ -998,7 +1051,7 @@ const styles = StyleSheet.create({
     top: '50%',
   },
 });
-~~~
+```
 
 > Se a sua versão do React Native não aceitar `transformOrigin` no `StyleSheet` (entrou no
 > 0.76; este projeto está no 0.81, então deve aceitar), **pare e me avise** — a alternativa
@@ -1010,26 +1063,30 @@ const styles = StyleSheet.create({
 
 Em `src/components/ResultModal.tsx`, no import dos componentes acrescente:
 
-~~~tsx
+```tsx
 import { ConfettiRain } from './ConfettiRain';
 import { LightRays } from './LightRays';
-~~~
+```
 
 Procure o bloco das partículas de emoji (começa logo depois do `<SafeAreaView ...>`):
 
-~~~tsx
+```tsx
         {isWon ? (
           <View pointerEvents="none" style={styles.sparkleLayer}>
             {RESULT_PARTICLES.map((particle, index) => {
-~~~
+```
 
 …e **substitua o bloco `{isWon ? ( ... ) : null}` inteiro** (até o `) : null}` que fecha essa
 camada, imediatamente antes do `<Animated.View style={[styles.card, ...` do card) por:
 
-~~~tsx
-        {isWon ? <LightRays /> : null}
-        {isWon ? <ConfettiRain /> : null}
-~~~
+```tsx
+{
+  isWon ? <LightRays /> : null;
+}
+{
+  isWon ? <ConfettiRain /> : null;
+}
+```
 
 O card continua montado depois, então ele fica **por cima** das duas camadas — confira que o
 card não ficou atrás do confete; se ficar, acrescente `zIndex: 3` ao estilo `card`.
@@ -1049,7 +1106,7 @@ quadro, antes do número aparecer.
 
 **Crie `src/components/CoinPile.tsx`:**
 
-~~~tsx
+```tsx
 import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
@@ -1074,7 +1131,11 @@ const PILE_HEIGHT = 100;
 const PILE_WIDTH = 132;
 const POP_MS = 420;
 
-export function CoinPile({ animationKey = 0, size = 74, visible = true }: CoinPileProps) {
+export function CoinPile({
+  animationKey = 0,
+  size = 74,
+  visible = true,
+}: CoinPileProps) {
   const pops = useMemo(() => COINS.map(() => new Animated.Value(0)), []);
   const popsRef = useRef(pops);
 
@@ -1159,33 +1220,33 @@ const styles = StyleSheet.create({
     width: PILE_WIDTH,
   },
 });
-~~~
+```
 
 Ligue em `src/components/RewardCollectOverlay.tsx`. No import dos componentes acrescente:
 
-~~~tsx
+```tsx
 import { CoinPile } from './CoinPile';
-~~~
+```
 
 Procure o anel do estouro (é a primeira coisa dentro do `return`):
 
-~~~tsx
-      <Animated.View
-        style={[
-          styles.burstRing,
-          {
-            left: originX - 44,
-            opacity: ringOpacity,
-            top: originY - 44,
-            transform: [{ scale: ringScale }],
-          },
-        ]}
-      />
-~~~
+```tsx
+<Animated.View
+  style={[
+    styles.burstRing,
+    {
+      left: originX - 44,
+      opacity: ringOpacity,
+      top: originY - 44,
+      transform: [{ scale: ringScale }],
+    },
+  ]}
+/>
+```
 
 Troque por:
 
-~~~tsx
+```tsx
       <Animated.View
         style={[
           styles.burstRing,
@@ -1200,16 +1261,16 @@ Troque por:
       <View pointerEvents="none" style={[styles.pile, { left: originX - 66, top: originY - 50 }]}>
         <CoinPile animationKey={animationKey} />
       </View>
-~~~
+```
 
 E no `StyleSheet.create` do mesmo arquivo acrescente:
 
-~~~ts
+```ts
   pile: {
     position: 'absolute',
     zIndex: 5,
   },
-~~~
+```
 
 As moedas que **voam** para o contador (`COIN_PARTICLES`) continuam como estão: o montinho é
 a origem, elas são o trajeto.
@@ -1236,48 +1297,48 @@ Duas coisas para ter em mente antes de editar:
 
 Em `soundSources`, procure:
 
-~~~ts
+```ts
   button: undefined,
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   button: require('../../assets/sfx/button.mp3') as AudioSource,
-~~~
+```
 
 Procure:
 
-~~~ts
+```ts
   tap: undefined,
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   tap: require('../../assets/sfx/tap.mp3') as AudioSource,
-~~~
+```
 
 Apague também o comentário que dizia que eles estavam desativados de propósito, logo acima do
 `SOUND_CONFIGS`:
 
-~~~ts
+```ts
 // Generic button/tap sounds are intentionally disabled for now to reduce audio fatigue.
 // Undefined sources are runtime no-ops.
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
 // Fontes `undefined` continuam sendo no-op em tempo de execução — é a rede de
 // segurança caso algum arquivo seja removido da pasta no futuro.
-~~~
+```
 
 ## S2 — as três chaves novas
 
 Procure o tipo:
 
-~~~ts
+```ts
 type SoundKey =
   | 'blocked'
   | 'button'
@@ -1290,11 +1351,11 @@ type SoundKey =
   | 'tap'
   | 'win'
   | 'worldUnlock';
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
 type SoundKey =
   | 'blocked'
   | 'button'
@@ -1310,28 +1371,28 @@ type SoundKey =
   | 'whoosh'
   | 'win'
   | 'worldUnlock';
-~~~
+```
 
 Em `soundSources`, procure:
 
-~~~ts
+```ts
   coin: require('../../assets/sfx/coin.mp3') as AudioSource,
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   coin: require('../../assets/sfx/coin.mp3') as AudioSource,
   confetti: require('../../assets/sfx/confetti.wav') as AudioSource,
   shockwave: require('../../assets/sfx/shockwave.wav') as AudioSource,
   whoosh: require('../../assets/sfx/whoosh.wav') as AudioSource,
-~~~
+```
 
 ## S3 — volumes e cooldowns
 
 Substitua o `SOUND_CONFIGS` inteiro por:
 
-~~~ts
+```ts
 const SOUND_CONFIGS: Record<SoundKey, SoundConfig> = {
   // 750ms engolia a segunda tentativa na mesma peça: 300 responde a cada toque.
   blocked: { cooldownMs: 300, source: soundSources.blocked, volume: 0.32 },
@@ -1343,43 +1404,51 @@ const SOUND_CONFIGS: Record<SoundKey, SoundConfig> = {
   lose: { cooldownMs: 700, source: soundSources.lose, volume: 0.46 },
   match: { cooldownMs: 180, source: soundSources.match, volume: 0.44 },
   // Vira camada em cima da trinca, então baixa de 0.34 para 0.22.
-  rewardSparkle: { cooldownMs: 700, source: soundSources.rewardSparkle, volume: 0.22 },
+  rewardSparkle: {
+    cooldownMs: 700,
+    source: soundSources.rewardSparkle,
+    volume: 0.22,
+  },
   shockwave: { cooldownMs: 200, source: soundSources.shockwave, volume: 0.3 },
   shopBuy: { cooldownMs: 450, source: soundSources.shopBuy, volume: 0.46 },
   tap: { cooldownMs: 55, source: soundSources.tap, volume: 0.3 },
   whoosh: { cooldownMs: 60, source: soundSources.whoosh, volume: 0.26 },
   win: { cooldownMs: 700, source: soundSources.win, volume: 0.52 },
-  worldUnlock: { cooldownMs: 900, source: soundSources.worldUnlock, volume: 0.54 },
+  worldUnlock: {
+    cooldownMs: 900,
+    source: soundSources.worldUnlock,
+    volume: 0.54,
+  },
 };
-~~~
+```
 
 ## S4 — trinca sobe de tom com a sequência
 
 Procure a constante do ambiente:
 
-~~~ts
+```ts
 export const AMBIENT_VOLUME = 0.12;
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
 export const AMBIENT_VOLUME = 0.12;
 // Volume do ambiente durante vitória/baú: o efeito grande precisa de espaço.
 export const AMBIENT_DUCK_VOLUME = 0.04;
 // Altura da trinca por sequência. A 5ª trinca seguida já soa quase uma quinta acima.
 const MATCH_RATE_BY_STREAK = [1, 1.06, 1.12, 1.19, 1.26];
-~~~
+```
 
 Agora as funções. Procure:
 
-~~~ts
+```ts
 export const playMatchSound = () => playSound('match');
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
 export const playMatchSound = () => playSound('match');
 
 const setPlayerRate = (player: AudioPlayer, rate: number) => {
@@ -1410,7 +1479,10 @@ export const playTripleSounds = (streak = 1) => {
     return;
   }
 
-  const rateIndex = Math.min(MATCH_RATE_BY_STREAK.length - 1, Math.max(0, streak - 1));
+  const rateIndex = Math.min(
+    MATCH_RATE_BY_STREAK.length - 1,
+    Math.max(0, streak - 1),
+  );
   const player = getPlayer('match');
 
   if (player) {
@@ -1452,9 +1524,13 @@ export const unduckAmbient = (fadeMs = 400) => {
     return;
   }
 
-  fadeAmbientTo(currentAmbientPlayer, AMBIENT_CONFIGS[currentAmbientKey].volume, fadeMs);
+  fadeAmbientTo(
+    currentAmbientPlayer,
+    AMBIENT_CONFIGS[currentAmbientKey].volume,
+    fadeMs,
+  );
 };
-~~~
+```
 
 > `setPlaybackRate` é do `AudioPlayer` do `expo-audio`. Se a assinatura da sua versão for
 > outra, o `try/catch` já garante que a trinca continua tocando na altura normal — **não é
@@ -1464,27 +1540,27 @@ export const unduckAmbient = (fadeMs = 400) => {
 
 Em `src/components/RewardCollectOverlay.tsx`, procure:
 
-~~~tsx
+```tsx
 import { playCoinSound } from '../utils/sounds';
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
 import { playCoinCascade } from '../utils/sounds';
-~~~
+```
 
 Procure:
 
-~~~tsx
-      playCoinSound();
-~~~
+```tsx
+playCoinSound();
+```
 
 Troque por:
 
-~~~tsx
-      playCoinCascade(3);
-~~~
+```tsx
+playCoinCascade(3);
+```
 
 ## S6 — trinca, whoosh e confete no GameScreen
 
@@ -1497,45 +1573,45 @@ depois de S6.1 e o typecheck reclamar, remova-o do import.
 
 Procure:
 
-~~~tsx
+```tsx
       if (result.status !== 'won') {
         playMatchSound();
         triggerMoveFeedback();
-~~~
+```
 
 Troque por (a ordem inverte de propósito: `triggerMoveFeedback` é quem atualiza a sequência,
 e o som precisa dela já atualizada):
 
-~~~tsx
+```tsx
       if (result.status !== 'won') {
         triggerMoveFeedback();
         playTripleSounds(moveFeedbackStreakRef.current);
-~~~
+```
 
 ### S6.2 — o voo da peça
 
 Procure:
 
-~~~tsx
-    setFlyingTileEvent({
-      from: fromTarget,
-      id: Date.now() + Math.random(),
-      tile: trayTile,
-      to: toTarget,
-    });
-~~~
+```tsx
+setFlyingTileEvent({
+  from: fromTarget,
+  id: Date.now() + Math.random(),
+  tile: trayTile,
+  to: toTarget,
+});
+```
 
 Troque por:
 
-~~~tsx
-    playWhooshSound();
-    setFlyingTileEvent({
-      from: fromTarget,
-      id: Date.now() + Math.random(),
-      tile: trayTile,
-      to: toTarget,
-    });
-~~~
+```tsx
+playWhooshSound();
+setFlyingTileEvent({
+  from: fromTarget,
+  id: Date.now() + Math.random(),
+  tile: trayTile,
+  to: toTarget,
+});
+```
 
 O `tap.mp3` (S1) já toca no fim do voo, em `handleFlyingTileComplete` — junto com o whoosh
 fica sopro na saída e encaixe na chegada, que é o par padrão.
@@ -1544,55 +1620,55 @@ fica sopro na saída e encaixe na chegada, que é o par padrão.
 
 Procure:
 
-~~~tsx
+```tsx
     if (result.status === 'won') {
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
     if (result.status === 'won') {
       duckAmbient();
       playConfettiSound();
-~~~
+```
 
 E em `resetRoundState`, procure:
 
-~~~tsx
-    clearMoveFeedbackStreak();
-~~~
+```tsx
+clearMoveFeedbackStreak();
+```
 
 Troque por:
 
-~~~tsx
-    clearMoveFeedbackStreak();
-    unduckAmbient();
-~~~
+```tsx
+clearMoveFeedbackStreak();
+unduckAmbient();
+```
 
 ## S7 — som nos botões da HUD do mapa
 
 O `button.mp3` só vale se alguém o tocar. Em `src/components/MapHud.tsx`, no topo,
 acrescente:
 
-~~~tsx
+```tsx
 import { playButtonSound } from '../utils/sounds';
-~~~
+```
 
 E nos `onPress` de **home**, **configurações**, **mundo anterior** e **próximo mundo**, envolva
 a chamada existente. Exemplo do home — procure:
 
-~~~tsx
-          onPress={onHome}
-~~~
+```tsx
+onPress = { onHome };
+```
 
 Troque por:
 
-~~~tsx
+```tsx
           onPress={() => {
             playButtonSound();
             onHome();
           }}
-~~~
+```
 
 Faça o mesmo com `onPress={onOpenSettings}`, `onPress={onPreviousWorld}` e
 `onPress={onNextWorld}`. **Não** coloque nos botões `+` de moeda/vida: eles abrem a loja, que
@@ -1602,14 +1678,12 @@ já tem som próprio.
 
 Já vêm com este script, em `sfx/`. Copie para `assets/sfx/` **antes** de aplicar S2:
 
-| arquivo | duração | caráter |
-| --- | --- | --- |
-| `whoosh.wav` | 190ms | sopro seco sem cauda — a chegada fica com o `tap.mp3` |
-| `shockwave.wav` | 300ms | corpo grave 96→48Hz com brilho no ataque |
-| `confetti.wav` | 760ms | estouro de papel + cauda de purpurina |
+| arquivo         | duração | caráter                                               |
+| --------------- | ------- | ----------------------------------------------------- |
+| `whoosh.wav`    | 190ms   | sopro seco sem cauda — a chegada fica com o `tap.mp3` |
+| `shockwave.wav` | 300ms   | corpo grave 96→48Hz com brilho no ataque              |
+| `confetti.wav`  | 760ms   | estouro de papel + cauda de purpurina                 |
 
 São sintetizados (mono, 44.1kHz, −3dB), feitos para casar com a duração de cada efeito
 visual. Se um dia trocar por gravação profissional, **mantenha o mesmo nome de arquivo** e
 nenhuma linha de código muda. WAV curto é normal em jogo: os três somam ~110KB.
-
-

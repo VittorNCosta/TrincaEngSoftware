@@ -21,9 +21,13 @@ export const mediumImpact = () => {
 };
 
 export const successImpact = () => {
-  runHaptic(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+  runHaptic(() =>
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
+  );
 };
 
 export const warningImpact = () => {
-  runHaptic(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning));
+  runHaptic(() =>
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
+  );
 };

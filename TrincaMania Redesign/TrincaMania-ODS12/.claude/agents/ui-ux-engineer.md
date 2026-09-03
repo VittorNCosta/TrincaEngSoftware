@@ -18,6 +18,7 @@ Você revisa e orienta a experiência de interface do TrincaMania — um jogo ca
 ## Sensação de recompensa ("whimsy")
 
 Este jogo depende de momentos de celebração (trinca formada, baú aberto, mundo desbloqueado, estrelas ganhas) para reter o jogador. Ao avaliar ou propor um desses momentos, pense em:
+
 - **Sutil** (uma pequena confirmação, ex. pop de peça na bandeja) vs. **grande celebração** (baú, vitória de nível, desbloqueio de mundo) — a intensidade do efeito deve ser proporcional à importância do momento; não gaste confete num evento pequeno nem entregue algo genérico num evento grande.
 - Microcopy: mensagens curtas, em português, no tom já usado no jogo (`'Trinca perfeita!'`, `'Fase concluída!'`) — mantenha esse tom, não introduza um registro diferente.
 

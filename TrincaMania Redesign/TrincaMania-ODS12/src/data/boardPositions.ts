@@ -130,7 +130,9 @@ const buildLayerCells = (): { column: number; row: number }[] => {
       Math.abs(second.column - centerColumn) + Math.abs(second.row - centerRow);
 
     return (
-      firstDistance - secondDistance || first.row - second.row || first.column - second.column
+      firstDistance - secondDistance ||
+      first.row - second.row ||
+      first.column - second.column
     );
   });
 };
@@ -146,7 +148,11 @@ const buildTilePositions = (): TilePosition[] => {
     0,
   );
 
-  for (let layer = 0; layer <= maxAuthoredLayer + GENERATED_LAYERS; layer += 1) {
+  for (
+    let layer = 0;
+    layer <= maxAuthoredLayer + GENERATED_LAYERS;
+    layer += 1
+  ) {
     layerCells.forEach(({ column, row }) => {
       const position: TilePosition = [
         GRID_ORIGIN_X + column * GRID_STEP,
@@ -184,7 +190,8 @@ export const getTilePosition = (index: number): TilePosition => {
 export const takeTilePositions = (count: number): TilePosition[] => {
   const safeCount = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
 
-  return Array.from({ length: Math.min(safeCount, TILE_POSITIONS.length) }, (_, index) =>
-    getTilePosition(index),
+  return Array.from(
+    { length: Math.min(safeCount, TILE_POSITIONS.length) },
+    (_, index) => getTilePosition(index),
   );
 };

@@ -17,7 +17,10 @@ require.extensions['.ts'] = (module, filename) => {
   module._compile(output, filename);
 };
 
-const { curveProgress, LINEAR_DIFFICULTY_CURVE } = require('../src/utils/difficultyCurve.ts');
+const {
+  curveProgress,
+  LINEAR_DIFFICULTY_CURVE,
+} = require('../src/utils/difficultyCurve.ts');
 
 // Curvas usadas de verdade pelos mundos 4-8 e pelos 10 capítulos (ver
 // GENERATED_WORLD_CONFIGS em levels.ts e CHAPTER_BLUEPRINTS em chapters.ts),
@@ -48,7 +51,12 @@ test('curveProgress é estritamente crescente em todo position, inclusive nas fr
     for (const curve of REAL_CURVES) {
       let previous = -Infinity;
       for (let position = 1; position <= shape.total; position += 1) {
-        const value = curveProgress(position, shape.total, shape.blockSize, curve);
+        const value = curveProgress(
+          position,
+          shape.total,
+          shape.blockSize,
+          curve,
+        );
         assert.ok(
           value > previous,
           `curveProgress deveria crescer estritamente: position=${position} deu ${value}, ` +
@@ -75,7 +83,12 @@ test('extremos: position=1 é exatamente 0, position=total é exatamente 1', () 
   for (const shape of SHAPES) {
     for (const curve of REAL_CURVES) {
       const first = curveProgress(1, shape.total, shape.blockSize, curve);
-      const last = curveProgress(shape.total, shape.total, shape.blockSize, curve);
+      const last = curveProgress(
+        shape.total,
+        shape.total,
+        shape.blockSize,
+        curve,
+      );
 
       assert.equal(first, 0);
       assert.equal(last, 1);

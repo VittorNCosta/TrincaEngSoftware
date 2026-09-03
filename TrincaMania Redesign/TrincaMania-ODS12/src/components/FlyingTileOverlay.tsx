@@ -43,10 +43,18 @@ function FlyingTileBody({
   scale?: Animated.AnimatedInterpolation<number>;
 }) {
   return (
-    <Animated.View style={[styles.tile, { transform: scale ? [{ scale }] : undefined }]}>
+    <Animated.View
+      style={[styles.tile, { transform: scale ? [{ scale }] : undefined }]}
+    >
       <View pointerEvents="none" style={styles.innerBottomShade} />
       <View pointerEvents="none" style={styles.specular} />
-      <TileIcon fallbackEmoji={emoji} highlighted kind={kind} role={role} size={38} />
+      <TileIcon
+        fallbackEmoji={emoji}
+        highlighted
+        kind={kind}
+        role={role}
+        size={38}
+      />
     </Animated.View>
   );
 }
@@ -93,7 +101,10 @@ function FlyingTileFlight({
 
   const from = getCenter(event.from, containerTarget);
   const to = getCenter(event.to, containerTarget);
-  const arcLift = Math.min(112, Math.max(56, Math.abs(to.y - from.y) * 0.24 + 40));
+  const arcLift = Math.min(
+    112,
+    Math.max(56, Math.abs(to.y - from.y) * 0.24 + 40),
+  );
   const translateX = flight.interpolate({
     inputRange: [0, 0.52, 1],
     outputRange: [0, (to.x - from.x) * 0.5, to.x - from.x],
@@ -156,7 +167,11 @@ function FlyingTileFlight({
   );
 }
 
-export function FlyingTileOverlay({ containerTarget, event, onSettled }: FlyingTileOverlayProps) {
+export function FlyingTileOverlay({
+  containerTarget,
+  event,
+  onSettled,
+}: FlyingTileOverlayProps) {
   if (!event) {
     return null;
   }

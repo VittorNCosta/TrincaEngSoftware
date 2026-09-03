@@ -28,7 +28,13 @@ export function LivesBadge({
         isEmpty ? styles.containerEmpty : null,
       ]}
     >
-      <Text style={[styles.value, dark ? styles.valueDark : null, isEmpty ? styles.valueEmpty : null]}>
+      <Text
+        style={[
+          styles.value,
+          dark ? styles.valueDark : null,
+          isEmpty ? styles.valueEmpty : null,
+        ]}
+      >
         {'♥'} {livesState.currentLives}/{livesState.maxLives}
       </Text>
       {!compact && !isFull ? (

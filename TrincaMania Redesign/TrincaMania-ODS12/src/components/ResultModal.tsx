@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 
@@ -82,22 +89,38 @@ function UnearnedStarOutline() {
   );
 }
 
-const getWorldChestRewardItems = (result?: WorldChestOpenResult): ChestRewardItem[] => {
+const getWorldChestRewardItems = (
+  result?: WorldChestOpenResult,
+): ChestRewardItem[] => {
   if (!result?.reward) {
     return [];
   }
 
   return [
     ...(result.reward.lifeGranted
-      ? [{ iconName: 'heart' as const, label: '+1 vida', tone: 'pink' as const }]
+      ? [
+          {
+            iconName: 'heart' as const,
+            label: '+1 vida',
+            tone: 'pink' as const,
+          },
+        ]
       : []),
     {
       iconName: 'coin' as const,
       label: `+${formatQuantity(result.reward.coins, 'moeda', 'moedas')}`,
       tone: 'gold' as const,
     },
-    { iconName: 'powers' as const, label: '+1 Trinca Mágica', tone: 'blue' as const },
-    { iconName: 'shuffle' as const, label: '+1 Misturar', tone: 'purple' as const },
+    {
+      iconName: 'powers' as const,
+      label: '+1 Trinca Mágica',
+      tone: 'blue' as const,
+    },
+    {
+      iconName: 'shuffle' as const,
+      label: '+1 Misturar',
+      tone: 'purple' as const,
+    },
     { iconName: 'undo' as const, label: '+1 Voltar', tone: 'green' as const },
   ];
 };
@@ -138,9 +161,14 @@ export function ResultModal({
   // WORLDS[0]. Sem este desvio a vitória anunciaria o Bosque e ofereceria
   // "Novo mundo em breve" no lugar de um avanço que existe de verdade.
   const chapterSummary = getChapterLevelSummary(level.id);
-  const chapterName = chapterSummary ? getChapter(chapterSummary.chapterId)?.name : undefined;
-  const currentLevelIndex = LEVELS.findIndex((knownLevel) => knownLevel.id === level.id);
-  const nextLevel = currentLevelIndex >= 0 ? LEVELS[currentLevelIndex + 1] : undefined;
+  const chapterName = chapterSummary
+    ? getChapter(chapterSummary.chapterId)?.name
+    : undefined;
+  const currentLevelIndex = LEVELS.findIndex(
+    (knownLevel) => knownLevel.id === level.id,
+  );
+  const nextLevel =
+    currentLevelIndex >= 0 ? LEVELS[currentLevelIndex + 1] : undefined;
   const canAdvanceDirectly = chapterSummary
     ? chapterSummary.campaignPosition < CHAPTER_COUNT * CHAPTER_MAPS_PER_CHAPTER
     : Boolean(nextLevel && (nextLevel.worldId !== 21 || level.worldId === 21));
@@ -172,12 +200,20 @@ export function ResultModal({
   const coinScale = useRef(new Animated.Value(0.88)).current;
   const loseShake = useRef(new Animated.Value(0)).current;
   const sparkle = useRef(new Animated.Value(0)).current;
-  const [worldChestResult, setWorldChestResult] = useState<WorldChestOpenResult | undefined>();
-  const [worldChestMessage, setWorldChestMessage] = useState<string | undefined>();
+  const [worldChestResult, setWorldChestResult] = useState<
+    WorldChestOpenResult | undefined
+  >();
+  const [worldChestMessage, setWorldChestMessage] = useState<
+    string | undefined
+  >();
   const [isOpeningWorldChest, setIsOpeningWorldChest] = useState(false);
-  const [isCommonChestOpeningVisible, setIsCommonChestOpeningVisible] = useState(false);
-  const [isWorldChestOpeningVisible, setIsWorldChestOpeningVisible] = useState(false);
-  const commonChestModalTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [isCommonChestOpeningVisible, setIsCommonChestOpeningVisible] =
+    useState(false);
+  const [isWorldChestOpeningVisible, setIsWorldChestOpeningVisible] =
+    useState(false);
+  const commonChestModalTimerRef = useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined);
   const shownCommonChestKeyRef = useRef<string | undefined>(undefined);
   const shownWorldChestKeyRef = useRef<string | undefined>(undefined);
   const starAnims = useRef([
@@ -390,279 +426,387 @@ export function ResultModal({
 
   return (
     <>
-    <Modal animationType="none" transparent visible={status !== 'playing'}>
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.overlay}>
-        {isWon ? <ConfettiRain /> : null}
-
-        <Animated.View
-          style={[
-            styles.card,
-            isWon ? styles.winCard : styles.loseCard,
-            isPerfect ? styles.perfectCard : null,
-            {
-              opacity: cardOpacity,
-              transform: [{ translateX: isWon ? 0 : loseTranslateX }, { scale: cardScale }],
-            },
-          ]}
+      <Modal animationType="none" transparent visible={status !== 'playing'}>
+        <SafeAreaView
+          edges={['top', 'bottom', 'left', 'right']}
+          style={styles.overlay}
         >
-          <View pointerEvents="none" style={styles.cardGlow} />
-          <View style={[styles.banner, isWon ? styles.winBanner : styles.loseBanner]}>
-            <Text style={styles.bannerText}>
-              {isWon ? 'Vitória' : 'Bandeja cheia!'}
-            </Text>
-          </View>
+          {isWon ? <ConfettiRain /> : null}
 
-          <GameIcon name={isWon ? 'win' : 'lose'} size={52} tone={isWon ? 'gold' : 'danger'} />
-
-          <Text style={[styles.title, isWon ? styles.winTitle : null]}>
-            {isWon ? victoryTitle : 'Tente de novo'}
-          </Text>
-          <Text style={[styles.subtitle, isWon ? styles.winSubtitle : null]}>
-            {isWon
-              ? `Fase ${getLevelDisplayLabel(level)} em ${chapterName ?? world.name}`
-              : `Bandeja cheia: ${activeTrayCapacity}/${activeTrayCapacity}`}
-          </Text>
-
-          <ScrollView
-            bounces={false}
-            contentContainerStyle={styles.resultBodyContent}
-            showsVerticalScrollIndicator={false}
-            style={styles.resultBody}
+          <Animated.View
+            style={[
+              styles.card,
+              isWon ? styles.winCard : styles.loseCard,
+              isPerfect ? styles.perfectCard : null,
+              {
+                opacity: cardOpacity,
+                transform: [
+                  { translateX: isWon ? 0 : loseTranslateX },
+                  { scale: cardScale },
+                ],
+              },
+            ]}
           >
-            {isWon ? (
-              <View style={[styles.rewardPanel, isPerfect ? styles.perfectRewardPanel : null]}>
-              {isPerfect ? <View pointerEvents="none" style={styles.perfectGlow} /> : null}
-              <View style={styles.starsRow}>
-                {starAnims.map((starAnim, index) => {
-                  if (index >= earnedStarCount) {
-                    return (
-                      <View key={`result-star-${index}`} style={styles.resultStar}>
-                        <UnearnedStarOutline />
+            <View pointerEvents="none" style={styles.cardGlow} />
+            <View
+              style={[
+                styles.banner,
+                isWon ? styles.winBanner : styles.loseBanner,
+              ]}
+            >
+              <Text style={styles.bannerText}>
+                {isWon ? 'Vitória' : 'Bandeja cheia!'}
+              </Text>
+            </View>
+
+            <GameIcon
+              name={isWon ? 'win' : 'lose'}
+              size={52}
+              tone={isWon ? 'gold' : 'danger'}
+            />
+
+            <Text style={[styles.title, isWon ? styles.winTitle : null]}>
+              {isWon ? victoryTitle : 'Tente de novo'}
+            </Text>
+            <Text style={[styles.subtitle, isWon ? styles.winSubtitle : null]}>
+              {isWon
+                ? `Fase ${getLevelDisplayLabel(level)} em ${chapterName ?? world.name}`
+                : `Bandeja cheia: ${activeTrayCapacity}/${activeTrayCapacity}`}
+            </Text>
+
+            <ScrollView
+              bounces={false}
+              contentContainerStyle={styles.resultBodyContent}
+              showsVerticalScrollIndicator={false}
+              style={styles.resultBody}
+            >
+              {isWon ? (
+                <View
+                  style={[
+                    styles.rewardPanel,
+                    isPerfect ? styles.perfectRewardPanel : null,
+                  ]}
+                >
+                  {isPerfect ? (
+                    <View pointerEvents="none" style={styles.perfectGlow} />
+                  ) : null}
+                  <View style={styles.starsRow}>
+                    {starAnims.map((starAnim, index) => {
+                      if (index >= earnedStarCount) {
+                        return (
+                          <View
+                            key={`result-star-${index}`}
+                            style={styles.resultStar}
+                          >
+                            <UnearnedStarOutline />
+                          </View>
+                        );
+                      }
+
+                      const starOpacity = starAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 1],
+                      });
+                      const starScale = starAnim.interpolate({
+                        inputRange: [0, 0.78, 1],
+                        outputRange: [0.35, 1.18, 1],
+                      });
+                      const starTranslateY = starAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [12, 0],
+                      });
+
+                      return (
+                        <Animated.View
+                          key={`result-star-${index}`}
+                          style={[
+                            styles.resultStar,
+                            {
+                              opacity: starOpacity,
+                              transform: [
+                                { translateY: starTranslateY },
+                                { scale: starScale },
+                              ],
+                            },
+                          ]}
+                        >
+                          <GameIcon
+                            name="star"
+                            size={34}
+                            tone="gold"
+                            variant="plain"
+                          />
+                        </Animated.View>
+                      );
+                    })}
+                  </View>
+                  <View style={styles.winStatsRow}>
+                    <View style={styles.statPill}>
+                      <Text style={styles.statLabel}>Tempo</Text>
+                      <Text style={styles.statValue}>
+                        {formatSeconds(elapsedSeconds)}
+                      </Text>
+                    </View>
+                    {isNewRecord ? (
+                      <View style={[styles.statPill, styles.recordPill]}>
+                        <Text style={styles.statLabel}>Recorde</Text>
+                        <Text style={styles.statValue}>Novo!</Text>
                       </View>
-                    );
-                  }
-
-                  const starOpacity = starAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1],
-                  });
-                  const starScale = starAnim.interpolate({
-                    inputRange: [0, 0.78, 1],
-                    outputRange: [0.35, 1.18, 1],
-                  });
-                  const starTranslateY = starAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [12, 0],
-                  });
-
-                  return (
+                    ) : null}
+                  </View>
+                  {isBonusReward && hasCoinReward ? (
+                    <Text style={styles.bonusRewardText}>
+                      Recompensa bônus!
+                    </Text>
+                  ) : null}
+                  {hasCoinReward ? (
                     <Animated.View
-                      key={`result-star-${index}`}
                       style={[
-                        styles.resultStar,
-                        {
-                          opacity: starOpacity,
-                          transform: [{ translateY: starTranslateY }, { scale: starScale }],
-                        },
+                        styles.rewardRow,
+                        { transform: [{ scale: coinScale }] },
                       ]}
                     >
-                      <GameIcon name="star" size={34} tone="gold" variant="plain" />
+                      <GameIcon name="coin" size={24} tone="gold" />
+                      <Text style={styles.rewardText}>
+                        +{formatQuantity(coinsEarned, 'moeda', 'moedas')}
+                      </Text>
                     </Animated.View>
-                  );
-                })}
-              </View>
-              <View style={styles.winStatsRow}>
-                <View style={styles.statPill}>
-                  <Text style={styles.statLabel}>Tempo</Text>
-                  <Text style={styles.statValue}>{formatSeconds(elapsedSeconds)}</Text>
-                </View>
-                {isNewRecord ? (
-                  <View style={[styles.statPill, styles.recordPill]}>
-                    <Text style={styles.statLabel}>Recorde</Text>
-                    <Text style={styles.statValue}>Novo!</Text>
-                  </View>
-                ) : null}
-              </View>
-              {isBonusReward && hasCoinReward ? (
-                <Text style={styles.bonusRewardText}>Recompensa bônus!</Text>
-              ) : null}
-              {hasCoinReward ? (
-                <Animated.View style={[styles.rewardRow, { transform: [{ scale: coinScale }] }]}>
-                  <GameIcon name="coin" size={24} tone="gold" />
-                  <Text style={styles.rewardText}>
-                    +{formatQuantity(coinsEarned, 'moeda', 'moedas')}
-                  </Text>
-                </Animated.View>
-              ) : (
-                <Text style={styles.noRewardText}>Melhor resultado mantido</Text>
-              )}
-              {chestProgress ? (
-                <ChestProgressCard
-                  animationKey={commonChestAnimationKey}
-                  fromProgress={commonChestFromProgress}
-                  isLevelCounted={chestProgress.isLevelCounted}
-                  opened={chestProgress.opened}
-                  requiredCount={chestProgress.requiredCount}
-                  toProgress={chestProgress.progressCount}
-                  onCompletedAnimationEnd={handleCommonChestProgressEnd}
-                />
-              ) : null}
-              {worldChest ? (
-                <View style={[styles.worldChestPanel, worldChestOpened ? styles.worldChestPanelOpen : null]}>
-                  <View style={styles.worldChestHeader}>
-                    {worldChestOpened ? (
-                      <GameIcon name="win" size={32} tone="green" />
-                    ) : (
-                      <GameIcon name="specialChest" size={32} tone="purple" />
-                    )}
-                    <View style={styles.worldChestCopy}>
-                      <Text style={styles.worldChestTitle}>
-                        {worldChestOpened ? 'Baú Especial aberto!' : 'Baú Especial'}
-                      </Text>
-                      <Text style={styles.worldChestMessage}>
-                        {worldChestOpened
-                          ? 'Você abriu um Baú Especial!'
-                          : getWorldChestLabel(worldChest.id)}
-                      </Text>
-                    </View>
-                  </View>
-
-                  {worldChestOpened && worldChestResult?.reward ? (
-                    <View style={styles.worldChestRewardGrid}>
-                      {worldChestResult.reward.lifeGranted ? (
-                        <Text style={styles.worldChestRewardText}>+1 vida</Text>
-                      ) : null}
-                      <Text style={styles.worldChestRewardText}>
-                        +{formatQuantity(worldChestResult.reward.coins, 'moeda', 'moedas')}
-                      </Text>
-                      <Text style={styles.worldChestRewardText}>+1 Trinca Mágica</Text>
-                      <Text style={styles.worldChestRewardText}>+1 Misturar</Text>
-                      <Text style={styles.worldChestRewardText}>+1 Voltar</Text>
-                    </View>
                   ) : (
-                    <>
-                      <View style={styles.worldChestKeyRow}>
-                        <View style={styles.worldChestKeyPill}>
-                          <GameIcon name="key" size={20} tone="purple" />
-                          <Text style={styles.worldChestKeyText}>
-                            {formatQuantity(keys, 'chave', 'chaves')}
+                    <Text style={styles.noRewardText}>
+                      Melhor resultado mantido
+                    </Text>
+                  )}
+                  {chestProgress ? (
+                    <ChestProgressCard
+                      animationKey={commonChestAnimationKey}
+                      fromProgress={commonChestFromProgress}
+                      isLevelCounted={chestProgress.isLevelCounted}
+                      opened={chestProgress.opened}
+                      requiredCount={chestProgress.requiredCount}
+                      toProgress={chestProgress.progressCount}
+                      onCompletedAnimationEnd={handleCommonChestProgressEnd}
+                    />
+                  ) : null}
+                  {worldChest ? (
+                    <View
+                      style={[
+                        styles.worldChestPanel,
+                        worldChestOpened ? styles.worldChestPanelOpen : null,
+                      ]}
+                    >
+                      <View style={styles.worldChestHeader}>
+                        {worldChestOpened ? (
+                          <GameIcon name="win" size={32} tone="green" />
+                        ) : (
+                          <GameIcon
+                            name="specialChest"
+                            size={32}
+                            tone="purple"
+                          />
+                        )}
+                        <View style={styles.worldChestCopy}>
+                          <Text style={styles.worldChestTitle}>
+                            {worldChestOpened
+                              ? 'Baú Especial aberto!'
+                              : 'Baú Especial'}
                           </Text>
-                        </View>
-                        <View style={styles.worldChestKeyPill}>
-                          <GameIcon name="coin" size={20} tone="gold" />
-                          <Text style={styles.worldChestKeyText}>
-                            Comprar: {formatQuantity(KEY_COST, 'moeda', 'moedas')}
+                          <Text style={styles.worldChestMessage}>
+                            {worldChestOpened
+                              ? 'Você abriu um Baú Especial!'
+                              : getWorldChestLabel(worldChest.id)}
                           </Text>
                         </View>
                       </View>
-                      {worldChestStatusText ? (
-                        <Text style={styles.worldChestStatusText}>{worldChestStatusText}</Text>
-                      ) : (
-                        <Text style={styles.worldChestHintText}>
-                          {keys > 0
-                            ? 'Use 1 chave para abrir agora.'
-                            : availableCoins >= KEY_COST
-                              ? 'Sem chaves. Compre uma chave e abra agora.'
-                              : 'Sem chaves. Ele fica disponível na Home e no mapa.'}
-                        </Text>
-                      )}
-                      {keys > 0 ? (
-                        <PrimaryButton
-                          disabled={isOpeningWorldChest}
-                          size="small"
-                          title={isOpeningWorldChest ? 'Abrindo...' : 'Abrir com 1 chave'}
-                          onPress={() => openSpecialChest('key')}
-                        />
-                      ) : (
-                        <PrimaryButton
-                          disabled={isOpeningWorldChest}
-                          size="small"
-                          title={isOpeningWorldChest ? 'Abrindo...' : `Comprar chave por ${KEY_COST}`}
-                          onPress={() => openSpecialChest('buy-key')}
-                        />
-                      )}
-                    </>
-                  )}
-                </View>
-              ) : null}
-              {unlockText ? <Text style={styles.unlockText}>{unlockText}</Text> : null}
-              </View>
-            ) : (
-              <View style={styles.losePanel}>
-              <View style={styles.loseTray}>
-                {Array.from({ length: MAX_TRAY_CAPACITY }).map((_, index) => {
-                  const activeSlot = index < activeTrayCapacity;
 
-                  return (
-                    <View
-                      key={`lose-slot-${index}`}
-                      style={[styles.loseSlot, !activeSlot ? styles.loseSlotLocked : null]}
-                    >
-                      {activeSlot ? (
-                        <Text style={styles.loseSlotText}>
-                          {index % 2 === 0 ? '\u25CF' : '\u25C6'}
-                        </Text>
+                      {worldChestOpened && worldChestResult?.reward ? (
+                        <View style={styles.worldChestRewardGrid}>
+                          {worldChestResult.reward.lifeGranted ? (
+                            <Text style={styles.worldChestRewardText}>
+                              +1 vida
+                            </Text>
+                          ) : null}
+                          <Text style={styles.worldChestRewardText}>
+                            +
+                            {formatQuantity(
+                              worldChestResult.reward.coins,
+                              'moeda',
+                              'moedas',
+                            )}
+                          </Text>
+                          <Text style={styles.worldChestRewardText}>
+                            +1 Trinca Mágica
+                          </Text>
+                          <Text style={styles.worldChestRewardText}>
+                            +1 Misturar
+                          </Text>
+                          <Text style={styles.worldChestRewardText}>
+                            +1 Voltar
+                          </Text>
+                        </View>
                       ) : (
-                        <GameIcon muted name="key" size={18} tone="neutral" />
+                        <>
+                          <View style={styles.worldChestKeyRow}>
+                            <View style={styles.worldChestKeyPill}>
+                              <GameIcon name="key" size={20} tone="purple" />
+                              <Text style={styles.worldChestKeyText}>
+                                {formatQuantity(keys, 'chave', 'chaves')}
+                              </Text>
+                            </View>
+                            <View style={styles.worldChestKeyPill}>
+                              <GameIcon name="coin" size={20} tone="gold" />
+                              <Text style={styles.worldChestKeyText}>
+                                Comprar:{' '}
+                                {formatQuantity(KEY_COST, 'moeda', 'moedas')}
+                              </Text>
+                            </View>
+                          </View>
+                          {worldChestStatusText ? (
+                            <Text style={styles.worldChestStatusText}>
+                              {worldChestStatusText}
+                            </Text>
+                          ) : (
+                            <Text style={styles.worldChestHintText}>
+                              {keys > 0
+                                ? 'Use 1 chave para abrir agora.'
+                                : availableCoins >= KEY_COST
+                                  ? 'Sem chaves. Compre uma chave e abra agora.'
+                                  : 'Sem chaves. Ele fica disponível na Home e no mapa.'}
+                            </Text>
+                          )}
+                          {keys > 0 ? (
+                            <PrimaryButton
+                              disabled={isOpeningWorldChest}
+                              size="small"
+                              title={
+                                isOpeningWorldChest
+                                  ? 'Abrindo...'
+                                  : 'Abrir com 1 chave'
+                              }
+                              onPress={() => openSpecialChest('key')}
+                            />
+                          ) : (
+                            <PrimaryButton
+                              disabled={isOpeningWorldChest}
+                              size="small"
+                              title={
+                                isOpeningWorldChest
+                                  ? 'Abrindo...'
+                                  : `Comprar chave por ${KEY_COST}`
+                              }
+                              onPress={() => openSpecialChest('buy-key')}
+                            />
+                          )}
+                        </>
                       )}
                     </View>
-                  );
-                })}
-              </View>
-              <Text style={styles.loseHint}>DICA RÁPIDA</Text>
-              <Text style={styles.loseText}>
-                Forme trincas antes de preencher todos os espaços ativos.
-              </Text>
-              <View style={[styles.livesPanel, hasNoLives ? styles.livesPanelEmpty : null]}>
-                <View style={styles.livesTitleRow}>
-                  <GameIcon name="heart" size={22} tone="pink" />
-                  <Text style={[styles.livesTitle, hasNoLives ? styles.livesTitleEmpty : null]}>
-                    {livesState.currentLives}/{livesState.maxLives} vidas
-                  </Text>
+                  ) : null}
+                  {unlockText ? (
+                    <Text style={styles.unlockText}>{unlockText}</Text>
+                  ) : null}
                 </View>
-                <Text style={styles.livesText}>
-                  {hasNoLives
-                    ? `A próxima vida chega em ${formatLifeTimer(timeUntilNextLifeMs)}`
-                    : 'Você ainda pode tentar novamente.'}
-                </Text>
-              </View>
-            </View>
-            )}
-          </ScrollView>
+              ) : (
+                <View style={styles.losePanel}>
+                  <View style={styles.loseTray}>
+                    {Array.from({ length: MAX_TRAY_CAPACITY }).map(
+                      (_, index) => {
+                        const activeSlot = index < activeTrayCapacity;
 
-          <View style={styles.actions}>
-            {isWon ? (
-              <PrimaryButton title={nextActionTitle} onPress={onNextLevel} />
-            ) : (
-              <PrimaryButton title="Tentar novamente" onPress={onRetry} />
-            )}
-            <PrimaryButton size="compact" title="Mapa" variant="secondary" onPress={onBackToLevels} />
-          </View>
-        </Animated.View>
-      </SafeAreaView>
-    </Modal>
-    <ChestOpeningModal
-      animationKey={commonChestAnimationKey}
-      rewardText={commonChestRewardText ?? ''}
-      rewardType={chestReward?.type ?? 'coins'}
-      visible={isCommonChestOpeningVisible && commonChestRewardText !== undefined}
-      coinCollectTarget={coinCollectTarget}
-      onClose={() => setIsCommonChestOpeningVisible(false)}
-      onOpenMoment={playChestOpenSound}
-      onRewardMoment={playRewardSparkleSound}
-    />
-    <ChestOpeningModal
-      animationKey={worldChestAnimationKey}
-      kicker="Baú de Mundo"
-      rewardItems={worldChestRewardItems}
-      title="Recompensa Especial"
-      variant="world"
-      visible={isWorldChestOpeningVisible && worldChestRewardItems.length > 0}
-      coinCollectTarget={coinCollectTarget}
-      onClose={() => setIsWorldChestOpeningVisible(false)}
-      onOpenMoment={playChestOpenSound}
-      onRewardMoment={playRewardSparkleSound}
-    />
+                        return (
+                          <View
+                            key={`lose-slot-${index}`}
+                            style={[
+                              styles.loseSlot,
+                              !activeSlot ? styles.loseSlotLocked : null,
+                            ]}
+                          >
+                            {activeSlot ? (
+                              <Text style={styles.loseSlotText}>
+                                {index % 2 === 0 ? '\u25CF' : '\u25C6'}
+                              </Text>
+                            ) : (
+                              <GameIcon
+                                muted
+                                name="key"
+                                size={18}
+                                tone="neutral"
+                              />
+                            )}
+                          </View>
+                        );
+                      },
+                    )}
+                  </View>
+                  <Text style={styles.loseHint}>DICA RÁPIDA</Text>
+                  <Text style={styles.loseText}>
+                    Forme trincas antes de preencher todos os espaços ativos.
+                  </Text>
+                  <View
+                    style={[
+                      styles.livesPanel,
+                      hasNoLives ? styles.livesPanelEmpty : null,
+                    ]}
+                  >
+                    <View style={styles.livesTitleRow}>
+                      <GameIcon name="heart" size={22} tone="pink" />
+                      <Text
+                        style={[
+                          styles.livesTitle,
+                          hasNoLives ? styles.livesTitleEmpty : null,
+                        ]}
+                      >
+                        {livesState.currentLives}/{livesState.maxLives} vidas
+                      </Text>
+                    </View>
+                    <Text style={styles.livesText}>
+                      {hasNoLives
+                        ? `A próxima vida chega em ${formatLifeTimer(timeUntilNextLifeMs)}`
+                        : 'Você ainda pode tentar novamente.'}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </ScrollView>
+
+            <View style={styles.actions}>
+              {isWon ? (
+                <PrimaryButton title={nextActionTitle} onPress={onNextLevel} />
+              ) : (
+                <PrimaryButton title="Tentar novamente" onPress={onRetry} />
+              )}
+              <PrimaryButton
+                size="compact"
+                title="Mapa"
+                variant="secondary"
+                onPress={onBackToLevels}
+              />
+            </View>
+          </Animated.View>
+        </SafeAreaView>
+      </Modal>
+      <ChestOpeningModal
+        animationKey={commonChestAnimationKey}
+        rewardText={commonChestRewardText ?? ''}
+        rewardType={chestReward?.type ?? 'coins'}
+        visible={
+          isCommonChestOpeningVisible && commonChestRewardText !== undefined
+        }
+        coinCollectTarget={coinCollectTarget}
+        onClose={() => setIsCommonChestOpeningVisible(false)}
+        onOpenMoment={playChestOpenSound}
+        onRewardMoment={playRewardSparkleSound}
+      />
+      <ChestOpeningModal
+        animationKey={worldChestAnimationKey}
+        kicker="Baú de Mundo"
+        rewardItems={worldChestRewardItems}
+        title="Recompensa Especial"
+        variant="world"
+        visible={isWorldChestOpeningVisible && worldChestRewardItems.length > 0}
+        coinCollectTarget={coinCollectTarget}
+        onClose={() => setIsWorldChestOpeningVisible(false)}
+        onOpenMoment={playChestOpenSound}
+        onRewardMoment={playRewardSparkleSound}
+      />
     </>
   );
 }

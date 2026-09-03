@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
@@ -223,7 +232,11 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
 
   return (
     <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
-      <Pressable accessibilityRole="button" onPress={() => finishIntro(true)} style={styles.skipLayer}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => finishIntro(true)}
+        style={styles.skipLayer}
+      >
         <View pointerEvents="none" style={StyleSheet.absoluteFillObject}>
           <View style={styles.topWash} />
           <View style={styles.centerGlow} />
@@ -231,11 +244,18 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
           <View style={styles.diagonalPanel} />
           <View style={[styles.glowRing, styles.glowRingTop]} />
           <View style={[styles.glowRing, styles.glowRingBottom]} />
-          <Animated.View style={[styles.finalFlash, { opacity: finalFlashOpacity }]} />
+          <Animated.View
+            style={[styles.finalFlash, { opacity: finalFlashOpacity }]}
+          />
           <View style={styles.particleLayer}>
             {INTRO_PARTICLES.map((particle, index) => {
               const opacity = particleFloat.interpolate({
-                inputRange: [0, particle.delay, Math.min(1, particle.delay + 0.24), 1],
+                inputRange: [
+                  0,
+                  particle.delay,
+                  Math.min(1, particle.delay + 0.24),
+                  1,
+                ],
                 outputRange: [0, 0, 0.78, 0.34],
               });
               const translateY = particleFloat.interpolate({
@@ -266,8 +286,16 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
           </View>
         </View>
 
-        <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.safeArea}>
-          <View style={[styles.centerStage, height < 760 ? styles.centerStageCompact : null]}>
+        <SafeAreaView
+          edges={['top', 'bottom', 'left', 'right']}
+          style={styles.safeArea}
+        >
+          <View
+            style={[
+              styles.centerStage,
+              height < 760 ? styles.centerStageCompact : null,
+            ]}
+          >
             <Animated.View
               style={[
                 styles.logoStage,
@@ -277,7 +305,10 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
                 },
               ]}
             >
-              <View accessibilityLabel="Logo IGRION" style={[styles.logoFrame, { width: logoWidth }]}>
+              <View
+                accessibilityLabel="Logo IGRION"
+                style={[styles.logoFrame, { width: logoWidth }]}
+              >
                 {logoLoadFailed ? (
                   <Text style={styles.logoFallback}>IGRION</Text>
                 ) : (
@@ -293,7 +324,10 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
                   style={[
                     styles.logoShine,
                     {
-                      transform: [{ translateX: shineTranslate }, { rotate: '-18deg' }],
+                      transform: [
+                        { translateX: shineTranslate },
+                        { rotate: '-18deg' },
+                      ],
                     },
                   ]}
                 />
@@ -339,7 +373,9 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
             </View>
           </View>
 
-          <Animated.View style={[styles.launchBlock, { opacity: launchOpacity }]}>
+          <Animated.View
+            style={[styles.launchBlock, { opacity: launchOpacity }]}
+          >
             <View style={styles.launchTrack}>
               <View style={styles.launchFill} />
             </View>

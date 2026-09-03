@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Image, ImageBackground, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Image,
+  ImageBackground,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { GameIcon } from '../components/GameIcon';
 import { PowerIcon } from '../components/PowerIcon';
@@ -12,9 +20,12 @@ import { POWER_UP_COSTS } from '../utils/gameLogic';
 import { lightImpact, successImpact, warningImpact } from '../utils/haptics';
 import { playShopBuySound } from '../utils/sounds';
 
-const shopImage = require('../../assets/map/map_shop.png') as ImageSourcePropType;
-const world3ShopImage = require('../../assets/map/map_world3_shop.png') as ImageSourcePropType;
-const world3ShopBg = require('../../assets/map/map_world3_shop_bg.png') as ImageSourcePropType;
+const shopImage =
+  require('../../assets/map/map_shop.png') as ImageSourcePropType;
+const world3ShopImage =
+  require('../../assets/map/map_world3_shop.png') as ImageSourcePropType;
+const world3ShopBg =
+  require('../../assets/map/map_world3_shop_bg.png') as ImageSourcePropType;
 
 type ShopScreenProps = {
   backTitle?: string;
@@ -90,110 +101,142 @@ export function ShopScreen({
   };
 
   const content = (
-      <View style={[styles.container, isCrystalShop ? styles.containerCrystal : null]}>
-        <View style={[styles.header, isCrystalShop ? styles.headerCrystal : null]}>
-          <View pointerEvents="none" style={styles.headerGlow} />
-          <View style={styles.shopArtFrame}>
-            <Image resizeMode="contain" source={activeShopImage} style={styles.shopArt} />
-          </View>
-          <View style={styles.titleBlock}>
-            <Text style={styles.eyebrow}>Loja de campanha</Text>
-            <Text adjustsFontSizeToFit minimumFontScale={0.78} numberOfLines={2} style={styles.title}>
-              Ponto de descanso
-            </Text>
-            <Text numberOfLines={2} style={styles.subtitle}>
-              Poderes para continuar a jornada
-            </Text>
-          </View>
-          <View style={styles.coinBadge}>
-            <GameIcon name="coin" size={24} tone="gold" />
-            <Text style={styles.coinText}>{progress.coins}</Text>
-          </View>
+    <View
+      style={[styles.container, isCrystalShop ? styles.containerCrystal : null]}
+    >
+      <View
+        style={[styles.header, isCrystalShop ? styles.headerCrystal : null]}
+      >
+        <View pointerEvents="none" style={styles.headerGlow} />
+        <View style={styles.shopArtFrame}>
+          <Image
+            resizeMode="contain"
+            source={activeShopImage}
+            style={styles.shopArt}
+          />
         </View>
-
-        <View style={styles.toastSlot} pointerEvents="none">
-          {toast ? (
-            <Animated.View style={[styles.toast, { opacity: toastOpacity }]}>
-              <Text style={styles.toastText}>{toast.text}</Text>
-            </Animated.View>
-          ) : null}
+        <View style={styles.titleBlock}>
+          <Text style={styles.eyebrow}>Loja de campanha</Text>
+          <Text
+            adjustsFontSizeToFit
+            minimumFontScale={0.78}
+            numberOfLines={2}
+            style={styles.title}
+          >
+            Ponto de descanso
+          </Text>
+          <Text numberOfLines={2} style={styles.subtitle}>
+            Poderes para continuar a jornada
+          </Text>
         </View>
-
-        <View style={styles.itemList}>
-          {POWER_UP_ORDER.map((powerType) => {
-            const item = POWER_UP_UI[powerType];
-            const cost = POWER_UP_COSTS[powerType];
-            const count = progress.itemCounts[powerType];
-            const canBuy = progress.coins >= cost;
-
-            return (
-              <View key={powerType} style={[styles.itemCard, !canBuy ? styles.itemCardDisabled : null]}>
-                <View pointerEvents="none" style={styles.itemAccent} />
-                <View style={styles.itemTopRow}>
-                  <View style={styles.itemIconBox}>
-                    <PowerIcon name={powerType} size={38} />
-                  </View>
-                  <View style={styles.itemCopy}>
-                    <Text numberOfLines={1} style={styles.itemTitle}>
-                      {item.shopTitle}
-                    </Text>
-                    <Text numberOfLines={3} style={styles.itemDescription}>
-                      {item.description}
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={styles.itemBottomRow}>
-                  <View style={styles.itemMetaRow}>
-                    <View style={styles.metaPill}>
-                      <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={styles.metaLabel}>
-                        Estoque
-                      </Text>
-                      <Text style={styles.stockText}>{count}</Text>
-                    </View>
-                    <View style={[styles.metaPill, styles.pricePill]}>
-                      <Text adjustsFontSizeToFit minimumFontScale={0.82} numberOfLines={1} style={styles.metaLabel}>
-                        Preço
-                      </Text>
-                      <View style={styles.priceValueRow}>
-                        <GameIcon name="coin" size={18} tone="gold" />
-                        <Text style={styles.priceText}>{cost}</Text>
-                      </View>
-                    </View>
-                  </View>
-                  {!canBuy ? (
-                    <Text style={styles.insufficientText}>Moedas insuficientes</Text>
-                  ) : null}
-
-                  <View style={styles.buyButton}>
-                    <PrimaryButton
-                      disabled={!canBuy}
-                      size="small"
-                      title={canBuy ? 'Comprar' : 'Sem moedas'}
-                      variant="primary"
-                      onPress={() => handleBuy(powerType)}
-                    />
-                  </View>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.notePanel}>
-          <GameIcon name="info" size={32} tone="blue" />
-          <View style={styles.noteCopy}>
-            <Text style={styles.noteTitle}>Como funciona</Text>
-            <Text numberOfLines={3} style={styles.noteText}>
-              O estoque comprado é usado primeiro. Depois, o poder ainda pode ser ativado com moedas.
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.backButtonWrap}>
-          <PrimaryButton title={backTitle} variant="secondary" onPress={onBack} />
+        <View style={styles.coinBadge}>
+          <GameIcon name="coin" size={24} tone="gold" />
+          <Text style={styles.coinText}>{progress.coins}</Text>
         </View>
       </View>
+
+      <View style={styles.toastSlot} pointerEvents="none">
+        {toast ? (
+          <Animated.View style={[styles.toast, { opacity: toastOpacity }]}>
+            <Text style={styles.toastText}>{toast.text}</Text>
+          </Animated.View>
+        ) : null}
+      </View>
+
+      <View style={styles.itemList}>
+        {POWER_UP_ORDER.map((powerType) => {
+          const item = POWER_UP_UI[powerType];
+          const cost = POWER_UP_COSTS[powerType];
+          const count = progress.itemCounts[powerType];
+          const canBuy = progress.coins >= cost;
+
+          return (
+            <View
+              key={powerType}
+              style={[
+                styles.itemCard,
+                !canBuy ? styles.itemCardDisabled : null,
+              ]}
+            >
+              <View pointerEvents="none" style={styles.itemAccent} />
+              <View style={styles.itemTopRow}>
+                <View style={styles.itemIconBox}>
+                  <PowerIcon name={powerType} size={38} />
+                </View>
+                <View style={styles.itemCopy}>
+                  <Text numberOfLines={1} style={styles.itemTitle}>
+                    {item.shopTitle}
+                  </Text>
+                  <Text numberOfLines={3} style={styles.itemDescription}>
+                    {item.description}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.itemBottomRow}>
+                <View style={styles.itemMetaRow}>
+                  <View style={styles.metaPill}>
+                    <Text
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.82}
+                      numberOfLines={1}
+                      style={styles.metaLabel}
+                    >
+                      Estoque
+                    </Text>
+                    <Text style={styles.stockText}>{count}</Text>
+                  </View>
+                  <View style={[styles.metaPill, styles.pricePill]}>
+                    <Text
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.82}
+                      numberOfLines={1}
+                      style={styles.metaLabel}
+                    >
+                      Preço
+                    </Text>
+                    <View style={styles.priceValueRow}>
+                      <GameIcon name="coin" size={18} tone="gold" />
+                      <Text style={styles.priceText}>{cost}</Text>
+                    </View>
+                  </View>
+                </View>
+                {!canBuy ? (
+                  <Text style={styles.insufficientText}>
+                    Moedas insuficientes
+                  </Text>
+                ) : null}
+
+                <View style={styles.buyButton}>
+                  <PrimaryButton
+                    disabled={!canBuy}
+                    size="small"
+                    title={canBuy ? 'Comprar' : 'Sem moedas'}
+                    variant="primary"
+                    onPress={() => handleBuy(powerType)}
+                  />
+                </View>
+              </View>
+            </View>
+          );
+        })}
+      </View>
+
+      <View style={styles.notePanel}>
+        <GameIcon name="info" size={32} tone="blue" />
+        <View style={styles.noteCopy}>
+          <Text style={styles.noteTitle}>Como funciona</Text>
+          <Text numberOfLines={3} style={styles.noteText}>
+            O estoque comprado é usado primeiro. Depois, o poder ainda pode ser
+            ativado com moedas.
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.backButtonWrap}>
+        <PrimaryButton title={backTitle} variant="secondary" onPress={onBack} />
+      </View>
+    </View>
   );
 
   return (

@@ -17,7 +17,8 @@ export type CampaignMapAnchorOrigin = Readonly<{
 
 export type CampaignMapProgressionDirection = 'bottom-to-top' | 'top-to-bottom';
 
-export type CampaignMapSite = 'bridge' | 'clearing' | 'crossing' | 'curve' | 'platform';
+export type CampaignMapSite =
+  'bridge' | 'clearing' | 'crossing' | 'curve' | 'platform';
 
 export type CampaignMapLevelAnchor = Readonly<{
   levelId: string;
@@ -89,12 +90,11 @@ export type LegacyWorldMapConfig = Readonly<{
 
 export type WorldMapConfig = LegacyWorldMapConfig | SegmentedWorldMapConfig;
 
-export type WorldMapConfigRegistry = Readonly<
-  Record<WorldId, WorldMapConfig>
->;
+export type WorldMapConfigRegistry = Readonly<Record<WorldId, WorldMapConfig>>;
 
 export type PartialWorldMapConfigRegistry = Readonly<
   Partial<Record<WorldId, WorldMapConfig>>
 >;
 
-export type CampaignMapLevelState = 'available' | 'completed' | 'current' | 'locked';
+export type CampaignMapLevelState =
+  'available' | 'completed' | 'current' | 'locked';

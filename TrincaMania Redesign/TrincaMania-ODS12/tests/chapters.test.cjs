@@ -43,9 +43,18 @@ const {
 } = require('../src/data/boardPositions.ts');
 const { LEVELS } = require('../src/data/levels.ts');
 const { WORLDS } = require('../src/data/worlds.ts');
-const { CHAPTER_WORLD_IDS, WORLD_MAP_CONFIGS } = require('../src/data/worldMapConfigs.ts');
-const { validateWorldMapRegistry } = require('../src/utils/campaignMapLayout.ts');
-const { getTileRect, isDrawnAbove, rectanglesOverlap } = require('../src/utils/gameLogic.ts');
+const {
+  CHAPTER_WORLD_IDS,
+  WORLD_MAP_CONFIGS,
+} = require('../src/data/worldMapConfigs.ts');
+const {
+  validateWorldMapRegistry,
+} = require('../src/utils/campaignMapLayout.ts');
+const {
+  getTileRect,
+  isDrawnAbove,
+  rectanglesOverlap,
+} = require('../src/utils/gameLogic.ts');
 const {
   MATERIAL_TYPES,
 } = require('../src/domain/recycling/value-objects/MaterialType.ts');
@@ -69,7 +78,10 @@ const countRemovableTiles = (tiles) => {
       if (
         index !== otherIndex &&
         isDrawnAbove(tiles[otherIndex], otherIndex, tiles[index], index) &&
-        rectanglesOverlap(getTileRect(tiles[index]), getTileRect(tiles[otherIndex]))
+        rectanglesOverlap(
+          getTileRect(tiles[index]),
+          getTileRect(tiles[otherIndex]),
+        )
       ) {
         unlocks[otherIndex].push(index);
         blockerCounts[index] += 1;
@@ -123,7 +135,10 @@ test('são exatamente 10 capítulos de 100 mapas, com ids únicos e sem lacunas'
     summaries.forEach((summary, index) => {
       assert.equal(summary.chapterMapNumber, index + 1);
       assert.equal(summary.id, buildChapterMapId(chapter.id, index + 1));
-      assert.equal(summary.campaignPosition, (chapter.id - 1) * 100 + index + 1);
+      assert.equal(
+        summary.campaignPosition,
+        (chapter.id - 1) * 100 + index + 1,
+      );
       assert.equal(getChapterLevelSummary(summary.id), summary);
     });
   });
@@ -165,7 +180,10 @@ test('todo tileCount é múltiplo de 3 e cabe nas posições disponíveis', () =
       0,
       `${summary.id}: tileCount ${summary.tileCount} não é múltiplo de 3`,
     );
-    assert.ok(summary.tileCount >= TRIPLE_SIZE, `${summary.id}: tileCount pequeno demais`);
+    assert.ok(
+      summary.tileCount >= TRIPLE_SIZE,
+      `${summary.id}: tileCount pequeno demais`,
+    );
     assert.ok(
       summary.tileCount <= CHAPTER_MAX_SUPPORTED_TILE_COUNT,
       `${summary.id}: tileCount ${summary.tileCount} excede ${CHAPTER_MAX_SUPPORTED_TILE_COUNT} posições`,
@@ -205,8 +223,14 @@ test('a curva do capítulo é monotônica não-decrescente e realmente progride'
           getChapterDifficultyRank(previous.difficulty),
         `${summary.id}: dificuldade regrediu de ${previous.difficulty} para ${summary.difficulty}`,
       );
-      assert.ok(summary.tileCount >= previous.tileCount, `${summary.id}: tileCount regrediu`);
-      assert.ok(summary.kindCount >= previous.kindCount, `${summary.id}: kindCount regrediu`);
+      assert.ok(
+        summary.tileCount >= previous.tileCount,
+        `${summary.id}: tileCount regrediu`,
+      );
+      assert.ok(
+        summary.kindCount >= previous.kindCount,
+        `${summary.id}: kindCount regrediu`,
+      );
       assert.ok(
         summary.mysteryTileCount >= previous.mysteryTileCount,
         `${summary.id}: peças mistério regrediram`,
@@ -217,7 +241,10 @@ test('a curva do capítulo é monotônica não-decrescente e realmente progride'
     const last = summaries[summaries.length - 1];
 
     // Sem isto, "monotônico" seria satisfeito por 100 mapas idênticos.
-    assert.ok(last.tileCount > first.tileCount, `capítulo ${chapter.id}: tileCount não cresce`);
+    assert.ok(
+      last.tileCount > first.tileCount,
+      `capítulo ${chapter.id}: tileCount não cresce`,
+    );
     assert.ok(
       last.kindCount > first.kindCount,
       `capítulo ${chapter.id}: número de materiais não cresce`,
@@ -227,7 +254,8 @@ test('a curva do capítulo é monotônica não-decrescente e realmente progride'
       `capítulo ${chapter.id}: peças mistério não crescem`,
     );
     assert.ok(
-      getChapterDifficultyRank(last.difficulty) > getChapterDifficultyRank(first.difficulty),
+      getChapterDifficultyRank(last.difficulty) >
+        getChapterDifficultyRank(first.difficulty),
       `capítulo ${chapter.id}: dificuldade não muda de faixa`,
     );
   });
@@ -261,7 +289,9 @@ test('marcos caem de 10 em 10 e o mapa 100 é o guardião', () => {
 
     // O marco alivia pelo relógio, nunca derrubando a carga do tabuleiro.
     const rest = summaries[9];
-    assert.ok(rest.starTimeLimits.threeStars > summaries[8].starTimeLimits.threeStars);
+    assert.ok(
+      rest.starTimeLimits.threeStars > summaries[8].starTimeLimits.threeStars,
+    );
     assert.ok(rest.tileCount >= summaries[8].tileCount);
   });
 });
@@ -272,12 +302,21 @@ test('títulos são compostos e distintos em todo o conjunto', () => {
   assert.equal(new Set(titles).size, 1000);
 
   CHAPTERS.forEach((chapter) => {
-    const chapterTitles = getChapterLevelSummaries(chapter.id).map(({ title }) => title);
+    const chapterTitles = getChapterLevelSummaries(chapter.id).map(
+      ({ title }) => title,
+    );
     assert.equal(new Set(chapterTitles).size, 100);
   });
 
-  assert.ok(CHAPTER_LEVELS.every(({ objectiveText }) => objectiveText.startsWith('Objetivo: ')));
-  assert.equal(getChapterLevelSummary('ch10-100').title, 'Guardião: Portal do Fecho');
+  assert.ok(
+    CHAPTER_LEVELS.every(({ objectiveText }) =>
+      objectiveText.startsWith('Objetivo: '),
+    ),
+  );
+  assert.equal(
+    getChapterLevelSummary('ch10-100').title,
+    'Guardião: Portal do Fecho',
+  );
 });
 
 test('a validação automática dos capítulos não acusa nenhum problema', () => {
@@ -327,7 +366,9 @@ test('mapas irmãos do mesmo capítulo têm identidades visuais distintas', () =
     );
     assert.equal(new Set(identities.map(({ themeKey }) => themeKey)).size, 1);
 
-    identities.forEach((identity) => allSignatures.add(getChapterVisualSignature(identity)));
+    identities.forEach((identity) =>
+      allSignatures.add(getChapterVisualSignature(identity)),
+    );
   });
 
   assert.equal(allSignatures.size, 1000);
@@ -349,7 +390,10 @@ test('cada mapa de capítulo materializa um tabuleiro jogável', () => {
     assert.equal(level.worldId, summary.worldId);
     assert.equal(level.tiles.length, summary.tileCount);
     assert.equal(level.tiles.length % TRIPLE_SIZE, 0);
-    assert.equal(new Set(level.tiles.map(({ id }) => id)).size, summary.tileCount);
+    assert.equal(
+      new Set(level.tiles.map(({ id }) => id)).size,
+      summary.tileCount,
+    );
 
     // Alcançabilidade: nenhuma peça pode ficar presa para sempre.
     assert.equal(
@@ -362,15 +406,27 @@ test('cada mapa de capítulo materializa um tabuleiro jogável', () => {
     // lixeira e símbolo. Se desbalancear, sobra ciclo pela metade.
     const rolesByMaterial = new Map();
     level.tiles.forEach((tile) => {
-      const roles = rolesByMaterial.get(tile.kind) ?? { lixeira: 0, residuo: 0, simbolo: 0 };
+      const roles = rolesByMaterial.get(tile.kind) ?? {
+        lixeira: 0,
+        residuo: 0,
+        simbolo: 0,
+      };
       roles[tile.role] += 1;
       rolesByMaterial.set(tile.kind, roles);
     });
 
     assert.ok(rolesByMaterial.size <= summary.kindCount);
     rolesByMaterial.forEach((roles, material) => {
-      assert.equal(roles.residuo, roles.lixeira, `${mapId}: ${material} desbalanceado`);
-      assert.equal(roles.lixeira, roles.simbolo, `${mapId}: ${material} desbalanceado`);
+      assert.equal(
+        roles.residuo,
+        roles.lixeira,
+        `${mapId}: ${material} desbalanceado`,
+      );
+      assert.equal(
+        roles.lixeira,
+        roles.simbolo,
+        `${mapId}: ${material} desbalanceado`,
+      );
     });
 
     const mysteryCount = level.tiles.filter(({ mystery }) => mystery).length;
@@ -401,9 +457,14 @@ test('posições acima das 60 autorais existem e não sobrescrevem o layout can�
   });
 
   const allPositions = takeTilePositions(MAX_TILE_POSITIONS);
-  assert.equal(new Set(allPositions.map((position) => position.join(':'))).size, MAX_TILE_POSITIONS);
+  assert.equal(
+    new Set(allPositions.map((position) => position.join(':'))).size,
+    MAX_TILE_POSITIONS,
+  );
   allPositions.forEach(([x, y, z]) => {
-    assert.ok(Number.isInteger(x) && Number.isInteger(y) && Number.isInteger(z));
+    assert.ok(
+      Number.isInteger(x) && Number.isInteger(y) && Number.isInteger(z),
+    );
     assert.ok(x >= 0 && y >= 0 && z >= 0);
   });
 
@@ -414,7 +475,10 @@ test('posições acima das 60 autorais existem e não sobrescrevem o layout can�
 });
 
 test('cada capítulo tem entrada própria no registry de mapas, sem colisão', () => {
-  assert.deepEqual(validateWorldMapRegistry(WORLD_MAP_CONFIGS, CHAPTER_WORLD_IDS), []);
+  assert.deepEqual(
+    validateWorldMapRegistry(WORLD_MAP_CONFIGS, CHAPTER_WORLD_IDS),
+    [],
+  );
   assert.deepEqual(
     CHAPTERS.map(({ worldId }) => worldId),
     [...CHAPTER_WORLD_IDS],
@@ -422,12 +486,17 @@ test('cada capítulo tem entrada própria no registry de mapas, sem colisão', (
 
   const campaignWorldIds = new Set(WORLDS.map(({ id }) => id));
   CHAPTER_WORLD_IDS.forEach((worldId) => {
-    assert.ok(!campaignWorldIds.has(worldId), `${worldId} colidiu com um mundo da campanha`);
+    assert.ok(
+      !campaignWorldIds.has(worldId),
+      `${worldId} colidiu com um mundo da campanha`,
+    );
     assert.equal(WORLD_MAP_CONFIGS[worldId].worldId, worldId);
     assert.equal(WORLD_MAP_CONFIGS[worldId].mode, 'legacy');
   });
 
-  const identityKeys = Object.values(WORLD_MAP_CONFIGS).map(({ identityKey }) => identityKey);
+  const identityKeys = Object.values(WORLD_MAP_CONFIGS).map(
+    ({ identityKey }) => identityKey,
+  );
   assert.equal(new Set(identityKeys).size, identityKeys.length);
 });
 
@@ -458,7 +527,11 @@ test('as 203 fases canônicas continuam intactas ao lado dos capítulos', () => 
     ],
   );
   LEVELS.forEach((level) => {
-    assert.equal(level.tiles.length % TRIPLE_SIZE, 0, `${level.id}: fase com ciclo pela metade`);
+    assert.equal(
+      level.tiles.length % TRIPLE_SIZE,
+      0,
+      `${level.id}: fase com ciclo pela metade`,
+    );
     assert.ok(level.tiles.every(({ x, y, z }) => Number.isInteger(x + y + z)));
   });
 });
