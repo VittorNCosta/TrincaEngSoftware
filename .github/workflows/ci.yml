@@ -26,6 +26,13 @@ jobs:
 
       - run: npm run lint
 
+      # Guardas de conteudo. Comparam com um livro-razao versionado
+      # (scripts/*-baseline.json) em vez de reprovar no saldo atual, que e
+      # divida conhecida com tarefa no roadmap.
+      - run: npm run guarda:ods12
+
+      - run: npm run valida:assets
+
       - run: npm run typecheck
 
       - run: npm test
