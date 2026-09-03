@@ -100,8 +100,14 @@ Duas trilhas de conteúdo, não confunda:
 
 ```
 npm run typecheck
-npm test   # node --test tests — passar o diretório, não um glob: glob citado não expande no cmd/PowerShell, e sem aspas também não expande fora do bash
+npm test   # scripts/rodar-testes.js resolve a lista de tests/*.test.cjs no Node
 ```
+
+Quem lista os arquivos é o Node, não o shell nem o runner: `node --test tests`
+só funciona até o Node 21 (do 22 em diante o diretório vira `MODULE_NOT_FOUND`)
+e `node --test tests/*.test.cjs` depende do shell expandir o glob, o que o cmd
+e o PowerShell não fazem. Teste novo em `tests/` só precisa terminar em
+`.test.cjs` para entrar na rodada.
 
 `tests/levelComposition.test.cjs` trava um hash sha256 do JSON das 203 fases
 canônicas (`as 203 fases canonicas continuam byte-identicas`). Qualquer edição
