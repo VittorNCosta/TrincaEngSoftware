@@ -31,16 +31,23 @@ const arquivos = fs
   .sort()
   .map((nome) => path.join(testsDir, nome));
 
-if (arquivos.length === 0) {
-  console.error(`nenhum *.test.cjs em ${testsDir}`);
-  process.exit(1);
+// `scripts/cobertura.js` reaproveita a lista para rodar a mesma suite com
+// `--experimental-test-coverage`. As duas medem o mesmo conjunto por
+// construcao, e nao porque alguem lembrou de repetir o filtro.
+module.exports = { arquivos, testsDir };
+
+if (require.main === module) {
+  if (arquivos.length === 0) {
+    console.error(`nenhum *.test.cjs em ${testsDir}`);
+    process.exit(1);
+  }
+
+  // Argumento extra passa adiante: `npm test -- --test-name-pattern=trinca`.
+  const { status } = spawnSync(
+    process.execPath,
+    ['--test', ...process.argv.slice(2), ...arquivos],
+    { stdio: 'inherit' },
+  );
+
+  process.exit(status ?? 1);
 }
-
-// Argumento extra passa adiante: `npm test -- --test-name-pattern=trinca`.
-const { status } = spawnSync(
-  process.execPath,
-  ['--test', ...process.argv.slice(2), ...arquivos],
-  { stdio: 'inherit' },
-);
-
-process.exit(status ?? 1);

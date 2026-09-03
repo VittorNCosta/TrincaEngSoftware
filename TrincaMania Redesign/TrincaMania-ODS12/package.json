@@ -18,6 +18,7 @@
     "lint": "eslint .",
     "guarda:ods12": "node scripts/guarda-ods12.js",
     "valida:assets": "node scripts/valida-assets.js",
+    "cobertura": "node scripts/cobertura.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
