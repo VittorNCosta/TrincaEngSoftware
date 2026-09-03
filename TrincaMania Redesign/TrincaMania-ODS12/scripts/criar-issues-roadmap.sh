@@ -1160,8 +1160,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code' --milestone 'Git e versionamento'
 
 # --- CI/CD ---
-mk open --title 'CI-01 · Quebrar o CI em jobs paralelos' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-01 · Quebrar o CI em jobs paralelos' \
+  --body '**Feito 03/09.** Sete jobs no lugar de um sequencial: `lint`, `typecheck`, `guardas`, `test`, `test-ui`, `playthrough` e `expo-doctor`. Antes, lint quebrado escondia se os testes passariam e cada ida ao CI devolvia um problema de cada vez; agora o PR volta com a lista inteira. O preço é um `npm ci` por job, barato porque o cache do `setup-node` e compartilhado e o gargalo real (playthrough, ~1 min) passa a rodar ao lado do resto.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1169,8 +1169,8 @@ mk open --title 'CI-01 · Quebrar o CI em jobs paralelos' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-02 · `concurrency` com cancelamento de runs antigos' \
-  --body 'Economiza minutos em PR com vários pushes.
+mk done --title 'CI-02 · `concurrency` com cancelamento de runs antigos' \
+  --body '**Feito 03/09.** Push novo no mesmo PR cancela o run anterior. Em push para `main`/`develop` nao cancela — `cancel-in-progress` so liga quando `github.event_name == '\''pull_request'\''`, porque ali cada commit e um estado que vale ter verificado por si.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1178,8 +1178,8 @@ mk open --title 'CI-02 · `concurrency` com cancelamento de runs antigos' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-03 · `timeout-minutes` em todo job' \
-  --body 'Sem isso um job travado queima 6 h.
+mk done --title 'CI-03 · `timeout-minutes` em todo job' \
+  --body '**Feito 03/09.** 10 min nos jobs curtos, 15 nos de teste, 20 no playthrough. Sem isso um job travado queima as 6 h de teto padrao do runner.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1187,8 +1187,8 @@ mk open --title 'CI-03 · `timeout-minutes` em todo job' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-04 · `permissions: contents: read` no topo' \
-  --body 'Menor privilégio. Hoje o workflow herda tudo.
+mk done --title 'CI-04 · `permissions: contents: read` no topo' \
+  --body '**Feito 03/09.** Declarado no nivel do workflow. Sem a chave o `GITHUB_TOKEN` herda o escopo padrao do repositorio, que inclui escrita — e nenhum dos sete jobs precisa de mais que leitura.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -1196,8 +1196,8 @@ mk open --title 'CI-04 · `permissions: contents: read` no topo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-05 · Fixar as actions por SHA, não por tag' \
-  --body 'Tag é mutável — é vetor de supply chain.
+mk done --title 'CI-05 · Fixar as actions por SHA, não por tag' \
+  --body '**Feito 03/09.** `actions/checkout` em `11d5960` e `actions/setup-node` em `49933ea`, ambos a v4.4.0, com a versao no comentario ao lado para o bump continuar legivel. Tag e ponteiro mutavel: quem controla o repositorio da action pode reapontar `v4` para outro commit sem que nada aqui mude.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1205,8 +1205,8 @@ mk open --title 'CI-05 · Fixar as actions por SHA, não por tag' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-06 · Matrix de Node 20 e 22' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-06 · Matrix de Node 20 e 22' \
+  --body '**Feito 03/09**, com `fail-fast: false` — se o 20 quebra e o 22 e cancelado, a matrix perde a graca, porque a pergunta e em qual das duas falha. **Achou um bug de verdade:** `npm test` era `node --test tests`, e passar diretorio so funciona ate o Node 21 — do 22 em diante o runner trata o argumento como arquivo e morre com `MODULE_NOT_FOUND`. Como `engines` declara `>=20.19.0`, o comando estava quebrado em metade das versoes suportadas. Ver CI-06a.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1214,8 +1214,8 @@ mk open --title 'CI-06 · Matrix de Node 20 e 22' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-07 · Rodar `npm run format:check` no CI' \
-  --body 'O script existe e nunca é chamado.
+mk done --title 'CI-06a · Corrigir `npm test` para qualquer Node >= 20' \
+  --body '**Feito 03/09.** Saiu de CI-06. Agora `npm test` chama `scripts/rodar-testes.js`, que le `tests/` e passa a lista de `*.test.cjs` explicita ao `--test`. A alternativa obvia, `node --test tests/*.test.cjs`, trocaria um problema por outro: depende do shell expandir o glob, o que o cmd e o PowerShell nao fazem — armadilha que o `CLAUDE.md` ja avisava. Assim quem lista os arquivos e o Node. 128/128 no Node 20 e no 24.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1223,8 +1223,17 @@ mk open --title 'CI-07 · Rodar `npm run format:check` no CI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-08 · Rodar `npx expo-doctor` no CI' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-07 · Rodar `npm run format:check` no CI' \
+  --body '**Feito 03/09.** Segundo passo do job `lint`, junto da checagem que ja existia — as duas sao analise estatica barata e falham pelo mesmo motivo: alguem commitou sem passar o prettier.
+
+**Responsável:** Claude Code
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
+mk done --title 'CI-08 · Rodar `npx expo-doctor` no CI' \
+  --body '**Feito 03/09.** Job proprio. Verificado antes de ligar: 18/18 checks passam hoje, entao entra verde em vez de repetir a armadilha de deixar o CI vermelho de saida.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1824,4 +1833,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 195 issues (6 já criadas fechadas) =="
+echo "== pronto: 196 issues (15 já criadas fechadas) =="
