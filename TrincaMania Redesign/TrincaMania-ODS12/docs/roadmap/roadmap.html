@@ -607,6 +607,7 @@ const BLOCKS = [
  ["Q-12","Escrever o ADR da mudança 203 → 100","cc",1,"<code>docs/adr/0004-*.md</code>. Os três ADRs existentes documentam decisões desse porte."],
  ["Q-13","Resolver o gap do Modo Dev","cc",2,"Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa."],
  ["Q-14","Atualizar o <code>CONTEXT.md</code> com o vocabulário dos 10 mundos","cc",1],
+ ["Q-15","✅ Corrigir a faixa de dificuldade do primeiro mapa dos capítulos 4 e 7","cc",1,"<b>Feito 03/09.</b> Defeito real em produção, achado ao prototipar a curva do bloco C. <code>Math.floor(score * 5)</code> em <code>src/data/chapters.ts</code> rotulava <code>ch04-001</code> como <i>easy</i> (devia ser <i>normal</i>) e <code>ch07-001</code> como <i>normal</i> (devia ser <i>hard</i>). Não era regra de negócio: <code>(n-1)/9*0,6</code> cai <i>abaixo</i> da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o <code>floor</code> derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma <code>BORDA_DE_FAIXA = 1e-9</code> documentada e teste de regressão fixando as 10 faixas de abertura."],
 ]},
 {k:"r", h:"Release e publicação", note:"Quase tudo aqui é conta, formulário e captura de tela — trabalho seu, não de código. Vale começar cedo: a conta do Play Console e a política de privacidade travam a submissão.", t:[
  ["R-01","Criar ou confirmar a conta Google Play Console","voce",0,"US$ 25, uma vez."],

@@ -197,7 +197,11 @@ const gravarPiso = (atual) => {
           'So vale no nodeMajor em que foi medido — o V8 conta diferente entre ' +
           'versoes.',
         nodeMajor: NODE_MAJOR,
-        ...atual,
+        // So as tres metricas globais: sao as unicas que a comparacao le.
+        // O detalhe por arquivo do resumo sai de `atual`, medido na hora —
+        // gravar aqui poria 200+ linhas de numero que ninguem checa no diff
+        // de toda atualizacao de piso.
+        ...Object.fromEntries(METRICAS.map(([chave]) => [chave, atual[chave]])),
       },
       null,
       2,

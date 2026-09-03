@@ -1677,6 +1677,15 @@ mk open --title 'Q-14 · Atualizar o `CONTEXT.md` com o vocabulário dos 10 mund
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code' --milestone 'Qualidade'
+mk done --title 'Q-15 · Corrigir a faixa de dificuldade do primeiro mapa dos capítulos 4 e 7' \
+  --body '**Feito 03/09.** Defeito real em produção, achado ao prototipar a curva do bloco C. `Math.floor(score * 5)` em `src/data/chapters.ts` rotulava `ch04-001` como easy (devia ser normal) e `ch07-001` como normal (devia ser hard). Não era regra de negócio: `(n-1)/9*0,6` cai abaixo da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o `floor` derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma `BORDA_DE_FAIXA = 1e-9` documentada e teste de regressão fixando as 10 faixas de abertura.
+
+**Responsável:** Claude Code
+**Prioridade:** P1
+**Fluxo:** Qualidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'qualidade,P1,claude-code' --milestone 'Qualidade'
 
 # --- Release ---
 mk open --title 'R-01 · Criar ou confirmar a conta Google Play Console' \
@@ -1842,4 +1851,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 197 issues (36 já criadas fechadas) =="
+echo "== pronto: 198 issues (37 já criadas fechadas) =="

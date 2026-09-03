@@ -211,6 +211,42 @@ test('threeStars é sempre menor que twoStars nos 1000 mapas', () => {
   });
 });
 
+/**
+ * `score` do primeiro mapa de cada capítulo é exatamente
+ * `(chapterId - 1) / 9 * 0.6`, sem nada da curva interna somado. Em dois
+ * capítulos essa conta cai em cima de uma fronteira de faixa, e em binário ela
+ * cai *por baixo*: 0.9999999999999999 no capítulo 4 e 1.9999999999999998 no 7.
+ * Sem folga o `Math.floor` derrubava os dois uma faixa, e o primeiro mapa do
+ * capítulo 4 anunciava `easy` sendo `normal`.
+ *
+ * O teste fixa as cinco faixas de abertura porque é o rótulo que o jogador lê
+ * antes de encarar o mapa — a carga do tabuleiro nunca esteve errada.
+ */
+test('o primeiro mapa de cada capítulo não cai de faixa por arredondamento binário', () => {
+  const esperado = {
+    1: 'easy',
+    2: 'easy',
+    3: 'easy',
+    4: 'normal',
+    5: 'normal',
+    6: 'normal',
+    7: 'hard',
+    8: 'hard',
+    9: 'hard',
+    10: 'expert',
+  };
+
+  Object.entries(esperado).forEach(([chapterId, difficulty]) => {
+    const [primeiro] = getChapterLevelSummaries(Number(chapterId));
+
+    assert.equal(
+      primeiro.difficulty,
+      difficulty,
+      `${primeiro.id}: faixa de dificuldade do primeiro mapa mudou`,
+    );
+  });
+});
+
 test('a curva do capítulo é monotônica não-decrescente e realmente progride', () => {
   CHAPTERS.forEach((chapter) => {
     const summaries = getChapterLevelSummaries(chapter.id);
