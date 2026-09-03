@@ -1,0 +1,834 @@
+<title>Linha de Triagem TrincaMania</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #EDEFEB;
+  --surface: #FFFFFF;
+  --surface-2: #F5F7F3;
+  --ink: #151B17;
+  --ink-2: #414B45;
+  --muted: #6B756E;
+  --line: #D5DAD4;
+  --line-soft: #E4E8E2;
+  --accent: #00713A;
+  --accent-ink: #FFFFFF;
+  --shadow: 0 1px 2px rgba(21,27,23,.06), 0 8px 24px -14px rgba(21,27,23,.24);
+
+  --s-f0: #4A5450;
+  --s-c:  #00803B;
+  --s-a:  #C8121B;
+  --s-s:  #B98A00;
+  --s-l:  #7B3F00;
+  --s-g:  #0055A4;
+  --s-ci: #2F6478;
+  --s-sec:#CC5F00;
+  --s-q:  #574E6B;
+  --s-r:  #0E6F6B;
+
+  --done: #00803B;
+  --p0: #C8121B;
+  --p1: #B26A00;
+  --p2: #6B756E;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101410;
+    --surface: #191E1A;
+    --surface-2: #202721;
+    --ink: #E7EDE7;
+    --ink-2: #BAC4BC;
+    --muted: #8B968D;
+    --line: #2C342D;
+    --line-soft: #232A24;
+    --accent: #4FBE7C;
+    --accent-ink: #08150D;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -16px rgba(0,0,0,.8);
+
+    --s-f0: #93A099;
+    --s-c:  #4FBE7C;
+    --s-a:  #F2585F;
+    --s-s:  #E0B333;
+    --s-l:  #C08A55;
+    --s-g:  #62A6E8;
+    --s-ci: #6FAEC4;
+    --s-sec:#F0913C;
+    --s-q:  #A093C0;
+    --s-r:  #4FB8B2;
+
+    --done: #4FBE7C;
+    --p0: #F2585F;
+    --p1: #E0A03C;
+    --p2: #8B968D;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101410;
+  --surface: #191E1A;
+  --surface-2: #202721;
+  --ink: #E7EDE7;
+  --ink-2: #BAC4BC;
+  --muted: #8B968D;
+  --line: #2C342D;
+  --line-soft: #232A24;
+  --accent: #4FBE7C;
+  --accent-ink: #08150D;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -16px rgba(0,0,0,.8);
+
+  --s-f0: #93A099;
+  --s-c:  #4FBE7C;
+  --s-a:  #F2585F;
+  --s-s:  #E0B333;
+  --s-l:  #C08A55;
+  --s-g:  #62A6E8;
+  --s-ci: #6FAEC4;
+  --s-sec:#F0913C;
+  --s-q:  #A093C0;
+  --s-r:  #4FB8B2;
+
+  --done: #4FBE7C;
+  --p0: #F2585F;
+  --p1: #E0A03C;
+  --p2: #8B968D;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 16px/1.55 "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 96px; }
+
+h1, h2, h3 { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; text-wrap: balance; margin: 0; }
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+/* ---------- masthead ---------- */
+.mast { padding: 44px 0 28px; border-bottom: 1px solid var(--line); }
+.eyebrow {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11.5px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 14px;
+}
+h1 { font-size: clamp(34px, 5.4vw, 54px); font-weight: 700; letter-spacing: -.025em; line-height: 1.02; }
+.lede {
+  margin: 16px 0 0; max-width: 62ch; font-size: 17.5px; color: var(--ink-2);
+}
+.lede b { font-weight: 600; color: var(--ink); }
+
+.stats { display: flex; flex-wrap: wrap; gap: 10px 40px; margin-top: 28px; }
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.stat .n { font-family: Archivo; font-weight: 700; font-size: 30px; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .k { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------- sorting bar ---------- */
+.line-label { display: flex; justify-content: space-between; align-items: baseline; margin: 30px 0 8px; gap: 16px; flex-wrap: wrap; }
+.line-label span { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sortbar { display: flex; height: 14px; border-radius: 2px; overflow: hidden; gap: 2px; }
+.sortbar i { display: block; height: 100%; }
+
+/* ---------- controls ---------- */
+.controls {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--ground); border-bottom: 1px solid var(--line);
+  padding: 14px 0 13px; margin-bottom: 6px;
+}
+.ctlrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ctlrow + .ctlrow { margin-top: 9px; }
+.ctlkey {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); width: 58px; flex: none;
+}
+.chip {
+  font: 500 13px/1 "Source Sans 3", sans-serif;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+  border-radius: 999px; padding: 6px 12px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.chip:hover { border-color: var(--muted); }
+.chip .dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.chip .ct { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+.chip[aria-pressed="true"] .ct { color: var(--ground); opacity: .7; }
+.chip:focus-visible, .tbtn:focus-visible, .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tbtn {
+  margin-left: auto; font: 500 12.5px/1 "Source Sans 3", sans-serif;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+  border-radius: 6px; padding: 7px 11px; cursor: pointer;
+}
+.tbtn:hover { border-color: var(--muted); }
+
+/* ---------- blocks ---------- */
+.block { margin-top: 40px; scroll-margin-top: 130px; }
+.bhead { display: flex; align-items: baseline; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--st); }
+.bhead h2 { font-size: 21px; font-weight: 600; letter-spacing: -.012em; }
+.bcode {
+  font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 600;
+  letter-spacing: .09em; color: var(--st); text-transform: uppercase;
+}
+.bcount { margin-left: auto; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bnote { margin: 12px 0 0; font-size: 14.5px; color: var(--ink-2); max-width: 74ch; border-left: 2px solid var(--st); padding-left: 12px; }
+.bnote code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; background: var(--surface-2); padding: 1px 4px; border-radius: 3px; }
+
+.tasks { margin-top: 6px; }
+.task {
+  display: grid;
+  grid-template-columns: 22px 62px 1fr auto;
+  gap: 12px; align-items: start;
+  padding: 11px 4px 11px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.task:last-child { border-bottom: 0; }
+.task.hidden { display: none; }
+.task input[type=checkbox] {
+  appearance: none; width: 17px; height: 17px; margin: 3px 0 0;
+  border: 1.5px solid var(--line); border-radius: 4px; background: var(--surface);
+  cursor: pointer; position: relative; flex: none;
+}
+.task input[type=checkbox]:hover { border-color: var(--muted); }
+.task input[type=checkbox]:checked { background: var(--done); border-color: var(--done); }
+.task input[type=checkbox]:checked::after {
+  content: ""; position: absolute; left: 4.5px; top: 1px;
+  width: 4px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(42deg);
+}
+.task input[type=checkbox]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tid {
+  font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 500;
+  color: var(--st); padding-top: 3px; letter-spacing: -.01em;
+}
+.tbody { min-width: 0; }
+.tt { font-size: 15.5px; line-height: 1.4; }
+.td { font-size: 13.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+.td code { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-2); }
+.task.done .tt { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.tmeta { display: flex; gap: 6px; align-items: center; padding-top: 2px; flex: none; }
+.tag {
+  font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 6px; border-radius: 3px; border: 1px solid var(--line); color: var(--muted);
+  white-space: nowrap;
+}
+.tag.who-cc { color: var(--ink-2); border-color: var(--line); background: var(--surface-2); }
+.tag.who-voce { color: var(--s-sec); border-color: currentColor; background: transparent; }
+.tag.who-both { color: var(--s-g); border-color: currentColor; }
+.tag.p0 { color: var(--p0); border-color: currentColor; font-weight: 600; }
+.tag.p1 { color: var(--p1); border-color: currentColor; }
+.tag.p2 { color: var(--p2); border-color: var(--line); }
+
+/* ---------- prompts ---------- */
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; margin-top: 18px; }
+.pcard { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.pcard header { display: flex; align-items: baseline; gap: 9px; }
+.pw { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); font-weight: 500; }
+.pcard h3 { font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; }
+.pcard .files { display: flex; flex-wrap: wrap; gap: 5px; }
+.pcard .files span { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; color: var(--muted); background: var(--surface-2); border-radius: 3px; padding: 2px 6px; }
+.pcard pre {
+  margin: 0; background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 6px;
+  padding: 11px 12px; overflow-x: auto;
+  font-family: "IBM Plex Mono", monospace; font-size: 12px; line-height: 1.5; color: var(--ink-2);
+  white-space: pre-wrap; word-break: break-word;
+}
+.copy {
+  align-self: flex-start; font: 500 12px/1 "Source Sans 3", sans-serif;
+  border: 1px solid var(--line); background: transparent; color: var(--ink-2);
+  border-radius: 5px; padding: 6px 10px; cursor: pointer;
+}
+.copy:hover { border-color: var(--muted); }
+
+.callout {
+  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 6px; padding: 14px 16px; margin-top: 18px; font-size: 14.5px; color: var(--ink-2);
+}
+.callout b { color: var(--ink); font-weight: 600; }
+.callout code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
+
+/* ---------- palette strip ---------- */
+.pal { display: flex; flex-wrap: wrap; gap: 0; margin-top: 16px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.pal div { flex: 1 1 130px; padding: 12px 13px; color: #fff; }
+.pal div .m { font: 600 13.5px/1.2 "Source Sans 3", sans-serif; }
+.pal div .h { font-family: "IBM Plex Mono", monospace; font-size: 11px; opacity: .85; margin-top: 2px; }
+
+/* ---------- tables ---------- */
+.tblwrap { overflow-x: auto; margin-top: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14.5px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+th {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--surface-2);
+}
+tr:last-child td { border-bottom: 0; }
+td.sev { white-space: nowrap; font-weight: 600; }
+td.sev[data-s="alto"] { color: var(--p0); }
+td.sev[data-s="médio"] { color: var(--p1); }
+td.sev[data-s="baixo"] { color: var(--muted); }
+td.sev[data-s="resolvido"] { color: var(--done); }
+
+/* ---------- flow ---------- */
+.flow { margin-top: 18px; display: flex; flex-direction: column; gap: 0; }
+.step { display: grid; grid-template-columns: 78px 1fr; gap: 16px; padding: 13px 0; border-top: 1px solid var(--line-soft); }
+.step:first-child { border-top: 0; }
+.step .ph { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.step .sb { font-size: 15px; }
+.step .sb b { font-weight: 600; }
+.step .sb em { font-style: normal; color: var(--muted); font-size: 13.5px; display: block; margin-top: 2px; }
+
+.crit { margin-top: 18px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 13px 15px; }
+.crit .k { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.crit .v { font-family: "IBM Plex Mono", monospace; font-size: 13px; margin-top: 6px; color: var(--ink); word-break: break-word; line-height: 1.7; }
+
+.sechead { margin-top: 62px; padding-top: 26px; border-top: 1px solid var(--line); }
+.sechead h2 { font-size: 25px; font-weight: 700; letter-spacing: -.02em; }
+.sechead p { margin: 8px 0 0; color: var(--ink-2); max-width: 70ch; font-size: 15.5px; }
+
+footer { margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+footer code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
+
+@media (max-width: 620px) {
+  .task { grid-template-columns: 20px 1fr; }
+  .tid { grid-column: 2; padding-top: 0; }
+  .tbody { grid-column: 2; }
+  .tmeta { grid-column: 2; }
+  .ctlkey { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">TrincaMania · ODS 12 · Roadmap operacional · 03 set 2026</p>
+  <h1>Linha de Triagem</h1>
+  <p class="lede">Tudo que falta para o jogo ficar pronto: <b>10 mundos × 10 fases</b>, cada um com arte, som e identidade próprios, publicado na Play Store com pipeline automatizado. As tarefas estão separadas em fluxos, como o jogo separa material.</p>
+
+  <div class="stats">
+    <div class="stat"><span class="n" id="statTotal">193</span><span class="k">tarefas</span></div>
+    <div class="stat"><span class="n">100</span><span class="k">fases finais</span></div>
+    <div class="stat"><span class="n">20</span><span class="k">imagens de mapa</span></div>
+    <div class="stat"><span class="n">10</span><span class="k">trilhas de som</span></div>
+    <div class="stat"><span class="n" id="statDone">0</span><span class="k">concluídas</span></div>
+  </div>
+
+  <div class="line-label"><span>Distribuição por fluxo</span><span id="pctDone">0% concluído</span></div>
+  <div class="sortbar" id="sortbar"></div>
+</header>
+
+<div class="controls">
+  <div class="ctlrow" id="rowStream"><span class="ctlkey">Fluxo</span></div>
+  <div class="ctlrow" id="rowMeta">
+    <span class="ctlkey">Filtro</span>
+    <button class="chip" data-f="who" data-v="cc" aria-pressed="false">Claude Code <span class="ct" id="cWhoCc"></span></button>
+    <button class="chip" data-f="who" data-v="voce" aria-pressed="false">Você <span class="ct" id="cWhoVoce"></span></button>
+    <button class="chip" data-f="who" data-v="both" aria-pressed="false">Os dois <span class="ct" id="cWhoBoth"></span></button>
+    <button class="chip" data-f="prio" data-v="0" aria-pressed="false">P0 <span class="ct" id="cP0"></span></button>
+    <button class="chip" data-f="prio" data-v="1" aria-pressed="false">P1 <span class="ct" id="cP1"></span></button>
+    <button class="chip" data-f="prio" data-v="2" aria-pressed="false">P2 <span class="ct" id="cP2"></span></button>
+    <button class="chip" data-f="open" data-v="1" aria-pressed="false">Só em aberto</button>
+    <button class="tbtn" id="clearBtn">Limpar filtros</button>
+  </div>
+</div>
+
+<main id="blocks"></main>
+
+<section class="sechead">
+  <h2>Os 20 prompts de arte</h2>
+  <p>Cada mundo precisa de duas imagens — fundo de mapa e fundo de jogo — em <b>1080 × 1920</b>. O prompt de cada mundo é o bloco de cena abaixo colado depois do bloco de estilo compartilhado. É o bloco de estilo que faz os dez mapas parecerem o mesmo jogo.</p>
+</section>
+
+<div class="callout">
+  <b>Portão A-04.</b> Gere <b>uma</b> imagem-piloto (Mundo 1, fundo de jogo), coloque no aparelho e valide antes de gerar as outras dezenove. Refazer uma custa uma; refazer vinte custa vinte.
+</div>
+
+<div class="pcard" style="margin-top:14px">
+  <header><span class="pw">Base</span><h3>Bloco de estilo — colar em todo prompt</h3></header>
+  <pre id="styleblock">STYLE: 2D vector game illustration, flat shapes with soft gradient shading,
+clean readable silhouettes, mobile game background, warm ambient occlusion,
+no outlines heavier than 3px, cohesive with a casual puzzle game aesthetic.
+COMPOSITION: vertical 9:16, main visual interest in the upper and lower thirds,
+CENTER-BOTTOM AREA MUST STAY VISUALLY CALM (a game board is drawn on top of it).
+NEGATIVE: no text, no letters, no numbers, no logos, no watermark, no UI,
+no human faces, no fantasy elements (no castles, no dragons, no crystals,
+no magic, no candy, no treasure chests, no angels), no fruit, no photorealism.</pre>
+  <button class="copy" data-t="styleblock">Copiar bloco de estilo</button>
+</div>
+
+<p class="eyebrow" style="margin:28px 0 0">Paleta obrigatória — CONAMA 275/2001</p>
+<div class="pal">
+  <div style="background:#E30613"><div class="m">Plástico</div><div class="h">#E30613</div></div>
+  <div style="background:#0055A4"><div class="m">Papel</div><div class="h">#0055A4</div></div>
+  <div style="background:#009640"><div class="m">Vidro</div><div class="h">#009640</div></div>
+  <div style="background:#FFD500;color:#2A2400"><div class="m">Metal</div><div class="h">#FFD500</div></div>
+  <div style="background:#7B3F00"><div class="m">Orgânico</div><div class="h">#7B3F00</div></div>
+</div>
+
+<div class="pgrid" id="pgrid"></div>
+
+<section class="sechead">
+  <h2>Ordem de execução</h2>
+  <p>Os fluxos de automação e de conteúdo tocam arquivos diferentes e podem correr em paralelo. O que não pode adiantar é a produção em lote de arte antes da piloto validada, nem o build público antes da migração de save.</p>
+</section>
+
+<div class="flow" id="flow"></div>
+
+<div class="crit">
+  <div class="k">Caminho crítico</div>
+  <div class="v">F0-01 → F0-02 → C-02 → C-11 → C-19…C-26 → A-04 → A-05…A-24 → R-15 → R-18</div>
+</div>
+
+<section class="sechead">
+  <h2>Riscos registrados</h2>
+  <p>Cada um destes já tem uma tarefa que o cobre. Estão aqui porque são as falhas que custam caro se passarem despercebidas.</p>
+</section>
+
+<div class="tblwrap">
+  <table>
+    <thead><tr><th>Risco</th><th>Impacto</th><th>O que o cobre</th></tr></thead>
+    <tbody id="risks"></tbody>
+  </table>
+</div>
+
+<footer>
+  Fonte de verdade no repositório: <code>docs/ROADMAP-JOGO-COMPLETO.md</code>, na branch <code>develop</code> @ <code>678e256</code>.
+  As marcações desta página ficam salvas só neste navegador.
+</footer>
+
+</div>
+
+<script>
+const S = {
+  f0:  {n:"Fundação",         c:"var(--s-f0)",  code:"F0"},
+  c:   {n:"Conteúdo 10×10",   c:"var(--s-c)",   code:"C"},
+  a:   {n:"Arte",             c:"var(--s-a)",   code:"A"},
+  s:   {n:"Som",              c:"var(--s-s)",   code:"S"},
+  l:   {n:"Limpeza ODS12",    c:"var(--s-l)",   code:"L"},
+  g:   {n:"Git e versão",     c:"var(--s-g)",   code:"G"},
+  ci:  {n:"CI/CD",            c:"var(--s-ci)",  code:"CI"},
+  sec: {n:"DevSecOps",        c:"var(--s-sec)", code:"SEC"},
+  q:   {n:"Qualidade",        c:"var(--s-q)",   code:"Q"},
+  r:   {n:"Release",          c:"var(--s-r)",   code:"R"},
+};
+
+const BLOCKS = [
+{k:"f0", h:"Fundação", note:"Desbloqueia todo o resto. Duas destas travam ferramenta: <code>gh</code> não existe no WSL e <code>node</code> só resolve em shell interativo.", t:[
+ ["F0-01","✅ Instalar o <code>gh</code> CLI","voce",0,"<b>Feito 03/09:</b> binário v2.99.0 baixado do release oficial para <code>~/.local/bin/gh</code>, sem sudo — o diretório já está no PATH via <code>.zshrc:105</code>. Falta só o <code>gh auth login</code>, que é interativo."],
+ ["F0-02","Expor <code>node</code> no PATH não-interativo","voce",0,"Hoje só existe via nvm. Em shell não-interativo o comando não resolve — isso quebra hook de git e script de CI local."],
+ ["F0-03","Fixar a versão de Node do projeto","cc",1,"<code>.nvmrc</code> com 20 + campo <code>engines</code>. O CI já usa Node 20; falta alinhar o local."],
+ ["F0-04","✅ Resolver o <code>package.json</code> pendente","cc",0,"<b>Feito 03/09</b> (commit <code>c1e3b65</code>). Não era decisão em aberto e sim bug: o <code>package-lock.json</code> commitado já trazia ~54.0.37 / ~54.0.18 / ^29.5.14, então HEAD tinha manifest e lock discordando — <code>npm ci</code>, que é o que o CI roda, falharia."],
+ ["F0-05","Rodar <code>npx expo-doctor</code> e registrar o baseline","cc",1,"Saúde do projeto antes das mudanças grandes."],
+ ["F0-06","Criar a branch <code>feat/campanha-10x10</code>","cc",0,"A reescrita de conteúdo não vai direto em <code>develop</code>."],
+]},
+{k:"c", h:"Conteúdo — 10 mundos × 10 fases", note:"O bloco de maior risco. Hoje são 203 fases em 8 mundos × 25 + bônus, e <code>tests/levelComposition.test.cjs</code> trava um sha256 do JSON delas. Quebrar esse hash é intencional aqui — mas exige atualizar seis arquivos de teste e migrar o save de quem já joga.", t:[
+ ["C-01","✅ Confirmar os nomes dos Mundos 9 e 10","voce",0,"<b>Decidido 03/09.</b> A campanha fica com <b>Oficina do Reparo</b> e <b>Cidade Circular</b>; quem foi renomeado foi o capítulo — 9 virou <b>Ferro-Velho Renascido</b> e 10 virou <b>Metrópole do Ciclo Fechado</b>. Já no código (commit <code>9bd1059</code>)."],
+ ["C-02","Redesenhar a curva de dificuldade para 100 fases","cc",0,"Hoje a rampa vai de 9 a 60 peças em 203 fases. <code>WORLD_LEVELS_PER_MAP</code> 25→10, <code>WORLD_DIFFICULTY_BLOCK_SIZE</code> 5→2. Invariante: <code>tileCount</code> sempre múltiplo de 3."],
+ ["C-03","Redefinir os marcos de descanso, loja e guardião","cc",0,"Com 10 fases por mundo os marcos atuais (5/10/15/20/25) colapsam. Proposta: descanso na 5, guardião na 10, loja entre mundos."],
+ ["C-04","Escrever os 100 títulos de fase","cc",0,"Dez por mundo, no vocabulário de <code>CONTEXT.md</code>. Zero fantasia genérica."],
+ ["C-05","Escrever os 100 textos de objetivo","cc",0,"Padrão atual: “Objetivo: &lt;verbo&gt; &lt;alvo&gt;.”"],
+ ["C-06","Derivar os <code>starTimeLimits</code> das 100 fases","cc",1,"Da curva, não à mão — hoje via <code>WORLD_STAR_TIME_BASE_OFFSET</code> e <code>WORLD_STAR_TIME_SPAN</code>."],
+ ["C-07","Definir <code>recommendedPower</code> e <code>mysteryTileCount</code> por fase","cc",1,"Mistério com teto de 1/6 do tabuleiro, regra já usada nos capítulos."],
+ ["C-08","✅ Decidir o destino do mundo bônus (id 21)","voce",1,"<b>Decidido 03/09:</b> fica como 11º mapa secreto — que já é o comportamento atual (<code>subtitle: 'Mundo secreto'</code>). Não muda código hoje, mas cria C-08a e C-08b na reescrita."],
+ ["C-08a","Reposicionar o bônus de <code>25.1–25.3</code> para <code>10.1–10.3</code>","cc",0,"<code>src/data/worlds.ts:119-120</code>. O <code>levelStart</code>/<code>levelEnd</code> atual aponta para o fim de um Mundo 1 de 25 fases, que passa a ter 10."],
+ ["C-08b","Trocar o <code>theme: 'sweet'</code> do bônus","cc",1,"Vocabulário de fantasia num mundo que fica. Cai junto com L-02. Reavaliar também <code>unlockRule: 'three-stars-world-1'</code>, que fica mais fácil com o Mundo 1 em 10 fases."],
+ ["C-09","Estender <code>CampaignWorldId</code> para 9 e 10","cc",0,"<code>src/types/game.ts:30</code>"],
+ ["C-10","Reescrever <code>WORLDS</code> com 10 mundos","cc",0,"<code>src/data/worlds.ts</code> — ajustar <code>levelStart</code>/<code>levelEnd</code>, hoje 1-25, 26-50 … 176-200."],
+ ["C-11","Reescrever <code>LEVEL_SEEDS</code>","cc",0,"<code>src/data/levels.ts:519-1545</code>. Mundos 1–3 são autorais, 4–8 gerados. Decidir se as 100 viram todas geradas (mais sustentável)."],
+ ["C-12","Ajustar <code>GENERATED_WORLD_CONFIGS</code> de 25 para 10 títulos","cc",0,"<code>src/data/levels.ts:198-395</code>"],
+ ["C-13","Registrar os mundos 9 e 10 em <code>WORLD_MAP_CONFIGS</code>","cc",0,"O <code>Record</code> é total — <code>tsc</code> quebra sem as entradas. É proposital."],
+ ["C-14","Reduzir o mapa do Mundo 1 de 25 para 10 âncoras","cc",0,"<code>src/data/worldMapConfigs.ts:26-195</code>, <code>designSize</code> 360×3160."],
+ ["C-15","Renomear <code>BOSQUE_*</code> para vocabulário ODS12","cc",1,"15 ocorrências. Ver o fluxo de limpeza."],
+ ["C-16","Atualizar o comentário das 203 em <code>boardPositions.ts</code>","cc",1,"Linhas 16 e 39."],
+ ["C-17","Mapear <code>AMBIENT_BY_WORLD_ID</code> para os 10 mundos","cc",0,"<code>src/utils/sounds.ts:165-174</code> cobre só 1–8. Mundo sem entrada toca em silêncio."],
+ ["C-18","Cobrir os mundos 9 e 10 em <code>getGameBackground</code>","cc",0,"<code>src/screens/GameScreen.tsx:327</code> — hoje só 1–8 e 21."],
+ ["C-19","Recalcular o hash sha256 das fases","cc",0,"<code>tests/levelComposition.test.cjs:108</code>. Trocar 203→100, o total de peças (11415) e o literal <code>b1a76275…</code>. <b>Não deletar a asserção</b> — é trava de integridade."],
+ ["C-20","Atualizar <code>tests/chapterProgress.test.cjs:80</code>","cc",0],
+ ["C-21","Atualizar <code>tests/worldMapConfig.test.cjs:57-73</code>","cc",0,"Três asserções sobre 203."],
+ ["C-22","Atualizar <code>tests/chapters.test.cjs:434-436</code>","cc",0],
+ ["C-23","Atualizar <code>tests/simulateFullPlaythrough.cjs:44,210</code>","cc",0,"É a simulação que prova que toda fase é vencível."],
+ ["C-24","Revisar <code>boardLayout</code> e <code>campaignMapLayout</code>","cc",0,"Podem depender da contagem e das âncoras do Mundo 1."],
+ ["C-25","Escrever a migração de save 203→100","cc",0,"<b>Crítico.</b> Ids <code>w1-011</code>…<code>w8-025</code> deixam de existir e <code>normalizeProgress</code> descarta id desconhecido em silêncio. Decidir: mapear proporcionalmente, ou versionar o save e resetar com aviso."],
+ ["C-26","Testar a migração de save","cc",0,"Save antigo → save novo, sem perda silenciosa."],
+ ["C-27","Travar em teste a cobertura de fundo e ambiente por mundo","cc",1,"Impede que um mundo novo caia em silêncio ou no fundo do Mundo 1 — o mesmo problema já registrado nos capítulos."],
+ ["C-28","Atualizar o texto do Modo Dev","cc",2,"<code>src/components/SettingsModal.tsx:120</code> cita “203 fases”."],
+ ["C-29","Reescrever o invariante #4 do <code>CLAUDE.md</code>","cc",0,"O congelamento das 203 deixa de valer."],
+ ["C-30","Decidir e implementar o destino dos Capítulos","both",1,"Esconder do menu, manter como modo infinito pós-jogo, ou remover. Hoje <code>ChaptersScreen</code> é acessível."],
+]},
+{k:"a", h:"Arte", note:"Vinte imagens de mapa mais oito assets globais. É o maior gargalo do projeto e tudo depende do portão A-04. Alvo de peso: <b>≤ 400 KB por PNG</b> — hoje <code>map_world1_scene_bg.png</code> sozinho tem 5,8 MB.", t:[
+ ["A-01","Escrever o art bible","cc",0,"Paleta CONAMA, estilo, do/don't ODS12."],
+ ["A-02","Criar <code>assets/map/worlds/</code> e a convenção de nome","cc",0],
+ ["A-03","Escolher a ferramenta de geração e travar seed/estilo","voce",0],
+ ["A-04","Gerar e validar a imagem-piloto no aparelho","voce",0,"Mundo 1, fundo de jogo. <b>Portão</b> — nada em lote antes disso."],
+ ["A-05","Mundo 1 · Parque da Coleta Seletiva — fundo de mapa","both",0],
+ ["A-06","Mundo 1 · Parque da Coleta Seletiva — fundo de jogo","both",0],
+ ["A-07","Mundo 2 · Vale da Reciclagem — fundo de mapa","both",0],
+ ["A-08","Mundo 2 · Vale da Reciclagem — fundo de jogo","both",0],
+ ["A-09","Mundo 3 · Central de Materiais — fundo de mapa","both",0],
+ ["A-10","Mundo 3 · Central de Materiais — fundo de jogo","both",0],
+ ["A-11","Mundo 4 · Viveiro Comunitário — fundo de mapa","both",0],
+ ["A-12","Mundo 4 · Viveiro Comunitário — fundo de jogo","both",0],
+ ["A-13","Mundo 5 · Usina de Compostagem — fundo de mapa","both",0],
+ ["A-14","Mundo 5 · Usina de Compostagem — fundo de jogo","both",0],
+ ["A-15","Mundo 6 · Cooperativa dos Catadores — fundo de mapa","both",0],
+ ["A-16","Mundo 6 · Cooperativa dos Catadores — fundo de jogo","both",0],
+ ["A-17","Mundo 7 · Rota da Logística Reversa — fundo de mapa","both",0],
+ ["A-18","Mundo 7 · Rota da Logística Reversa — fundo de jogo","both",0],
+ ["A-19","Mundo 8 · Fórum da Economia Circular — fundo de mapa","both",0],
+ ["A-20","Mundo 8 · Fórum da Economia Circular — fundo de jogo","both",0],
+ ["A-21","Mundo 9 · Oficina do Reparo — fundo de mapa","both",0],
+ ["A-22","Mundo 9 · Oficina do Reparo — fundo de jogo","both",0],
+ ["A-23","Mundo 10 · Cidade Circular — fundo de mapa","both",0],
+ ["A-24","Mundo 10 · Cidade Circular — fundo de jogo","both",0],
+ ["A-25","Ícone do app 1024×1024","both",0,"Hoje 1254×1254, fora do padrão Expo. Símbolo de reciclagem + trinca, sem texto."],
+ ["A-26","Adaptive icon Android 1024×1024","both",0,"Elemento dentro do círculo de 66%. O <code>backgroundColor</code> hoje é <code>#4B148C</code> — roxo, fora da paleta CONAMA."],
+ ["A-27","Splash screen","both",1,"<code>SplashIntroScreen.tsx</code> tem 537 linhas — conferir o que já é desenhado em código."],
+ ["A-28","Selo de marco “Descanso” 320×320","both",1,"Substitui <code>forest_rest_cart.png</code>, que é carrinho de floresta do tema antigo. Proposta: carrinho de catador."],
+ ["A-29","Selo de marco “Loja” 320×320","both",1],
+ ["A-30","Selo de marco “Guardião” 320×320","both",1,"Não existe hoje."],
+ ["A-31","Marcador de portal entre mundos 320×320","both",1,"Hoje é <code>forest-portal-rune</code> — runa é fantasia. Proposta: seta de ciclo."],
+ ["A-32","Nós de fase: bloqueado, atual, completo","both",2,"Avaliar se vira SVG em código, como as peças já são."],
+ ["A-33","Comprimir todos os PNGs para ≤ 400 KB","voce",1,"<code>assets/</code> tem ~50 MB hoje. pngquant, oxipng ou TinyPNG."],
+ ["A-34","Remover <code>Identidade visual de TrincaMania.png</code> da raiz","cc",1,"6 MB versionados, duplicata byte-idêntica de <code>map_world1_scene_bg.png</code>."],
+ ["A-35","Remover os 6 arquivos <code>.png.png</code>","cc",1,"<code>map_bonus_bg.png.png</code>, <code>map_shop.png.png</code>, os três <code>map_path_pieces_*</code> e <code>map_world2_bg.png.png</code>."],
+ ["A-36","Integrar cada asset entregue no código","both",0,"<code>campaignMapAssets.ts</code> e <code>getGameBackground</code>."],
+]},
+{k:"s", h:"Som", note:"MP3 em loop sem emenda audível, 30–60 s, 128 kbps, ≤ 800 KB. Sem melodia forte — o jogo é de concentração.", t:[
+ ["S-01","<code>ambient_parque.mp3</code> — Mundo 1","both",0,"Pássaros distantes, folhas, passos ocasionais."],
+ ["S-02","<code>ambient_vale.mp3</code> — Mundo 2","both",0,"Esteira ao longe, vento de vale, maquinário abafado."],
+ ["S-03","<code>ambient_central.mp3</code> — Mundo 3","both",0,"Galpão amplo com eco, prensa distante, ventilação."],
+ ["S-04","<code>ambient_viveiro.mp3</code> — Mundo 4","both",0,"Regador, insetos, lona ao vento."],
+ ["S-05","<code>ambient_usina.mp3</code> — Mundo 5","both",0,"Zumbido grave de biodigestor, vapor, pá revolvendo."],
+ ["S-06","<code>ambient_cooperativa.mp3</code> — Mundo 6","both",0,"Carrinho de metal, fardos, vozes distantes indistintas."],
+ ["S-07","<code>ambient_rota.mp3</code> — Mundo 7","both",0,"Rodovia distante, caminhão manobrando, engradado."],
+ ["S-08","<code>ambient_forum.mp3</code> — Mundo 8","both",0,"Praça aberta, murmúrio cívico, bandeira ao vento."],
+ ["S-09","<code>ambient_oficina.mp3</code> — Mundo 9","both",0,"Chave de fenda, gaveta de peças, ferro de solda."],
+ ["S-10","<code>ambient_cidade.mp3</code> — Mundo 10","both",0,"Bonde, cidade calma, folhagem urbana, sem buzina."],
+ ["S-11","Renomear as <code>AmbientKey</code> de fantasia","cc",1,"<code>beach | celestial | crystal | forest | mountain | snow | stars | volcano</code>."],
+ ["S-12","Remover os 8 <code>ambient_*.mp3</code> antigos","cc",1],
+ ["S-13","Integrar os 10 ambientes em <code>sounds.ts</code>","both",0],
+ ["S-14","Revisar os SFX de voz","voce",2,"<code>voice_amazing</code>, <code>voice_excellent</code> e afins — conferir se o tom bate com o tema."],
+ ["S-15","Travar em teste que todo mundo tem ambiente","cc",1],
+]},
+{k:"l", h:"Limpeza ODS12", note:"A regra permanente do <code>CLAUDE.md</code> trata sobra de vocabulário de fantasia como <b>bug de conteúdo</b>. Isto é o que ainda existe hoje, verificado no código.", t:[
+ ["L-01","Renomear a union <code>AmbientKey</code>","cc",1,"<code>src/utils/sounds.ts:32-39</code>"],
+ ["L-02","Renomear <code>WorldTheme</code>","cc",1,"<code>'forest' | 'mountain' | 'crystal' | 'sweet'</code> em <code>src/types/game.ts:42</code>."],
+ ["L-03","Trocar os <code>identityKey</code> dos mundos 2–8 e bônus","cc",1,"<code>vales-montanhosos</code>, <code>ruinas-de-cristal</code>, <code>praia-dos-tesouros</code>, <code>vulcao-doce</code>, <code>cidade-das-estrelas</code>, <code>neve-cristalina</code>, <code>reino-celestial</code>, <code>reino-acucarado</code>."],
+ ["L-04","Renomear os 15 <code>BOSQUE_*</code>","cc",1,"<code>worldMapConfigs.ts</code>"],
+ ["L-05","Renomear as chaves <code>forest-*</code> de asset","cc",1,"<code>campaignMapAssets.ts:3-11</code>"],
+ ["L-06","Renomear <code>ForestRestMapMarker.tsx</code>","cc",1],
+ ["L-07","Renomear os 8 <code>assets/map/world1/forest_*.png</code>","cc",2],
+ ["L-08","Renomear <code>map_path_pieces_bonus_reino_acucarado.png</code>","cc",1,"Nome de arquivo com “reino açucarado”."],
+ ["L-09","Renomear os path pieces de bosque e vales montanhosos","cc",2],
+ ["L-10","Revisar <code>assets/map/README_MUNDO_3.txt</code>","cc",2],
+ ["L-11","Remover os 4 <code>PATCH-*.md</code> da raiz","voce",2,"96 KB de docs de patch antigos."],
+ ["L-12","Remover <code>TrincaMania Redesign/patch/</code> aninhado","voce",2,"Diretório com o mesmo nome do pai, dentro do projeto."],
+ ["L-13","Escrever o <code>README.md</code> de verdade","cc",1,"Hoje tem 13 bytes."],
+ ["L-14","Decidir o nome do app","voce",0,"<code>app.json</code> diz <code>TileAdventure-ODS</code>, o slug é <code>trinca-mania</code> e o pacote Android é <code>br.com.mhvtech.trincamania</code>. Três nomes diferentes."],
+ ["L-15","Consolidar os dois manuais de APK","cc",2,"<code>COMO_GERAR_APK.md</code> e <code>ManualParaGerarApk.txt</code>."],
+ ["L-16","Rodar <code>/code-review</code> na limpeza","cc",1],
+]},
+{k:"g", h:"Git e versionamento", note:"Os commits já seguem Conventional Commits na prática. Falta travar isso em ferramenta e ligar a versão ao histórico.", t:[
+ ["G-01","Adotar Conventional Commits formalmente","cc",1],
+ ["G-02","<code>commitlint</code> + config convencional","cc",1,"Rejeita mensagem fora do padrão."],
+ ["G-03","<code>husky</code> com hook <code>commit-msg</code>","cc",1,"Depende de F0-02 — sem node no PATH o hook não roda."],
+ ["G-04","<code>lint-staged</code> no <code>pre-commit</code>","cc",1,"eslint + prettier só nos arquivos staged."],
+ ["G-05","Hook <code>pre-push</code> com typecheck","cc",2,"Barato e evita CI vermelho."],
+ ["G-06","<code>release-please</code> para versão e CHANGELOG","cc",1,"Lê o log e abre PR de release. Casa com o <code>autoIncrement</code> do EAS."],
+ ["G-07","Criar o <code>CHANGELOG.md</code>","cc",1],
+ ["G-08","Alinhar <code>package.json:version</code> com <code>app.json:version</code>","cc",1,"Hoje ambos 1.0.0, mas sem sincronia automática."],
+ ["G-09","Definir a estratégia de branch","voce",1,"Hoje só existe <code>develop</code>. O CI já espera <code>main</code> também."],
+ ["G-10","Branch protection em <code>main</code> e <code>develop</code>","voce",0,"Exigir PR, checks verdes, sem force-push."],
+ ["G-11","Template de PR","cc",2],
+ ["G-12","Templates de issue: bug, arte, conteúdo","cc",2],
+ ["G-13","<code>CODEOWNERS</code>","cc",2],
+ ["G-14","Padronizar as labels","cc",2,"<code>arte</code>, <code>som</code>, <code>conteudo</code>, <code>automacao</code>, <code>devsecops</code>, <code>p0/p1/p2</code>."],
+ ["G-15","Revisar o <code>.gitattributes</code>","cc",2,"Faltam <code>*.ttf</code>, <code>*.otf</code>, <code>*.aab</code>, <code>*.keystore</code>."],
+ ["G-16","Decidir sobre Git LFS para os PNGs","voce",2,"Reavaliar depois de A-33 — com tudo ≤ 400 KB pode não valer."],
+ ["G-17","<code>.gitignore</code>: <code>.eas/</code>, <code>*.aab</code>, <code>coverage/</code>","cc",2],
+]},
+{k:"ci", h:"CI/CD", note:"O <code>ci.yml</code> atual roda lint, typecheck, test, test:ui e test:playthrough em <b>um job sequencial</b>. Se o lint falha, você não descobre se os testes passariam.", t:[
+ ["CI-01","Quebrar o CI em jobs paralelos","cc",1],
+ ["CI-02","<code>concurrency</code> com cancelamento de runs antigos","cc",1,"Economiza minutos em PR com vários pushes."],
+ ["CI-03","<code>timeout-minutes</code> em todo job","cc",1,"Sem isso um job travado queima 6 h."],
+ ["CI-04","<code>permissions: contents: read</code> no topo","cc",0,"Menor privilégio. Hoje o workflow herda tudo."],
+ ["CI-05","Fixar as actions por SHA, não por tag","cc",1,"Tag é mutável — é vetor de supply chain."],
+ ["CI-06","Matrix de Node 20 e 22","cc",2],
+ ["CI-07","Rodar <code>npm run format:check</code> no CI","cc",1,"O script existe e nunca é chamado."],
+ ["CI-08","Rodar <code>npx expo-doctor</code> no CI","cc",1],
+ ["CI-09","Cobertura de teste com threshold","cc",1],
+ ["CI-10","Publicar o relatório de cobertura no PR","cc",2],
+ ["CI-11","Path filters","cc",2,"Não rodar a suíte de código quando só mudou <code>.md</code>."],
+ ["CI-12","Job de validação de peso de asset","cc",2,"Falha se entrar PNG acima de 400 KB."],
+ ["CI-13","Job de guarda ODS12","cc",1,"Grep barrando <code>reino|castelo|dragão|cristal mágico|doce|pirata|tesouro|anjo</code> em <code>src/</code>. Automatiza a regra permanente."],
+ ["CI-14","Criar o secret <code>EXPO_TOKEN</code>","voce",0,"expo.dev → Access Tokens."],
+ ["CI-15","Migrar <code>eas.json</code> para <code>appVersionSource: \"remote\"</code>","cc",1,"Hoje é <code>local</code>. Remote é o recomendado e habilita o auto-incremento."],
+ ["CI-16","<code>autoIncrement: true</code> no perfil de produção","cc",1,"Incrementa <code>versionCode</code> sozinho."],
+ ["CI-17","Adicionar o perfil <code>development</code> no <code>eas.json</code>","cc",1,"Hoje só existem <code>preview</code> e <code>production</code>."],
+ ["CI-18","Workflow de build de preview em PR","cc",1,"APK por PR para testar no aparelho."],
+ ["CI-19","Workflow de build de produção em tag","cc",1,"Dispara na tag do release-please."],
+ ["CI-20","Configurar EAS Submit para a Play Store","voce",1,"Exige o service account JSON do Google Play."],
+ ["CI-21","<code>--auto-submit</code> no build de produção","cc",2],
+ ["CI-22","Configurar EAS Update (OTA)","cc",1,"Correção de JS sem passar pela revisão da loja."],
+ ["CI-23","Avaliar EAS Workflows em <code>.eas/workflows/</code>","cc",2,"Alternativa nativa ao GitHub Actions no lado mobile."],
+ ["CI-24","Canal de update por branch","cc",2,"<code>preview</code> e <code>production</code>."],
+]},
+{k:"sec", h:"DevSecOps", note:"O último commit do repositório é <code>chore: corrige vulnerabilidades</code> — feito à mão. O objetivo deste fluxo é que isso não volte a ser manual.", t:[
+ ["SEC-01","Habilitar CodeQL para JS/TS","cc",0,"SAST nativo do GitHub."],
+ ["SEC-02","Habilitar Secret Scanning e Push Protection","voce",0,"Bloqueia o commit de segredo antes de sair da máquina."],
+ ["SEC-03","Habilitar Dependabot alerts e security updates","voce",0],
+ ["SEC-04","<code>dependabot.yml</code> para npm e github-actions","cc",1,"Atualiza dependência e versão de action."],
+ ["SEC-05","Avaliar Renovate no lugar do Dependabot","voce",2,"Agrupa PRs e respeita melhor os ranges do Expo."],
+ ["SEC-06","<code>npm audit --audit-level=high</code> no CI","cc",1],
+ ["SEC-07","<code>gitleaks</code> no CI","cc",1,"Varre o histórico, não só o diff."],
+ ["SEC-08","<code>dependency-review</code> em PR","cc",1,"Action oficial — barra dependência com CVE conhecida."],
+ ["SEC-09","Gerar SBOM CycloneDX por release","cc",2],
+ ["SEC-10","OpenSSF Scorecard","cc",2],
+ ["SEC-11","Auditar <code>android.permissions</code>","cc",1,"Hoje é <code>[]</code> — confirmar que continua assim depois de cada lib nova."],
+ ["SEC-12","Travar a config do <code>expo-audio</code> em teste","cc",1,"<code>microphonePermission: false</code>, <code>recordAudioAndroid: false</code> — está certo hoje."],
+ ["SEC-13","Confirmar que não há segredo em <code>app.json</code>/<code>eas.json</code>","cc",0,"O <code>projectId</code> é público; conferir o resto."],
+ ["SEC-14","Escrever o <code>SECURITY.md</code>","cc",2],
+ ["SEC-15","Rodar <code>/security-review</code> antes do release","cc",0],
+ ["SEC-16","Proteger o keystore Android","voce",0,"O <code>.gitignore</code> já barra <code>*.jks</code>/<code>*.p12</code>/<code>*.key</code>. Guardar no EAS credentials, nunca no repo."],
+ ["SEC-17","Revisar os dados coletados (LGPD)","voce",1,"Hoje é tudo AsyncStorage local. Se entrar analytics, a política muda."],
+]},
+{k:"q", h:"Qualidade e DX", note:"Já existem 19 arquivos de teste. Falta cobertura de ponta a ponta e quebrar os três arquivos que passaram do tamanho gerenciável.", t:[
+ ["Q-01","Montar E2E com Maestro","cc",1,"YAML, fora do build, roda em CI. Melhor custo/benefício que Detox aqui."],
+ ["Q-02","Fluxo E2E: abrir, escolher fase, jogar e vencer","cc",1],
+ ["Q-03","Fluxo E2E: comprar na loja","cc",2],
+ ["Q-04","Fluxo E2E: perder vida e esperar a recarga","cc",2],
+ ["Q-05","Rodar o Maestro no CI","cc",2,"Emulador Android em GitHub Actions."],
+ ["Q-06","Teste de acessibilidade","cc",1,"Labels e alvo de toque ≥ 44 px. O <code>minimumTouchSize: 44</code> já existe no config de mapa, mas ninguém testa."],
+ ["Q-07","Quebrar <code>GameScreen.tsx</code>","cc",1,"3166 linhas. O <code>CLAUDE.md</code> já avisa para não deixar crescer."],
+ ["Q-08","Quebrar <code>LevelSelectScreen.tsx</code>","cc",2,"1879 linhas."],
+ ["Q-09","Quebrar <code>App.tsx</code>","cc",2,"1169 linhas."],
+ ["Q-10","Orçamento de tamanho de bundle no CI","cc",2],
+ ["Q-11","Perfilar performance em aparelho de entrada","voce",1,"Depois da arte nova — 20 PNGs mudam o consumo de memória."],
+ ["Q-12","Escrever o ADR da mudança 203 → 100","cc",1,"<code>docs/adr/0004-*.md</code>. Os três ADRs existentes documentam decisões desse porte."],
+ ["Q-13","Resolver o gap do Modo Dev","cc",2,"Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa."],
+ ["Q-14","Atualizar o <code>CONTEXT.md</code> com o vocabulário dos 10 mundos","cc",1],
+]},
+{k:"r", h:"Release e publicação", note:"Quase tudo aqui é conta, formulário e captura de tela — trabalho seu, não de código. Vale começar cedo: a conta do Play Console e a política de privacidade travam a submissão.", t:[
+ ["R-01","Criar ou confirmar a conta Google Play Console","voce",0,"US$ 25, uma vez."],
+ ["R-02","Definir o nome final do app","voce",0,"Ver L-14 — hoje há três nomes divergentes."],
+ ["R-03","Gerar e guardar o keystore de produção","voce",0,"Via EAS credentials."],
+ ["R-04","Escrever a ficha da loja","both",0,"Título, descrição curta e longa, com o enquadramento ODS 12."],
+ ["R-05","Capturar 8 screenshots de telefone","voce",0,"Mínimo 2, ideal 8."],
+ ["R-06","Feature graphic 1024×500","both",0],
+ ["R-07","Ícone da loja 512×512","both",0],
+ ["R-08","Vídeo de preview","voce",2,"Opcional."],
+ ["R-09","Hospedar a política de privacidade","both",0,"Obrigatória. Como o jogo é offline, é curta."],
+ ["R-10","Responder o questionário de classificação etária","voce",0],
+ ["R-11","Preencher o Data safety form","voce",0,"Declarar que não coleta dados."],
+ ["R-12","Declarar o público-alvo","voce",0,"Jogo educativo atrai criança — abaixo de 13 anos entram as regras de Famílias."],
+ ["R-13","Rodar teste interno","voce",1,"Até 100 testadores."],
+ ["R-14","Rodar teste fechado e coletar feedback","voce",1],
+ ["R-15","Jogar as 100 fases manualmente","voce",0,"O <code>test:playthrough</code> simula, mas não substitui jogar."],
+ ["R-16","Rodar <code>/security-review</code>","cc",0],
+ ["R-17","Marcar a tag <code>v1.0.0</code> e publicar o release","cc",0],
+ ["R-18","Publicar em produção","voce",0],
+]},
+];
+
+const PROMPTS = [
+ [1,"Parque da Coleta Seletiva","w01_parque","a sunny urban public park with a selective-collection ecopoint;\nfive color-coded recycling bins (red, blue, green, yellow, brown) under a\nwooden shelter, trimmed grass, paved walking path, park benches, leafy trees,\nmorning light, hopeful and inviting mood."],
+ [2,"Vale da Reciclagem","w02_vale","a green valley with a recycling facility nested in the hillside;\nconveyor belts running between low industrial sheds, stacked color-sorted bales,\nwinding road, distant hills, mid-morning haze, industrious but clean mood."],
+ [3,"Central de Materiais","w03_central","interior of a material recovery facility; tall stacks of compressed\nbales sorted by color, overhead skylights casting light shafts, sorting tables,\nforklift silhouette, industrial but orderly, cool neutral palette with\ncolor-coded accents."],
+ [4,"Viveiro Comunitário","w04_viveiro","a community plant nursery built from reused materials; seedlings\ngrowing in cut plastic bottles and tin cans on wooden shelves, a shade cloth\noverhead, raised beds made from pallets, watering cans, warm afternoon light,\ngreen and terracotta palette, nurturing mood."],
+ [5,"Usina de Compostagem","w05_usina","an industrial composting yard; long dark compost windrows with\ngentle steam rising, a biodigester tank, turning machinery, wood chip piles,\nearthy brown and moss green palette, soft overcast light, warm organic mood."],
+ [6,"Cooperativa dos Catadores","w06_cooperativa","a waste-picker cooperative yard; hand carts and pushcarts parked\nin rows, color-sorted material bales, a corrugated metal workshop with open\ndoors, hanging work aprons, hand-painted signage shapes (no readable text),\nwarm late-afternoon light, dignified community-work mood, silhouettes only."],
+ [7,"Rota da Logística Reversa","w07_rota","a reverse-logistics route; a highway curving toward a distribution\nhub, delivery trucks carrying stacked returnable crates, roadside collection\npoints with color-coded containers, overpass, dusk sky with long shadows,\nblue and amber palette, motion and flow mood."],
+ [8,"Fórum da Economia Circular","w08_forum","a civic plaza built for public debate about circular economy; a\ncircular amphitheater of stone steps, tall banner poles with blank colored\nflags, a large circular arrow motif inlaid in the pavement, planted trees in\nreused containers, clear midday light, blue and stone palette, civic mood."],
+ [9,"Oficina do Reparo","w09_oficina","a community repair workshop; workbenches with half-disassembled\nappliances, toasters and radios opened up, pegboard walls of hand tools,\nlabeled parts drawers, a desk lamp pool of warm light, sawdust motes in the\nair, amber and steel palette, careful hands-on mood."],
+ [10,"Cidade Circular","w10_cidade","a sustainable city skyline at golden hour; green rooftops and\nrooftop gardens, solar panels, wind turbines on the horizon, a tram line,\ntree-lined streets with color-coded collection points, a large circular flow\nmotif formed by the street layout, optimistic and complete mood."],
+];
+
+const FLOW = [
+ ["Agora","Fundação","F0 inteiro. Instalar <code>gh</code>, resolver o PATH do node, criar a branch."],
+ ["Paralelo A","Conteúdo 10×10","C-01 a C-18 — redesenho da curva, reescrita de <code>levels.ts</code> e <code>worlds.ts</code>, registro dos mundos 9 e 10."],
+ ["Paralelo B","Automação","G, CI.1 e SEC. Escopo de arquivo disjunto do fluxo de conteúdo — dá para correr junto sem conflito."],
+ ["Paralelo C","Art bible e piloto","A-01 a A-04. Termina no portão: uma imagem validada no aparelho."],
+ ["Depois de A","Testes e migração","C-19 a C-30. Nenhum build público antes de C-25 e C-26."],
+ ["Depois de C","Produção em lote","As 20 imagens e as 10 trilhas, depois a integração no código."],
+ ["Então","Limpeza e qualidade","L inteiro, depois Q — E2E e a quebra dos arquivos grandes."],
+ ["Fim","Build e loja","CI.2 (EAS build, submit, OTA) e por último R."],
+];
+
+const RISKS = [
+ ["Perda silenciosa de progresso na migração 203→100","alto","C-25 e C-26 antes de qualquer build público. <code>normalizeProgress</code> descarta id desconhecido sem avisar."],
+ ["As 20 imagens saírem inconsistentes entre si","alto","Bloco de estilo compartilhado, mais o portão A-04 antes de gerar em lote."],
+ ["O hash congelado ser “consertado” por engano","médio","C-19 manda recalcular, não deletar a asserção."],
+ ["<s>Colisão de nome entre Mundo 9/10 e Capítulo 9/10</s>","resolvido","Fechado em 03/09 por C-01: os capítulos foram renomeados, a campanha ficou com os nomes propostos."],
+ ["Peso do app — <code>assets/</code> tem ~50 MB hoje","médio","A-33 comprime e CI-12 impede a regressão."],
+ ["Hooks de git quebrarem por node fora do PATH","baixo","F0-02 antes de G-03."],
+];
+
+/* ---------- render ---------- */
+const KEY = "trinca-roadmap-v1";
+let done = {};
+try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { done = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
+
+const WHO = { cc: "Claude", voce: "Você", both: "CC + Você" };
+const filters = { stream: null, who: null, prio: null, open: false };
+
+const esc = (s) => s;
+const blocksEl = document.getElementById("blocks");
+
+BLOCKS.forEach((b) => {
+  const st = S[b.k];
+  const sec = document.createElement("section");
+  sec.className = "block";
+  sec.id = "b-" + b.k;
+  sec.dataset.stream = b.k;
+  sec.style.setProperty("--st", st.c);
+  sec.innerHTML =
+    '<div class="bhead"><span class="bcode">' + st.code + '</span><h2>' + b.h + '</h2>' +
+    '<span class="bcount" data-count>' + b.t.length + ' tarefas</span></div>' +
+    (b.note ? '<p class="bnote">' + b.note + '</p>' : '') +
+    '<div class="tasks"></div>';
+  const list = sec.querySelector(".tasks");
+  b.t.forEach(([id, title, who, prio, det]) => {
+    const row = document.createElement("div");
+    row.className = "task";
+    row.dataset.stream = b.k; row.dataset.who = who; row.dataset.prio = prio; row.dataset.id = id;
+    row.innerHTML =
+      '<input type="checkbox" aria-label="Concluir ' + id + '">' +
+      '<span class="tid">' + id + '</span>' +
+      '<div class="tbody"><div class="tt">' + esc(title) + '</div>' +
+      (det ? '<div class="td">' + det + '</div>' : '') + '</div>' +
+      '<div class="tmeta"><span class="tag who-' + who + '">' + WHO[who] + '</span>' +
+      '<span class="tag p' + prio + '">P' + prio + '</span></div>';
+    const cb = row.querySelector("input");
+    cb.checked = !!done[id];
+    if (cb.checked) row.classList.add("done");
+    cb.addEventListener("change", () => {
+      if (cb.checked) done[id] = 1; else delete done[id];
+      row.classList.toggle("done", cb.checked);
+      save(); refresh();
+    });
+    list.appendChild(row);
+  });
+  blocksEl.appendChild(sec);
+});
+
+/* stream chips + sortbar */
+const rowStream = document.getElementById("rowStream");
+const sortbar = document.getElementById("sortbar");
+const total = BLOCKS.reduce((n, b) => n + b.t.length, 0);
+BLOCKS.forEach((b) => {
+  const st = S[b.k];
+  const btn = document.createElement("button");
+  btn.className = "chip"; btn.dataset.f = "stream"; btn.dataset.v = b.k;
+  btn.setAttribute("aria-pressed", "false");
+  btn.innerHTML = '<span class="dot" style="background:' + st.c + '"></span>' + st.n +
+                  ' <span class="ct">' + b.t.length + '</span>';
+  rowStream.appendChild(btn);
+
+  const seg = document.createElement("i");
+  seg.style.background = st.c;
+  seg.style.flexGrow = String(b.t.length);
+  seg.title = st.n + " — " + b.t.length + " tarefas";
+  sortbar.appendChild(seg);
+});
+
+/* counts on meta chips */
+const count = (fn) => BLOCKS.reduce((n, b) => n + b.t.filter(fn).length, 0);
+document.getElementById("cWhoCc").textContent = count((t) => t[2] === "cc");
+document.getElementById("cWhoVoce").textContent = count((t) => t[2] === "voce");
+document.getElementById("cWhoBoth").textContent = count((t) => t[2] === "both");
+document.getElementById("cP0").textContent = count((t) => t[3] === 0);
+document.getElementById("cP1").textContent = count((t) => t[3] === 1);
+document.getElementById("cP2").textContent = count((t) => t[3] === 2);
+document.getElementById("statTotal").textContent = total;
+
+/* filtering */
+document.querySelectorAll(".chip").forEach((c) => {
+  c.addEventListener("click", () => {
+    const f = c.dataset.f, v = c.dataset.v;
+    if (f === "open") filters.open = !filters.open;
+    else filters[f] = filters[f] === v ? null : v;
+    document.querySelectorAll('.chip[data-f="' + f + '"]').forEach((o) => {
+      const on = f === "open" ? filters.open : filters[f] === o.dataset.v;
+      o.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    refresh();
+  });
+});
+document.getElementById("clearBtn").addEventListener("click", () => {
+  filters.stream = filters.who = filters.prio = null; filters.open = false;
+  document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "false"));
+  refresh();
+});
+
+function refresh() {
+  let shownDone = 0;
+  document.querySelectorAll(".block").forEach((sec) => {
+    let shown = 0;
+    sec.querySelectorAll(".task").forEach((row) => {
+      const isDone = !!done[row.dataset.id];
+      const ok =
+        (!filters.stream || row.dataset.stream === filters.stream) &&
+        (!filters.who || row.dataset.who === filters.who) &&
+        (!filters.prio || row.dataset.prio === filters.prio) &&
+        (!filters.open || !isDone);
+      row.classList.toggle("hidden", !ok);
+      if (ok) shown++;
+    });
+    sec.hidden = shown === 0;
+    const c = sec.querySelector("[data-count]");
+    if (c) c.textContent = shown + (shown === 1 ? " tarefa" : " tarefas");
+  });
+  const nDone = Object.keys(done).length;
+  document.getElementById("statDone").textContent = nDone;
+  document.getElementById("pctDone").textContent = Math.round((nDone / total) * 100) + "% concluído";
+}
+refresh();
+
+/* prompts */
+const pgrid = document.getElementById("pgrid");
+PROMPTS.forEach(([n, name, slug, scene]) => {
+  const card = document.createElement("div");
+  card.className = "pcard";
+  const pid = "p" + n;
+  card.innerHTML =
+    '<header><span class="pw">Mundo ' + n + '</span><h3>' + name + '</h3></header>' +
+    '<div class="files"><span>' + slug + '_map.png</span><span>' + slug + '_game.png</span><span>1080 × 1920</span></div>' +
+    '<pre id="' + pid + '">SCENE: ' + scene + '</pre>' +
+    '<button class="copy" data-t="' + pid + '">Copiar cena</button>';
+  pgrid.appendChild(card);
+});
+
+document.querySelectorAll(".copy").forEach((b) => {
+  b.addEventListener("click", async () => {
+    const el = document.getElementById(b.dataset.t);
+    const txt = el.textContent;
+    const label = b.textContent;
+    let ok = false;
+    try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {
+      try {
+        const r = document.createRange(); r.selectNodeContents(el);
+        const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        ok = document.execCommand("copy");
+      } catch (e2) { ok = false; }
+    }
+    b.textContent = ok ? "Copiado" : "Selecione e copie";
+    setTimeout(() => { b.textContent = label; }, 1800);
+  });
+});
+
+/* flow */
+const flowEl = document.getElementById("flow");
+FLOW.forEach(([ph, title, body]) => {
+  const d = document.createElement("div");
+  d.className = "step";
+  d.innerHTML = '<div class="ph">' + ph + '</div><div class="sb"><b>' + title + '</b><em>' + body + '</em></div>';
+  flowEl.appendChild(d);
+});
+
+/* risks */
+const risksEl = document.getElementById("risks");
+RISKS.forEach(([r, sev, mit]) => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = '<td>' + r + '</td><td class="sev" data-s="' + sev + '">' + sev + '</td><td>' + mit + '</td>';
+  risksEl.appendChild(tr);
+});
+</script>

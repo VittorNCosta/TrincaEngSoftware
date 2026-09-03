@@ -15,7 +15,27 @@ CI/CD/DevSecOps automatizado.
 |---|---|---|
 | Qual trilha vira o jogo | **Campanha vira 10 mundos × 10 fases** | Reescreve `src/data/levels.ts` (hoje 203 fases em 8 mundos × 25 + bônus). Quebra de propósito o hash congelado. Capítulos (10 × 100) viram conteúdo extra/infinito. |
 | Produção de arte | **IA generativa** | Cada tarefa de arte traz prompt pronto, resolução, paleta e critério de aceite. |
-| Entrega do plano | Doc no repo + Artifact + GitHub Issues | Este arquivo é a fonte de verdade. |
+| Entrega do plano | Doc no repo + Artifact + GitHub Issues | Este arquivo é a fonte de verdade em prosa. |
+
+### As três superfícies e como não desincronizam
+
+O roadmap existe em três lugares, e três cópias contando histórias diferentes
+é o modo de falha óbvio. Só um deles é editado à mão como **dados**:
+
+| Superfície | Arquivo | Papel |
+|---|---|---|
+| Doc | `docs/ROADMAP-JOGO-COMPLETO.md` | Prosa, justificativa, prompts de arte na íntegra. Editado à mão. |
+| Artifact | `docs/roadmap/roadmap.html` | Painel filtrável. O array `BLOCKS` é a **fonte de dados** das tarefas. |
+| Backlog | `scripts/criar-issues-roadmap.sh` | **Gerado**, nunca editado à mão. |
+
+Ao concluir ou acrescentar tarefa: mexa no `BLOCKS` do HTML (título começando
+com `✅` marca concluída — a issue é criada e fechada em seguida), rode
+
+```
+node scripts/gerar-issues-roadmap.js
+```
+
+e reflita a mesma mudança na prosa deste arquivo.
 
 ### Legenda de responsável
 
