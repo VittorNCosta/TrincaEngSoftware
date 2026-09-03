@@ -1259,8 +1259,8 @@ mk open --title 'CI-11 · Path filters' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-12 · Job de validação de peso de asset' \
-  --body 'Falha se entrar PNG acima de 400 KB.
+mk done --title 'CI-12 · Job de validação de peso de asset' \
+  --body '**Feito 03/09.** `scripts/valida-assets.js` roda no CI e cobre três coisas: teto de 400 KB por arquivo, asset órfão que nada em `src/` referencia, e extensão duplicada (`.png.png`, sempre erro de exportação). Reprovar no saldo atual era inviável — 42 arquivos já estouram o teto e 51 são órfãos —, então compara com o livro-razão `scripts/assets-baseline.json`: falha em arquivo novo acima do limite, em arquivo conhecido que engordou e em entrada que saiu da lista sem o saldo ser atualizado. Assim a dívida só pode encolher. Hoje: 100 arquivos, 84,9 MB.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1268,8 +1268,8 @@ mk open --title 'CI-12 · Job de validação de peso de asset' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-13 · Job de guarda ODS12' \
-  --body 'Grep barrando `reino|castelo|dragão|cristal mágico|doce|pirata|tesouro|anjo` em `src/`. Automatiza a regra permanente.
+mk done --title 'CI-13 · Job de guarda ODS12' \
+  --body '**Feito 03/09.** `scripts/guarda-ods12.js` roda no CI varrendo `src/` e também o **nome** dos assets — `ambient_celestial.mp3` é conteúdo tanto quanto uma string. Grep puro reprovaria o repositório hoje (`theme: '\''sweet'\''`, `identityKey` legado, trilha do Mundo 8) e reprovaria ocorrência legítima ("restos de fruta" é o que é resíduo orgânico), então compara com o livro-razão `scripts/ods12-baseline.json`: falha em ocorrência nova e em entrada morta, com a chave em `arquivo::termo` e não na linha. Restam 19 pendências classificadas, todas com tarefa nos blocos L, S e C-08b.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1824,4 +1824,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 195 issues (4 já criadas fechadas) =="
+echo "== pronto: 195 issues (6 já criadas fechadas) =="
