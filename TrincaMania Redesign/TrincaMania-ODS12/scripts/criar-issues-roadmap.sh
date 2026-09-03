@@ -68,8 +68,8 @@ mk open --title 'F0-02 · Expor `node` no PATH não-interativo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P0,humano' --milestone 'Fundação'
-mk open --title 'F0-03 · Fixar a versão de Node do projeto' \
-  --body '`.nvmrc` com 20 + campo `engines`. O CI já usa Node 20; falta alinhar o local.
+mk done --title 'F0-03 · Fixar a versão de Node do projeto' \
+  --body '**Feito 03/09:** `.nvmrc` e `engines.node` em `>=20.19.4 <21` — não é só "20": `npm ci` acusou `EBADENGINE` porque `react-native@0.81.5` exige `>=20.19.4` e a máquina local tinha `v20.19.1`. Quem rodar local precisa de `nvm install` na versão do `.nvmrc`.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -86,8 +86,8 @@ mk done --title 'F0-04 · Resolver o `package.json` pendente' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P0,claude-code' --milestone 'Fundação'
-mk open --title 'F0-05 · Rodar `npx expo-doctor` e registrar o baseline' \
-  --body 'Saúde do projeto antes das mudanças grandes.
+mk done --title 'F0-05 · Rodar `npx expo-doctor` e registrar o baseline' \
+  --body '**Feito 03/09:** 17/17 checks passaram depois de restaurar um `package-lock.json` não commitado que tinha regredido (`@types/jest` voltou a `^30.0.0`, `expo` a `~54.0.34`, `jest-expo` a `~54.0.17` — mesma classe de bug do F0-04) e rodar `npm ci` limpo. `typecheck` e os 121 testes de `tests/` continuam verdes.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1824,4 +1824,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 195 issues (4 já criadas fechadas) =="
+echo "== pronto: 195 issues (6 já criadas fechadas) =="

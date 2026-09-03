@@ -79,11 +79,11 @@ Verificado no código nesta data:
 
 | ID | Tarefa | Quem | Prio | Detalhe |
 |---|---|---|---|---|
-| F0-01 | Instalar `gh` CLI | [VOCÊ] | P0 | Necessário para criar as issues e automatizar PRs. `sudo apt install gh && gh auth login`. Hoje `gh` não existe no WSL. |
+| F0-01 | ✅ Instalar `gh` CLI | [VOCÊ] | P0 | **Feito 03/09:** binário v2.99.0 baixado do release oficial para `~/.local/bin/gh`, sem sudo — o diretório já está no PATH via `.zshrc:105`. Falta só o `gh auth login`, que é interativo. |
 | F0-02 | Expor `node` no PATH não-interativo | [VOCÊ] | P0 | `node` só existe via nvm (`~/.nvm/versions/node/v20.20.2`). Em shell não-interativo o comando não resolve — quebra hooks de git e scripts. Adicionar carga do nvm em `~/.zshenv` ou usar caminho absoluto nos hooks. |
-| F0-03 | Fixar versão de Node do projeto | [CC] | P1 | Criar `.nvmrc` com `20` + campo `engines` no `package.json`. CI já usa Node 20 — alinhar local e CI. |
-| F0-04 | Commitar ou descartar o `package.json` pendente | [VOCÊ] | P0 | Working tree tem bump não commitado: `expo ~54.0.34→~54.0.37`, `@types/jest ^30→^29.5.14`, `jest-expo ~54.0.17→~54.0.18`. Decidir antes de qualquer branch nova. |
-| F0-05 | Rodar `npx expo-doctor` e registrar o resultado | [CC] | P1 | Baseline de saúde do projeto Expo antes das mudanças grandes. |
+| F0-03 | ✅ Fixar versão de Node do projeto | [CC] | P1 | **Feito 03/09:** `.nvmrc` e `engines.node` em `>=20.19.4 <21` — não é só "20": `npm ci` acusou `EBADENGINE` porque `react-native@0.81.5` exige `>=20.19.4` e a máquina local tinha `v20.19.1`. Quem rodar local precisa de `nvm install` na versão do `.nvmrc`. |
+| F0-04 | ✅ Resolver o `package.json` pendente | [CC] | P0 | **Feito 03/09** (commit `c1e3b65`). Não era decisão em aberto e sim bug: o `package-lock.json` commitado já trazia ~54.0.37 / ~54.0.18 / ^29.5.14, então HEAD tinha manifest e lock discordando — `npm ci`, que é o que o CI roda, falharia. |
+| F0-05 | ✅ Rodar `npx expo-doctor` e registrar o resultado | [CC] | P1 | **Feito 03/09:** 17/17 checks passaram depois de restaurar um `package-lock.json` não commitado que tinha regredido (`@types/jest` voltou a `^30.0.0`, `expo` a `~54.0.34`, `jest-expo` a `~54.0.17` — mesma classe de bug do F0-04) e rodar `npm ci` limpo. `typecheck` e os 121 testes de `tests/` continuam verdes. |
 | F0-06 | Criar branch de trabalho `feat/campanha-10x10` | [CC] | P0 | A reescrita de conteúdo não vai direto em `develop`. |
 
 ---
