@@ -1259,8 +1259,8 @@ mk done --title 'CI-09a · Fixar o job de cobertura numa versao de Node' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-10 · Publicar o relatório de cobertura no PR' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-10 · Publicar o relatório de cobertura' \
+  --body '**Feito 03/09.** Vai para o **resumo do job** (`$GITHUB_STEP_SUMMARY`), que o GitHub renderiza na pagina do run, e nao para um comentario no PR. Comentar exigiria `pull-requests: write`, reabrindo justamente o privilegio que CI-04 acabou de fechar, e por um relatorio que ninguem le duas vezes. O resumo nao pede permissao nenhuma. Traz as tres metricas contra o piso e, num `<details>`, os 10 arquivos de `src/` menos cobertos — que e a parte acionavel: hoje aponta `MatchRule.ts` e `ShuffleService.ts` em 24,56%. Sem a variavel de ambiente o script nao escreve nada, entao rodar local continua limpo.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1268,8 +1268,8 @@ mk open --title 'CI-10 · Publicar o relatório de cobertura no PR' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-11 · Path filters' \
-  --body 'Não rodar a suíte de código quando só mudou `.md`.
+mk done --title 'CI-11 · Path filters' \
+  --body '**Feito 03/09.** Job `mudancas` compara com a base e exporta `codigo=true|false`; os sete jobs de codigo ganham `if: needs.mudancas.outputs.codigo == '\''true'\''`. **Nao** foi usado `paths:` no nivel do workflow, que e a forma obvia e a errada: com ela o workflow nao roda, o check obrigatorio nunca reporta e o PR de documentacao trava sem poder mergear. Job pulado por `if:`, ao contrario, conta como sucesso. `lint` fica de fora do gate porque o `format:check` tambem cobre `.md`. Na duvida — branch nova, force-push, base fora de alcance — roda tudo. O checkout usa `filter: blob:none` para pegar o historico sem os 85 MB de PNG.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1842,4 +1842,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 197 issues (17 já criadas fechadas) =="
+echo "== pronto: 197 issues (19 já criadas fechadas) =="
