@@ -66,6 +66,85 @@ const METRICAS = [
 const linhaTotal =
   /^[#ℹ]\s*all files\s*\|\s*([\d.]+)\s*\|\s*([\d.]+)\s*\|\s*([\d.]+)\s*\|/m;
 
+/** Mesma tabela, linha a linha, para o resumo do CI saber quem puxa a media. */
+const linhaArquivo =
+  /^[#ℹ]\s*(\S+)\s*\|\s*([\d.]+)\s*\|\s*([\d.]+)\s*\|\s*([\d.]+)\s*\|/;
+
+const porArquivo = (saida) =>
+  saida
+    .split('\n')
+    .map((linha) => linhaArquivo.exec(linha))
+    .filter(Boolean)
+    .map(([, arquivo, linhas, ramos, funcoes]) => ({
+      arquivo,
+      linhas: Number(linhas),
+      ramos: Number(ramos),
+      funcoes: Number(funcoes),
+    }))
+    .filter(
+      ({ arquivo }) =>
+        arquivo !== 'file' &&
+        arquivo !== 'all' &&
+        !arquivo.startsWith('tests/'),
+    );
+
+/**
+ * Publica o resultado no resumo do job (CI-10).
+ *
+ * O roadmap falava em publicar no PR. Isso exigiria `pull-requests: write`,
+ * reabrindo exatamente o privilegio que CI-04 acabou de fechar para um
+ * relatorio que ninguem le duas vezes. `GITHUB_STEP_SUMMARY` renderiza o mesmo
+ * markdown na pagina do run, sem permissao nenhuma e sem escrever para fora.
+ *
+ * Fora do CI a variavel nao existe e a funcao nao faz nada.
+ */
+const publicarResumo = (atual, piso, arquivos_, ok) => {
+  const destino = process.env.GITHUB_STEP_SUMMARY;
+
+  if (!destino) {
+    return;
+  }
+
+  const pct = (v) => `${v.toFixed(2)}%`;
+  const seta = (chave) => {
+    const delta = atual[chave] - piso[chave];
+    if (Math.abs(delta) < 0.005) return 'no piso';
+    return `${delta > 0 ? '+' : ''}${delta.toFixed(2)} ponto`;
+  };
+
+  const piores = arquivos_
+    .slice()
+    .sort((a, b) => a.linhas - b.linhas)
+    .slice(0, 10);
+
+  const linhas = [
+    `## Cobertura — ${ok ? 'no piso ou acima' : 'abaixo do piso'}`,
+    '',
+    `Suite \`tests/*.test.cjs\`, Node ${NODE_MAJOR}.`,
+    '',
+    '| Métrica | Atual | Piso | |',
+    '| --- | ---: | ---: | --- |',
+    ...METRICAS.map(
+      ([chave, rotulo]) =>
+        `| ${rotulo} | ${pct(atual[chave])} | ${pct(piso[chave])} | ${seta(chave)} |`,
+    ),
+    '',
+    '<details><summary>Os 10 arquivos de <code>src/</code> menos cobertos</summary>',
+    '',
+    '| Arquivo | Linha | Ramo | Função |',
+    '| --- | ---: | ---: | ---: |',
+    ...piores.map(
+      (f) =>
+        `| \`${f.arquivo}\` | ${pct(f.linhas)} | ${pct(f.ramos)} | ${pct(f.funcoes)} |`,
+    ),
+    '',
+    '</details>',
+    '',
+  ];
+
+  fs.appendFileSync(destino, `${linhas.join('\n')}\n`);
+};
+
 const medir = () => {
   const { status, stdout, stderr } = spawnSync(
     process.execPath,
@@ -97,6 +176,7 @@ const medir = () => {
     linhas: Number(encontrado[1]),
     ramos: Number(encontrado[2]),
     funcoes: Number(encontrado[3]),
+    arquivos: porArquivo(stdout ?? ''),
   };
 };
 
@@ -184,6 +264,8 @@ const main = () => {
   }
 
   const abaixo = METRICAS.filter(([chave]) => atual[chave] < piso[chave]);
+
+  publicarResumo(atual, piso, atual.arquivos, abaixo.length === 0);
 
   if (abaixo.length) {
     console.error('\n✖ cobertura abaixo do piso:\n');
