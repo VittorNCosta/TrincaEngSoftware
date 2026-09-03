@@ -96,9 +96,9 @@ export type ChapterTheme =
   | 'compostagem'
   | 'feira'
   | 'metal'
-  | 'oficina'
   | 'papel'
   | 'rio'
+  | 'sucata'
   | 'triagem'
   | 'vidro';
 

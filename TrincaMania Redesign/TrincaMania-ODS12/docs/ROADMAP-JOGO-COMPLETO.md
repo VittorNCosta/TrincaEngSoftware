@@ -79,7 +79,7 @@ Verificado no código nesta data:
 
 | ID | Tarefa | Quem | Prio | Detalhe |
 |---|---|---|---|---|
-| C-01 | Confirmar nomes dos Mundos 9 e 10 | [VOCÊ] | P0 | Proposta abaixo. Mundos 1–8 já são ODS12 e ficam. |
+| ~~C-01~~ | ~~Confirmar nomes dos Mundos 9 e 10~~ | [VOCÊ] | P0 | ✅ **Feito 2026-09-03.** Mundo 9 = Oficina do Reparo, Mundo 10 = Cidade Circular. Os capítulos 9 e 10 é que foram renomeados — ver tabela abaixo. |
 | C-02 | Redesenhar a curva de dificuldade para 100 fases | [CC] | P0 | Hoje a rampa é de 9→60 peças em 203 fases. Comprimir para 100 sem virar salto. `WORLD_LEVELS_PER_MAP: 25 → 10`, `WORLD_DIFFICULTY_BLOCK_SIZE: 5 → 2`. Invariante: `tileCount` sempre múltiplo de 3. |
 | C-03 | Redefinir marcos (descanso/loja/guardião) | [CC] | P0 | Com 10 fases por mundo, os marcos atuais (5/10/15/20/25) colapsam. Proposta: descanso na fase 5, guardião na fase 10, loja entre mundos. |
 | C-04 | Escrever 100 títulos de fase ODS12 | [CC] | P0 | 10 por mundo. Vocabulário obrigatório de `CONTEXT.md`. Sem fantasia genérica. |
@@ -88,20 +88,28 @@ Verificado no código nesta data:
 | C-07 | Definir `recommendedPower` e `mysteryTileCount` por fase | [CC] | P1 | Mistério com teto de 1/6 do tabuleiro (regra já usada nos capítulos). |
 | C-08 | Decidir destino do mundo bônus (id 21, 3 fases) | [VOCÊ] | P1 | Hoje "Jardim Renascido", desbloqueia com 3 estrelas no Mundo 1. Manter como 11º mapa secreto, ou absorver? |
 
-### Proposta de nomes — Mundos 9 e 10
+### Nomes dos Mundos 9 e 10 — decidido
 
 O arco atual termina em "Fórum da Economia Circular" (mundo 8), que é
-deliberação. Faltam a **ação** e o **resultado**:
+deliberação. Faltavam a **ação** e o **resultado**:
 
-| Mundo | Nome proposto | Subtítulo | Material foco | Justificativa ODS12 |
+| Mundo | Nome | Subtítulo | Material foco | Justificativa ODS12 |
 |---|---|---|---|---|
 | 9 | **Oficina do Reparo** | "Consertar antes de descartar" | metal | ODS 12.5 — prevenção e reuso vêm antes da reciclagem |
 | 10 | **Cidade Circular** | "O ciclo fecha aqui" | todos os 5 | Clímax: o ciclo completo em escala urbana |
 
-⚠️ **Colisão a resolver**: `src/data/chapters.ts` já usa "Oficina do Conserto"
-(cap. 9) e "Cidade Circular" (cap. 10). Se os Capítulos continuarem visíveis,
-renomear um dos lados. Alternativas para o Mundo 10: *Bairro Circular*,
-*Ecobairro do Ciclo Fechado*, *Praça do Ciclo Completo*.
+**Colisão resolvida** (2026-09-03): os Capítulos 9 e 10 usavam "Oficina do
+Conserto" e "Cidade Circular". A campanha ficou com os nomes acima e os
+capítulos foram renomeados:
+
+| Capítulo | Antes | Agora | Subtítulo |
+|---|---|---|---|
+| 9 | Oficina do Conserto | **Ferro-Velho Renascido** | "Sucata que volta a ser matéria-prima" |
+| 10 | Cidade Circular | **Metrópole do Ciclo Fechado** | "Cem bairros, um ciclo só" |
+
+O `ChapterTheme` do capítulo 9 passou de `'oficina'` para `'sucata'`, e os
+`titlePrefixes` "Oficina" e "Reparo" saíram da lista dele pelo mesmo motivo que
+"Peça" já estava fora: são vocabulário reservado a outra coisa.
 
 ## C.2 — Implementação
 

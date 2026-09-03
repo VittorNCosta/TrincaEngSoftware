@@ -101,7 +101,7 @@ export const CHAPTER_THEME_BY_ID: Record<number, ChapterTheme> = {
   6: 'metal',
   7: 'compostagem',
   8: 'papel',
-  9: 'oficina',
+  9: 'sucata',
   10: 'circular',
 };
 

@@ -240,8 +240,8 @@ export const WORLD_MAP_CONFIGS: WorldMapConfigRegistry = {
   106: chapterWorldMap(106, 'capitulo-patio-do-metal'),
   107: chapterWorldMap(107, 'capitulo-horta-de-compostagem'),
   108: chapterWorldMap(108, 'capitulo-biblioteca-de-papel'),
-  109: chapterWorldMap(109, 'capitulo-oficina-do-conserto'),
-  110: chapterWorldMap(110, 'capitulo-cidade-circular'),
+  109: chapterWorldMap(109, 'capitulo-ferro-velho-renascido'),
+  110: chapterWorldMap(110, 'capitulo-metropole-do-ciclo-fechado'),
 };
 
 /** Ids de mundo reservados aos capítulos, na ordem dos capítulos. */

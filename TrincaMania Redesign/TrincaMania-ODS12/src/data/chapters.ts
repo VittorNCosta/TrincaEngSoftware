@@ -386,21 +386,23 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   {
     id: 9,
     difficultyCurve: { gamma: 2.0, blockGrowth: 1.26 },
-    name: 'Oficina do Conserto',
-    subtitle: 'Consertar antes de descartar',
-    theme: 'oficina',
+    name: 'Ferro-Velho Renascido',
+    subtitle: 'Sucata que volta a ser matéria-prima',
+    theme: 'sucata',
     focusMaterial: 'metal',
     minTileCount: 66,
     maxTileCount: 96,
     lockedText:
-      'Conclua a Biblioteca de Papel para abrir a Oficina do Conserto.',
+      'Conclua a Biblioteca de Papel para abrir o Ferro-Velho Renascido.',
     titlePrefixes: [
       // "Peça" fica de fora de propósito: no vocabulário do domínio peça é uma
       // carta posicionada, e usar a palavra como topônimo confundiria a leitura.
-      'Oficina',
+      // "Oficina" e "Reparo" também ficam de fora: são o nome do Mundo 9 da
+      // campanha (Oficina do Reparo), e repeti-los aqui confundiria as trilhas.
+      'Carcaça',
       'Ferramenta',
       'Chassi',
-      'Reparo',
+      'Fiação',
       'Engrenagem',
       'Manual',
       'Garantia',
@@ -418,13 +420,14 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   {
     id: 10,
     difficultyCurve: { gamma: 2.2, blockGrowth: 1.3 },
-    name: 'Cidade Circular',
-    subtitle: 'O ciclo fecha aqui',
+    name: 'Metrópole do Ciclo Fechado',
+    subtitle: 'Cem bairros, um ciclo só',
     theme: 'circular',
     focusMaterial: 'vidro',
     minTileCount: 72,
     maxTileCount: 102,
-    lockedText: 'Conclua a Oficina do Conserto para abrir a Cidade Circular.',
+    lockedText:
+      'Conclua o Ferro-Velho Renascido para abrir a Metrópole do Ciclo Fechado.',
     titlePrefixes: [
       'Avenida',
       'Ecoponto',
