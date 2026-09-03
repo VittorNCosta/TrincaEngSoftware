@@ -86,7 +86,9 @@ Verificado no código nesta data:
 | C-05 | Escrever 100 textos de objetivo | [CC] | P0 | Padrão atual: `Objetivo: <verbo> <alvo>.` |
 | C-06 | Definir `starTimeLimits` das 100 fases | [CC] | P1 | Derivar da curva, não à mão. Hoje `WORLD_STAR_TIME_BASE_OFFSET` / `WORLD_STAR_TIME_SPAN`. |
 | C-07 | Definir `recommendedPower` e `mysteryTileCount` por fase | [CC] | P1 | Mistério com teto de 1/6 do tabuleiro (regra já usada nos capítulos). |
-| C-08 | Decidir destino do mundo bônus (id 21, 3 fases) | [VOCÊ] | P1 | Hoje "Jardim Renascido", desbloqueia com 3 estrelas no Mundo 1. Manter como 11º mapa secreto, ou absorver? |
+| ~~C-08~~ | ~~Decidir destino do mundo bônus (id 21, 3 fases)~~ | [VOCÊ] | P1 | ✅ **Feito 2026-09-03.** Fica como 11º mapa secreto, como já é hoje. Ver spec abaixo. |
+| C-08a | Reposicionar o bônus de `25.1–25.3` para `10.1–10.3` | [CC] | P0 | `src/data/worlds.ts:119-120`. O `levelStart`/`levelEnd` atual aponta para o fim de um Mundo 1 de 25 fases, que passa a ter 10. |
+| C-08b | Trocar o `theme: 'sweet'` do bônus | [CC] | P1 | Vocabulário de fantasia num mundo que fica. Cai junto com L-02. |
 
 ### Nomes dos Mundos 9 e 10 — decidido
 
@@ -110,6 +112,27 @@ capítulos foram renomeados:
 O `ChapterTheme` do capítulo 9 passou de `'oficina'` para `'sucata'`, e os
 `titlePrefixes` "Oficina" e "Reparo" saíram da lista dele pelo mesmo motivo que
 "Peça" já estava fora: são vocabulário reservado a outra coisa.
+
+### Mundo bônus — decidido
+
+Fica como **11º mapa secreto**, exatamente como funciona hoje: 3 fases,
+`isBonus: true`, `subtitle: 'Mundo secreto'`, desbloqueado por 3 estrelas em
+todas as fases do Mundo 1. Não entra na contagem de 100 — a meta continua
+10 × 10, e o bônus é o que existe além dela.
+
+O que a reescrita precisa preservar, e o que precisa ajustar:
+
+| Campo | Hoje | Depois |
+|---|---|---|
+| `levelIds` | `bonus-w1-001..003` | igual — não renomear, é id de save |
+| `unlockRule` | `three-stars-world-1` | igual, mas passa a valer sobre 10 fases em vez de 25, ou seja, fica **mais fácil** de alcançar |
+| `levelStart` / `levelEnd` | `25.1` / `25.3` | `10.1` / `10.3` |
+| `theme` | `'sweet'` | ODS12 (L-02) |
+| `lockedText` | cita "Parque da Coleta Seletiva" | igual — o Mundo 1 mantém o nome |
+
+⚠️ O `unlockRule` ficar mais fácil é efeito colateral, não escolha. Se o bônus
+deve continuar sendo uma conquista rara, a regra precisa mudar junto — decidir
+em C-02, quando a curva for redesenhada.
 
 ## C.2 — Implementação
 
@@ -567,8 +590,11 @@ F0 (fundação)
 
 **Caminho crítico**: `F0-01/02 → C-02 → C-11 → C-19..C-26 → A-04 → A-05..A-24 → R-15 → R-18`
 
-**Contagem**: 6 (F0) + 30 (C) + 36 (A) + 15 (S) + 16 (L) + 17 (G) + 24 (CI) +
-17 (SEC) + 14 (Q) + 18 (R) = **193 tarefas**.
+**Contagem**: 6 (F0) + 32 (C) + 36 (A) + 15 (S) + 16 (L) + 17 (G) + 24 (CI) +
+17 (SEC) + 14 (Q) + 18 (R) = **195 tarefas**.
+
+> C subiu de 30 para 32 quando a decisão de C-08 (mundo bônus fica como 11º
+> mapa secreto) desdobrou em C-08a e C-08b.
 
 De longe o maior gargalo é o **Bloco A** — 20 imagens de mapa mais 8 assets
 globais, todos dependentes de A-04 (a imagem-piloto validada in-game).
