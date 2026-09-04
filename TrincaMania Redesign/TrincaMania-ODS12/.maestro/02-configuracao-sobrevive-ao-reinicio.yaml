@@ -17,6 +17,9 @@ name: A configuração sobrevive a fechar e reabrir o app
     timeout: 40000
 - tapOn:
     id: 'splash-skip'
+- tapOn:
+    id: 'tutorial-pular'
+    optional: true
 
 - tapOn: 'Abrir configurações'
 - assertVisible: 'Som: Ligado'
@@ -35,6 +38,11 @@ name: A configuração sobrevive a fechar e reabrir o app
     timeout: 40000
 - tapOn:
     id: 'splash-skip'
+# Aqui o guia não deve mais aparecer — quem o dispensou foi a primeira metade
+# deste mesmo fluxo, e isso já é uma gravação que sobreviveu ao reinício.
+- tapOn:
+    id: 'tutorial-pular'
+    optional: true
 
 - tapOn: 'Abrir configurações'
 - assertVisible: 'Som: Desligado'

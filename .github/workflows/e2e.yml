@@ -126,6 +126,16 @@ jobs:
 
       # Falhou: o Maestro grava captura de tela e hierarquia de views de cada
       # passo. Sem isso, "nao achou o botao" num runner sem tela e indepuravel.
+      #
+      # `--debug-output` sozinho nao bastou — criou o diretorio e deixou vazio,
+      # porque as capturas continuam saindo em `~/.maestro/tests`, que esta
+      # fora do checkout e o upload-artifact nao alcanca.
+      - name: Recolher o diagnostico
+        if: failure()
+        run: |
+          mkdir -p ../../maestro-diagnostico
+          cp -r "${HOME}/.maestro/tests" ../../maestro-diagnostico/ || true
+
       - name: Guardar o diagnostico
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

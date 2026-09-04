@@ -17,6 +17,15 @@ name: Abrir o app do zero e entrar na primeira fase
 - tapOn:
     id: 'splash-skip'
 
+# Save em branco abre o guia da campanha por cima do mapa
+# (`setIsTutorialVisible(!tutorialSeen)` no App.tsx) — nada atrás dele é
+# tocável enquanto estiver aberto. `optional` porque o guia só aparece uma vez
+# na vida do save: numa reexecução sem `clearState` ele não vem, e isso não é
+# falha.
+- tapOn:
+    id: 'tutorial-pular'
+    optional: true
+
 - extendedWaitUntil:
     visible:
       id: 'map-level-w1-001'

@@ -141,6 +141,7 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
             />
             <PrimaryButton
               size="compact"
+              testID="tutorial-pular"
               title="Pular"
               variant="secondary"
               onPress={finishTutorial}
