@@ -12,6 +12,11 @@
 name: E2E Android
 
 on:
+  # TEMPORARIO — sai assim que o job passar verde uma vez. `workflow_dispatch`
+  # so existe depois que o arquivo chega na branch padrao, entao nao ha como
+  # disparar este workflow a partir da branch onde ele esta nascendo.
+  push:
+    branches: [feat/campanha-10x10]
   workflow_dispatch:
   schedule:
     # Segunda de manha, antes de alguem comecar a semana em cima de um app que
