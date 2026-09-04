@@ -10,6 +10,12 @@ type PrimaryButtonProps = {
   onPress: () => void;
   disabled?: boolean;
   size?: 'regular' | 'compact' | 'small';
+  /**
+   * Id para teste. Opcional de propósito: só os botões que um fluxo precisa
+   * alcançar ganham um, e aí o id diz o que aquele botão faz naquela tela —
+   * um `testID` em todo botão viraria ruído sem virar cobertura.
+   */
+  testID?: string;
   variant?: 'primary' | 'secondary' | 'danger' | 'power';
   children?: ReactNode;
 };
@@ -19,6 +25,7 @@ export function PrimaryButton({
   onPress,
   disabled = false,
   size = 'regular',
+  testID,
   variant = 'primary',
   children,
 }: PrimaryButtonProps) {
@@ -35,9 +42,14 @@ export function PrimaryButton({
 
   return (
     <AnimatedPressable
+      // Quando o botão traz `children` em vez do texto padrão (ícone, moeda,
+      // contador), o leitor de tela não tinha nome nenhum para anunciar. O
+      // `title` continua sendo a descrição correta nesses casos.
+      accessibilityLabel={title}
       accessibilityRole="button"
       accessibilityState={{ disabled }}
       disabled={disabled}
+      testID={testID}
       onPress={onPress}
       onPressIn={() => animateTo(0.96)}
       onPressOut={() => animateTo(1)}

@@ -1347,6 +1347,10 @@ export function LevelSelectScreen({
                   <View style={styles.panelButton}>
                     <PrimaryButton
                       size="small"
+                      // Existe outro "Jogar" na tela: a fita do nó da fase
+                      // atual. Buscar por texto acharia os dois, e o fluxo de
+                      // teste tocaria no errado.
+                      testID="jogar-fase"
                       title="Jogar"
                       onPress={() => playSelectedLevel(selectedLevel.id, false)}
                     />
