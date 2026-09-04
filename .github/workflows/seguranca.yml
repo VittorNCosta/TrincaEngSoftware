@@ -1,0 +1,127 @@
+# DevSecOps: as verificacoes que olham para risco, nao para correcao.
+#
+# Separado do ci.yml de proposito. O CI responde "este commit quebrou o jogo?"
+# e precisa ser rapido, porque bloqueia trabalho. Isto responde "este
+# repositorio tem vulnerabilidade, segredo vazado ou dependencia suspeita?", e
+# a resposta muda sozinha com o tempo — advisory novo aparece sem ninguem
+# empurrar commit. Por isso este workflow tambem roda no relogio, uma vez por
+# semana, e o CI nao.
+name: Seguranca
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main, develop]
+  # Segunda-feira, 06:00 UTC (03:00 em Sao Paulo). Pega o advisory que foi
+  # publicado enquanto ninguem mexia no codigo.
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  auditoria:
+    name: Vulnerabilidade em dependencia
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+        working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+      # Nao e `npm audit --audit-level=high` puro: reprovaria hoje, por causa
+      # dos 19 advisories da cadeia do Expo que nao tem correcao sem subir o
+      # major. Compara com scripts/auditoria-baseline.json e reprova em
+      # advisory novo e em entrada morta. Ver o cabecalho de scripts/auditoria.js.
+      - run: npm run auditoria
+        working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+
+  segredos:
+    name: Segredo vazado
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Segredo vazado quase nunca esta no ultimo commit — esta enterrado
+          # no historico, onde ninguem olha. Sem `fetch-depth: 0` a varredura
+          # veria um commit so e nao acharia nada, o que e pior que nao rodar:
+          # daria um check verde falso.
+          #
+          # `blob:none` importa aqui: o repositorio tem ~85 MB de PNG e o
+          # gitleaks so precisa dos commits, nao do conteudo dos binarios.
+          fetch-depth: 0
+          filter: blob:none
+      # Binario direto do release, e nao a action `gitleaks/gitleaks-action`,
+      # pelo mesmo motivo do build.yml nao usar a action do Expo (CI-05): uma
+      # action de terceiro roda com acesso ao token do job. O que ela faz de
+      # util aqui e baixar este mesmo binario.
+      - name: Instalar o gitleaks
+        env:
+          VERSAO: 8.30.1
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSAO}/gitleaks_${VERSAO}_linux_x64.tar.gz"
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks version
+      # `--redact` para o proprio log do CI nao virar o vazamento: sem isso o
+      # segredo encontrado apareceria em texto puro num run publico.
+      - name: Varrer o historico
+        run: ./gitleaks git . --redact --verbose --exit-code 1
+
+  dependencias:
+    name: Revisao de dependencia
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # So faz sentido em PR: a action compara o manifesto antes e depois da
+    # mudanca, e fora de um PR nao existe "antes".
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          # Barra dependencia nova com vulnerabilidade alta. Diferente do job
+          # de auditoria, aqui nao existe divida herdada para tolerar: e
+          # dependencia que esta entrando agora, nesta mudanca.
+          fail-on-severity: high
+          # Licenca incompativel com distribuicao na Play Store. GPL/AGPL num
+          # app publicado obrigaria abrir o codigo do jogo inteiro.
+          deny-licenses: GPL-2.0, GPL-3.0, AGPL-3.0
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      # Escrita so aqui, e so nisto: e o que permite publicar o alerta na aba
+      # Security. Nenhum outro job do repositorio pede mais que leitura.
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: github/codeql-action/init@a35ac6e6798d72df5475948b28efb89edc2e19ca # v4
+        with:
+          languages: javascript-typescript
+          # `security-and-quality` inclui as regras de qualidade alem das de
+          # seguranca. Num projeto de uma pessoa vale: o custo e minuto de
+          # runner, que e gratuito em repositorio publico.
+          queries: security-and-quality
+          config: |
+            paths-ignore:
+              - "**/node_modules"
+              - "**/assets"
+              - "**/*.min.js"
+      - uses: github/codeql-action/analyze@a35ac6e6798d72df5475948b28efb89edc2e19ca # v4
+        with:
+          category: "/language:javascript-typescript"

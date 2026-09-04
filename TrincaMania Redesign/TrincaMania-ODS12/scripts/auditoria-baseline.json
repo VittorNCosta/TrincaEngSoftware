@@ -1,0 +1,61 @@
+{
+  "_leia": "Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= high e em entrada que nao existe mais. A chave e pacote::id-do-advisory.",
+  "piso": "high",
+  "entradas": {
+    "@xmldom/xmldom::1158517": {
+      "severidade": "moderate",
+      "titulo": "xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization",
+      "url": "https://github.com/advisories/GHSA-6gmq-8vp8-gcm6"
+    },
+    "@xmldom/xmldom::1158518": {
+      "severidade": "moderate",
+      "titulo": "xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization",
+      "url": "https://github.com/advisories/GHSA-6gmq-8vp8-gcm6"
+    },
+    "browserslist::1153171": {
+      "severidade": "high",
+      "titulo": "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
+      "url": "https://github.com/advisories/GHSA-c83g-rgw3-j3cx"
+    },
+    "browserslist::1153172": {
+      "severidade": "high",
+      "titulo": "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)",
+      "url": "https://github.com/advisories/GHSA-73wf-gq98-2v4g"
+    },
+    "image-size::1138808": {
+      "severidade": "high",
+      "titulo": "image-size: ICNS parser allows denial of service through an infinite loop",
+      "url": "https://github.com/advisories/GHSA-w3rx-r6r6-pgpr"
+    },
+    "image-size::1138809": {
+      "severidade": "high",
+      "titulo": "image-size: JXL and HEIF parsers allow denial of service through infinite loops",
+      "url": "https://github.com/advisories/GHSA-5p2g-fcmc-qvqq"
+    },
+    "postcss::1117015": {
+      "severidade": "moderate",
+      "titulo": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+      "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93"
+    },
+    "postcss::1124252": {
+      "severidade": "high",
+      "titulo": "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+      "url": "https://github.com/advisories/GHSA-6g55-p6wh-862q"
+    },
+    "postcss::1130709": {
+      "severidade": "moderate",
+      "titulo": "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset",
+      "url": "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp"
+    },
+    "postcss::1139510": {
+      "severidade": "high",
+      "titulo": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
+      "url": "https://github.com/advisories/GHSA-r28c-9q8g-f849"
+    },
+    "uuid::1119441": {
+      "severidade": "moderate",
+      "titulo": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+      "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq"
+    }
+  }
+}

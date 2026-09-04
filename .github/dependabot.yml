@@ -1,0 +1,81 @@
+# Atualizacao automatica de dependencia (SEC-04).
+#
+# O motivo de existir esta a um `git log` de distancia: o commit "chore:
+# corrige vulnerabilidades" subiu `@types/jest` para `^30.0.0` a mao e deixou o
+# `package-lock.json` em `29.5.14`. `npm ci` passou a morrer com EUSAGE e o CI
+# de `develop` ficou vermelho por dias. O Dependabot nao comete esse erro:
+# manifesto e lock saem sempre no mesmo commit.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    # O projeto nao fica na raiz do repositorio. O caminho tem espaco e o
+    # Dependabot aceita — precisa ser exatamente este.
+    directory: "/TrincaMania Redesign/TrincaMania-ODS12"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: America/Sao_Paulo
+    # O commitlint deste repositorio exige Conventional Commits com escopo
+    # dentro de um enum fechado; `deps` esta nele. Sem isto todo PR do
+    # Dependabot nasceria com a mensagem reprovada pelo hook.
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps)"
+    open-pull-requests-limit: 5
+    groups:
+      # Um PR por semana com todo minor/patch junto, em vez de oito PRs
+      # separados que ninguem revisa. Major continua vindo sozinho, porque e o
+      # unico que costuma quebrar alguma coisa.
+      producao:
+        applies-to: version-updates
+        dependency-type: production
+        update-types: [minor, patch]
+      desenvolvimento:
+        applies-to: version-updates
+        dependency-type: development
+        update-types: [minor, patch]
+    ignore:
+      # Quem manda na versao destes e o Expo SDK, via `expo install` e o
+      # `jest-expo` correspondente — nao o registro do npm. Um major solto aqui
+      # quebra o app de um jeito que so aparece no aparelho.
+      #
+      # Foi exatamente o que aconteceu com `@types/jest`: subir para 30 com
+      # `jest` em `~29.7.0` (fixado pelo `jest-expo` 54) trouxe metade do jest
+      # 30 como dependencia transitiva. Subir o SDK do Expo e tarefa de
+      # roadmap, com teste de aparelho — nao PR automatico.
+      - dependency-name: expo
+        update-types: [version-update:semver-major]
+      - dependency-name: expo-*
+        update-types: [version-update:semver-major]
+      - dependency-name: react
+      - dependency-name: react-dom
+      - dependency-name: react-native
+      - dependency-name: react-native-*
+        update-types: [version-update:semver-major]
+      - dependency-name: jest
+      - dependency-name: jest-expo
+      - dependency-name: "@types/jest"
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+
+  # As proprias actions dos workflows. Estao pinadas por SHA, que e o certo
+  # para seguranca e o pior para manutencao: SHA nao envelhece visivelmente, e
+  # um dia o runner deixa de suportar a versao do Node embutida nela — foi o
+  # aviso de deprecacao que apareceu nas actions v4 deste repositorio.
+  # O Dependabot le o comentario `# v7.0.1` ao lado do SHA e sobe os dois.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: America/Sao_Paulo
+    commit-message:
+      prefix: "chore(ci)"
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: [minor, patch]
