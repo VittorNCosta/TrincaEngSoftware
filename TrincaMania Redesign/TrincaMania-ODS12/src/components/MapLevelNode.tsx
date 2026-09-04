@@ -18,6 +18,42 @@ type MapLevelNodeProps = {
 
 const STAR_TILT = ['starLeft', 'starCenter', 'starRight'] as const;
 
+/**
+ * O que o leitor de tela anuncia neste nó.
+ *
+ * Antes ele não anunciava nada além de "botão": o número da fase, as estrelas e
+ * o cadeado são desenho, e desenho não chega em quem usa TalkBack. Como o mapa
+ * inteiro é feito destes nós, isso deixava a navegação da campanha inacessível
+ * — não difícil, inacessível.
+ */
+const describeLevelNode = ({
+  completed,
+  current,
+  displayLabel,
+  locked,
+  stars,
+}: {
+  completed: boolean;
+  current: boolean;
+  displayLabel: string;
+  locked: boolean;
+  stars: number;
+}) => {
+  if (locked) {
+    return `Fase ${displayLabel}, bloqueada`;
+  }
+
+  if (current) {
+    return `Fase ${displayLabel}, jogar agora`;
+  }
+
+  if (completed) {
+    return `Fase ${displayLabel}, concluída com ${stars} de 3 estrelas`;
+  }
+
+  return `Fase ${displayLabel}, liberada`;
+};
+
 function MapLevelNodeBase({
   completed,
   current,
@@ -29,6 +65,13 @@ function MapLevelNodeBase({
 }: MapLevelNodeProps) {
   const pulse = useRef(new Animated.Value(0)).current;
   const displayLabel = getLevelDisplayLabel(level);
+  const accessibilityLabel = describeLevelNode({
+    completed,
+    current,
+    displayLabel,
+    locked,
+    stars,
+  });
 
   useEffect(() => {
     if (!current) {
@@ -73,9 +116,14 @@ function MapLevelNodeBase({
 
   return (
     <Pressable
+      accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       accessibilityState={{ disabled: locked, selected }}
       hitSlop={4}
+      // O nó do mapa é a porta de entrada de toda partida. Sem um id estável
+      // aqui, nenhum teste — nem de interface, nem de aparelho — consegue dizer
+      // "abra a fase 3": só dá para tocar em coordenada, que muda com o layout.
+      testID={`map-level-${level.id}`}
       onPress={() => onPress(level.id)}
       style={({ pressed }) => [
         styles.pressable,

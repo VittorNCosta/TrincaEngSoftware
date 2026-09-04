@@ -41,6 +41,7 @@ export function BottomNavBar({ activeIndex, onSelect }: BottomNavBarProps) {
             accessibilityRole="button"
             accessibilityState={{ selected: isActive }}
             key={item.key}
+            testID={`nav-${item.key}`}
             onPress={() => {
               if (!isActive) {
                 playButtonSound();

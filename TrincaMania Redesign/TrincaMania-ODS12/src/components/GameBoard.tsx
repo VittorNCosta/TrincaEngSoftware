@@ -56,6 +56,9 @@ function GameBoardBase({
 
   return (
     <View
+      // Âncora de "estou numa partida": é por ela que um teste de aparelho
+      // confirma que a fase abriu, sem depender de texto que muda com o tema.
+      testID="game-board"
       style={[
         styles.board,
         {

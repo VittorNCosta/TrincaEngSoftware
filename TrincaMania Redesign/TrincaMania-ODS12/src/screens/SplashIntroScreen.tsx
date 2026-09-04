@@ -233,7 +233,12 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
   return (
     <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <Pressable
+        accessibilityLabel="Pular a introdução"
         accessibilityRole="button"
+        // Primeira tela do app: um teste de aparelho precisa atravessá-la para
+        // chegar em qualquer outra coisa, e esperar a animação inteira acabar
+        // torna todo fluxo E2E refém do tempo dela.
+        testID="splash-skip"
         onPress={() => finishIntro(true)}
         style={styles.skipLayer}
       >
