@@ -9,6 +9,33 @@ CI/CD/DevSecOps automatizado.
 
 ---
 
+## Pausa de sessão — 2026-09-03 (retomar daqui)
+
+Trabalho pausado a pedido do usuário. Branch `feat/campanha-10x10` **pushada
+para `origin`** (upstream configurado, PR ainda não aberto):
+https://github.com/VittorNCosta/TrincaEngSoftware/pull/new/feat/campanha-10x10
+
+**Bloco C — estado**: C-19 a C-29 concluídos e verificados nesta sessão
+(`npm run typecheck` limpo, `node --test tests` 130/130). Falta só:
+
+- **C-30** (P1) — decisão do usuário pendente: destino dos Capítulos
+  (esconder do menu / manter como "modo infinito" pós-campanha / remover o
+  código). `ChaptersScreen` continua acessível via `onOpenChapters`. Não
+  implementar sem essa decisão.
+
+**Blocos A (arte), S (som), L (limpeza), G (git/PR), CI, SEC, Q, R**: ainda
+não iniciados — fora do escopo do que foi pedido nesta sessão.
+
+**Nota técnica**: o commit `f426af4` (C-27) foi reescrito via
+`git commit --amend` nesta sessão — a mensagem original tinha um trecho
+truncado (`` `case N:` `` virou command substitution no shell e sumiu da
+mensagem ao commitar via `-m` com aspas duplas). Conteúdo do commit em si
+nunca foi afetado, só o texto da mensagem. Lição para próximas sessões: não
+usar crases dentro de mensagem de commit passada com aspas duplas no shell —
+usar `git commit -F <arquivo>` para mensagens com trecho de código inline.
+
+---
+
 ## Decisões que originaram este plano
 
 | Decisão | Escolha | Consequência |
@@ -173,12 +200,12 @@ em C-02, quando a curva for redesenhada.
 
 | ID | Tarefa | Quem | Prio | Detalhe |
 |---|---|---|---|---|
-| C-19 | Recalcular o hash sha256 das fases | [CC] | P0 | `tests/levelComposition.test.cjs:108-115`. Trocar `LEVELS.length` 203→100, o total de peças (hoje 11415) e o literal `b1a76275…`. **Não deletar a asserção** — é trava de integridade. |
-| C-20 | Atualizar `tests/chapterProgress.test.cjs:80` | [CC] | P0 | `assert.equal(LEVELS.length, 203)` |
-| C-21 | Atualizar `tests/worldMapConfig.test.cjs:57-73` | [CC] | P0 | 3 asserções sobre 203 |
-| C-22 | Atualizar `tests/chapters.test.cjs:434-436` | [CC] | P0 | "as 203 fases canônicas continuam intactas" |
-| C-23 | Atualizar `tests/simulateFullPlaythrough.cjs:44,210` | [CC] | P0 | Simulação de playthrough completo — a que prova que toda fase é vencível |
-| C-24 | Atualizar `tests/boardLayout.test.cjs` e `campaignMapLayout.test.cjs` | [CC] | P0 | Podem depender de contagem/âncoras do Mundo 1 |
+| C-19 | ✅ Recalcular o hash sha256 das fases | [CC] | P0 | `tests/levelComposition.test.cjs` — hash recalculado para as 103 fases canônicas atuais. Confirmado nesta sessão (2026-09-03): nenhuma referência a `203` sobra em `tests/*.cjs` fora de comentário histórico; suíte completa passa. |
+| C-20 | ✅ Atualizar `tests/chapterProgress.test.cjs` | [CC] | P0 | Sem asserção presa em 203; suíte passa. |
+| C-21 | ✅ Atualizar `tests/worldMapConfig.test.cjs` | [CC] | P0 | Sem asserção presa em 203; suíte passa. |
+| C-22 | ✅ Atualizar `tests/chapters.test.cjs` | [CC] | P0 | Sem asserção presa em 203; suíte passa. |
+| C-23 | ✅ Atualizar `tests/simulateFullPlaythrough.cjs` | [CC] | P0 | Simulação de playthrough completo passa contra as 103 fases atuais. |
+| C-24 | ✅ Atualizar `tests/boardLayout.test.cjs` e `campaignMapLayout.test.cjs` | [CC] | P0 | Sem dependência solta em contagem/âncora do esquema antigo; suíte passa. |
 | C-25 | ✅ Migração de save 203→103 | [CC] | P0 | **Decisão tomada**: sem remapeamento proporcional. Os ids `wN-001`…`wN-010` são idênticos entre o esquema antigo (8 mundos × 25) e o novo (10 mundos × 10) — `normalizeProgress` já descarta em silêncio (invariante #3) só as fases que de fato não existem mais (posição 11–25 de cada mundo antigo), sem tocar moedas/chaves/itens. Adicionado `detectDroppedCampaignProgress`/`loadStoredProgressMigrationInfo` (`src/storage/progressStorage.ts`) para a UI saber quando avisar, e `CampaignResizeNoticeModal` (aviso único, chave `@trinca-mania/campaign-resize-notice-seen-v1`) ligado em `App.tsx`. |
 | C-26 | ✅ Teste da migração de save | [CC] | P0 | `tests/progressMigration.test.cjs` — save antigo simulado (8 mundos × 25) contra o esquema novo: conta exatamente as fases descartadas, confirma que bônus/capítulo nunca entram na conta, e que moedas/chaves/itens/fases 1–10 sobrevivem intactos. |
 | C-27 | ✅ Teste travando cobertura de fundo e ambiente por mundo | [CC] | P1 | `tests/worldAmbientAndBackgroundCoverage.test.cjs`. Ambiente sonoro (`AMBIENT_BY_WORLD_ID`) testado de verdade contra `WORLDS` (mundos 1–10); `getGameBackground` (GameScreen.tsx, pesado demais para importar de verdade em teste — muitas dependências RN/Reanimated) travado por auditoria estrutural do `switch`. Mundo 21 (bônus) documentado como deliberadamente sem ambiente próprio, não lacuna. |
