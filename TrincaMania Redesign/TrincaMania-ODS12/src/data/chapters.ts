@@ -63,7 +63,11 @@ import {
   mixSeed,
   stableHash,
 } from '../utils/deterministicRandom';
-import { curveProgress, DifficultyCurve } from '../utils/difficultyCurve';
+import {
+  bandIndex,
+  curveProgress,
+  DifficultyCurve,
+} from '../utils/difficultyCurve';
 import { generatePlayableLevelFrom } from '../utils/levelGenerator';
 import { MAX_TILE_POSITIONS, takeTilePositions } from './boardPositions';
 import {
@@ -95,22 +99,6 @@ const MIN_KIND_COUNT = 3;
 const MAX_KIND_COUNT = MATERIAL_TYPES.length;
 /** Teto de mistério: mais de um sexto do tabuleiro vira adivinhação, não leitura. */
 const MYSTERY_SHARE_DIVISOR = 6;
-
-/**
- * Folga para o arredondamento binário na hora de escolher a faixa de
- * dificuldade.
- *
- * `score` nasce de `(chapterId - 1) / 9 * 0.6`, e essa conta cai em cima da
- * fronteira de faixa em dois pontos — só que por baixo: para o capítulo 4 o
- * resultado é `0.9999999999999999` em vez de `1`, e para o 7 é
- * `1.9999999999999998` em vez de `2`. Sem a folga o `Math.floor` derruba os
- * dois para a faixa de baixo, e o primeiro mapa do capítulo 4 saía rotulado
- * `easy` (devia ser `normal`) e o do 7 saía `normal` (devia ser `hard`).
- *
- * Eram 2 mapas em 1000 e só o rótulo — a carga do tabuleiro sempre esteve
- * certa —, mas o rótulo é o que o jogador lê para decidir se encara o mapa.
- */
-const BORDA_DE_FAIXA = 1e-9;
 
 type ChapterBlueprint = {
   focusMaterial: MaterialType;
@@ -579,10 +567,7 @@ const createChapterLevelSummary = (
     chapterMapNumber: mapNumber,
     difficulty:
       CHAPTER_DIFFICULTY_ORDER[
-        Math.min(
-          CHAPTER_DIFFICULTY_ORDER.length - 1,
-          Math.floor(score * CHAPTER_DIFFICULTY_ORDER.length + BORDA_DE_FAIXA),
-        )
+        bandIndex(score, CHAPTER_DIFFICULTY_ORDER.length)
       ],
     displayLabel: String(mapNumber),
     id: buildChapterMapId(blueprint.id, mapNumber),
