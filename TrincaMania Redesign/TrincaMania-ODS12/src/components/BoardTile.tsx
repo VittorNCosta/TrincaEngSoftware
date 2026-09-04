@@ -199,6 +199,11 @@ function BoardTileBase({
       }`}
       accessibilityRole="button"
       accessibilityState={{ disabled: isDisabled || blocked }}
+      // O rótulo de acessibilidade não identifica uma peça: `Peça 🧴` cabe em
+      // várias ao mesmo tempo, por construção. Sem um identificador estável,
+      // nenhum teste consegue dizer "toque *nesta* peça" — e sem isso não dá
+      // para jogar uma fase pela interface, só verificar que ela renderiza.
+      testID={`board-tile-${tile.id}`}
       disabled={isDisabled}
       onPress={() => {
         if (blocked) {
