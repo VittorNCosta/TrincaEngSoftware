@@ -174,7 +174,7 @@ const createBonusLevel = (
 /**
  * Configuração de geração de um dos 10 mundos da campanha.
  *
- * Desde a redução de 203 para 100 fases (8 mundos × 25 → 10 mundos × 10), os
+ * Desde a redução de 203 para 103 fases (8 mundos × 25 → 10 mundos × 10), os
  * 10 mundos são gerados pelo mesmo mecanismo — antes só os mundos 4–8 eram
  * assim; manter 3 mundos autorais à mão para 10 fases cada não compensava o
  * custo de manutenção (é o "mais sustentável" citado no roadmap). Cada mundo

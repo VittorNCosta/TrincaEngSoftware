@@ -95,8 +95,8 @@ mk done --title 'F0-05 · Rodar `npx expo-doctor` e registrar o baseline' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P1,claude-code' --milestone 'Fundação'
-mk open --title 'F0-06 · Criar a branch `feat/campanha-10x10`' \
-  --body 'A reescrita de conteúdo não vai direto em `develop`.
+mk done --title 'F0-06 · Criar a branch `feat/campanha-10x10`' \
+  --body '**Feito 03/09.** Toda a reescrita de conteúdo saiu nela. Em 04/09 a linha paralela de CI/build foi incorporada por merge (`ed35d11`) e a branch `feat/renomeia-capitulos-9-10` foi apagada — sobrou uma linha só.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -115,8 +115,17 @@ mk done --title 'C-01 · Confirmar os nomes dos Mundos 9 e 10' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,humano' --milestone 'Conteúdo 10×10'
-mk open --title 'C-02 · Redesenhar a curva de dificuldade para 100 fases' \
-  --body 'Hoje a rampa vai de 9 a 60 peças em 203 fases. `WORLD_LEVELS_PER_MAP` 25→10, `WORLD_DIFFICULTY_BLOCK_SIZE` 5→2. Invariante: `tileCount` sempre múltiplo de 3.
+mk open --title 'C-01a · Reconciliar os nomes dos Mundos 9 e 10 com a decisão de C-01' \
+  --body '**Drift achado 04/09.** C-01 decidiu **Oficina do Reparo** e **Cidade Circular**, e `9bd1059` renomeou os capítulos 9 e 10 justamente para liberar esses nomes — mas `2295575` criou os mundos como **Distrito da Reindustrialização** e **Cúpula da Reciclagem Global**. Os nomes liberados nunca foram usados. Decidir entre: renomear os mundos (mexe em 5 títulos de fase e 4 objetivos que citam “Distrito”/“Cúpula”, e obriga a recalcular o hash de C-19), ou aceitar os nomes atuais e corrigir C-01 mais as tarefas de asset que herdaram os antigos (A-21, A-22, A-23, A-24, S-09, S-10).
+
+**Responsável:** Claude Code + Você
+**Prioridade:** P0
+**Fluxo:** Conteúdo 10×10
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'conteudo,P0,claude-code,humano' --milestone 'Conteúdo 10×10'
+mk done --title 'C-02 · Redesenhar a curva de dificuldade para 100 fases' \
+  --body '**Feito 03/09.** `WORLD_LEVELS_PER_MAP` 25→10 e `WORLD_DIFFICULTY_BLOCK_SIZE` 5→2. A rampa de 9 a 60 peças agora cabe em 10 fases por mundo, com `tileCount` múltiplo de 3 travado em teste.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -124,8 +133,8 @@ mk open --title 'C-02 · Redesenhar a curva de dificuldade para 100 fases' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-03 · Redefinir os marcos de descanso, loja e guardião' \
-  --body 'Com 10 fases por mundo os marcos atuais (5/10/15/20/25) colapsam. Proposta: descanso na 5, guardião na 10, loja entre mundos.
+mk done --title 'C-03 · Redefinir os marcos de descanso, loja e guardião' \
+  --body '**Feito 03/09.** Descanso na fase 5 e guardião na 10 nos dez mundos; `REST_CHECKPOINT_COIN_REWARDS` reajustado para o novo ritmo.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -133,8 +142,8 @@ mk open --title 'C-03 · Redefinir os marcos de descanso, loja e guardião' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-04 · Escrever os 100 títulos de fase' \
-  --body 'Dez por mundo, no vocabulário de `CONTEXT.md`. Zero fantasia genérica.
+mk done --title 'C-04 · Escrever os 100 títulos de fase' \
+  --body '**Feito 03/09.** 103 títulos únicos (100 canônicas + 3 bônus), no vocabulário de `CONTEXT.md`.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -142,8 +151,8 @@ mk open --title 'C-04 · Escrever os 100 títulos de fase' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-05 · Escrever os 100 textos de objetivo' \
-  --body 'Padrão atual: “Objetivo: <verbo> <alvo>.”
+mk done --title 'C-05 · Escrever os 100 textos de objetivo' \
+  --body '**Feito 03/09.** 103/103 com `objectiveText` preenchido.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -151,8 +160,8 @@ mk open --title 'C-05 · Escrever os 100 textos de objetivo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-06 · Derivar os `starTimeLimits` das 100 fases' \
-  --body 'Da curva, não à mão — hoje via `WORLD_STAR_TIME_BASE_OFFSET` e `WORLD_STAR_TIME_SPAN`.
+mk done --title 'C-06 · Derivar os `starTimeLimits` das 100 fases' \
+  --body '**Feito 03/09.** Derivados da curva por `WORLD_STAR_TIME_BASE_OFFSET` e `WORLD_STAR_TIME_SPAN`, não à mão.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -160,8 +169,8 @@ mk open --title 'C-06 · Derivar os `starTimeLimits` das 100 fases' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-07 · Definir `recommendedPower` e `mysteryTileCount` por fase' \
-  --body 'Mistério com teto de 1/6 do tabuleiro, regra já usada nos capítulos.
+mk done --title 'C-07 · Definir `recommendedPower` e `mysteryTileCount` por fase' \
+  --body '**Feito 03/09.** Os 103 níveis têm `recommendedPower`; o mistério respeita o teto de 1/6 do tabuleiro.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -178,8 +187,8 @@ mk done --title 'C-08 · Decidir o destino do mundo bônus (id 21)' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,humano' --milestone 'Conteúdo 10×10'
-mk open --title 'C-08a · Reposicionar o bônus de `25.1–25.3` para `10.1–10.3`' \
-  --body '`src/data/worlds.ts:119-120`. O `levelStart`/`levelEnd` atual aponta para o fim de um Mundo 1 de 25 fases, que passa a ter 10.
+mk done --title 'C-08a · Reposicionar o bônus de `25.1–25.3` para `10.1–10.3`' \
+  --body '**Feito 03/09.** `levelStart: 10.1` em `src/data/worlds.ts`, acompanhando o Mundo 1 de 10 fases.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -196,8 +205,8 @@ mk open --title 'C-08b · Trocar o `theme: '\''sweet'\''` do bônus' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-09 · Estender `CampaignWorldId` para 9 e 10' \
-  --body '`src/types/game.ts:30`
+mk done --title 'C-09 · Estender `CampaignWorldId` para 9 e 10' \
+  --body '**Feito 03/09.** `src/types/game.ts`.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -205,8 +214,8 @@ mk open --title 'C-09 · Estender `CampaignWorldId` para 9 e 10' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-10 · Reescrever `WORLDS` com 10 mundos' \
-  --body '`src/data/worlds.ts` — ajustar `levelStart`/`levelEnd`, hoje 1-25, 26-50 … 176-200.
+mk done --title 'C-10 · Reescrever `WORLDS` com 10 mundos' \
+  --body '**Feito 03/09.** Dez mundos, `levelStart`/`levelEnd` de 1-10, 11-20 … 91-100. **Ressalva:** os nomes dos Mundos 9 e 10 saíram diferentes do que C-01 decidiu — ver C-01a.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -214,8 +223,8 @@ mk open --title 'C-10 · Reescrever `WORLDS` com 10 mundos' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-11 · Reescrever `LEVEL_SEEDS`' \
-  --body '`src/data/levels.ts:519-1545`. Mundos 1–3 são autorais, 4–8 gerados. Decidir se as 100 viram todas geradas (mais sustentável).
+mk done --title 'C-11 · Reescrever `LEVEL_SEEDS`' \
+  --body '**Feito 03/09.** Os 10 mundos passaram a ser gerados pelo mesmo mecanismo — manter 3 mundos autorais à mão para 10 fases cada não pagava a manutenção. É a opção “mais sustentável” do enunciado.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -223,8 +232,8 @@ mk open --title 'C-11 · Reescrever `LEVEL_SEEDS`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-12 · Ajustar `GENERATED_WORLD_CONFIGS` de 25 para 10 títulos' \
-  --body '`src/data/levels.ts:198-395`
+mk done --title 'C-12 · Ajustar `GENERATED_WORLD_CONFIGS` de 25 para 10 títulos' \
+  --body '**Feito 03/09.** Dez entradas, uma por mundo.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -232,8 +241,8 @@ mk open --title 'C-12 · Ajustar `GENERATED_WORLD_CONFIGS` de 25 para 10 título
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-13 · Registrar os mundos 9 e 10 em `WORLD_MAP_CONFIGS`' \
-  --body 'O `Record` é total — `tsc` quebra sem as entradas. É proposital.
+mk done --title 'C-13 · Registrar os mundos 9 e 10 em `WORLD_MAP_CONFIGS`' \
+  --body '**Feito 03/09.** O `Record` total voltou a fechar no `tsc`.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -241,8 +250,8 @@ mk open --title 'C-13 · Registrar os mundos 9 e 10 em `WORLD_MAP_CONFIGS`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-14 · Reduzir o mapa do Mundo 1 de 25 para 10 âncoras' \
-  --body '`src/data/worldMapConfigs.ts:26-195`, `designSize` 360×3160.
+mk done --title 'C-14 · Reduzir o mapa do Mundo 1 de 25 para 10 âncoras' \
+  --body '**Feito 03/09.** `src/data/worldMapConfigs.ts`.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -259,8 +268,8 @@ mk open --title 'C-15 · Renomear `BOSQUE_*` para vocabulário ODS12' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-16 · Atualizar o comentário das 203 em `boardPositions.ts`' \
-  --body 'Linhas 16 e 39.
+mk done --title 'C-16 · Atualizar o comentário das 203 em `boardPositions.ts`' \
+  --body '**Feito 03/09.** Linhas 16 e 39 passaram a falar em 100 fases canônicas. As sobras em `src/types/game.ts` e `src/data/chapters.ts` caíram em 04/09.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -268,8 +277,8 @@ mk open --title 'C-16 · Atualizar o comentário das 203 em `boardPositions.ts`'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-17 · Mapear `AMBIENT_BY_WORLD_ID` para os 10 mundos' \
-  --body '`src/utils/sounds.ts:165-174` cobre só 1–8. Mundo sem entrada toca em silêncio.
+mk done --title 'C-17 · Mapear `AMBIENT_BY_WORLD_ID` para os 10 mundos' \
+  --body '**Feito 03/09.** Mundo 9 reaproveita `volcano` e o 10, `celestial` — nenhum mundo toca em silêncio. Travado por `tests/worldAmbientAndBackgroundCoverage.test.cjs`.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -277,8 +286,8 @@ mk open --title 'C-17 · Mapear `AMBIENT_BY_WORLD_ID` para os 10 mundos' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-18 · Cobrir os mundos 9 e 10 em `getGameBackground`' \
-  --body '`src/screens/GameScreen.tsx:327` — hoje só 1–8 e 21.
+mk done --title 'C-18 · Cobrir os mundos 9 e 10 em `getGameBackground`' \
+  --body '**Feito 03/09.** Mundo 9 cai no fundo do 2 e o 10 no do 3, em vez de cair no default do Mundo 1.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -286,8 +295,8 @@ mk open --title 'C-18 · Cobrir os mundos 9 e 10 em `getGameBackground`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-19 · Recalcular o hash sha256 das fases' \
-  --body '`tests/levelComposition.test.cjs:108`. Trocar 203→100, o total de peças (11415) e o literal `b1a76275…`. **Não deletar a asserção** — é trava de integridade.
+mk done --title 'C-19 · Recalcular o hash sha256 das fases' \
+  --body '**Feito 03/09.** Asserção mantida e literal recalculado sobre as 103 fases novas — a trava de integridade continua de pé.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -295,8 +304,8 @@ mk open --title 'C-19 · Recalcular o hash sha256 das fases' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-20 · Atualizar `tests/chapterProgress.test.cjs:80`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'C-20 · Atualizar `tests/chapterProgress.test.cjs:80`' \
+  --body '**Feito 03/09.**
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -304,8 +313,8 @@ mk open --title 'C-20 · Atualizar `tests/chapterProgress.test.cjs:80`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-21 · Atualizar `tests/worldMapConfig.test.cjs:57-73`' \
-  --body 'Três asserções sobre 203.
+mk done --title 'C-21 · Atualizar `tests/worldMapConfig.test.cjs:57-73`' \
+  --body '**Feito 03/09.** As três asserções sobre 203 passaram a valer sobre 103.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -313,8 +322,8 @@ mk open --title 'C-21 · Atualizar `tests/worldMapConfig.test.cjs:57-73`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-22 · Atualizar `tests/chapters.test.cjs:434-436`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'C-22 · Atualizar `tests/chapters.test.cjs:434-436`' \
+  --body '**Feito 03/09.**
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -322,8 +331,8 @@ mk open --title 'C-22 · Atualizar `tests/chapters.test.cjs:434-436`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-23 · Atualizar `tests/simulateFullPlaythrough.cjs:44,210`' \
-  --body 'É a simulação que prova que toda fase é vencível.
+mk done --title 'C-23 · Atualizar `tests/simulateFullPlaythrough.cjs:44,210`' \
+  --body '**Feito 03/09.** A simulação roda as 103 fases e sai 0 — toda fase continua vencível.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -331,8 +340,8 @@ mk open --title 'C-23 · Atualizar `tests/simulateFullPlaythrough.cjs:44,210`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-24 · Revisar `boardLayout` e `campaignMapLayout`' \
-  --body 'Podem depender da contagem e das âncoras do Mundo 1.
+mk done --title 'C-24 · Revisar `boardLayout` e `campaignMapLayout`' \
+  --body '**Feito 03/09.**
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -340,8 +349,8 @@ mk open --title 'C-24 · Revisar `boardLayout` e `campaignMapLayout`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-25 · Escrever a migração de save 203→100' \
-  --body '**Crítico.** Ids `w1-011`…`w8-025` deixam de existir e `normalizeProgress` descarta id desconhecido em silêncio. Decidir: mapear proporcionalmente, ou versionar o save e resetar com aviso.
+mk done --title 'C-25 · Escrever a migração de save 203→100' \
+  --body '**Feito 03/09.** Não precisou mapear nem resetar: como os ids `wN-001`…`wN-010` são idênticos nos dois esquemas, o save antigo continua valendo e só somem as posições 11–25. `detectDroppedCampaignProgress` + `CampaignResizeNoticeModal` avisam o jogador uma única vez. Moedas, chaves e itens nunca são filtrados.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -349,8 +358,8 @@ mk open --title 'C-25 · Escrever a migração de save 203→100' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-26 · Testar a migração de save' \
-  --body 'Save antigo → save novo, sem perda silenciosa.
+mk done --title 'C-26 · Testar a migração de save' \
+  --body '**Feito 03/09.** `tests/progressMigration.test.cjs`, 6 casos — incluindo o save de quem zerou os 8 mundos antigos.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -358,8 +367,8 @@ mk open --title 'C-26 · Testar a migração de save' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-27 · Travar em teste a cobertura de fundo e ambiente por mundo' \
-  --body 'Impede que um mundo novo caia em silêncio ou no fundo do Mundo 1 — o mesmo problema já registrado nos capítulos.
+mk done --title 'C-27 · Travar em teste a cobertura de fundo e ambiente por mundo' \
+  --body '**Feito 03/09.** `tests/worldAmbientAndBackgroundCoverage.test.cjs`.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -367,8 +376,8 @@ mk open --title 'C-27 · Travar em teste a cobertura de fundo e ambiente por mun
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-28 · Atualizar o texto do Modo Dev' \
-  --body '`src/components/SettingsModal.tsx:120` cita “203 fases”.
+mk done --title 'C-28 · Atualizar o texto do Modo Dev' \
+  --body '**Feito 03/09.** `SettingsModal` cita 103 fases.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -376,8 +385,8 @@ mk open --title 'C-28 · Atualizar o texto do Modo Dev' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P2,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-29 · Reescrever o invariante #4 do `CLAUDE.md`' \
-  --body 'O congelamento das 203 deixa de valer.
+mk done --title 'C-29 · Reescrever o invariante #4 do `CLAUDE.md`' \
+  --body '**Feito 03/09.** O invariante passou a citar 103 e a dizer explicitamente que o número muda se a campanha for reestruturada de novo — o mecanismo de trava, não.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -1851,4 +1860,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 198 issues (38 já criadas fechadas) =="
+echo "== pronto: 199 issues (66 já criadas fechadas) =="

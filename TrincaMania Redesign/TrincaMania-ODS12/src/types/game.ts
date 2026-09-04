@@ -27,7 +27,7 @@ export type Tile = {
 export type LevelDifficulty =
   'easy' | 'normal' | 'hard' | 'expert' | 'master' | 'bonus';
 
-/** Mundos da campanha canônica: as 203 fases de `LEVELS`. */
+/** Mundos da campanha canônica: as 103 fases de `LEVELS`. */
 export type CampaignWorldId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 21;
 
 /**

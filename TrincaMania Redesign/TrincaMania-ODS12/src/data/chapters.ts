@@ -1,12 +1,12 @@
 /**
- * Capítulos: 10 x 100 mapas jogáveis, paralelos às 203 fases canônicas.
+ * Capítulos: 10 x 100 mapas jogáveis, paralelos às 103 fases canônicas.
  *
  * ## Por que um registro paralelo
  *
- * `LEVELS` e `WORLDS` descrevem a campanha canônica e há teste travando as 203
+ * `LEVELS` e `WORLDS` descrevem a campanha canônica e há teste travando as 103
  * fases. Os capítulos não entram lá: são um segundo registro, com ids próprios
  * (`chNN-NNN`) e mundos próprios (`ChapterWorldId`, faixa 101–110). O jogo
- * continua enxergando 203 fases canônicas; quem quiser capítulos importa daqui.
+ * continua enxergando 103 fases canônicas; quem quiser capítulos importa daqui.
  *
  * ## Memória
  *
