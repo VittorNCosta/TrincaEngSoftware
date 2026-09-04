@@ -1,0 +1,40 @@
+appId: br.com.mhvtech.trincamania
+name: A configuração sobrevive a fechar e reabrir o app
+---
+# Este é o fluxo que **só** um aparelho responde. Toda a persistência do jogo
+# passa pelo AsyncStorage, e nenhum teste de nó ou de componente prova que o
+# que foi escrito volta depois de o processo morrer: eles rodam num mock em
+# memória, que sempre devolve o que guardou.
+#
+# A configuração é o alvo mais barato para isso — dois toques, sem depender de
+# vencer fase nenhuma —, mas o que está sendo verificado é o caminho de
+# gravação e leitura que o progresso, as vidas e as moedas também usam.
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: 'splash-skip'
+    timeout: 40000
+- tapOn:
+    id: 'splash-skip'
+
+- tapOn: 'Abrir configurações'
+- assertVisible: 'Som: Ligado'
+- tapOn: 'Som: Ligado'
+- assertVisible: 'Som: Desligado'
+- tapOn: 'Fechar configurações'
+
+# Mata o processo de verdade, em vez de mandar para segundo plano: estado que
+# só vive em memória sobreviveria a um `background`, e o teste passaria sem ter
+# provado nada.
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'splash-skip'
+    timeout: 40000
+- tapOn:
+    id: 'splash-skip'
+
+- tapOn: 'Abrir configurações'
+- assertVisible: 'Som: Desligado'

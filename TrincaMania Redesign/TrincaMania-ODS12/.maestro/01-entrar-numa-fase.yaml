@@ -1,0 +1,43 @@
+appId: br.com.mhvtech.trincamania
+name: Abrir o app do zero e entrar na primeira fase
+---
+# O caminho mais curto entre "instalei" e "estou jogando". Nenhuma das outras
+# camadas de teste responde se ele funciona: os testes de componente montam a
+# tela em memória, sem app, sem navegação e sem save de verdade.
+- launchApp:
+    clearState: true
+
+# A abertura é animada e a duração dela não é contrato de nada. Esperar pelo
+# botão de pular, e não por um tempo fixo, é o que impede o fluxo de virar
+# refém do ritmo da animação.
+- extendedWaitUntil:
+    visible:
+      id: 'splash-skip'
+    timeout: 40000
+- tapOn:
+    id: 'splash-skip'
+
+- extendedWaitUntil:
+    visible:
+      id: 'map-level-w1-001'
+    timeout: 20000
+
+# Save em branco abre o mapa já centrado na primeira fase. Se um dia isso
+# deixar de valer, o fluxo falha aqui — e é uma falha legítima: o jogador novo
+# ficaria olhando um mapa sem saber por onde começar.
+- tapOn:
+    id: 'map-level-w1-001'
+
+- extendedWaitUntil:
+    visible:
+      id: 'jogar-fase'
+    timeout: 10000
+- tapOn:
+    id: 'jogar-fase'
+
+- extendedWaitUntil:
+    visible:
+      id: 'game-board'
+    timeout: 30000
+- assertVisible:
+    id: 'game-board'

@@ -1,0 +1,131 @@
+# O app instalado, num Android de verdade, tocado por fora.
+#
+# Separado do ci.yml pelo mesmo motivo do build.yml: o CI verifica todo push e
+# tem de ser rapido; isto monta o APK nativo e sobe um emulador, o que leva
+# dezenas de minutos de runner. Roda sob demanda e uma vez por semana — o
+# suficiente para pegar "o app parou de abrir", que e a unica classe de defeito
+# que nenhuma das outras duas camadas de teste enxerga.
+#
+# Nao usa segredo nenhum: `assembleRelease` num projeto Expo sai assinado com o
+# keystore de debug, que instala em emulador. Nao e o APK de loja — esse e o do
+# build.yml, que vai pelo EAS.
+name: E2E Android
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Segunda de manha, antes de alguem comecar a semana em cima de um app que
+    # parou de abrir na sexta.
+    - cron: "0 9 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+
+jobs:
+  fluxos:
+    name: Fluxos no emulador
+    runs-on: ubuntu-latest
+    # Build nativo do zero (~15min) + emulador (~5min) + fluxos. O teto e
+    # generoso de proposito: cair por timeout num runner lento seria falha
+    # falsa, e a frequencia baixa nao deixa isso virar custo.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+
+      - run: npm ci
+
+      - uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # Workflow gerenciado: nao existe `android/` no repositorio, o prebuild a
+      # monta a partir do app.json. `--no-install` porque o `npm ci` acima ja
+      # instalou tudo, e deixar o prebuild reinstalar sozinho descartaria o lock.
+      - name: Gerar o projeto nativo
+        run: npx expo prebuild --platform android --no-install
+
+      # `assembleRelease`, nao `assembleDebug`: APK de debug espera um Metro
+      # rodando na maquina e trava numa tela vermelha sem ele. O release
+      # empacota o bundle JS dentro do APK, que e o que um teste de caixa preta
+      # precisa.
+      - name: Montar o APK
+        working-directory: "TrincaMania Redesign/TrincaMania-ODS12/android"
+        run: ./gradlew assembleRelease --no-daemon
+
+      # Sem action de terceiro para o Maestro: baixa o release fixado e confere
+      # o sha256 antes de executar qualquer coisa dele. Mesmo padrao do gitleaks
+      # no seguranca.yml.
+      - name: Instalar o Maestro
+        env:
+          MAESTRO_VERSAO: cli-2.10.0
+          MAESTRO_SHA256: 29b675e10cc12080e445e9bfb2e2b4e4dfb9c0f2e30d5884120d258b5e1cd991
+        run: |
+          set -euo pipefail
+          curl -sSL -o /tmp/maestro.zip \
+            "https://github.com/mobile-dev-inc/Maestro/releases/download/${MAESTRO_VERSAO}/maestro.zip"
+          echo "${MAESTRO_SHA256}  /tmp/maestro.zip" | sha256sum -c -
+          unzip -q /tmp/maestro.zip -d "${HOME}"
+          chmod +x "${HOME}/maestro/bin/maestro"
+          echo "${HOME}/maestro/bin" >> "$GITHUB_PATH"
+
+      # Sem isto o emulador cai para emulacao por software e o job estoura o
+      # teto de tempo em vez de falhar por motivo de verdade.
+      - name: Liberar o KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Rodar os fluxos
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        env:
+          # O CLI pergunta sobre telemetria na primeira execucao; num runner sem
+          # terminal isso pendura o passo ate o teto de tempo.
+          MAESTRO_CLI_NO_ANALYTICS: "true"
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          # Emulador de CI: sem janela, sem animacao (animacao atrasa o que o
+          # Maestro espera ver), sem audio, sem snapshot de saida.
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+          # Os dois caminhos de saida sobem dois niveis de proposito: caem na
+          # raiz do checkout, que e onde o upload-artifact procura.
+          script: |
+            adb install -r android/app/build/outputs/apk/release/app-release.apk
+            maestro test \
+              --format junit \
+              --output ../../maestro-resultado.xml \
+              --debug-output ../../maestro-diagnostico \
+              .maestro
+
+      # Falhou: o Maestro grava captura de tela e hierarquia de views de cada
+      # passo. Sem isso, "nao achou o botao" num runner sem tela e indepuravel.
+      - name: Guardar o diagnostico
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: maestro-diagnostico
+          path: |
+            maestro-diagnostico/**
+            maestro-resultado.xml
+          retention-days: 7
+          if-no-files-found: warn
