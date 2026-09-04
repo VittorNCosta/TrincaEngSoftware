@@ -112,15 +112,17 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
           disable-animations: true
           working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+          # Cada linha do `script` vira um `sh -c` proprio, entao continuacao
+          # com barra invertida nao funciona: a linha seguinte roda sozinha e a
+          # barra sobra como argumento — foi assim que o `\` virou caminho de
+          # fluxo na primeira execucao. Por isso o `maestro test` cabe numa
+          # linha so.
+          #
           # Os dois caminhos de saida sobem dois niveis de proposito: caem na
           # raiz do checkout, que e onde o upload-artifact procura.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
-            maestro test \
-              --format junit \
-              --output ../../maestro-resultado.xml \
-              --debug-output ../../maestro-diagnostico \
-              .maestro
+            maestro test --format junit --output ../../maestro-resultado.xml --debug-output ../../maestro-diagnostico .maestro
 
       # Falhou: o Maestro grava captura de tela e hierarquia de views de cada
       # passo. Sem isso, "nao achou o botao" num runner sem tela e indepuravel.
