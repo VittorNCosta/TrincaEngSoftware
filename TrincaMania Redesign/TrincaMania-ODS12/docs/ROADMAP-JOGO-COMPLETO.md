@@ -124,33 +124,33 @@ Verificado no código nesta data:
 
 ## C.1 — Design e nomeação
 
-| ID       | Tarefa                                                       | Quem          | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| -------- | ------------------------------------------------------------ | ------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ~~C-01~~ | ~~Confirmar nomes dos Mundos 9 e 10~~                        | [VOCÊ]        | P0   | ✅ **Feito 2026-09-03.** Mundo 9 = Oficina do Reparo, Mundo 10 = Cidade Circular. Os capítulos 9 e 10 é que foram renomeados — ver tabela abaixo.                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| C-01a    | Reconciliar os nomes dos Mundos 9 e 10 com a decisão de C-01 | [VOCÊ] + [CC] | P0   | **Drift achado 04/09.** C-01 decidiu **Oficina do Reparo** e **Cidade Circular**, e `9bd1059` renomeou os capítulos 9 e 10 justamente para liberar esses nomes — mas `2295575` criou os mundos como **Distrito da Reindustrialização** e **Cúpula da Reciclagem Global**. Os nomes liberados nunca foram usados. Decidir entre: renomear os mundos (mexe em 5 títulos de fase e 4 objetivos que citam "Distrito"/"Cúpula", e obriga a recalcular o hash de C-19), ou aceitar os nomes atuais e corrigir C-01 mais as tarefas de asset que herdaram os antigos (A-21, A-22, A-23, A-24, S-09, S-10). |
-| C-02     | ✅ Redesenhar a curva de dificuldade para 100 fases          | [CC]          | P0   | **Feito 03/09.** `WORLD_LEVELS_PER_MAP: 25 → 10` e `WORLD_DIFFICULTY_BLOCK_SIZE: 5 → 2`. A rampa de 9→60 peças cabe em 10 fases por mundo, com `tileCount` múltiplo de 3 travado em teste.                                                                                                                                                                                                                                                                                                                                                                                                          |
-| C-03     | ✅ Redefinir marcos (descanso/loja/guardião)                 | [CC]          | P0   | **Feito 03/09.** Descanso na fase 5 e guardião na 10 nos dez mundos; `REST_CHECKPOINT_COIN_REWARDS` reajustado para o novo ritmo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| C-04     | ✅ Escrever 100 títulos de fase ODS12                        | [CC]          | P0   | **Feito 03/09.** 103 títulos únicos (100 canônicas + 3 bônus), no vocabulário de `CONTEXT.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| C-05     | ✅ Escrever 100 textos de objetivo                           | [CC]          | P0   | **Feito 03/09.** 103/103 com `objectiveText` preenchido.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| C-06     | ✅ Definir `starTimeLimits` das 100 fases                    | [CC]          | P1   | **Feito 03/09.** Derivados da curva por `WORLD_STAR_TIME_BASE_OFFSET` / `WORLD_STAR_TIME_SPAN`, não à mão.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| C-07     | ✅ Definir `recommendedPower` e `mysteryTileCount` por fase  | [CC]          | P1   | **Feito 03/09.** Os 103 níveis têm `recommendedPower`; o mistério respeita o teto de 1/6 do tabuleiro.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| ~~C-08~~ | ~~Decidir destino do mundo bônus (id 21, 3 fases)~~          | [VOCÊ]        | P1   | ✅ **Feito 2026-09-03.** Fica como 11º mapa secreto, como já é hoje. Ver spec abaixo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| C-08a    | ✅ Reposicionar o bônus de `25.1–25.3` para `10.1–10.3`      | [CC]          | P0   | **Feito 03/09.** `levelStart: 10.1` em `src/data/worlds.ts`, acompanhando o Mundo 1 de 10 fases.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| C-08b    | Trocar o `theme: 'sweet'` do bônus                           | [CC]          | P1   | Vocabulário de fantasia num mundo que fica. Cai junto com L-02.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ID       | Tarefa                                                          | Quem          | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------- | --------------------------------------------------------------- | ------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~C-01~~ | ~~Confirmar nomes dos Mundos 9 e 10~~                           | [VOCÊ]        | P0   | ✅ **Decidido 2026-09-03, revisto 2026-09-04.** Mundo 9 = **Distrito da Reindustrialização**, Mundo 10 = **Cúpula da Reciclagem Global** — os nomes que o código recebeu em `2295575`. A primeira decisão tinha sido _Oficina do Reparo_ e _Cidade Circular_; ver C-01a.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| C-01a    | ✅ Reconciliar os nomes dos Mundos 9 e 10 com a decisão de C-01 | [VOCÊ] + [CC] | P0   | **Resolvido 04/09: valem os nomes do código.** C-01 tinha decidido "Oficina do Reparo" e "Cidade Circular", e `9bd1059` renomeou os capítulos 9 e 10 para liberar esses nomes — mas `2295575` criou os mundos como "Distrito da Reindustrialização" e "Cúpula da Reciclagem Global" e os nomes liberados nunca foram usados. **Escolhido aceitar os do código**: os títulos de fase do Mundo 9 já são de reindustrialização (Pátio das Prensas, Forno de Refundição, Torre de Extrusão) e casariam mal com "oficina de reparo", e renomear obrigaria a recalcular o hash congelado sem ganho de conteúdo. Corrigidos no lugar: C-01, A-21 a A-24, S-09, S-10, os prompts de arte e o comentário de `chapters.ts`. `src/data/worlds.ts` não mudou. |
+| C-02     | ✅ Redesenhar a curva de dificuldade para 100 fases             | [CC]          | P0   | **Feito 03/09.** `WORLD_LEVELS_PER_MAP: 25 → 10` e `WORLD_DIFFICULTY_BLOCK_SIZE: 5 → 2`. A rampa de 9→60 peças cabe em 10 fases por mundo, com `tileCount` múltiplo de 3 travado em teste.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| C-03     | ✅ Redefinir marcos (descanso/loja/guardião)                    | [CC]          | P0   | **Feito 03/09.** Descanso na fase 5 e guardião na 10 nos dez mundos; `REST_CHECKPOINT_COIN_REWARDS` reajustado para o novo ritmo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| C-04     | ✅ Escrever 100 títulos de fase ODS12                           | [CC]          | P0   | **Feito 03/09.** 103 títulos únicos (100 canônicas + 3 bônus), no vocabulário de `CONTEXT.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| C-05     | ✅ Escrever 100 textos de objetivo                              | [CC]          | P0   | **Feito 03/09.** 103/103 com `objectiveText` preenchido.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| C-06     | ✅ Definir `starTimeLimits` das 100 fases                       | [CC]          | P1   | **Feito 03/09.** Derivados da curva por `WORLD_STAR_TIME_BASE_OFFSET` / `WORLD_STAR_TIME_SPAN`, não à mão.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| C-07     | ✅ Definir `recommendedPower` e `mysteryTileCount` por fase     | [CC]          | P1   | **Feito 03/09.** Os 103 níveis têm `recommendedPower`; o mistério respeita o teto de 1/6 do tabuleiro.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ~~C-08~~ | ~~Decidir destino do mundo bônus (id 21, 3 fases)~~             | [VOCÊ]        | P1   | ✅ **Feito 2026-09-03.** Fica como 11º mapa secreto, como já é hoje. Ver spec abaixo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| C-08a    | ✅ Reposicionar o bônus de `25.1–25.3` para `10.1–10.3`         | [CC]          | P0   | **Feito 03/09.** `levelStart: 10.1` em `src/data/worlds.ts`, acompanhando o Mundo 1 de 10 fases.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| C-08b    | Trocar o `theme: 'sweet'` do bônus                              | [CC]          | P1   | Vocabulário de fantasia num mundo que fica. Cai junto com L-02.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 ### Nomes dos Mundos 9 e 10 — decidido
 
 O arco atual termina em "Fórum da Economia Circular" (mundo 8), que é
 deliberação. Faltavam a **ação** e o **resultado**:
 
-| Mundo | Nome                  | Subtítulo                      | Material foco | Justificativa ODS12                                  |
-| ----- | --------------------- | ------------------------------ | ------------- | ---------------------------------------------------- |
-| 9     | **Oficina do Reparo** | "Consertar antes de descartar" | metal         | ODS 12.5 — prevenção e reuso vêm antes da reciclagem |
-| 10    | **Cidade Circular**   | "O ciclo fecha aqui"           | todos os 5    | Clímax: o ciclo completo em escala urbana            |
+| Mundo | Nome                               | Subtítulo                             | Material foco | Justificativa ODS12                                     |
+| ----- | ---------------------------------- | ------------------------------------- | ------------- | ------------------------------------------------------- |
+| 9     | **Distrito da Reindustrialização** | "Onde o material vira insumo de novo" | metal         | ODS 12.5 — o resíduo reciclado volta à cadeia produtiva |
+| 10    | **Cúpula da Reciclagem Global**    | "O mundo inteiro na mesma meta"       | todos os 5    | Clímax: o ciclo completo em escala global               |
 
 **Colisão resolvida** (2026-09-03): os Capítulos 9 e 10 usavam "Oficina do
-Conserto" e "Cidade Circular". A campanha ficou com os nomes acima e os
-capítulos foram renomeados:
+Conserto" e "Cidade Circular", e foram renomeados para liberar esses nomes
+para a campanha:
 
 | Capítulo | Antes               | Agora                          | Subtítulo                              |
 | -------- | ------------------- | ------------------------------ | -------------------------------------- |
@@ -159,7 +159,14 @@ capítulos foram renomeados:
 
 O `ChapterTheme` do capítulo 9 passou de `'oficina'` para `'sucata'`, e os
 `titlePrefixes` "Oficina" e "Reparo" saíram da lista dele pelo mesmo motivo que
-"Peça" já estava fora: são vocabulário reservado a outra coisa.
+"Peça" já estava fora: eram vocabulário reservado a outra coisa.
+
+**Desfecho (2026-09-04):** os nomes liberados nunca foram usados — a campanha
+acabou ficando com "Distrito da Reindustrialização" e "Cúpula da Reciclagem
+Global" (C-01a). Os capítulos ficam com os nomes novos assim mesmo: já estão no
+jogo, são bons nomes ODS12 e não colidem com nada. "Oficina" e "Reparo" estão
+livres de novo, mas seguem fora dos `titlePrefixes` do capítulo 9 — o conjunto
+é determinístico por id, e mexer nele renomearia mapa que jogador já viu.
 
 ### Mundo bônus — decidido
 
@@ -392,33 +399,33 @@ containers, clear midday light, blue and stone palette, deliberative civic mood.
 | A-19 | `assets/map/worlds/w08_forum_map.png`  | Fundo de mapa | [CC→VOCÊ] |
 | A-20 | `assets/map/worlds/w08_forum_game.png` | Fundo de jogo | [CC→VOCÊ] |
 
-### Mundo 9 — Oficina do Reparo
+### Mundo 9 — Distrito da Reindustrialização
 
 ```
-SCENE: a community repair workshop; workbenches with half-disassembled
-appliances, toasters and radios opened up, pegboard walls of hand tools,
-labeled parts drawers, a desk lamp pool of warm light, sawdust motes in the air,
-amber and steel palette, careful hands-on mood.
+SCENE: an industrial remanufacturing district; hydraulic baling presses and
+conveyor lines, colour-sorted bales stacked high, the orange glow of a
+re-melting furnace, extrusion towers venting steam, gantry cranes, warehouse
+skylights, steel and amber palette, purposeful working mood.
 ```
 
-| ID   | Arquivo                                  | Tipo          | Quem      |
-| ---- | ---------------------------------------- | ------------- | --------- |
-| A-21 | `assets/map/worlds/w09_oficina_map.png`  | Fundo de mapa | [CC→VOCÊ] |
-| A-22 | `assets/map/worlds/w09_oficina_game.png` | Fundo de jogo | [CC→VOCÊ] |
+| ID   | Arquivo                                   | Tipo          | Quem      |
+| ---- | ----------------------------------------- | ------------- | --------- |
+| A-21 | `assets/map/worlds/w09_distrito_map.png`  | Fundo de mapa | [CC→VOCÊ] |
+| A-22 | `assets/map/worlds/w09_distrito_game.png` | Fundo de jogo | [CC→VOCÊ] |
 
-### Mundo 10 — Cidade Circular
+### Mundo 10 — Cúpula da Reciclagem Global
 
 ```
-SCENE: a sustainable city skyline at golden hour; green rooftops and rooftop
-gardens, solar panels, wind turbines on the horizon, a tram line, tree-lined
-streets with color-coded collection points, a large circular flow motif formed
-by the street layout, optimistic and complete mood, full CONAMA color accents.
+SCENE: a global recycling summit; a great domed assembly hall, tiered delegate
+seating, a projected world map and target dashboards on wide screens, daylight
+through the glass dome, a large circular flow motif in the floor mosaic, formal
+and hopeful climax mood, full CONAMA color accents.
 ```
 
 | ID   | Arquivo                                 | Tipo          | Quem      |
 | ---- | --------------------------------------- | ------------- | --------- |
-| A-23 | `assets/map/worlds/w10_cidade_map.png`  | Fundo de mapa | [CC→VOCÊ] |
-| A-24 | `assets/map/worlds/w10_cidade_game.png` | Fundo de jogo | [CC→VOCÊ] |
+| A-23 | `assets/map/worlds/w10_cupula_map.png`  | Fundo de mapa | [CC→VOCÊ] |
+| A-24 | `assets/map/worlds/w10_cupula_game.png` | Fundo de jogo | [CC→VOCÊ] |
 
 ## A.3 — Arte global (fora dos 10 mapas)
 
@@ -445,18 +452,18 @@ by the street layout, optimistic and complete mood, full CONAMA color accents.
 128 kbps, ≤ 800 KB. Sem trilha melódica forte (o jogo é de concentração).
 Referência de volume: os `ambient_*.mp3` existentes.
 
-| ID   | Arquivo                   | Mundo           | Descrição                                              | Quem      |
-| ---- | ------------------------- | --------------- | ------------------------------------------------------ | --------- |
-| S-01 | `ambient_parque.mp3`      | 1 · Parque      | Pássaros distantes, folhas, passos ocasionais          | [CC→VOCÊ] |
-| S-02 | `ambient_vale.mp3`        | 2 · Vale        | Esteira ao longe, vento de vale, maquinário abafado    | [CC→VOCÊ] |
-| S-03 | `ambient_central.mp3`     | 3 · Central     | Galpão amplo, eco, prensa distante, ventilação         | [CC→VOCÊ] |
-| S-04 | `ambient_viveiro.mp3`     | 4 · Viveiro     | Regador, insetos, lona ao vento                        | [CC→VOCÊ] |
-| S-05 | `ambient_usina.mp3`       | 5 · Usina       | Zumbido grave de biodigestor, vapor, pá revolvendo     | [CC→VOCÊ] |
-| S-06 | `ambient_cooperativa.mp3` | 6 · Cooperativa | Carrinho de metal, fardos, vozes distantes indistintas | [CC→VOCÊ] |
-| S-07 | `ambient_rota.mp3`        | 7 · Rota        | Rodovia distante, caminhão manobrando, engradado       | [CC→VOCÊ] |
-| S-08 | `ambient_forum.mp3`       | 8 · Fórum       | Praça aberta, murmúrio cívico, bandeira ao vento       | [CC→VOCÊ] |
-| S-09 | `ambient_oficina.mp3`     | 9 · Oficina     | Chave de fenda, gaveta de peças, ferro de solda        | [CC→VOCÊ] |
-| S-10 | `ambient_cidade.mp3`      | 10 · Cidade     | Bonde, cidade calma, folhagem urbana, sem buzina       | [CC→VOCÊ] |
+| ID   | Arquivo                   | Mundo           | Descrição                                                           | Quem      |
+| ---- | ------------------------- | --------------- | ------------------------------------------------------------------- | --------- |
+| S-01 | `ambient_parque.mp3`      | 1 · Parque      | Pássaros distantes, folhas, passos ocasionais                       | [CC→VOCÊ] |
+| S-02 | `ambient_vale.mp3`        | 2 · Vale        | Esteira ao longe, vento de vale, maquinário abafado                 | [CC→VOCÊ] |
+| S-03 | `ambient_central.mp3`     | 3 · Central     | Galpão amplo, eco, prensa distante, ventilação                      | [CC→VOCÊ] |
+| S-04 | `ambient_viveiro.mp3`     | 4 · Viveiro     | Regador, insetos, lona ao vento                                     | [CC→VOCÊ] |
+| S-05 | `ambient_usina.mp3`       | 5 · Usina       | Zumbido grave de biodigestor, vapor, pá revolvendo                  | [CC→VOCÊ] |
+| S-06 | `ambient_cooperativa.mp3` | 6 · Cooperativa | Carrinho de metal, fardos, vozes distantes indistintas              | [CC→VOCÊ] |
+| S-07 | `ambient_rota.mp3`        | 7 · Rota        | Rodovia distante, caminhão manobrando, engradado                    | [CC→VOCÊ] |
+| S-08 | `ambient_forum.mp3`       | 8 · Fórum       | Praça aberta, murmúrio cívico, bandeira ao vento                    | [CC→VOCÊ] |
+| S-09 | `ambient_distrito.mp3`    | 9 · Distrito    | Prensa hidráulica ao longe, esteira rolante, zumbido grave de forno | [CC→VOCÊ] |
+| S-10 | `ambient_cupula.mp3`      | 10 · Cúpula     | Murmúrio de plenário, papel manuseado, passos em saguão amplo       | [CC→VOCÊ] |
 
 | ID   | Tarefa                                                   | Quem      | Prio |
 | ---- | -------------------------------------------------------- | --------- | ---- |

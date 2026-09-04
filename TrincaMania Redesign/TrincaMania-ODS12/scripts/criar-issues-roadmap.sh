@@ -107,7 +107,7 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 
 # --- Conteúdo 10×10 ---
 mk done --title 'C-01 · Confirmar os nomes dos Mundos 9 e 10' \
-  --body '**Decidido 03/09.** A campanha fica com **Oficina do Reparo** e **Cidade Circular**; quem foi renomeado foi o capítulo — 9 virou **Ferro-Velho Renascido** e 10 virou **Metrópole do Ciclo Fechado**. Já no código (commit `9bd1059`).
+  --body '**Decidido 03/09, revisto 04/09.** A campanha fica com **Distrito da Reindustrialização** (Mundo 9) e **Cúpula da Reciclagem Global** (Mundo 10) — os nomes que o código recebeu em `2295575`. A primeira decisão tinha sido Oficina do Reparo e Cidade Circular, e foi por ela que os capítulos 9 e 10 viraram **Ferro-Velho Renascido** e **Metrópole do Ciclo Fechado** (`9bd1059`); os capítulos ficam com os nomes novos, que já estão no jogo e não colidem com nada. Ver C-01a.
 
 **Responsável:** Você
 **Prioridade:** P0
@@ -115,8 +115,8 @@ mk done --title 'C-01 · Confirmar os nomes dos Mundos 9 e 10' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,humano' --milestone 'Conteúdo 10×10'
-mk open --title 'C-01a · Reconciliar os nomes dos Mundos 9 e 10 com a decisão de C-01' \
-  --body '**Drift achado 04/09.** C-01 decidiu **Oficina do Reparo** e **Cidade Circular**, e `9bd1059` renomeou os capítulos 9 e 10 justamente para liberar esses nomes — mas `2295575` criou os mundos como **Distrito da Reindustrialização** e **Cúpula da Reciclagem Global**. Os nomes liberados nunca foram usados. Decidir entre: renomear os mundos (mexe em 5 títulos de fase e 4 objetivos que citam “Distrito”/“Cúpula”, e obriga a recalcular o hash de C-19), ou aceitar os nomes atuais e corrigir C-01 mais as tarefas de asset que herdaram os antigos (A-21, A-22, A-23, A-24, S-09, S-10).
+mk done --title 'C-01a · Reconciliar os nomes dos Mundos 9 e 10 com a decisão de C-01' \
+  --body '**Resolvido 04/09: valem os nomes do código.** Achado: C-01 decidiu **Oficina do Reparo** e **Cidade Circular**, e `9bd1059` renomeou os capítulos 9 e 10 justamente para liberar esses nomes — mas `2295575` criou os mundos como **Distrito da Reindustrialização** e **Cúpula da Reciclagem Global**. Os nomes liberados nunca foram usados. Decidir entre: renomear os mundos (mexe em 5 títulos de fase e 4 objetivos que citam “Distrito”/“Cúpula”, e obriga a recalcular o hash de C-19), ou aceitar os nomes atuais. **Escolhido aceitar**: os títulos de fase do Mundo 9 já são de reindustrialização (Pátio das Prensas, Forno de Refundição, Torre de Extrusão) e casariam mal com “oficina de reparo”, e mexer nos títulos obrigaria a recalcular o hash congelado sem ganho de conteúdo. Corrigidos no lugar: C-01, A-21 a A-24, S-09, S-10, os prompts de arte dos dois mundos e o comentário de `chapters.ts`. Nenhuma linha de `src/data/worlds.ts` mudou.
 
 **Responsável:** Claude Code + Você
 **Prioridade:** P0
@@ -585,7 +585,7 @@ mk open --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jog
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano' --milestone 'Arte'
-mk open --title 'A-21 · Mundo 9 · Oficina do Reparo — fundo de mapa' \
+mk open --title 'A-21 · Mundo 9 · Distrito da Reindustrialização — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
@@ -594,7 +594,7 @@ mk open --title 'A-21 · Mundo 9 · Oficina do Reparo — fundo de mapa' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano' --milestone 'Arte'
-mk open --title 'A-22 · Mundo 9 · Oficina do Reparo — fundo de jogo' \
+mk open --title 'A-22 · Mundo 9 · Distrito da Reindustrialização — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
@@ -603,7 +603,7 @@ mk open --title 'A-22 · Mundo 9 · Oficina do Reparo — fundo de jogo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano' --milestone 'Arte'
-mk open --title 'A-23 · Mundo 10 · Cidade Circular — fundo de mapa' \
+mk open --title 'A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
@@ -612,7 +612,7 @@ mk open --title 'A-23 · Mundo 10 · Cidade Circular — fundo de mapa' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano' --milestone 'Arte'
-mk open --title 'A-24 · Mundo 10 · Cidade Circular — fundo de jogo' \
+mk open --title 'A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
@@ -803,8 +803,8 @@ mk open --title 'S-08 · `ambient_forum.mp3` — Mundo 8' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano' --milestone 'Som'
-mk open --title 'S-09 · `ambient_oficina.mp3` — Mundo 9' \
-  --body 'Chave de fenda, gaveta de peças, ferro de solda.
+mk open --title 'S-09 · `ambient_distrito.mp3` — Mundo 9' \
+  --body 'Prensa hidráulica ao longe, esteira rolante, zumbido grave de forno.
 
 **Responsável:** Claude Code + Você
 **Prioridade:** P0
@@ -812,8 +812,8 @@ mk open --title 'S-09 · `ambient_oficina.mp3` — Mundo 9' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano' --milestone 'Som'
-mk open --title 'S-10 · `ambient_cidade.mp3` — Mundo 10' \
-  --body 'Bonde, cidade calma, folhagem urbana, sem buzina.
+mk open --title 'S-10 · `ambient_cupula.mp3` — Mundo 10' \
+  --body 'Murmúrio de plenário, papel manuseado, passos em saguão amplo.
 
 **Responsável:** Claude Code + Você
 **Prioridade:** P0
@@ -1860,4 +1860,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (68 já criadas fechadas) =="
+echo "== pronto: 199 issues (69 já criadas fechadas) =="

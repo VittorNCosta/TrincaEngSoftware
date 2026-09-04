@@ -401,8 +401,11 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
     titlePrefixes: [
       // "Peça" fica de fora de propósito: no vocabulário do domínio peça é uma
       // carta posicionada, e usar a palavra como topônimo confundiria a leitura.
-      // "Oficina" e "Reparo" também ficam de fora: são o nome do Mundo 9 da
-      // campanha (Oficina do Reparo), e repeti-los aqui confundiria as trilhas.
+      // "Oficina" e "Reparo" também ficam de fora, hoje por inércia: eram o
+      // nome reservado ao Mundo 9 da campanha, que acabou ficando com
+      // "Distrito da Reindustrialização" (C-01a). As palavras estão livres de
+      // novo, mas o conjunto de prefixos é determinístico por id — mexer nele
+      // renomearia mapa que jogador já viu, e não vale o troco.
       'Carcaça',
       'Ferramenta',
       'Chassi',
