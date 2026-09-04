@@ -50,7 +50,7 @@ export const LEGACY_CAMPAIGN_MAP_ASSETS = {
  * A variedade percebida vem da identidade visual de cada mapa
  * (`chapterVisualIdentity.ts`), que troca paleta e ordem de camadas por cima
  * desta base. Aqui só garantimos que nenhum capítulo caia no fallback do
- * Bosque, o que faria dez capítulos parecerem o mundo 1.
+ * Parque, o que faria dez capítulos parecerem o mundo 1.
  */
 export const CHAPTER_MAP_ASSETS = {
   'chapter-map-1':

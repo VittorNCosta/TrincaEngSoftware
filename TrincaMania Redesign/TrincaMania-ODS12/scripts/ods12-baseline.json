@@ -67,39 +67,9 @@
       "motivo": "Comentario do encaixe ocupado chama o tile de doce. Bloco L.",
       "situacao": "pendente"
     },
-    "src/data/worldMapConfigs.ts::acucar": {
-      "count": 1,
-      "linhas": [274],
-      "motivo": "identityKey legado reino-acucarado do mundo bonus. L-04.",
-      "situacao": "pendente"
-    },
-    "src/data/worldMapConfigs.ts::celestial": {
-      "count": 1,
-      "linhas": [273],
-      "motivo": "identityKey legado reino-celestial do Mundo 8. L-04.",
-      "situacao": "pendente"
-    },
-    "src/data/worldMapConfigs.ts::doce": {
-      "count": 1,
-      "linhas": [270],
-      "motivo": "identityKey legado vulcao-doce do Mundo 5. L-04.",
-      "situacao": "pendente"
-    },
-    "src/data/worldMapConfigs.ts::reino": {
-      "count": 2,
-      "linhas": [273, 274],
-      "motivo": "identityKey legado reino-celestial e reino-acucarado. L-04.",
-      "situacao": "pendente"
-    },
-    "src/data/worldMapConfigs.ts::tesouro": {
-      "count": 1,
-      "linhas": [269],
-      "motivo": "identityKey legado praia-dos-tesouros do Mundo 4. L-04.",
-      "situacao": "pendente"
-    },
     "src/data/worlds.ts::sweet": {
       "count": 1,
-      "linhas": [121],
+      "linhas": [147],
       "motivo": "theme sweet do mundo bonus. C-08b.",
       "situacao": "pendente"
     },
@@ -130,8 +100,8 @@
       "situacao": "pendente"
     },
     "src/utils/sounds.ts::celestial": {
-      "count": 5,
-      "linhas": [36, 78, 144, 146, 189],
+      "count": 6,
+      "linhas": [36, 78, 144, 146, 192, 194],
       "motivo": "Chave da trilha ambiente do Mundo 8 e caminho do mp3. Renomear junto com o arquivo — bloco S.",
       "situacao": "pendente"
     }

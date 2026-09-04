@@ -652,7 +652,7 @@ export const getChapterLevelProfile = (
     kindCount: summary.kindCount,
     maxZ: positions.reduce((highest, [, , z]) => Math.max(highest, z), 0),
     mysteryTileCount: summary.mysteryTileCount,
-    // Os capítulos não têm tutorial de trinca de abertura — isso é do Bosque.
+    // Os capítulos não têm tutorial de trinca de abertura — isso é do Parque.
     openingTriple: false,
     tileCount: summary.tileCount,
   };

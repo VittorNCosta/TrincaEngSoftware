@@ -259,8 +259,8 @@ mk done --title 'C-14 · Reduzir o mapa do Mundo 1 de 25 para 10 âncoras' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code' --milestone 'Conteúdo 10×10'
-mk open --title 'C-15 · Renomear `BOSQUE_*` para vocabulário ODS12' \
-  --body '15 ocorrências. Ver o fluxo de limpeza.
+mk done --title 'C-15 · Renomear `BOSQUE_*` para vocabulário ODS12' \
+  --body '**Feito 04/09.** Eram 107 ocorrências, não 15: `BOSQUE_*` virou `PARQUE_*` e os ids de layout `bosque-*` viraram `parque-*`, seguindo o nome atual do Mundo 1 (**Parque da Coleta Seletiva**). `assetKey`/`visualKey` `forest-*` ficaram de fora de propósito — apontam para PNG real, isso é L-09.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -895,8 +895,8 @@ mk open --title 'L-03 · Trocar os `identityKey` dos mundos 2–8 e bônus' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code' --milestone 'Limpeza ODS12'
-mk open --title 'L-04 · Renomear os 15 `BOSQUE_*`' \
-  --body '`worldMapConfigs.ts`
+mk done --title 'L-04 · Renomear os `BOSQUE_*` e os `identityKey` legados' \
+  --body '**Feito 04/09.** Mesmo escopo do C-15, mais os oito `identityKey` que ainda carregavam o nome de fantasia (`vulcao-doce`, `reino-celestial`, `praia-dos-tesouros`, `reino-acucarado`…): agora derivam do nome ODS12 do mundo. Nenhum é persistido em save — só identificam o mapa. O livro-razão da guarda caiu de 19 para 14 pendências.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1860,4 +1860,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (66 já criadas fechadas) =="
+echo "== pronto: 199 issues (68 já criadas fechadas) =="

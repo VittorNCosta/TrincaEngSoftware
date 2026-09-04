@@ -403,7 +403,7 @@ export function GameScreen({
   const { height, width } = useWindowDimensions();
   const world = getWorldById(level.worldId);
   // `getWorldById` cai em WORLDS[0] para um mundo de capítulo (faixa 101–110),
-  // então sem isto a placa da fase anunciaria "Bosque" dentro de um capítulo.
+  // então sem isto a placa da fase anunciaria "Parque" dentro de um capítulo.
   const chapterSummary = getChapterLevelSummary(level.id);
   const chapter = chapterSummary
     ? getChapter(chapterSummary.chapterId)

@@ -17,7 +17,7 @@ require.extensions['.ts'] = (module, filename) => {
   module._compile(output, filename);
 };
 
-const { BOSQUE_MAP_CONFIG } = require('../src/data/worldMapConfigs.ts');
+const { PARQUE_MAP_CONFIG } = require('../src/data/worldMapConfigs.ts');
 const {
   createCampaignMapTransform,
   deriveCampaignMapLevelState,
@@ -39,7 +39,7 @@ const closeTo = (actual, expected, epsilon = 0.000001) => {
 
 test('transforma a cena proporcionalmente em 360, 392 e 412 pixels', () => {
   [360, 392, 412].forEach((width) => {
-    const transform = createCampaignMapTransform(BOSQUE_MAP_CONFIG, width);
+    const transform = createCampaignMapTransform(PARQUE_MAP_CONFIG, width);
     const expectedScale = width / 360;
 
     closeTo(transform.scale, expectedScale);
@@ -54,7 +54,7 @@ test('transforma a cena proporcionalmente em 360, 392 e 412 pixels', () => {
 
 test('frame visual e toque compartilham exatamente o mesmo centro', () => {
   [360, 392, 412].forEach((width) => {
-    const transform = createCampaignMapTransform(BOSQUE_MAP_CONFIG, width);
+    const transform = createCampaignMapTransform(PARQUE_MAP_CONFIG, width);
     const frames = getCampaignMapEntityFrames(
       { x: 180, y: 1500 },
       { height: 20, width: 20 },
@@ -83,14 +83,14 @@ test('frame visual e toque compartilham exatamente o mesmo centro', () => {
 });
 
 test('nós usam a âncora de contato no solo sem separar arte e hitbox', () => {
-  const transform = createCampaignMapTransform(BOSQUE_MAP_CONFIG, 392);
-  const anchor = BOSQUE_MAP_CONFIG.levelAnchors[4];
+  const transform = createCampaignMapTransform(PARQUE_MAP_CONFIG, 392);
+  const anchor = PARQUE_MAP_CONFIG.levelAnchors[4];
   const frames = getCampaignMapEntityFrames(
     anchor.point,
-    BOSQUE_MAP_CONFIG.levelNodeSize,
-    BOSQUE_MAP_CONFIG.levelNodeOrigin,
+    PARQUE_MAP_CONFIG.levelNodeSize,
+    PARQUE_MAP_CONFIG.levelNodeOrigin,
     transform,
-    BOSQUE_MAP_CONFIG.minimumTouchSize,
+    PARQUE_MAP_CONFIG.minimumTouchSize,
   );
   const transformedAnchor = transformCampaignMapPoint(anchor.point, transform);
 
@@ -107,18 +107,18 @@ test('nós usam a âncora de contato no solo sem separar arte e hitbox', () => {
 
 test('overlap visual dos segmentos também escala proporcionalmente', () => {
   [360, 392, 412].forEach((width) => {
-    const transform = createCampaignMapTransform(BOSQUE_MAP_CONFIG, width);
+    const transform = createCampaignMapTransform(PARQUE_MAP_CONFIG, width);
 
-    for (let index = 1; index < BOSQUE_MAP_CONFIG.segments.length; index += 1) {
-      const previous = BOSQUE_MAP_CONFIG.segments[index - 1];
-      const current = BOSQUE_MAP_CONFIG.segments[index];
+    for (let index = 1; index < PARQUE_MAP_CONFIG.segments.length; index += 1) {
+      const previous = PARQUE_MAP_CONFIG.segments[index - 1];
+      const current = PARQUE_MAP_CONFIG.segments[index];
       const renderedOverlap =
         (previous.top + previous.height) * transform.scale -
         current.top * transform.scale;
 
       closeTo(
         renderedOverlap,
-        BOSQUE_MAP_CONFIG.segmentOverlap * transform.scale,
+        PARQUE_MAP_CONFIG.segmentOverlap * transform.scale,
       );
     }
   });
@@ -132,16 +132,16 @@ test('abertura respeita HUD, começo, meio e fim nas três telas alvo', () => {
   ];
 
   screens.forEach(({ height, width }) => {
-    const transform = createCampaignMapTransform(BOSQUE_MAP_CONFIG, width);
+    const transform = createCampaignMapTransform(PARQUE_MAP_CONFIG, width);
     const bounds = getCampaignMapScrollBounds(transform.contentHeight, height);
     const openingFor = (levelIndex) =>
       getCampaignMapOpeningScrollOffset({
         contentHeight: transform.contentHeight,
-        fixedBottomInset: BOSQUE_MAP_CONFIG.openingInsets.bottom,
-        fixedTopInset: BOSQUE_MAP_CONFIG.openingInsets.top,
-        focusRatio: BOSQUE_MAP_CONFIG.openingFocusRatio,
+        fixedBottomInset: PARQUE_MAP_CONFIG.openingInsets.bottom,
+        fixedTopInset: PARQUE_MAP_CONFIG.openingInsets.top,
+        focusRatio: PARQUE_MAP_CONFIG.openingFocusRatio,
         focusY:
-          BOSQUE_MAP_CONFIG.levelAnchors[levelIndex].point.y * transform.scale,
+          PARQUE_MAP_CONFIG.levelAnchors[levelIndex].point.y * transform.scale,
         viewportHeight: height,
       });
 
@@ -154,39 +154,39 @@ test('abertura respeita HUD, começo, meio e fim nas três telas alvo', () => {
 });
 
 test('primeira fase e conjunto final permanecem fora dos overlays fixos', () => {
-  const transform = createCampaignMapTransform(BOSQUE_MAP_CONFIG, 360);
+  const transform = createCampaignMapTransform(PARQUE_MAP_CONFIG, 360);
   const firstFrames = getCampaignMapEntityFrames(
-    BOSQUE_MAP_CONFIG.levelAnchors[0].point,
-    BOSQUE_MAP_CONFIG.levelNodeSize,
-    BOSQUE_MAP_CONFIG.levelNodeOrigin,
+    PARQUE_MAP_CONFIG.levelAnchors[0].point,
+    PARQUE_MAP_CONFIG.levelNodeSize,
+    PARQUE_MAP_CONFIG.levelNodeOrigin,
     transform,
-    BOSQUE_MAP_CONFIG.minimumTouchSize,
+    PARQUE_MAP_CONFIG.minimumTouchSize,
   );
   const finalFrames = getCampaignMapEntityFrames(
-    BOSQUE_MAP_CONFIG.levelAnchors[9].point,
-    BOSQUE_MAP_CONFIG.levelNodeSize,
-    BOSQUE_MAP_CONFIG.levelNodeOrigin,
+    PARQUE_MAP_CONFIG.levelAnchors[9].point,
+    PARQUE_MAP_CONFIG.levelNodeSize,
+    PARQUE_MAP_CONFIG.levelNodeOrigin,
     transform,
-    BOSQUE_MAP_CONFIG.minimumTouchSize,
+    PARQUE_MAP_CONFIG.minimumTouchSize,
   );
-  const finalLandmarks = BOSQUE_MAP_CONFIG.landmarks.filter(
+  const finalLandmarks = PARQUE_MAP_CONFIG.landmarks.filter(
     ({ afterLevelId }) => afterLevelId === 'w1-010',
   );
 
   assert.ok(
     firstFrames.visual.top + firstFrames.visual.height <=
-      transform.contentHeight - BOSQUE_MAP_CONFIG.openingInsets.bottom,
+      transform.contentHeight - PARQUE_MAP_CONFIG.openingInsets.bottom,
   );
-  assert.ok(finalFrames.visual.top >= BOSQUE_MAP_CONFIG.openingInsets.top);
+  assert.ok(finalFrames.visual.top >= PARQUE_MAP_CONFIG.openingInsets.top);
   finalLandmarks.forEach((landmark) => {
     const frames = getCampaignMapEntityFrames(
       landmark.point,
       landmark.visualSize,
       landmark.origin,
       transform,
-      BOSQUE_MAP_CONFIG.minimumTouchSize,
+      PARQUE_MAP_CONFIG.minimumTouchSize,
     );
-    assert.ok(frames.visual.top >= BOSQUE_MAP_CONFIG.openingInsets.top);
+    assert.ok(frames.visual.top >= PARQUE_MAP_CONFIG.openingInsets.top);
   });
 });
 
@@ -208,7 +208,7 @@ test('conteúdo menor que a viewport possui scroll e abertura zerados', () => {
 });
 
 test('foco preserva primeira desbloqueada incompleta e final do mundo concluído', () => {
-  const levelIds = BOSQUE_MAP_CONFIG.levelAnchors.map(({ levelId }) => levelId);
+  const levelIds = PARQUE_MAP_CONFIG.levelAnchors.map(({ levelId }) => levelId);
 
   assert.equal(
     getCampaignMapFocusLevelId(levelIds, {
@@ -265,7 +265,7 @@ test('seleção rejeita mundo bloqueado sem perder um fallback desbloqueado', ()
 
 test('entradas geométricas inválidas falham sem produzir NaN', () => {
   assert.throws(
-    () => createCampaignMapTransform(BOSQUE_MAP_CONFIG, 0),
+    () => createCampaignMapTransform(PARQUE_MAP_CONFIG, 0),
     /availableWidth must be a positive finite number/,
   );
   assert.throws(

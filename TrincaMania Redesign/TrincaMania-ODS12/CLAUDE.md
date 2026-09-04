@@ -36,7 +36,7 @@ mesmos PNGs como placeholder). Reformar essa arte exige ilustração nova
 (fora do alcance de edição de código/texto); não tente gerar PNG de jogo via
 código. Marcadores pontuais ainda com arte antiga:
 `src/components/ForestRestMapMarker.tsx` (`forest_rest_cart.png`) e o layout
-`BOSQUE_MAP_CONFIG` do Mundo 1 em `src/data/worldMapConfigs.ts`.
+`PARQUE_MAP_CONFIG` do Mundo 1 em `src/data/worldMapConfigs.ts`.
 
 **Contexto histórico — resize da campanha (2026-09-03)**: a campanha foi
 reestruturada de 203 fases (8 mundos × 25 + bônus 21 × 3) para 103 fases (10

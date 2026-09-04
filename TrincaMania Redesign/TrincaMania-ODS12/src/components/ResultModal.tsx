@@ -158,7 +158,7 @@ export function ResultModal({
   const victoryTitle = getVictoryTitleByStars(earnedStarCount);
   const world = getWorldById(level.worldId);
   // Mapa de capítulo não está em LEVELS nem em WORLDS — `getWorldById` cai em
-  // WORLDS[0]. Sem este desvio a vitória anunciaria o Bosque e ofereceria
+  // WORLDS[0]. Sem este desvio a vitória anunciaria o Parque e ofereceria
   // "Novo mundo em breve" no lugar de um avanço que existe de verdade.
   const chapterSummary = getChapterLevelSummary(level.id);
   const chapterName = chapterSummary
