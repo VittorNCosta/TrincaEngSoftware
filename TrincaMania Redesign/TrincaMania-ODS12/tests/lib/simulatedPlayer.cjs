@@ -10,31 +10,8 @@
  * Quem usar esta lib precisa exigi-la **antes** de qualquer `require` de `.ts`:
  * o hook é instalado no carregamento deste módulo.
  */
-const fs = require('node:fs');
-const ts = require('typescript');
-
 const { NODE_BUDGET, criarJogador } = require('./solver.cjs');
-
-/** Idempotente: vários arquivos carregam a lib no mesmo processo. */
-const registrarTypeScript = () => {
-  if (require.extensions['.ts']) {
-    return;
-  }
-
-  require.extensions['.ts'] = (module, filename) => {
-    const source = fs.readFileSync(filename, 'utf8');
-    const output = ts.transpileModule(source, {
-      compilerOptions: {
-        esModuleInterop: true,
-        module: ts.ModuleKind.CommonJS,
-        target: ts.ScriptTarget.ES2020,
-      },
-      fileName: filename,
-    }).outputText;
-
-    module._compile(output, filename);
-  };
-};
+const { registrarTypeScript } = require('./typescript.cjs');
 
 registrarTypeScript();
 
