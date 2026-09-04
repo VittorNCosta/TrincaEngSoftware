@@ -51,7 +51,7 @@ echo "== issues =="
 
 # --- Fundação ---
 mk done --title 'F0-01 · Instalar o `gh` CLI' \
-  --body '**Feito 03/09:** binário v2.99.0 baixado do release oficial para `~/.local/bin/gh`, sem sudo — o diretório já está no PATH via `.zshrc:105`. Falta só o `gh auth login`, que é interativo.
+  --body '**Feito 03/09:** binário v2.99.0 baixado do release oficial para `~/.local/bin/gh`, sem sudo — o diretório já está no PATH via `.zshrc:105`. Autenticado em 04/09 (`gh auth login` por device code, conta `VittorNCosta`) — o backlog do GitHub passou a ser sincronizável daqui.
 
 **Responsável:** Você
 **Prioridade:** P0
