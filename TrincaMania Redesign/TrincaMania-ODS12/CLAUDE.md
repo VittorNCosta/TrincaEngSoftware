@@ -38,6 +38,19 @@ código. Marcadores pontuais ainda com arte antiga:
 `src/components/ForestRestMapMarker.tsx` (`forest_rest_cart.png`) e o layout
 `BOSQUE_MAP_CONFIG` do Mundo 1 em `src/data/worldMapConfigs.ts`.
 
+**Contexto histórico — resize da campanha (2026-09-03)**: a campanha foi
+reestruturada de 203 fases (8 mundos × 25 + bônus 21 × 3) para 103 fases (10
+mundos × 10 + bônus 21 × 3), na branch `feat/campanha-10x10`. Isso quebrou de
+propósito o invariante #4 antigo (as 203 fases congeladas) — o hash de
+`tests/levelComposition.test.cjs` foi recalculado sobre o novo conjunto de
+103. Save de jogador com progresso no esquema antigo não quebra: como os ids
+`wN-001`…`wN-010` são idênticos entre os dois esquemas,
+`detectDroppedCampaignProgress`/`CampaignResizeNoticeModal`
+(`src/storage/progressStorage.ts`, `src/components/CampaignResizeNoticeModal.tsx`)
+avisam o jogador uma única vez quando o `normalizeProgress` descarta silenciosamente
+fase que não existe mais (posição 11–25 de um mundo antigo) — moedas, chaves e
+itens nunca são afetados por essa filtragem. Ver `tests/progressMigration.test.cjs`.
+
 **Gap conhecido — "Modo Dev" (2026-08-15)**: `unlockAllLevelsForDevMode`
 (`src/storage/progressStorage.ts`) e `unlockAllChapterMapsForDevMode`
 (`src/storage/chapterProgressStorage.ts`), acionados pelo botão em
@@ -79,7 +92,7 @@ tarefa não trivial concluída; `/security-review` antes de release;
 1. **Progresso** só é gravado por `commitProgress` / `commitChapterProgress` (fila serializada em `App.tsx`, com guarda de geração). Chamar `saveProgress` direto já apagou progresso de jogador.
 2. **Vidas** só mudam por `mutateLives` (`src/storage/livesStorage.ts`). Chamada direta a `saveLivesState` já perdeu vida premiada.
 3. **Campanha e capítulos têm storages separados.** `normalizeProgress` descarta ids `chNN-NNN` **em silêncio** — nunca passe id de capítulo ao storage da campanha.
-4. **As 203 fases canônicas de `src/data/levels.ts` são congeladas.** Existe teste travando o hash de `JSON.stringify(LEVELS)`. Se mexer no arquivo, prove que a saída não mudou.
+4. **As 103 fases canônicas de `src/data/levels.ts` são congeladas.** Existe teste travando o hash de `JSON.stringify(LEVELS)`. Se mexer no arquivo, prove que a saída não mudou. (Eram 203 antes do resize de 2026-09-03 — o número muda se a campanha for reestruturada de novo, o mecanismo de trava não.)
 5. **Guarda de idempotência vai depois do `await`**, lendo o ref atual — antes do `await` abre janela de duplo toque.
 6. **`tileCount` sempre múltiplo de 3.** Senão sobra ciclo pela metade e a fase fica invencível.
 7. Parâmetro declarado no tipo mas **não desestruturado** já virou bug real (`activeTrayCapacity`). Se declarou, use.
@@ -92,7 +105,7 @@ tarefa não trivial concluída; `/security-review` antes de release;
 - **Apresentação**: `src/screens/`, `src/components/`. `GameScreen.tsx` já tem ~3000 linhas — não deixe crescer com lógica que pertence ao domínio.
 
 Duas trilhas de conteúdo, não confunda:
-- **Campanha** — 203 fases em `src/data/levels.ts` (mundos 1–8 × 25 + bônus 21 × 3). Tabuleiro varia a cada tentativa.
+- **Campanha** — 103 fases em `src/data/levels.ts` (mundos 1–10 × 10 + bônus 21 × 3). Tabuleiro varia a cada tentativa.
 - **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o *retry* re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
 
 ## Verificação (sempre antes de reportar terminado)
@@ -102,8 +115,8 @@ npm run typecheck
 npm test   # node --test tests — passar o diretório, não um glob: glob citado não expande no cmd/PowerShell, e sem aspas também não expande fora do bash
 ```
 
-`tests/levelComposition.test.cjs` trava um hash sha256 do JSON das 203 fases
-canônicas (`as 203 fases canonicas continuam byte-identicas`). Qualquer edição
+`tests/levelComposition.test.cjs` trava um hash sha256 do JSON das 103 fases
+canônicas (`as 103 fases canonicas continuam byte-identicas`). Qualquer edição
 de conteúdo em `src/data/levels.ts` quebra esse hash **de propósito** — é uma
 trava de integridade, não um bug. Depois de confirmar que a mudança é
 intencional, recalcule `sha256(JSON.stringify(LEVELS))` e atualize o literal

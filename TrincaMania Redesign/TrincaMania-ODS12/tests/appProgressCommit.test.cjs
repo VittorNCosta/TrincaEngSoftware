@@ -83,6 +83,9 @@ stub('react-native-safe-area-context', {
 
 const projectModule = (relativePath) => path.join(ROOT, relativePath);
 
+stub(projectModule('src/components/CampaignResizeNoticeModal'), {
+  CampaignResizeNoticeModal: 'CampaignResizeNoticeModal',
+});
 stub(projectModule('src/components/MysteryTutorialModal'), {
   MysteryTutorialModal: 'MysteryTutorialModal',
 });

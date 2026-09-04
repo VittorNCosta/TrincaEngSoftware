@@ -179,11 +179,11 @@ em C-02, quando a curva for redesenhada.
 | C-22 | Atualizar `tests/chapters.test.cjs:434-436` | [CC] | P0 | "as 203 fases canônicas continuam intactas" |
 | C-23 | Atualizar `tests/simulateFullPlaythrough.cjs:44,210` | [CC] | P0 | Simulação de playthrough completo — a que prova que toda fase é vencível |
 | C-24 | Atualizar `tests/boardLayout.test.cjs` e `campaignMapLayout.test.cjs` | [CC] | P0 | Podem depender de contagem/âncoras do Mundo 1 |
-| C-25 | Escrever migração de save 203→100 | [CC] | P0 | **Crítico.** Saves existentes têm ids `w1-011`…`w1-025`, `w2-*`…`w8-*` que deixam de existir. `normalizeProgress` descarta id desconhecido *em silêncio* (invariante #3) — jogador perderia progresso sem aviso. Decidir: mapear proporcionalmente, ou versionar o save e resetar com aviso. |
-| C-26 | Teste da migração de save | [CC] | P0 | Save antigo → save novo, sem perda silenciosa |
+| C-25 | ✅ Migração de save 203→103 | [CC] | P0 | **Decisão tomada**: sem remapeamento proporcional. Os ids `wN-001`…`wN-010` são idênticos entre o esquema antigo (8 mundos × 25) e o novo (10 mundos × 10) — `normalizeProgress` já descarta em silêncio (invariante #3) só as fases que de fato não existem mais (posição 11–25 de cada mundo antigo), sem tocar moedas/chaves/itens. Adicionado `detectDroppedCampaignProgress`/`loadStoredProgressMigrationInfo` (`src/storage/progressStorage.ts`) para a UI saber quando avisar, e `CampaignResizeNoticeModal` (aviso único, chave `@trinca-mania/campaign-resize-notice-seen-v1`) ligado em `App.tsx`. |
+| C-26 | ✅ Teste da migração de save | [CC] | P0 | `tests/progressMigration.test.cjs` — save antigo simulado (8 mundos × 25) contra o esquema novo: conta exatamente as fases descartadas, confirma que bônus/capítulo nunca entram na conta, e que moedas/chaves/itens/fases 1–10 sobrevivem intactos. |
 | C-27 | Teste travando cobertura de fundo e ambiente por mundo | [CC] | P1 | Impede que um mundo novo caia em silêncio/floresta-fantasma (mesmo problema já registrado nos capítulos) |
 | C-28 | Atualizar texto do Modo Dev | [CC] | P2 | `src/components/SettingsModal.tsx:120` cita "203 fases" |
-| C-29 | Atualizar `CLAUDE.md` (invariante #4) | [CC] | P0 | O invariante das 203 congeladas deixa de valer — reescrever para 100 |
+| C-29 | ✅ Atualizar `CLAUDE.md` (invariante #4) | [CC] | P0 | Invariante #4, trilha "Campanha" e a nota de `tests/levelComposition.test.cjs` reescritos para 103; novo bloco de contexto histórico documentando o resize de 2026-09-03. |
 | C-30 | Decidir e implementar destino dos Capítulos | [VOCÊ] + [CC] | P1 | Opções: (a) esconder do menu, (b) manter como "modo infinito" pós-jogo, (c) remover o código. Hoje `ChaptersScreen` é acessível por `onOpenChapters`. |
 
 ---
@@ -625,7 +625,7 @@ globais, todos dependentes de A-04 (a imagem-piloto validada in-game).
 
 | Risco | Impacto | Mitigação |
 |---|---|---|
-| Perda silenciosa de progresso na migração 203→100 | Alto | C-25 + C-26 antes de qualquer build público. `normalizeProgress` descarta id desconhecido sem avisar. |
+| ✅ Perda silenciosa de progresso na migração 203→103 | Alto | Resolvido em C-25 + C-26: `detectDroppedCampaignProgress` + `CampaignResizeNoticeModal` avisam o jogador quando `normalizeProgress` descarta fase que não existe mais; testado em `tests/progressMigration.test.cjs`. |
 | As 20 imagens saírem inconsistentes entre si | Alto | Bloco de estilo compartilhado + portão A-04 antes de gerar em lote |
 | Hash congelado ser "consertado" por engano | Médio | C-19 diz explicitamente para recalcular, não deletar a asserção |
 | Colisão de nome Mundo 9/10 ↔ Capítulo 9/10 | Médio | C-01 resolve antes de escrever conteúdo |

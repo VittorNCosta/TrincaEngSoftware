@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import { CampaignResizeNoticeModal } from './src/components/CampaignResizeNoticeModal';
 import { MysteryTutorialModal } from './src/components/MysteryTutorialModal';
 import { NoLivesModal } from './src/components/NoLivesModal';
 import { SettingsModal } from './src/components/SettingsModal';
@@ -24,16 +25,19 @@ import {
   consumePowerUpItem,
   createChestProgressSummary,
   createInitialProgress,
+  getCampaignResizeNoticeSeen,
   grantChestCoinReward,
   getMysteryTutorialSeen,
   getPracticalTutorialSeen,
   getTutorialSeen,
   loadProgress,
+  loadStoredProgressMigrationInfo,
   markBonusWorldAchievementShown,
   normalizeProgress,
   openWorldChest,
   purchasePowerUpTransaction,
   restorePurchasedPowerUpItem,
+  saveCampaignResizeNoticeSeen,
   saveMysteryTutorialSeen,
   savePracticalTutorialSeen,
   saveProgress,
@@ -130,6 +134,7 @@ export default function App() {
   const [isTutorialVisible, setIsTutorialVisible] = useState(false);
   const [isMysteryTutorialSeen, setIsMysteryTutorialSeen] = useState(false);
   const [isPracticalTutorialSeen, setIsPracticalTutorialSeen] = useState(false);
+  const [isCampaignResizeNoticeVisible, setIsCampaignResizeNoticeVisible] = useState(false);
   const [magicTripleRescueState, setMagicTripleRescueState] =
     useState<MagicTripleRescueState>(createInitialMagicTripleRescueState());
   const [settings, setSettings] = useState<AppSettings>(createDefaultSettings());
@@ -179,6 +184,8 @@ export default function App() {
       getLivesState(),
       getTrayBoostState(),
       getSettings(),
+      loadStoredProgressMigrationInfo(),
+      getCampaignResizeNoticeSeen(),
     ])
       .then(
         ([
@@ -191,6 +198,8 @@ export default function App() {
           storedLives,
           storedTrayBoost,
           storedSettings,
+          progressMigrationInfo,
+          campaignResizeNoticeSeen,
         ]) => {
           if (isMounted) {
             setProgress(storedProgress);
@@ -203,6 +212,9 @@ export default function App() {
             setIsPracticalTutorialSeen(practicalTutorialSeen);
             setIsMysteryTutorialSeen(mysteryTutorialSeen);
             setMagicTripleRescueState(storedMagicTripleRescueState);
+            setIsCampaignResizeNoticeVisible(
+              progressMigrationInfo.droppedLevelCount > 0 && !campaignResizeNoticeSeen,
+            );
           }
         },
       )
@@ -595,6 +607,11 @@ export default function App() {
   const handleFinishMysteryTutorial = () => {
     setIsMysteryTutorialSeen(true);
     saveMysteryTutorialSeen(true).catch(() => undefined);
+  };
+
+  const handleCloseCampaignResizeNotice = () => {
+    setIsCampaignResizeNoticeVisible(false);
+    saveCampaignResizeNoticeSeen(true).catch(() => undefined);
   };
 
   const handleFinishPracticalTutorial = () => {
@@ -1144,6 +1161,10 @@ export default function App() {
       <MysteryTutorialModal
         visible={isMysteryTutorialVisible}
         onClose={handleFinishMysteryTutorial}
+      />
+      <CampaignResizeNoticeModal
+        visible={isCampaignResizeNoticeVisible}
+        onClose={handleCloseCampaignResizeNotice}
       />
     </SafeAreaProvider>
   );

@@ -23,6 +23,7 @@ const STORAGE_KEY = '@trinca-mania/progress-v2';
 const TUTORIAL_STORAGE_KEY = '@trinca-mania/tutorial-seen-v1';
 export const PRACTICAL_TUTORIAL_STORAGE_KEY = '@trinca-mania/practical-tutorial-seen-v1';
 export const MYSTERY_TUTORIAL_STORAGE_KEY = '@trinca-mania/mystery-tutorial-seen-v1';
+const CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY = '@trinca-mania/campaign-resize-notice-seen-v1';
 export const CHEST_PHASES_REQUIRED = 5;
 export const CHEST_COIN_REWARD = 50;
 export const KEY_COST = 100;
@@ -668,6 +669,63 @@ export const loadProgress = async (): Promise<ProgressState> => {
 
 export const saveProgress = async (progress: ProgressState) => {
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeProgress(progress)));
+};
+
+export type ProgressMigrationInfo = {
+  droppedLevelCount: number;
+};
+
+const CAMPAIGN_LEVEL_ID_PATTERN = /^w\d+-\d{3}$/;
+
+/**
+ * `normalizeProgress` descarta id de fase desconhecido em silêncio
+ * (invariante #3 do CLAUDE.md) — necessário para não quebrar o boot com save
+ * de formato antigo, mas isso por si só nunca avisa o jogador quando uma
+ * reestruturação de campanha (como 203→103 fases) apaga progresso real.
+ *
+ * Função pura e reutilizável para qualquer reestruturação futura: compara os
+ * ids de fase (`wN-NNN`, nunca bônus nem capítulo) do save bruto contra
+ * `LEVEL_ID_SET` atual e conta quantos não existem mais, para a UI decidir se
+ * mostra um aviso — sem inventar dado nem bloquear o carregamento.
+ */
+export const detectDroppedCampaignProgress = (
+  raw: Partial<ProgressState> | null | undefined,
+): ProgressMigrationInfo => {
+  const rawCompletedLevelIds = Array.isArray(raw?.completedLevelIds) ? raw.completedLevelIds : [];
+  const rawCampaignLevelIds = rawCompletedLevelIds.filter(
+    (id): id is string => typeof id === 'string' && CAMPAIGN_LEVEL_ID_PATTERN.test(id),
+  );
+  const stillKnownCount = rawCampaignLevelIds.filter((id) => LEVEL_ID_SET.has(id)).length;
+
+  return { droppedLevelCount: rawCampaignLevelIds.length - stillKnownCount };
+};
+
+/**
+ * Lê o save bruto (sem normalizar) só para detectar progresso de campanha
+ * apagado por uma reestruturação — não substitui `loadProgress`, roda em
+ * paralelo a ele.
+ */
+export const loadStoredProgressMigrationInfo = async (): Promise<ProgressMigrationInfo> => {
+  const rawProgress = await AsyncStorage.getItem(STORAGE_KEY);
+
+  if (!rawProgress) {
+    return { droppedLevelCount: 0 };
+  }
+
+  try {
+    return detectDroppedCampaignProgress(JSON.parse(rawProgress) as Partial<ProgressState>);
+  } catch {
+    return { droppedLevelCount: 0 };
+  }
+};
+
+export const getCampaignResizeNoticeSeen = async () => {
+  const rawValue = await AsyncStorage.getItem(CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY);
+  return rawValue === 'true';
+};
+
+export const saveCampaignResizeNoticeSeen = async (seen: boolean) => {
+  await AsyncStorage.setItem(CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY, seen ? 'true' : 'false');
 };
 
 export const getTutorialSeen = async () => {
