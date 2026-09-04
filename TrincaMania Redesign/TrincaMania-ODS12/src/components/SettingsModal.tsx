@@ -117,7 +117,7 @@ export function SettingsModal({
   const handleUnlockAllForDevMode = () =>
     confirmAction(
       'Liberar todas as fases?',
-      'Modo dev: desbloqueia as 203 fases da campanha (incluindo as bônus) e os 1000 mapas de capítulo para teste. Não afeta moedas, vidas nem estrelas já salvas.',
+      'Modo dev: desbloqueia as 103 fases da campanha (incluindo as bônus) e os 1000 mapas de capítulo para teste. Não afeta moedas, vidas nem estrelas já salvas.',
       'Liberar tudo',
       onUnlockAllForDevMode,
       onClose,
