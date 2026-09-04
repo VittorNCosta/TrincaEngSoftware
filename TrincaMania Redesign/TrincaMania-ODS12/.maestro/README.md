@@ -46,3 +46,17 @@ Os fluxos usam `testID` onde o texto não identifica (`map-level-w1-001`,
 e legível (`Som: Ligado`). Rótulo de acessibilidade também serve de seletor no
 Android — `Abrir configurações` é o `accessibilityLabel` da engrenagem do mapa
 —, o que faz um fluxo quebrar quando alguém remove um rótulo, e isso é bom.
+
+## Os dois tutoriais no caminho
+
+`clearState: true` deixa o save em branco, e save em branco tem dois tutoriais
+que **cobrem** o que o fluxo quer tocar: o guia da campanha abre por cima do
+mapa (`setIsTutorialVisible(!tutorialSeen)`, em `App.tsx`) e a fase `w1-001`
+abre o tutorial prático por cima do tabuleiro (`GameScreen.tsx`). Os dois viram
+um `tapOn ... optional: true` — `tutorial-pular` e `tutorial-pratico-avancar` —
+porque só aparecem uma vez na vida do save, e um fluxo que rodasse num aparelho
+já usado não pode falhar por eles não estarem lá.
+
+Nenhuma das outras duas camadas enxerga isso: o guia e o pop-up são estado de
+`AsyncStorage` mais navegação, não regra de jogo nem fiação de tabuleiro. Foi o
+emulador que os encontrou, e é o tipo de coisa que ele existe para encontrar.
