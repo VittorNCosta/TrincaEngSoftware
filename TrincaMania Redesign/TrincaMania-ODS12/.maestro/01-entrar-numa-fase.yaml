@@ -26,14 +26,18 @@ name: Abrir o app do zero e entrar na primeira fase
     id: 'tutorial-pular'
     optional: true
 
-- extendedWaitUntil:
-    visible:
+# O mapa é mais alto que a tela e a fase 1 fica no pé dele; a `ScrollView` usa
+# `removeClippedSubviews`, então nó fora da viewport nem existe na hierarquia
+# nativa — procurar por ele sem rolar não acha nada. A tela rola sozinha até a
+# fase atual ao abrir, mas depender disso deixaria o fluxo refém de uma corrida
+# de layout. `scrollUntilVisible` funciona nos dois casos: se já rolou, acha de
+# primeira.
+- scrollUntilVisible:
+    element:
       id: 'map-level-w1-001'
-    timeout: 20000
+    direction: DOWN
+    timeout: 30000
 
-# Save em branco abre o mapa já centrado na primeira fase. Se um dia isso
-# deixar de valer, o fluxo falha aqui — e é uma falha legítima: o jogador novo
-# ficaria olhando um mapa sem saber por onde começar.
 - tapOn:
     id: 'map-level-w1-001'
 

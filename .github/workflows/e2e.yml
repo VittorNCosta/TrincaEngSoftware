@@ -122,19 +122,24 @@ jobs:
           # raiz do checkout, que e onde o upload-artifact procura.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
-            maestro test --format junit --output ../../maestro-resultado.xml --debug-output ../../maestro-diagnostico .maestro
+            maestro test --format junit --output ../../maestro-resultado.xml .maestro
 
       # Falhou: o Maestro grava captura de tela e hierarquia de views de cada
       # passo. Sem isso, "nao achou o botao" num runner sem tela e indepuravel.
       #
-      # `--debug-output` sozinho nao bastou — criou o diretorio e deixou vazio,
-      # porque as capturas continuam saindo em `~/.maestro/tests`, que esta
-      # fora do checkout e o upload-artifact nao alcanca.
+      # Sem `--debug-output`: passar esse flag fez o Maestro parar de escrever
+      # em `~/.maestro/tests` sem escrever no lugar pedido, e o diagnostico
+      # saiu vazio duas vezes. No caminho padrao as capturas existem — so
+      # precisam entrar no checkout, que e onde o upload-artifact procura.
+      #
+      # O `ls` nao e enfeite: se o upload falhar de novo, a arvore fica no log
+      # do proprio job e a proxima investigacao nao custa outra execucao.
       - name: Recolher o diagnostico
         if: failure()
         run: |
           mkdir -p ../../maestro-diagnostico
-          cp -r "${HOME}/.maestro/tests" ../../maestro-diagnostico/ || true
+          cp -r "${HOME}/.maestro/tests/." ../../maestro-diagnostico/ || true
+          ls -R ../../maestro-diagnostico || true
 
       - name: Guardar o diagnostico
         if: failure()
