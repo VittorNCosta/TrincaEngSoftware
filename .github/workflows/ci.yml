@@ -10,10 +10,20 @@
 name: CI
 
 on:
+  # Toda branch, nao so main/develop. O motivo e concreto: o trabalho nasce em
+  # `feat/*` e ficava semanas sem verificacao nenhuma alem do `pre-push` local,
+  # que roda so `typecheck`. Quando o merge finalmente acontecia, o erro
+  # aparecia junto com dezenas de commits, longe de quem o escreveu.
+  #
+  # Rodar tambem no `pull_request` duplica o run enquanto o PR esta aberto. Fica
+  # assim de proposito: o repositorio e publico, entao minuto de Actions e
+  # gratuito, e o evento de PR e o unico que cobre PR vindo de fork e o unico
+  # que serve de required check em branch protection (G-10).
   push:
-    branches: [main, develop]
+    branches: ["**"]
   pull_request:
     branches: [main, develop]
+  workflow_dispatch:
 
 # Menor privilegio. Sem isto o workflow herda o escopo padrao do repositorio,
 # que inclui escrita — nenhum job aqui precisa de mais que leitura.
@@ -24,7 +34,11 @@ permissions:
 # interessa a ninguem. Em push para main/develop nao cancela, porque ali cada
 # commit e um estado que vale ter verificado por si.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # A chave inclui o numero do PR porque o mesmo commit agora chega por dois
+  # eventos: `push` na branch e `pull_request`. Sem isso os dois cairiam no
+  # mesmo grupo e um cancelaria o outro — justamente o run que serve de
+  # required check.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 defaults:
@@ -39,7 +53,7 @@ jobs:
     outputs:
       codigo: ${{ steps.filtro.outputs.codigo }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Precisa do historico para achar a base da comparacao; o checkout
           # raso padrao traz um commit so. `blob:none` busca os commits sem os
@@ -84,8 +98,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 20
           cache: npm
@@ -101,8 +115,8 @@ jobs:
     if: needs.mudancas.outputs.codigo == 'true'
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 20
           cache: npm
@@ -117,8 +131,8 @@ jobs:
     if: needs.mudancas.outputs.codigo == 'true'
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 20
           cache: npm
@@ -143,8 +157,8 @@ jobs:
       matrix:
         node: [20, 22]
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ matrix.node }}
           cache: npm
@@ -159,8 +173,8 @@ jobs:
     if: needs.mudancas.outputs.codigo == 'true'
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           # Fixo de proposito, sem matrix: o V8 conta cobertura diferente entre
           # versoes (85,70% no 20 contra 79,57% no 24, mesmo codigo e mesmos
@@ -178,8 +192,8 @@ jobs:
     if: needs.mudancas.outputs.codigo == 'true'
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 20
           cache: npm
@@ -194,8 +208,8 @@ jobs:
     if: needs.mudancas.outputs.codigo == 'true'
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 20
           cache: npm
@@ -210,8 +224,8 @@ jobs:
     if: needs.mudancas.outputs.codigo == 'true'
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 20
           cache: npm
