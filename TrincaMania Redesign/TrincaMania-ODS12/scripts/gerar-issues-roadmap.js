@@ -1,105 +1,50 @@
 /**
- * Gera o script de criação das issues a partir do array `BLOCKS` de
+ * Gera o script de criação **inicial** das issues a partir do array `BLOCKS` de
  * `docs/roadmap/roadmap.html` — o mesmo arquivo publicado como Artifact.
  *
  * O roadmap vive em três lugares (doc markdown, Artifact, backlog do GitHub) e
- * os três precisam contar a mesma história. O HTML é a fonte de dados: quem
- * marca uma tarefa como feita ou acrescenta uma nova mexe nele e roda
+ * os três precisam contar a mesma história. O HTML é a fonte de dados.
  *
  *   node scripts/gerar-issues-roadmap.js
  *
  * Tarefa com título começando em ✅ vira issue já fechada, para o backlog
  * refletir o que aconteceu antes de ele existir.
+ *
+ * ## Isto é para o dia zero. Depois use o sincronizador.
+ *
+ * O `.sh` gerado aqui **cria** issue; ele não sabe o que já existe, então rodar
+ * duas vezes duplica as 199. Serviu para levantar o backlog de uma vez e
+ * continua servindo se ele precisar ser recriado do zero.
+ *
+ * Para o uso do dia a dia — marcar tarefa feita, acrescentar tarefa nova,
+ * corrigir um título — o que reconcilia por delta é:
+ *
+ *     node scripts/sincronizar-issues.js            # mostra o que mudaria
+ *     node scripts/sincronizar-issues.js --aplicar  # aplica
+ *
+ * O que decide título, corpo e labels de uma tarefa está em `scripts/lib/roadmap.js`,
+ * compartilhado pelos dois — se cada um montasse do seu jeito, o sincronizador
+ * acusaria divergência em toda issue já na primeira execução.
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
-const repoRoot = path.join(__dirname, '..');
+const {
+  LABELS,
+  MILESTONE,
+  lerBlocos,
+  lerTarefas,
+  repoRoot,
+  toMarkdown,
+} = require('./lib/roadmap');
+
 const input =
   process.argv[2] ?? path.join(repoRoot, 'docs/roadmap/roadmap.html');
 const output =
   process.argv[3] ?? path.join(repoRoot, 'scripts/criar-issues-roadmap.sh');
 
-const html = fs.readFileSync(input, 'utf8');
-
-// Recorta o literal `const BLOCKS = [ ... ];` e avalia como JS.
-const start = html.indexOf('const BLOCKS = [');
-const end = html.indexOf('\n];', start);
-if (start < 0 || end < 0)
-  throw new Error('BLOCKS não encontrado em roadmap.html');
-const BLOCKS = eval(html.slice(start + 'const BLOCKS = '.length, end + 2));
-
-const LABELS = [
-  ['fundacao', '5E6862'],
-  ['conteudo', '00803B'],
-  ['arte', 'C8121B'],
-  ['som', 'B98A00'],
-  ['limpeza-ods12', '7B3F00'],
-  ['git', '0055A4'],
-  ['ci-cd', '2F6478'],
-  ['devsecops', 'CC5F00'],
-  ['qualidade', '574E6B'],
-  ['release', '0E6F6B'],
-  ['P0', 'D73A4A'],
-  ['P1', 'E5A000'],
-  ['P2', 'BFC7C2'],
-  ['claude-code', '0E8A6B'],
-  ['humano', '8A4FBE'],
-];
-
-const STREAM_LABEL = {
-  f0: 'fundacao',
-  c: 'conteudo',
-  a: 'arte',
-  s: 'som',
-  l: 'limpeza-ods12',
-  g: 'git',
-  ci: 'ci-cd',
-  sec: 'devsecops',
-  q: 'qualidade',
-  r: 'release',
-};
-
-const MILESTONE = {
-  f0: 'Fundação',
-  c: 'Conteúdo 10×10',
-  a: 'Arte',
-  s: 'Som',
-  l: 'Limpeza ODS12',
-  g: 'Git e versionamento',
-  ci: 'CI/CD',
-  sec: 'DevSecOps',
-  q: 'Qualidade',
-  r: 'Release',
-};
-
-const WHO_LABEL = {
-  cc: 'claude-code',
-  voce: 'humano',
-  both: 'claude-code,humano',
-  'cc-voce': 'claude-code',
-  'voce-cc': 'humano',
-};
-
-const WHO_TEXT = {
-  cc: 'Claude Code',
-  voce: 'Você',
-  both: 'Claude Code + Você',
-  'cc-voce': 'Claude Code → você',
-  'voce-cc': 'Você → Claude Code',
-};
-
-/** HTML dos detalhes → markdown de issue. */
-const toMarkdown = (value) =>
-  String(value ?? '')
-    .replace(/<code>(.*?)<\/code>/g, '`$1`')
-    .replace(/<b>(.*?)<\/b>/g, '**$1**')
-    .replace(/<s>(.*?)<\/s>/g, '~~$1~~')
-    .replace(/<br\s*\/?>/g, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&');
+const blocos = lerBlocos(input);
+const tarefas = lerTarefas(input);
 
 /** Aspas simples dentro de string bash com aspas simples. */
 const shq = (value) => `'${String(value).replace(/'/g, `'\\''`)}'`;
@@ -110,6 +55,7 @@ const lines = [
   '# docs/roadmap/roadmap.html — TrincaMania ODS 12',
   '# Requer: gh instalado e autenticado (gh auth login)',
   '# Idempotência: rodar duas vezes cria issues duplicadas. Rode uma vez só.',
+  '# Para reconciliar um backlog que já existe, use scripts/sincronizar-issues.js.',
   'set -euo pipefail',
   'REPO="VittorNCosta/TrincaEngSoftware"',
   '',
@@ -128,7 +74,7 @@ lines.push(
   'ms() { gh api -X POST "repos/$REPO/milestones" -f title="$1" -f description="$2" >/dev/null 2>&1 || true; }',
 );
 
-BLOCKS.forEach((block) => {
+blocos.forEach((block) => {
   lines.push(
     `ms ${shq(MILESTONE[block.k])} ${shq(toMarkdown(block.note).slice(0, 240))}`,
   );
@@ -150,50 +96,33 @@ lines.push(
   'echo "== issues =="',
 );
 
-let total = 0;
+let blocoAtual = null;
 let closed = 0;
 
-BLOCKS.forEach((block) => {
-  lines.push('', `# --- ${MILESTONE[block.k]} ---`);
+tarefas.forEach((tarefa) => {
+  if (tarefa.bloco !== blocoAtual) {
+    blocoAtual = tarefa.bloco;
+    lines.push('', `# --- ${tarefa.milestone} ---`);
+  }
 
-  block.t.forEach(([id, rawTitle, who, prio, detail]) => {
-    total += 1;
-    const isDone = rawTitle.startsWith('✅');
-    if (isDone) closed += 1;
-    const title = toMarkdown(rawTitle.replace(/^✅\s*/, ''));
-    const body = [
-      toMarkdown(detail) || '_Sem detalhe adicional no roadmap._',
-      '',
-      `**Responsável:** ${WHO_TEXT[who]}`,
-      `**Prioridade:** P${prio}`,
-      `**Fluxo:** ${MILESTONE[block.k]}`,
-      '',
-      'Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.',
-    ].join('\n');
-    if (!WHO_LABEL[who] || !WHO_TEXT[who]) {
-      throw new Error(
-        `"${id}": valor de "quem" sem mapeamento em WHO_LABEL/WHO_TEXT: ${JSON.stringify(who)}`,
-      );
-    }
-    const labels = [STREAM_LABEL[block.k], `P${prio}`, WHO_LABEL[who]].join(
-      ',',
-    );
+  if (tarefa.feita) {
+    closed += 1;
+  }
 
-    lines.push(
-      `mk ${isDone ? 'done' : 'open'} --title ${shq(`${id} · ${title}`)} \\`,
-      `  --body ${shq(body)} \\`,
-      `  --label ${shq(labels)} --milestone ${shq(MILESTONE[block.k])}`,
-    );
-  });
+  lines.push(
+    `mk ${tarefa.feita ? 'done' : 'open'} --title ${shq(tarefa.tituloIssue)} \\`,
+    `  --body ${shq(tarefa.corpo)} \\`,
+    `  --label ${shq(tarefa.labels)} --milestone ${shq(tarefa.milestone)}`,
+  );
 });
 
 lines.push(
   '',
-  `echo "== pronto: ${total} issues (${closed} já criadas fechadas) =="`,
+  `echo "== pronto: ${tarefas.length} issues (${closed} já criadas fechadas) =="`,
   '',
 );
 
 fs.writeFileSync(output, lines.join('\n'), { mode: 0o755 });
 console.log(
-  `${total} issues, ${closed} já fechadas → ${path.relative(repoRoot, output)}`,
+  `${tarefas.length} issues, ${closed} já fechadas → ${path.relative(repoRoot, output)}`,
 );

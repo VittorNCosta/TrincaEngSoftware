@@ -3,6 +3,7 @@
 # docs/roadmap/roadmap.html — TrincaMania ODS 12
 # Requer: gh instalado e autenticado (gh auth login)
 # Idempotência: rodar duas vezes cria issues duplicadas. Rode uma vez só.
+# Para reconciliar um backlog que já existe, use scripts/sincronizar-issues.js.
 set -euo pipefail
 REPO="VittorNCosta/TrincaEngSoftware"
 
