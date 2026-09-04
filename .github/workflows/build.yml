@@ -1,0 +1,104 @@
+# Builds no EAS. Separado do ci.yml de proposito: o CI verifica todo push e
+# tem de ser rapido e gratuito; isto gasta minuto de build de terceiro e roda
+# sob demanda.
+#
+# Nada aqui funciona sem o secret EXPO_TOKEN (CI-14, expo.dev -> Access
+# Tokens). Enquanto ele nao existir, o job `checagem` devolve um aviso e os
+# builds sao pulados — o workflow fica verde e inerte em vez de vermelho.
+name: Build
+
+on:
+  # Preview so em PR **rotulado** com `build:preview`. O roadmap pedia "APK
+  # por PR"; buildar todo push de todo PR queimaria a cota do EAS em troca de
+  # APKs que ninguem instala. Com o rotulo, o build sai quando alguem de fato
+  # quer testar no aparelho — e `synchronize` faz o PR rotulado rebuildar a
+  # cada push, entao o APK acompanha o PR ate o rotulo sair.
+  pull_request:
+    types: [labeled, synchronize]
+  # Producao na tag que o release-please cria.
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      perfil:
+        description: Perfil do eas.json
+        required: true
+        default: preview
+        type: choice
+        options: [development, preview, production]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+
+jobs:
+  checagem:
+    name: Tem token?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      tem_token: ${{ steps.token.outputs.tem_token }}
+    steps:
+      # `secrets` nao existe no `if:` de job — a checagem tem de ser um passo
+      # que exporta output. O valor nunca e impresso, so o seu comprimento.
+      - id: token
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -n "$EXPO_TOKEN" ]; then
+            echo "tem_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "tem_token=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=EXPO_TOKEN ausente::Build pulado. Crie o secret em Settings > Secrets and variables > Actions (roadmap CI-14)."
+          fi
+
+  preview:
+    name: APK de preview
+    needs: checagem
+    if: >-
+      needs.checagem.outputs.tem_token == 'true'
+      && github.event_name == 'pull_request'
+      && github.event.pull_request.draft == false
+      && contains(github.event.pull_request.labels.*.name, 'build:preview')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+      - name: Disparar o build
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: node ../../.github/scripts/disparar-build.js preview
+
+  producao:
+    name: Build de tag ou manual
+    needs: checagem
+    if: >-
+      needs.checagem.outputs.tem_token == 'true'
+      && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+      - name: Disparar o build
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: node ../../.github/scripts/disparar-build.js ${{ inputs.perfil || 'production' }}

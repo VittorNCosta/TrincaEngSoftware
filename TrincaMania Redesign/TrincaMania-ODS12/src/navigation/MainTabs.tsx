@@ -15,12 +15,21 @@ import { PowersScreen } from '../screens/PowersScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { RewardsScreen } from '../screens/RewardsScreen';
 import { LivesState } from '../storage/livesStorage';
-import { TrayBoostPurchaseResult, TrayBoostState } from '../storage/trayBoostStorage';
-import { ProgressState, RestCheckpointRewardResult, WorldId } from '../types/game';
+import {
+  TrayBoostPurchaseResult,
+  TrayBoostState,
+} from '../storage/trayBoostStorage';
+import {
+  ProgressState,
+  RestCheckpointRewardResult,
+  WorldId,
+} from '../types/game';
 import { WindowTarget } from '../types/ui';
 
 const MAP_TAB_INDEX = 0;
-const PROFILE_TAB_INDEX = MAIN_TAB_ITEMS.findIndex((item) => item.key === 'profile');
+const PROFILE_TAB_INDEX = MAIN_TAB_ITEMS.findIndex(
+  (item) => item.key === 'profile',
+);
 
 type MainTabsProps = {
   activeTrayCapacity: number;
@@ -33,7 +42,9 @@ type MainTabsProps = {
   timeUntilNextLifeMs: number;
   onCoinCounterLayout?: (target: WindowTarget) => void;
   onOpenChapters: () => void;
-  onOpenRestCheckpoint: (afterLevelId: string) => Promise<RestCheckpointRewardResult>;
+  onOpenRestCheckpoint: (
+    afterLevelId: string,
+  ) => Promise<RestCheckpointRewardResult>;
   onOpenSettings: () => void;
   onOpenShop: (worldId?: WorldId) => void;
   onOpenWorldChest: (worldChestId?: string) => void;
@@ -74,7 +85,10 @@ export function MainTabs({
   const [activeIndex, setActiveIndex] = useState(MAP_TAB_INDEX);
   // A largura da página precisa bater com a do pager, senão o pagingEnabled para
   // entre duas abas. O layout real vale mais do que a janela (insets laterais).
-  const [pageSize, setPageSize] = useState({ height: window.height, width: window.width });
+  const [pageSize, setPageSize] = useState({
+    height: window.height,
+    width: window.width,
+  });
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { height, width } = event.nativeEvent.layout;
@@ -84,7 +98,9 @@ export function MainTabs({
     }
 
     setPageSize((current) =>
-      current.height === height && current.width === width ? current : { height, width },
+      current.height === height && current.width === width
+        ? current
+        : { height, width },
     );
   }, []);
 
@@ -100,7 +116,10 @@ export function MainTabs({
   // Se a largura mudar (rotação, split screen), o pager precisa reencontrar a
   // aba ativa em vez de ficar parado no offset antigo.
   useEffect(() => {
-    pagerRef.current?.scrollTo({ animated: false, x: activeIndexRef.current * pageSize.width });
+    pagerRef.current?.scrollTo({
+      animated: false,
+      x: activeIndexRef.current * pageSize.width,
+    });
   }, [pageSize.width]);
 
   const handleMomentumScrollEnd = useCallback(
@@ -109,7 +128,9 @@ export function MainTabs({
         return;
       }
 
-      const nextIndex = Math.round(event.nativeEvent.contentOffset.x / pageSize.width);
+      const nextIndex = Math.round(
+        event.nativeEvent.contentOffset.x / pageSize.width,
+      );
 
       if (nextIndex === activeIndexRef.current) {
         return;

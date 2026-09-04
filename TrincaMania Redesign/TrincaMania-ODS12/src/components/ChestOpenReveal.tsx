@@ -145,7 +145,9 @@ export function ChestOpenReveal({
     <View style={styles.panel}>
       <View style={styles.headerRow}>
         <Text style={styles.kicker}>Bau Comum</Text>
-        {progressText ? <Text style={styles.progressText}>{progressText}</Text> : null}
+        {progressText ? (
+          <Text style={styles.progressText}>{progressText}</Text>
+        ) : null}
       </View>
 
       <View style={styles.stage}>

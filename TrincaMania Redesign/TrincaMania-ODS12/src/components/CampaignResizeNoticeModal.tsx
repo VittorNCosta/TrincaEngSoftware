@@ -9,10 +9,21 @@ type CampaignResizeNoticeModalProps = {
   onClose: () => void;
 };
 
-export function CampaignResizeNoticeModal({ visible, onClose }: CampaignResizeNoticeModalProps) {
+export function CampaignResizeNoticeModal({
+  visible,
+  onClose,
+}: CampaignResizeNoticeModalProps) {
   return (
-    <Modal animationType="fade" statusBarTranslucent transparent visible={visible}>
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.overlay}>
+    <Modal
+      animationType="fade"
+      statusBarTranslucent
+      transparent
+      visible={visible}
+    >
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.overlay}
+      >
         <View style={styles.card}>
           <View style={styles.badge}>
             <Text style={styles.badgeIcon}>♻️</Text>

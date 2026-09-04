@@ -21,10 +21,16 @@ export const getLevelsForWorld = (worldId: WorldId) => {
   return levels;
 };
 
-export const hasThreeStarsInWorld = (worldId: WorldId, progress: ProgressState) => {
+export const hasThreeStarsInWorld = (
+  worldId: WorldId,
+  progress: ProgressState,
+) => {
   const levels = getLevelsForWorld(worldId);
 
-  return levels.length > 0 && levels.every((level) => progress.levelStars[level.id] === 3);
+  return (
+    levels.length > 0 &&
+    levels.every((level) => progress.levelStars[level.id] === 3)
+  );
 };
 
 export const isBonusWorldUnlocked = (progress: ProgressState) =>
@@ -53,7 +59,9 @@ export const getUnlockedWorlds = (progress: ProgressState) =>
 
 export const getWorldProgress = (worldId: WorldId, progress: ProgressState) => {
   const levels = getLevelsForWorld(worldId);
-  const completedCount = levels.filter((level) => progress.completedLevelIds.includes(level.id)).length;
+  const completedCount = levels.filter((level) =>
+    progress.completedLevelIds.includes(level.id),
+  ).length;
   const totalCount = levels.length;
 
   return {
@@ -65,7 +73,9 @@ export const getWorldProgress = (worldId: WorldId, progress: ProgressState) => {
   };
 };
 
-export const getNextPlayableLevel = (progress: ProgressState): Level | undefined => {
+export const getNextPlayableLevel = (
+  progress: ProgressState,
+): Level | undefined => {
   const nextIncompleteLevel = LEVELS.find(
     (level) =>
       progress.unlockedLevelIds.includes(level.id) &&
@@ -76,7 +86,9 @@ export const getNextPlayableLevel = (progress: ProgressState): Level | undefined
     return nextIncompleteLevel;
   }
 
-  const unlockedLevels = LEVELS.filter((level) => progress.unlockedLevelIds.includes(level.id));
+  const unlockedLevels = LEVELS.filter((level) =>
+    progress.unlockedLevelIds.includes(level.id),
+  );
 
   return unlockedLevels[unlockedLevels.length - 1] ?? LEVELS[0];
 };
@@ -99,7 +111,9 @@ export const getCurrentLevelForWorld = (
     return nextLevel;
   }
 
-  const unlockedLevels = levels.filter((level) => progress.unlockedLevelIds.includes(level.id));
+  const unlockedLevels = levels.filter((level) =>
+    progress.unlockedLevelIds.includes(level.id),
+  );
 
   return unlockedLevels[unlockedLevels.length - 1] ?? levels[0];
 };

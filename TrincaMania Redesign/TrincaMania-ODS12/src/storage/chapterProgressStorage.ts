@@ -1,6 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { CHAPTERS, CHAPTER_LEVELS, getChapterLevelSummary } from '../data/chapters';
+import {
+  CHAPTERS,
+  CHAPTER_LEVELS,
+  getChapterLevelSummary,
+} from '../data/chapters';
 import { ChapterId } from '../types/game';
 
 /**
@@ -54,14 +58,20 @@ const CHAPTER_MAP_ORDER = new Map(
   CHAPTER_MAP_IDS.map((mapId, index) => [mapId, index] as const),
 );
 
-export const createInitialChapterProgress = (): ChapterProgressState => ({ mapStars: {} });
+export const createInitialChapterProgress = (): ChapterProgressState => ({
+  mapStars: {},
+});
 
 export const normalizeChapterProgress = (
   progress: Partial<ChapterProgressState> | undefined,
 ): ChapterProgressState => {
   const storedStars = progress?.mapStars;
 
-  if (!storedStars || typeof storedStars !== 'object' || Array.isArray(storedStars)) {
+  if (
+    !storedStars ||
+    typeof storedStars !== 'object' ||
+    Array.isArray(storedStars)
+  ) {
     return createInitialChapterProgress();
   }
 
@@ -84,8 +94,10 @@ export const normalizeChapterProgress = (
   };
 };
 
-export const getChapterMapStars = (progress: ChapterProgressState, mapId: string) =>
-  progress.mapStars[mapId] ?? 0;
+export const getChapterMapStars = (
+  progress: ChapterProgressState,
+  mapId: string,
+) => progress.mapStars[mapId] ?? 0;
 
 /**
  * Desbloqueio derivado, não persistido: o primeiro mapa está sempre aberto e
@@ -93,14 +105,19 @@ export const getChapterMapStars = (progress: ChapterProgressState, mapId: string
  * que já é capítulo 1 mapa 1 … capítulo 10 mapa 100. Concluir o mapa 100 de um
  * capítulo abre o mapa 1 do seguinte, que é como o capítulo inteiro destrava.
  */
-export const isChapterMapUnlocked = (mapId: string, progress: ChapterProgressState) => {
+export const isChapterMapUnlocked = (
+  mapId: string,
+  progress: ChapterProgressState,
+) => {
   const order = CHAPTER_MAP_ORDER.get(mapId);
 
   if (order === undefined) {
     return false;
   }
 
-  return order === 0 || progress.mapStars[CHAPTER_MAP_IDS[order - 1]] !== undefined;
+  return (
+    order === 0 || progress.mapStars[CHAPTER_MAP_IDS[order - 1]] !== undefined
+  );
 };
 
 export const getNextChapterMapId = (mapId: string) => {
@@ -115,7 +132,8 @@ export const getChapterProgressSummaries = (
   CHAPTERS.map((chapter) => ({
     chapterId: chapter.id,
     completedCount: chapter.levelIds.reduce(
-      (count, mapId) => (progress.mapStars[mapId] === undefined ? count : count + 1),
+      (count, mapId) =>
+        progress.mapStars[mapId] === undefined ? count : count + 1,
       0,
     ),
     totalCount: chapter.levelIds.length,
@@ -146,7 +164,9 @@ export const applyChapterMapCompletion = (
     savedStars,
     starsEarned: normalizedStars,
     unlockedMapTitle:
-      previousStars === 0 && nextMapId ? getChapterLevelSummary(nextMapId)?.title : undefined,
+      previousStars === 0 && nextMapId
+        ? getChapterLevelSummary(nextMapId)?.title
+        : undefined,
   };
 };
 
@@ -181,12 +201,17 @@ export const loadChapterProgress = async (): Promise<ChapterProgressState> => {
   }
 
   try {
-    return normalizeChapterProgress(JSON.parse(rawProgress) as Partial<ChapterProgressState>);
+    return normalizeChapterProgress(
+      JSON.parse(rawProgress) as Partial<ChapterProgressState>,
+    );
   } catch {
     return createInitialChapterProgress();
   }
 };
 
 export const saveChapterProgress = async (progress: ChapterProgressState) => {
-  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeChapterProgress(progress)));
+  await AsyncStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(normalizeChapterProgress(progress)),
+  );
 };

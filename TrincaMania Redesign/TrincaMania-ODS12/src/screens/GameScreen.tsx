@@ -33,7 +33,11 @@ import {
   type TripleConsumeEvent,
   type TripleConsumeTile,
 } from '../components/TripleConsumeEffect';
-import { buildChapterLevel, getChapter, getChapterLevelSummary } from '../data/chapters';
+import {
+  buildChapterLevel,
+  getChapter,
+  getChapterLevelSummary,
+} from '../data/chapters';
 import { POWER_UP_UI } from '../data/powerUps';
 import { getWorldById } from '../data/worlds';
 import { LivesState, formatLifeTimer } from '../storage/livesStorage';
@@ -97,7 +101,12 @@ import {
   undoLastMove,
   type VictoryResultSnapshot,
 } from '../utils/gameLogic';
-import { lightImpact, mediumImpact, successImpact, warningImpact } from '../utils/haptics';
+import {
+  lightImpact,
+  mediumImpact,
+  successImpact,
+  warningImpact,
+} from '../utils/haptics';
 import { generatePlayableLevel } from '../utils/levelGenerator';
 import {
   duckAmbient,
@@ -137,11 +146,16 @@ const TOAST_VISIBLE_MS = 1700;
 const BONUS_FEEDBACK_VISIBLE_MS = 1050;
 const TILE_INSERT_POP_MS = 110;
 
-const gameWorld1Bg = require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
-const gameWorld1SceneBg = require('../../assets/map/map_world1_scene_bg.png') as ImageSourcePropType;
-const gameWorld2Bg = require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
-const gameWorld3Bg = require('../../assets/map/map_world3_game_bg.png') as ImageSourcePropType;
-const gameBonusBg = require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType;
+const gameWorld1Bg =
+  require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
+const gameWorld1SceneBg =
+  require('../../assets/map/map_world1_scene_bg.png') as ImageSourcePropType;
+const gameWorld2Bg =
+  require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
+const gameWorld3Bg =
+  require('../../assets/map/map_world3_game_bg.png') as ImageSourcePropType;
+const gameBonusBg =
+  require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType;
 
 type LevelCompletionSummary = {
   bonusWorldAchievementUnlocked: boolean;
@@ -216,7 +230,10 @@ const PRACTICAL_TUTORIAL_POPUPS: Record<
 const isPracticalTutorialPopupStep = (
   step: PracticalTutorialStep,
 ): step is PracticalTutorialPopupStep =>
-  step === 'intro' || step === 'tray' || step === 'triple' || step === 'warning';
+  step === 'intro' ||
+  step === 'tray' ||
+  step === 'triple' ||
+  step === 'warning';
 
 const isPracticalTutorialTapStep = (step: PracticalTutorialStep) =>
   step === 'tap-first' || step === 'tap-second' || step === 'tap-third';
@@ -246,10 +263,13 @@ const getTutorialAvailableTiles = (board: Tile[], preferredKind?: TileKind) => {
 
 const findOpeningTutorialTile = (board: Tile[]) => {
   const availableTiles = getTutorialAvailableTiles(board);
-  const countsByKind = availableTiles.reduce<Map<TileKind, Tile[]>>((counts, tile) => {
-    counts.set(tile.kind, [...(counts.get(tile.kind) ?? []), tile]);
-    return counts;
-  }, new Map<TileKind, Tile[]>());
+  const countsByKind = availableTiles.reduce<Map<TileKind, Tile[]>>(
+    (counts, tile) => {
+      counts.set(tile.kind, [...(counts.get(tile.kind) ?? []), tile]);
+      return counts;
+    },
+    new Map<TileKind, Tile[]>(),
+  );
 
   return (
     Array.from(countsByKind.values()).find((tiles) => tiles.length >= 3)?.[0] ??
@@ -278,7 +298,10 @@ type GameScreenProps = {
   onBack: () => void;
   onBonusWorldAchievementSeen: (goToBonusWorld: boolean) => void;
   onCoinCounterLayout?: (target: WindowTarget) => void;
-  onLevelComplete: (levelId: string, starsEarned: number) => Promise<LevelCompletionSummary>;
+  onLevelComplete: (
+    levelId: string,
+    starsEarned: number,
+  ) => Promise<LevelCompletionSummary>;
   onLoseLife: () => Promise<LivesState>;
   onMagicTripleRescueSeen: () => Promise<void>;
   onMagicTripleRescueUsed: () => Promise<void>;
@@ -293,7 +316,10 @@ type GameScreenProps = {
   onPracticalTutorialSeen: () => void;
   onRestorePurchasedPowerUp: (powerType: PowerUpType) => Promise<boolean>;
   onRetryLevel: () => Promise<RetryLevelResult>;
-  onPurchasePowerUp: (powerType: PowerUpType, useImmediately: boolean) => Promise<boolean>;
+  onPurchasePowerUp: (
+    powerType: PowerUpType,
+    useImmediately: boolean,
+  ) => Promise<boolean>;
   onUseItem: (powerType: PowerUpType) => boolean;
 };
 
@@ -304,7 +330,10 @@ type GameScreenProps = {
 // reencontra o tabuleiro que largou pela metade. O "tentar novamente" precisa
 // passar um `random` próprio, senão devolve o layout idêntico enquanto a UI
 // anuncia "Nova variação pronta." — a campanha re-sorteia e ele não.
-const createBoardVariation = (levelId: string, options: GeneratedLevelOptions = {}) => {
+const createBoardVariation = (
+  levelId: string,
+  options: GeneratedLevelOptions = {},
+) => {
   const chapterLevel = buildChapterLevel(levelId, options);
 
   return revealAvailableMysteryTiles(
@@ -376,59 +405,100 @@ export function GameScreen({
   // `getWorldById` cai em WORLDS[0] para um mundo de capítulo (faixa 101–110),
   // então sem isto a placa da fase anunciaria "Bosque" dentro de um capítulo.
   const chapterSummary = getChapterLevelSummary(level.id);
-  const chapter = chapterSummary ? getChapter(chapterSummary.chapterId) : undefined;
+  const chapter = chapterSummary
+    ? getChapter(chapterSummary.chapterId)
+    : undefined;
   const levelDisplayLabel = getLevelDisplayLabel(level);
-  const [activeTrayCapacity, setActiveTrayCapacity] = useState(currentTrayCapacity);
-  const [roundBonusTraySlotActive, setRoundBonusTraySlotActive] =
-    useState(isBonusTraySlotActive);
-  const [roundCoinTraySlotActive, setRoundCoinTraySlotActive] = useState(isCoinTraySlotActive);
-  const [board, setBoard] = useState<Tile[]>(() => createBoardVariation(level.id));
+  const [activeTrayCapacity, setActiveTrayCapacity] =
+    useState(currentTrayCapacity);
+  const [roundBonusTraySlotActive, setRoundBonusTraySlotActive] = useState(
+    isBonusTraySlotActive,
+  );
+  const [roundCoinTraySlotActive, setRoundCoinTraySlotActive] =
+    useState(isCoinTraySlotActive);
+  const [board, setBoard] = useState<Tile[]>(() =>
+    createBoardVariation(level.id),
+  );
   const [boardBounds, setBoardBounds] = useState(() => getBoardBounds(board));
-  const [boardViewport, setBoardViewport] = useState<BoardViewport>({ height: 0, width: 0 });
+  const [boardViewport, setBoardViewport] = useState<BoardViewport>({
+    height: 0,
+    width: 0,
+  });
   const [boardLayoutGeneration, setBoardLayoutGeneration] = useState(0);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [highlightedTileId, setHighlightedTileId] = useState<string | undefined>();
-  const [isBonusSlotConfirmVisible, setIsBonusSlotConfirmVisible] = useState(false);
-  const [isBonusSlotRequestPending, setIsBonusSlotRequestPending] = useState(false);
+  const [highlightedTileId, setHighlightedTileId] = useState<
+    string | undefined
+  >();
+  const [isBonusSlotConfirmVisible, setIsBonusSlotConfirmVisible] =
+    useState(false);
+  const [isBonusSlotRequestPending, setIsBonusSlotRequestPending] =
+    useState(false);
   const [isBonusSlotProcessing, setIsBonusSlotProcessing] = useState(false);
   const [isCoinSlotProcessing, setIsCoinSlotProcessing] = useState(false);
-  const [bonusSlotFeedback, setBonusSlotFeedback] = useState<string | undefined>();
-  const [isMagicTripleRescueVisible, setIsMagicTripleRescueVisible] = useState(false);
-  const [magicTripleRescueDismissedThisRisk, setMagicTripleRescueDismissedThisRisk] =
+  const [bonusSlotFeedback, setBonusSlotFeedback] = useState<
+    string | undefined
+  >();
+  const [isMagicTripleRescueVisible, setIsMagicTripleRescueVisible] =
     useState(false);
+  const [
+    magicTripleRescueDismissedThisRisk,
+    setMagicTripleRescueDismissedThisRisk,
+  ] = useState(false);
   const [isMovePipelineActive, setIsMovePipelineActive] = useState(false);
   const [moveHistory, setMoveHistory] = useState<MoveHistoryItem[]>([]);
-  const [pendingPowerPurchase, setPendingPowerPurchase] = useState<PowerUpType | undefined>();
-  const [pendingPowerPurchaseRequest, setPendingPowerPurchaseRequest] = useState<
+  const [pendingPowerPurchase, setPendingPowerPurchase] = useState<
     PowerUpType | undefined
   >();
-  const [isPowerPurchaseProcessing, setIsPowerPurchaseProcessing] = useState(false);
+  const [pendingPowerPurchaseRequest, setPendingPowerPurchaseRequest] =
+    useState<PowerUpType | undefined>();
+  const [isPowerPurchaseProcessing, setIsPowerPurchaseProcessing] =
+    useState(false);
   const [practicalTutorialStep, setPracticalTutorialStep] =
     useState<PracticalTutorialStep>('done');
-  const [practicalTutorialTargetId, setPracticalTutorialTargetId] = useState<string | undefined>();
+  const [practicalTutorialTargetId, setPracticalTutorialTargetId] = useState<
+    string | undefined
+  >();
   const [practicalTutorialTileKind, setPracticalTutorialTileKind] = useState<
     TileKind | undefined
   >();
   const [resultChestProgress, setResultChestProgress] = useState<
     ChestProgressSummary | undefined
   >();
-  const [resultChestReward, setResultChestReward] = useState<ChestRewardSummary | undefined>();
+  const [resultChestReward, setResultChestReward] = useState<
+    ChestRewardSummary | undefined
+  >();
   const [resultCoins, setResultCoins] = useState(0);
   const [resultElapsedSeconds, setResultElapsedSeconds] = useState(0);
-  const [victoryResult, setVictoryResult] = useState<VictoryResultSnapshot | undefined>();
-  const [resultWorldChest, setResultWorldChest] = useState<WorldChestSummary | undefined>();
-  const [coinCollectTarget, setCoinCollectTarget] = useState<WindowTarget | undefined>();
-  const [gameAreaTarget, setGameAreaTarget] = useState<WindowTarget | undefined>();
-  const [flyingTileEvent, setFlyingTileEvent] = useState<FlyingTileEvent | undefined>();
+  const [victoryResult, setVictoryResult] = useState<
+    VictoryResultSnapshot | undefined
+  >();
+  const [resultWorldChest, setResultWorldChest] = useState<
+    WorldChestSummary | undefined
+  >();
+  const [coinCollectTarget, setCoinCollectTarget] = useState<
+    WindowTarget | undefined
+  >();
+  const [gameAreaTarget, setGameAreaTarget] = useState<
+    WindowTarget | undefined
+  >();
+  const [flyingTileEvent, setFlyingTileEvent] = useState<
+    FlyingTileEvent | undefined
+  >();
   const [hiddenTrayTileIds, setHiddenTrayTileIds] = useState<string[]>([]);
-  const [poppingTrayTileId, setPoppingTrayTileId] = useState<string | undefined>();
+  const [poppingTrayTileId, setPoppingTrayTileId] = useState<
+    string | undefined
+  >();
   const [trayTarget, setTrayTarget] = useState<WindowTarget | undefined>();
-  const [tripleConsumeEvent, setTripleConsumeEvent] = useState<TripleConsumeEvent | undefined>();
+  const [tripleConsumeEvent, setTripleConsumeEvent] = useState<
+    TripleConsumeEvent | undefined
+  >();
   const [showBonusAchievement, setShowBonusAchievement] = useState(false);
   const [status, setStatus] = useState<GameStatus>('playing');
   const [toast, setToast] = useState<ToastState | undefined>();
   const [tray, setTray] = useState<Tile[]>([]);
-  const [unlockedLevelTitle, setUnlockedLevelTitle] = useState<string | undefined>();
+  const [unlockedLevelTitle, setUnlockedLevelTitle] = useState<
+    string | undefined
+  >();
   const lifeConsumedForRoundRef = useRef(false);
   const activeTrayCapacityRef = useRef(currentTrayCapacity);
   const roundBonusTraySlotActiveRef = useRef(isBonusTraySlotActive);
@@ -442,8 +512,12 @@ export function GameScreen({
   const boardStageRef = useRef<View>(null);
   const boardStageTargetRef = useRef<WindowTarget | undefined>(undefined);
   const trayDockRef = useRef<View>(null);
-  const poppingTrayTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const completionSoundTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const poppingTrayTimeoutRef = useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined);
+  const completionSoundTimeoutRef = useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined);
   const isMountedRef = useRef(true);
   const shouldRunPracticalTutorialRef = useRef(shouldRunPracticalTutorial);
   const isBonusSlotProcessingRef = useRef(false);
@@ -460,7 +534,9 @@ export function GameScreen({
   const startNextQueuedMoveRef = useRef<() => void>(() => undefined);
   const activeTripleConsumeIdRef = useRef<string | undefined>(undefined);
   const tripleSequenceRef = useRef(0);
-  const tripleCompleteCallbackRef = useRef<((cancelled?: boolean) => void) | undefined>(undefined);
+  const tripleCompleteCallbackRef = useRef<
+    ((cancelled?: boolean) => void) | undefined
+  >(undefined);
   const handleTilePressRef = useRef<(tileId: string) => void>(() => undefined);
   const handleBlockedTilePressRef = useRef<() => void>(() => undefined);
   const toastOpacity = useRef(new Animated.Value(0)).current;
@@ -503,31 +579,40 @@ export function GameScreen({
     });
   }, []);
 
-  const reportBoardTileTarget = useCallback((tileId: string, target: WindowTarget) => {
-    boardTileTargetsRef.current[tileId] = target;
-  }, []);
-  const reportTraySlotTarget = useCallback((tileIndex: number, target: WindowTarget) => {
-    traySlotTargetsRef.current[tileIndex] = target;
-  }, []);
+  const reportBoardTileTarget = useCallback(
+    (tileId: string, target: WindowTarget) => {
+      boardTileTargetsRef.current[tileId] = target;
+    },
+    [],
+  );
+  const reportTraySlotTarget = useCallback(
+    (tileIndex: number, target: WindowTarget) => {
+      traySlotTargetsRef.current[tileIndex] = target;
+    },
+    [],
+  );
   const reportBoardStageTarget = useCallback(() => {
     requestAnimationFrame(() => {
-      boardStageRef.current?.measureInWindow((x, y, measuredWidth, measuredHeight) => {
-        if (measuredWidth <= 0 || measuredHeight <= 0) {
-          return;
-        }
+      boardStageRef.current?.measureInWindow(
+        (x, y, measuredWidth, measuredHeight) => {
+          if (measuredWidth <= 0 || measuredHeight <= 0) {
+            return;
+          }
 
-        boardStageTargetRef.current = {
-          height: measuredHeight,
-          width: measuredWidth,
-          x,
-          y,
-        };
-      });
+          boardStageTargetRef.current = {
+            height: measuredHeight,
+            width: measuredWidth,
+            x,
+            y,
+          };
+        },
+      );
     });
   }, []);
   const handleBoardAreaLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      const { height: measuredHeight, width: measuredWidth } = event.nativeEvent.layout;
+      const { height: measuredHeight, width: measuredWidth } =
+        event.nativeEvent.layout;
       const nextViewport = {
         height: Math.max(0, measuredHeight),
         width: Math.max(0, measuredWidth),
@@ -544,10 +629,15 @@ export function GameScreen({
   );
 
   const expandRoundTrayCapacity = (nextCapacity: number) => {
-    const expandedCapacity = Math.max(activeTrayCapacityRef.current, nextCapacity);
+    const expandedCapacity = Math.max(
+      activeTrayCapacityRef.current,
+      nextCapacity,
+    );
 
     activeTrayCapacityRef.current = expandedCapacity;
-    setActiveTrayCapacity((currentCapacity) => Math.max(currentCapacity, expandedCapacity));
+    setActiveTrayCapacity((currentCapacity) =>
+      Math.max(currentCapacity, expandedCapacity),
+    );
 
     // Uma compra pode terminar enquanto a última peça ainda está voando. Se o
     // espaço novo salvou a jogada, o resultado pendente não pode conservar a
@@ -588,7 +678,10 @@ export function GameScreen({
     [boardBounds, boardViewport],
   );
   const boardScale = boardFrame.scale;
-  const timerProgress = Math.min(100, (elapsedSeconds / level.starTimeLimits.twoStars) * 100);
+  const timerProgress = Math.min(
+    100,
+    (elapsedSeconds / level.starTimeLimits.twoStars) * 100,
+  );
   const threeStarMarker = Math.min(
     100,
     (level.starTimeLimits.threeStars / level.starTimeLimits.twoStars) * 100,
@@ -610,13 +703,20 @@ export function GameScreen({
     reportTrayTarget();
   }, [activeTrayCapacity, reportTrayTarget]);
 
-  const gameBackground = useMemo(() => getGameBackground(level.worldId), [level.worldId]);
-  const trayNearlyFull = status === 'playing' && tray.length >= activeTrayCapacity - 1;
+  const gameBackground = useMemo(
+    () => getGameBackground(level.worldId),
+    [level.worldId],
+  );
+  const trayNearlyFull =
+    status === 'playing' && tray.length >= activeTrayCapacity - 1;
   const magicTripleRescueMove = useMemo(
     () => findMagicTripleMove({ activeTrayCapacity, board, tray }),
     [activeTrayCapacity, board, tray],
   );
-  const lastUndoMove = useMemo(() => getUndoableMove(moveHistory), [moveHistory]);
+  const lastUndoMove = useMemo(
+    () => getUndoableMove(moveHistory),
+    [moveHistory],
+  );
   const gameplayModalOpen =
     isMagicTripleRescueVisible ||
     isBonusSlotConfirmVisible ||
@@ -629,19 +729,30 @@ export function GameScreen({
     shouldRunPracticalTutorial && level.id === PRACTICAL_TUTORIAL_LEVEL_ID;
   const practicalTutorialActive =
     practicalTutorialEligible && practicalTutorialStep !== 'done';
-  const practicalTutorialPopupStep = isPracticalTutorialPopupStep(practicalTutorialStep)
+  const practicalTutorialPopupStep = isPracticalTutorialPopupStep(
+    practicalTutorialStep,
+  )
     ? practicalTutorialStep
     : undefined;
-  const practicalTutorialWaitingForTile = isPracticalTutorialTapStep(practicalTutorialStep);
+  const practicalTutorialWaitingForTile = isPracticalTutorialTapStep(
+    practicalTutorialStep,
+  );
   const practicalTutorialTargetTile = useMemo(() => {
     if (!practicalTutorialWaitingForTile) {
       return undefined;
     }
 
-    const preferredTiles = getTutorialAvailableTiles(board, practicalTutorialTileKind);
-    const currentTarget = preferredTiles.find((tile) => tile.id === practicalTutorialTargetId);
+    const preferredTiles = getTutorialAvailableTiles(
+      board,
+      practicalTutorialTileKind,
+    );
+    const currentTarget = preferredTiles.find(
+      (tile) => tile.id === practicalTutorialTargetId,
+    );
 
-    return currentTarget ?? preferredTiles[0] ?? getTutorialAvailableTiles(board)[0];
+    return (
+      currentTarget ?? preferredTiles[0] ?? getTutorialAvailableTiles(board)[0]
+    );
   }, [
     board,
     practicalTutorialTargetId,
@@ -660,7 +771,8 @@ export function GameScreen({
     (practicalTutorialWaitingForTile && !practicalTutorialTargetTile);
   const magicTripleRescueCanShow =
     !magicTripleRescueState.rescueUsed &&
-    magicTripleRescueState.tutorialSeenCount < MAGIC_TRIPLE_RESCUE_MAX_PROMPTS &&
+    magicTripleRescueState.tutorialSeenCount <
+      MAGIC_TRIPLE_RESCUE_MAX_PROMPTS &&
     trayNearlyFull &&
     magicTripleRescueMove !== undefined &&
     !magicTripleRescueDismissedThisRisk &&
@@ -856,7 +968,8 @@ export function GameScreen({
   useEffect(() => {
     resetRoundState(createBoardVariation(level.id));
     setPracticalTutorialStep(
-      shouldRunPracticalTutorialRef.current && level.id === PRACTICAL_TUTORIAL_LEVEL_ID
+      shouldRunPracticalTutorialRef.current &&
+        level.id === PRACTICAL_TUTORIAL_LEVEL_ID
         ? 'intro'
         : 'done',
     );
@@ -1141,7 +1254,9 @@ export function GameScreen({
     return getFallbackTarget(boardTileTargetsRef.current[tile.id]);
   };
 
-  const deriveTraySlotTarget = (tileIndex: number): WindowTarget | undefined => {
+  const deriveTraySlotTarget = (
+    tileIndex: number,
+  ): WindowTarget | undefined => {
     if (!trayTarget) {
       return undefined;
     }
@@ -1159,14 +1274,22 @@ export function GameScreen({
     };
   };
 
-  const getTraySlotTarget = (tileIndex: number, fallbackTarget?: WindowTarget) => {
-    const index = Math.max(0, Math.min(activeTrayCapacityRef.current - 1, tileIndex));
+  const getTraySlotTarget = (
+    tileIndex: number,
+    fallbackTarget?: WindowTarget,
+  ) => {
+    const index = Math.max(
+      0,
+      Math.min(activeTrayCapacityRef.current - 1, tileIndex),
+    );
 
     // Ordem: encaixe medido → posição derivada da bandeja → fallback antigo.
     // O fallback antigo é o centro da tela, e era ele que jogava a trinca para
     // o meio quando um encaixe não tinha sido medido.
     return getFallbackTarget(
-      traySlotTargetsRef.current[index] ?? deriveTraySlotTarget(tileIndex) ?? fallbackTarget,
+      traySlotTargetsRef.current[index] ??
+        deriveTraySlotTarget(tileIndex) ??
+        fallbackTarget,
     );
   };
 
@@ -1190,7 +1313,9 @@ export function GameScreen({
     // Quem manda são os ids devolvidos pelo domínio: a bandeja pode ter mais
     // peças do material do que as três do ciclo consumido. O filtro por material
     // só existe como rede de segurança para chamadas antigas sem os ids.
-    const targetIds = removedTileIds?.length ? new Set(removedTileIds) : undefined;
+    const targetIds = removedTileIds?.length
+      ? new Set(removedTileIds)
+      : undefined;
     let removedCount = 0;
     const consumeTiles: TripleConsumeTile[] = [];
 
@@ -1318,7 +1443,10 @@ export function GameScreen({
       expandRoundTrayBoosts(result.state);
       showToast('Bandeja Plus já está ativa.');
     } catch {
-      if (isMountedRef.current && roundGenerationRef.current === operationGeneration) {
+      if (
+        isMountedRef.current &&
+        roundGenerationRef.current === operationGeneration
+      ) {
         showToast('Não foi possível ativar agora.');
       }
     } finally {
@@ -1381,11 +1509,17 @@ export function GameScreen({
 
       setBonusSlotFeedback(
         `+1 espaço já ativo · ${formatTrayBoostRemaining(
-          Math.max(0, (result.state.adSlotExpiresAt ?? Date.now()) - Date.now()),
+          Math.max(
+            0,
+            (result.state.adSlotExpiresAt ?? Date.now()) - Date.now(),
+          ),
         )}`,
       );
     } catch {
-      if (isMountedRef.current && roundGenerationRef.current === operationGeneration) {
+      if (
+        isMountedRef.current &&
+        roundGenerationRef.current === operationGeneration
+      ) {
         setIsBonusSlotConfirmVisible(false);
         showToast('Não foi possível liberar agora.');
       }
@@ -1440,7 +1574,10 @@ export function GameScreen({
           playWorldUnlockSound();
         }
       }, 260);
-    } else if (completion.coinsEarned > 0 || completion.chestReward?.type === 'coins') {
+    } else if (
+      completion.coinsEarned > 0 ||
+      completion.chestReward?.type === 'coins'
+    ) {
       completionSoundTimeoutRef.current = setTimeout(() => {
         completionSoundTimeoutRef.current = undefined;
         if (
@@ -1456,7 +1593,9 @@ export function GameScreen({
     setResultCoins(completion.coinsEarned);
     setResultWorldChest(completion.worldChest);
     setUnlockedLevelTitle(
-      completion.bonusWorldAchievementUnlocked ? undefined : completion.unlockedLevelTitle,
+      completion.bonusWorldAchievementUnlocked
+        ? undefined
+        : completion.unlockedLevelTitle,
     );
     setShowBonusAchievement(completion.bonusWorldAchievementUnlocked);
     showToast(
@@ -1539,10 +1678,13 @@ export function GameScreen({
   const pendingPowerPurchaseCost = pendingPowerPurchase
     ? POWER_UP_COSTS[pendingPowerPurchase]
     : 0;
-  const pendingPowerCanUseImmediately = pendingPowerUnavailableMessage === undefined;
+  const pendingPowerCanUseImmediately =
+    pendingPowerUnavailableMessage === undefined;
   const pendingPowerHasEnoughCoins = coins >= pendingPowerPurchaseCost;
 
-  const applyPowerEffect = async (powerType: PowerUpType): Promise<PowerEffectResult> => {
+  const applyPowerEffect = async (
+    powerType: PowerUpType,
+  ): Promise<PowerEffectResult> => {
     if (powerType === 'hint') {
       isVisualMoveResolvingRef.current = true;
       setIsMovePipelineActive(true);
@@ -1567,14 +1709,19 @@ export function GameScreen({
           ? [
               ...currentTray
                 .map((tile, tileIndex) => ({ tile, tileIndex }))
-                .filter(({ tile }) => !result.tray.some((nextTile) => nextTile.id === tile.id))
+                .filter(
+                  ({ tile }) =>
+                    !result.tray.some((nextTile) => nextTile.id === tile.id),
+                )
                 .map<TripleConsumeTile>(({ tile, tileIndex }) => ({
                   target: getTraySlotTarget(tileIndex),
                   tile,
                 })),
               ...currentBoard
                 .filter((tile) => {
-                  const nextTile = result.board.find((knownTile) => knownTile.id === tile.id);
+                  const nextTile = result.board.find(
+                    (knownTile) => knownTile.id === tile.id,
+                  );
                   return !isTileRemoved(tile) && nextTile?.removed === true;
                 })
                 .map<TripleConsumeTile>((tile) => ({
@@ -1618,7 +1765,11 @@ export function GameScreen({
         };
 
         if (result.removedKind) {
-          startTripleConsume(magicConsumeTiles, result.removedKind, completeMagicTriple);
+          startTripleConsume(
+            magicConsumeTiles,
+            result.removedKind,
+            completeMagicTriple,
+          );
         } else {
           completeMagicTriple();
         }
@@ -1630,7 +1781,9 @@ export function GameScreen({
       }
 
       mediumImpact();
-      const nextBoard = revealAvailableMysteryTiles(shuffleRemainingTiles(boardRef.current));
+      const nextBoard = revealAvailableMysteryTiles(
+        shuffleRemainingTiles(boardRef.current),
+      );
       boardRef.current = nextBoard;
       setBoard(nextBoard);
       setHighlightedTileId(undefined);
@@ -1764,7 +1917,8 @@ export function GameScreen({
     try {
       const purchased = await onPurchasePowerUp(powerType, useImmediately);
       const operationStillCurrent =
-        isMountedRef.current && roundGenerationRef.current === operationGeneration;
+        isMountedRef.current &&
+        roundGenerationRef.current === operationGeneration;
       if (!purchased) {
         if (operationStillCurrent) {
           warningImpact();
@@ -1830,7 +1984,9 @@ export function GameScreen({
         onLoseLife().catch(() => undefined);
       }
       playLoseSound();
-      setResultElapsedSeconds(move.terminalElapsedSeconds ?? elapsedSecondsRef.current);
+      setResultElapsedSeconds(
+        move.terminalElapsedSeconds ?? elapsedSecondsRef.current,
+      );
     }
   };
 
@@ -1853,7 +2009,13 @@ export function GameScreen({
     if (activeTileMoveRef.current?.event.id !== move.event.id) {
       return;
     }
-    if (!settleActiveTileMove(tileMoveQueueRef.current, move.event.id, 'completed')) {
+    if (
+      !settleActiveTileMove(
+        tileMoveQueueRef.current,
+        move.event.id,
+        'completed',
+      )
+    ) {
       return;
     }
 
@@ -1883,7 +2045,13 @@ export function GameScreen({
     if (!move || move.event.id !== event.id) {
       return;
     }
-    if (!settleActiveTileFlight(tileMoveQueueRef.current, event.id, visualFinished)) {
+    if (
+      !settleActiveTileFlight(
+        tileMoveQueueRef.current,
+        event.id,
+        visualFinished,
+      )
+    ) {
       return;
     }
 
@@ -1979,7 +2147,9 @@ export function GameScreen({
         result,
         terminalElapsedSeconds:
           result.status === 'playing' ? undefined : elapsedSecondsRef.current,
-        tutorialStep: practicalTutorialWaitingForTile ? practicalTutorialStep : undefined,
+        tutorialStep: practicalTutorialWaitingForTile
+          ? practicalTutorialStep
+          : undefined,
       };
 
       activeTileMoveRef.current = move;
@@ -2012,10 +2182,12 @@ export function GameScreen({
           isBlockingModalVisible ||
           isMysteryTutorialVisible ||
           isSettingsMenuVisible ||
-          (isVisualMoveResolvingRef.current && !tileMoveQueueRef.current.activeToken),
+          (isVisualMoveResolvingRef.current &&
+            !tileMoveQueueRef.current.activeToken),
         duplicate: hasPendingTileId(tileMoveQueueRef.current, tileId),
         status,
-        tutorialMoveLocked: practicalTutorialActive && isVisualMoveResolvingRef.current,
+        tutorialMoveLocked:
+          practicalTutorialActive && isVisualMoveResolvingRef.current,
       })
     ) {
       return;
@@ -2023,7 +2195,11 @@ export function GameScreen({
 
     const currentBoard = boardRef.current;
     const selectedTile = currentBoard.find((tile) => tile.id === tileId);
-    if (!selectedTile || isTileRemoved(selectedTile) || isMysteryTileHidden(selectedTile)) {
+    if (
+      !selectedTile ||
+      isTileRemoved(selectedTile) ||
+      isMysteryTileHidden(selectedTile)
+    ) {
       return;
     }
 
@@ -2058,7 +2234,11 @@ export function GameScreen({
 
     clearQueuedTilePresses();
     if (activeMove) {
-      settleActiveTileMove(tileMoveQueueRef.current, activeMove.event.id, 'completed');
+      settleActiveTileMove(
+        tileMoveQueueRef.current,
+        activeMove.event.id,
+        'completed',
+      );
     } else if (tileMoveQueueRef.current.activeToken) {
       settleActiveTileMove(
         tileMoveQueueRef.current,
@@ -2086,7 +2266,10 @@ export function GameScreen({
 
     isVisualMoveResolvingRef.current = false;
     setIsMovePipelineActive(false);
-    if (activeMove?.result.status !== undefined && activeMove.result.status !== 'playing') {
+    if (
+      activeMove?.result.status !== undefined &&
+      activeMove.result.status !== 'playing'
+    ) {
       finishTerminalMove(activeMove);
     } else if (!activeMove) {
       pendingTripleComplete?.(false);
@@ -2193,426 +2376,493 @@ export function GameScreen({
           <View style={[styles.sceneGlow, styles.sceneGlowBottom]} />
         </View>
         <View style={styles.gameContent}>
-        <View style={styles.hud}>
-          <View style={styles.hudNav}>
-            <Pressable
-              accessibilityLabel="Voltar ao mapa"
-              accessibilityRole="button"
-              onPress={handleBackToLevels}
-              style={({ pressed }) => [styles.navButton, pressed ? styles.navButtonPressed : null]}
-            >
-              <GameIcon name="back" size={24} tone="blue" />
-            </Pressable>
-            <Pressable
-              accessibilityLabel="Reiniciar fase"
-              accessibilityRole="button"
-              onPress={() => {
-                resetLevel();
-              }}
-              style={({ pressed }) => [styles.resetButton, pressed ? styles.navButtonPressed : null]}
-            >
-              <GameIcon name="reset" size={24} tone="neutral" />
-            </Pressable>
-            <Pressable
-              accessibilityLabel="Abrir configurações"
-              accessibilityRole="button"
-              onPress={onOpenSettings}
-              style={({ pressed }) => [styles.settingsNavButton, pressed ? styles.navButtonPressed : null]}
-            >
-              <GameIcon name="settings" size={24} tone="blue" />
-            </Pressable>
-          </View>
-          <View style={styles.hudTextBlock}>
-            <PhasePlate
-              levelLabel={levelDisplayLabel}
-              worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
-              worldName={chapter ? chapter.name : world.subtitle}
-            />
-          </View>
-          <View style={styles.hudRight}>
-            <ResourcePill
-              addTone="green"
-              footer={
-                livesState.currentLives < livesState.maxLives
-                  ? formatLifeTimer(timeUntilNextLifeMs)
-                  : 'CHEIO'
-              }
-              iconName="heart"
-              iconTone="pink"
-              value={`${livesState.currentLives}`}
-            />
-            <View style={styles.coinRow}>
-              <ResourcePill
-                iconName="coin"
-                iconTone="gold"
-                value={`${coins}`}
-                onLayoutInWindow={reportCoinCounterTarget}
-              />
+          <View style={styles.hud}>
+            <View style={styles.hudNav}>
               <Pressable
-                accessibilityLabel="Abrir a Loja"
+                accessibilityLabel="Voltar ao mapa"
                 accessibilityRole="button"
-                hitSlop={8}
-                onPress={onOpenShop}
+                onPress={handleBackToLevels}
                 style={({ pressed }) => [
-                  styles.shopCartButton,
+                  styles.navButton,
                   pressed ? styles.navButtonPressed : null,
                 ]}
               >
-                <GameIcon name="cart" size={30} tone="green" />
+                <GameIcon name="back" size={24} tone="blue" />
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Reiniciar fase"
+                accessibilityRole="button"
+                onPress={() => {
+                  resetLevel();
+                }}
+                style={({ pressed }) => [
+                  styles.resetButton,
+                  pressed ? styles.navButtonPressed : null,
+                ]}
+              >
+                <GameIcon name="reset" size={24} tone="neutral" />
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Abrir configurações"
+                accessibilityRole="button"
+                onPress={onOpenSettings}
+                style={({ pressed }) => [
+                  styles.settingsNavButton,
+                  pressed ? styles.navButtonPressed : null,
+                ]}
+              >
+                <GameIcon name="settings" size={24} tone="blue" />
               </Pressable>
             </View>
+            <View style={styles.hudTextBlock}>
+              <PhasePlate
+                levelLabel={levelDisplayLabel}
+                worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
+                worldName={chapter ? chapter.name : world.subtitle}
+              />
+            </View>
+            <View style={styles.hudRight}>
+              <ResourcePill
+                addTone="green"
+                footer={
+                  livesState.currentLives < livesState.maxLives
+                    ? formatLifeTimer(timeUntilNextLifeMs)
+                    : 'CHEIO'
+                }
+                iconName="heart"
+                iconTone="pink"
+                value={`${livesState.currentLives}`}
+              />
+              <View style={styles.coinRow}>
+                <ResourcePill
+                  iconName="coin"
+                  iconTone="gold"
+                  value={`${coins}`}
+                  onLayoutInWindow={reportCoinCounterTarget}
+                />
+                <Pressable
+                  accessibilityLabel="Abrir a Loja"
+                  accessibilityRole="button"
+                  hitSlop={8}
+                  onPress={onOpenShop}
+                  style={({ pressed }) => [
+                    styles.shopCartButton,
+                    pressed ? styles.navButtonPressed : null,
+                  ]}
+                >
+                  <GameIcon name="cart" size={30} tone="green" />
+                </Pressable>
+              </View>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.meterRow}>
-          <Text style={styles.meterTime}>{formatSeconds(elapsedSeconds)}</Text>
-          <View style={styles.meterTrack}>
-            <View style={[styles.meterFill, { width: `${timerProgress}%` }]} />
-            <View style={[styles.meterMark, { left: `${threeStarMarker}%` }]}>
-              <Text style={styles.meterMarkText}>3</Text>
-            </View>
-            <View style={[styles.meterMark, styles.meterMarkTwo]}>
-              <Text style={styles.meterMarkTextTwo}>2</Text>
-            </View>
-          </View>
-          <Text
-            accessibilityLabel={formatQuantity(remainingTiles, 'peça', 'peças')}
-            style={styles.meterCount}
-          >
-            {remainingTiles}{' '}
-            <Text style={styles.meterCountUnit}>
-              {remainingTiles === 1 ? 'peça' : 'peças'}
+          <View style={styles.meterRow}>
+            <Text style={styles.meterTime}>
+              {formatSeconds(elapsedSeconds)}
             </Text>
-          </Text>
-        </View>
+            <View style={styles.meterTrack}>
+              <View
+                style={[styles.meterFill, { width: `${timerProgress}%` }]}
+              />
+              <View style={[styles.meterMark, { left: `${threeStarMarker}%` }]}>
+                <Text style={styles.meterMarkText}>3</Text>
+              </View>
+              <View style={[styles.meterMark, styles.meterMarkTwo]}>
+                <Text style={styles.meterMarkTextTwo}>2</Text>
+              </View>
+            </View>
+            <Text
+              accessibilityLabel={formatQuantity(
+                remainingTiles,
+                'peça',
+                'peças',
+              )}
+              style={styles.meterCount}
+            >
+              {remainingTiles}{' '}
+              <Text style={styles.meterCountUnit}>
+                {remainingTiles === 1 ? 'peça' : 'peças'}
+              </Text>
+            </Text>
+          </View>
 
-        <View onLayout={handleBoardAreaLayout} style={styles.boardArea}>
-          <View
-            ref={boardStageRef}
-            onLayout={reportBoardStageTarget}
-            style={[
-              styles.boardStage,
-              {
-                height: boardFrame.height,
-                width: boardFrame.width,
-              },
-            ]}
-          >
+          <View onLayout={handleBoardAreaLayout} style={styles.boardArea}>
             <View
+              ref={boardStageRef}
+              onLayout={reportBoardStageTarget}
               style={[
-                styles.boardScaler,
+                styles.boardStage,
                 {
-                  height: boardBounds.height,
-                  transform: [{ scale: boardScale }],
-                  width: boardBounds.width,
+                  height: boardFrame.height,
+                  width: boardFrame.width,
                 },
               ]}
             >
-              <GameBoard
-                allowedTileId={
-                  practicalTutorialWaitingForTile ? practicalTutorialTargetTile?.id : undefined
-                }
-                disabled={practicalTutorialBoardDisabled}
-                bounds={boardBounds}
-                highlightedTileId={practicalTutorialTargetTile?.id ?? highlightedTileId}
-                onTileLayoutInWindow={reportBoardTileTarget}
-                onBlockedTilePress={handleBlockedTilePressStable}
-                onTilePress={handleTilePressStable}
-                tiles={board}
-              />
+              <View
+                style={[
+                  styles.boardScaler,
+                  {
+                    height: boardBounds.height,
+                    transform: [{ scale: boardScale }],
+                    width: boardBounds.width,
+                  },
+                ]}
+              >
+                <GameBoard
+                  allowedTileId={
+                    practicalTutorialWaitingForTile
+                      ? practicalTutorialTargetTile?.id
+                      : undefined
+                  }
+                  disabled={practicalTutorialBoardDisabled}
+                  bounds={boardBounds}
+                  highlightedTileId={
+                    practicalTutorialTargetTile?.id ?? highlightedTileId
+                  }
+                  onTileLayoutInWindow={reportBoardTileTarget}
+                  onBlockedTilePress={handleBlockedTilePressStable}
+                  onTilePress={handleTilePressStable}
+                  tiles={board}
+                />
+              </View>
             </View>
+            {practicalTutorialWaitingForTile && practicalTutorialTargetTile ? (
+              <View style={styles.practicalTargetCallout}>
+                <Text style={styles.practicalTargetText}>
+                  Toque nesta peça.
+                </Text>
+              </View>
+            ) : null}
           </View>
-          {practicalTutorialWaitingForTile && practicalTutorialTargetTile ? (
-            <View style={styles.practicalTargetCallout}>
-              <Text style={styles.practicalTargetText}>Toque nesta peça.</Text>
+
+          <View style={styles.trayControlRow}>
+            <View style={styles.trayStatus}>
+              <Text
+                style={[
+                  styles.trayLabel,
+                  trayNearlyFull ? styles.trayLabelDanger : null,
+                ]}
+              >
+                Bandeja {tray.length}/{activeTrayCapacity}
+              </Text>
+              {roundBonusTraySlotActive ? (
+                <Text style={styles.bonusSlotIndicator}>
+                  +1 bônus ·{' '}
+                  {isBonusTraySlotActive && bonusTraySlotRemainingMs > 0
+                    ? formatTrayBoostRemaining(bonusTraySlotRemainingMs)
+                    : 'esta fase'}
+                </Text>
+              ) : null}
             </View>
+            <PowerDrawer
+              disabled={
+                status !== 'playing' ||
+                practicalTutorialControlsLocked ||
+                isBlockingModalVisible ||
+                gameplayModalOpen ||
+                gameplayInteractionPending ||
+                isSettingsMenuVisible
+              }
+              disabledPowers={{
+                hint: !magicTripleRescueMove,
+                shuffle: remainingTiles < 2,
+                undo: !lastUndoMove,
+              }}
+              itemCounts={itemCounts}
+              onUsePower={requestPowerUse}
+            />
+          </View>
+
+          <Animated.View
+            ref={trayDockRef}
+            onLayout={reportTrayTarget}
+            style={styles.trayDock}
+          >
+            <Tray
+              activeCapacity={activeTrayCapacity}
+              bonusSlotActive={roundBonusTraySlotActive}
+              coinSlotActive={roundCoinTraySlotActive}
+              hiddenTileIds={hiddenTrayTileIds}
+              poppingTileId={poppingTrayTileId}
+              tiles={tray}
+              onAdSlotPress={handleAdTraySlotPress}
+              onCoinSlotPress={handleCoinTraySlotPress}
+              onSlotLayoutInWindow={reportTraySlotTarget}
+            />
+          </Animated.View>
+
+          {bonusSlotFeedback ? (
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.bonusSlotFeedback,
+                {
+                  opacity: bonusFeedbackOpacity,
+                  transform: [{ translateY: bonusFeedbackLift }],
+                },
+              ]}
+            >
+              <GameIcon name="bonus" size={16} tone="green" />
+              <Text style={styles.bonusSlotFeedbackText}>
+                {bonusSlotFeedback}
+              </Text>
+            </Animated.View>
+          ) : null}
+
+          {toast ? (
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.toast,
+                {
+                  opacity: toastOpacity,
+                  transform: [{ translateY: toastLift }],
+                },
+              ]}
+            >
+              <Text style={styles.toastText}>{toast.text}</Text>
+            </Animated.View>
           ) : null}
         </View>
 
-        <View style={styles.trayControlRow}>
-          <View style={styles.trayStatus}>
-            <Text style={[styles.trayLabel, trayNearlyFull ? styles.trayLabelDanger : null]}>
-              Bandeja {tray.length}/{activeTrayCapacity}
-            </Text>
-            {roundBonusTraySlotActive ? (
-              <Text style={styles.bonusSlotIndicator}>
-                +1 bônus ·{' '}
-                {isBonusTraySlotActive && bonusTraySlotRemainingMs > 0
-                  ? formatTrayBoostRemaining(bonusTraySlotRemainingMs)
-                  : 'esta fase'}
-              </Text>
-            ) : null}
-          </View>
-          <PowerDrawer
-            disabled={
-              status !== 'playing' ||
-              practicalTutorialControlsLocked ||
-              isBlockingModalVisible ||
-              gameplayModalOpen ||
-              gameplayInteractionPending ||
-              isSettingsMenuVisible
-            }
-            disabledPowers={{
-              hint: !magicTripleRescueMove,
-              shuffle: remainingTiles < 2,
-              undo: !lastUndoMove,
-            }}
-            itemCounts={itemCounts}
-            onUsePower={requestPowerUse}
-          />
-        </View>
+        <TripleConsumeEffect
+          containerTarget={gameAreaTarget}
+          event={tripleConsumeEvent}
+          onSettled={finishTripleConsume}
+        />
+        <FlyingTileOverlay
+          containerTarget={gameAreaTarget}
+          event={flyingTileEvent}
+          onSettled={handleFlyingTileSettled}
+        />
 
-        <Animated.View ref={trayDockRef} onLayout={reportTrayTarget} style={styles.trayDock}>
-          <Tray
-            activeCapacity={activeTrayCapacity}
-            bonusSlotActive={roundBonusTraySlotActive}
-            coinSlotActive={roundCoinTraySlotActive}
-            hiddenTileIds={hiddenTrayTileIds}
-            poppingTileId={poppingTrayTileId}
-            tiles={tray}
-            onAdSlotPress={handleAdTraySlotPress}
-            onCoinSlotPress={handleCoinTraySlotPress}
-            onSlotLayoutInWindow={reportTraySlotTarget}
-          />
-        </Animated.View>
-
-        {bonusSlotFeedback ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              styles.bonusSlotFeedback,
-              {
-                opacity: bonusFeedbackOpacity,
-                transform: [{ translateY: bonusFeedbackLift }],
-              },
-            ]}
+        <ResultModal
+          activeTrayCapacity={activeTrayCapacity}
+          availableCoins={coins}
+          chestProgress={resultChestProgress}
+          chestReward={resultChestReward}
+          coinCollectTarget={coinCollectTarget}
+          coinsEarned={resultCoins}
+          elapsedSeconds={victoryResult?.elapsedSeconds ?? resultElapsedSeconds}
+          isNewRecord={victoryResult?.isNewRecord ?? false}
+          level={level}
+          livesState={livesState}
+          keys={keys}
+          onBackToLevels={handleBackToLevels}
+          onNextLevel={onNextLevel}
+          onOpenWorldChest={onOpenWorldChest}
+          onRetry={handleRetryLevel}
+          starsEarned={victoryResult?.earnedStars ?? 0}
+          status={status === 'won' && !victoryResult ? 'playing' : status}
+          timeUntilNextLifeMs={timeUntilNextLifeMs}
+          unlockedLevelTitle={unlockedLevelTitle}
+          worldChest={resultWorldChest}
+        />
+        <BonusWorldAchievementModal
+          visible={showBonusAchievement}
+          onContinueMap={() => {
+            setShowBonusAchievement(false);
+            onBonusWorldAchievementSeen(false);
+          }}
+          onGoToBonusWorld={() => {
+            setShowBonusAchievement(false);
+            onBonusWorldAchievementSeen(true);
+          }}
+        />
+        <Modal
+          animationType="fade"
+          transparent
+          visible={practicalTutorialPopupStep !== undefined}
+          onRequestClose={() => undefined}
+        >
+          <SafeAreaView
+            edges={['top', 'bottom', 'left', 'right']}
+            style={styles.modalOverlay}
           >
-            <GameIcon name="bonus" size={16} tone="green" />
-            <Text style={styles.bonusSlotFeedbackText}>{bonusSlotFeedback}</Text>
-          </Animated.View>
-        ) : null}
-
-        {toast ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              styles.toast,
-              {
-                opacity: toastOpacity,
-                transform: [{ translateY: toastLift }],
-              },
-            ]}
-          >
-            <Text style={styles.toastText}>{toast.text}</Text>
-          </Animated.View>
-        ) : null}
-      </View>
-
-      <TripleConsumeEffect
-        containerTarget={gameAreaTarget}
-        event={tripleConsumeEvent}
-        onSettled={finishTripleConsume}
-      />
-      <FlyingTileOverlay
-        containerTarget={gameAreaTarget}
-        event={flyingTileEvent}
-        onSettled={handleFlyingTileSettled}
-      />
-
-      <ResultModal
-        activeTrayCapacity={activeTrayCapacity}
-        availableCoins={coins}
-        chestProgress={resultChestProgress}
-        chestReward={resultChestReward}
-        coinCollectTarget={coinCollectTarget}
-        coinsEarned={resultCoins}
-        elapsedSeconds={victoryResult?.elapsedSeconds ?? resultElapsedSeconds}
-        isNewRecord={victoryResult?.isNewRecord ?? false}
-        level={level}
-        livesState={livesState}
-        keys={keys}
-        onBackToLevels={handleBackToLevels}
-        onNextLevel={onNextLevel}
-        onOpenWorldChest={onOpenWorldChest}
-        onRetry={handleRetryLevel}
-        starsEarned={victoryResult?.earnedStars ?? 0}
-        status={status === 'won' && !victoryResult ? 'playing' : status}
-        timeUntilNextLifeMs={timeUntilNextLifeMs}
-        unlockedLevelTitle={unlockedLevelTitle}
-        worldChest={resultWorldChest}
-      />
-      <BonusWorldAchievementModal
-        visible={showBonusAchievement}
-        onContinueMap={() => {
-          setShowBonusAchievement(false);
-          onBonusWorldAchievementSeen(false);
-        }}
-        onGoToBonusWorld={() => {
-          setShowBonusAchievement(false);
-          onBonusWorldAchievementSeen(true);
-        }}
-      />
-      <Modal
-        animationType="fade"
-        transparent
-        visible={practicalTutorialPopupStep !== undefined}
-        onRequestClose={() => undefined}
-      >
-        <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.modalOverlay}>
-          <View style={styles.practicalModalCard}>
-            {practicalTutorialPopupStep ? (
-              <>
-                <Text style={styles.practicalModalTitle}>
-                  {PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].title}
-                </Text>
-                <Text style={styles.practicalModalText}>
-                  {PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].text}
-                </Text>
-                <PrimaryButton
-                  title={PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].button}
-                  onPress={advancePracticalTutorialPopup}
-                />
-              </>
-            ) : null}
-          </View>
-        </SafeAreaView>
-      </Modal>
-      <Modal
-        animationType="fade"
-        transparent
-        visible={isMagicTripleRescueVisible}
-        onRequestClose={dismissMagicTripleRescue}
-      >
-        <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.modalOverlay}>
-          <View style={styles.rescueModalCard}>
-            <GameIcon name="powers" size={46} tone="purple" />
-            <Text style={styles.purchaseModalTitle}>Quase sem espaço!</Text>
-            <Text style={styles.purchaseModalText}>
-              A Trinca Mágica forma uma trinca possível automaticamente.
-            </Text>
-            <Text style={styles.rescueModalHint}>
-              Use uma vez grátis para salvar sua bandeja.
-            </Text>
-            <View style={styles.purchaseModalActions}>
-              <PrimaryButton
-                size="small"
-                title="Depois"
-                variant="secondary"
-                onPress={dismissMagicTripleRescue}
-              />
-              <PrimaryButton size="small" title="Usar grátis" onPress={useFreeMagicTripleRescue} />
-            </View>
-          </View>
-        </SafeAreaView>
-      </Modal>
-      <Modal
-        animationType="fade"
-        statusBarTranslucent
-        transparent
-        visible={isBonusSlotConfirmVisible}
-        onRequestClose={() => {
-          if (!isBonusSlotProcessingRef.current) {
-            setIsBonusSlotConfirmVisible(false);
-          }
-        }}
-      >
-        <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.modalOverlay}>
-          <View style={styles.bonusPurchaseModalCard}>
-            <View style={styles.bonusModalIcon}>
-              <GameIcon name="bonus" size={34} tone="green" />
-            </View>
-            <Text style={styles.purchaseModalTitle}>Liberar espaço bônus?</Text>
-            <Text style={styles.purchaseModalText}>
-              Ganhe um sétimo espaço na bandeja e jogue com mais segurança.
-            </Text>
-            <View style={styles.bonusBenefitPill}>
-              <Text style={styles.bonusBenefitText}>+1 ESPAÇO · 30 MIN</Text>
-            </View>
-            <View style={styles.purchaseModalActions}>
-              <PrimaryButton
-                disabled={isBonusSlotProcessing}
-                size="small"
-                title="Cancelar"
-                variant="secondary"
-                onPress={() => setIsBonusSlotConfirmVisible(false)}
-              />
-              <PrimaryButton
-                disabled={isBonusSlotProcessing}
-                size="small"
-                title={isBonusSlotProcessing ? 'Liberando…' : 'Liberar grátis'}
-                onPress={confirmBonusTraySlot}
-              />
-            </View>
-          </View>
-        </SafeAreaView>
-      </Modal>
-      <Modal
-        animationType="fade"
-        statusBarTranslucent
-        transparent
-        visible={pendingPowerPurchase !== undefined}
-        onRequestClose={() => {
-          if (!isPowerPurchaseProcessingRef.current) {
-            setPendingPowerPurchase(undefined);
-          }
-        }}
-      >
-        <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.modalOverlay}>
-          <View style={styles.powerPurchaseModalCard}>
-            {pendingPowerPurchase ? (
-              <>
-                <View style={styles.powerPurchaseIcon}>
-                  <PowerIcon name={pendingPowerPurchase} size={38} />
-                </View>
-                <Text style={styles.purchaseModalTitle}>
-                  {POWER_UP_UI[pendingPowerPurchase].label}
-                </Text>
-                <Text style={styles.purchaseModalText}>
-                  {POWER_UP_UI[pendingPowerPurchase].description}
-                </Text>
-                <View style={styles.powerPriceRow}>
-                  <GameIcon name="coin" size={20} tone="gold" />
-                  <Text style={styles.powerPriceText}>{pendingPowerPurchaseCost}</Text>
-                  <Text style={styles.powerBalanceText}>Saldo: {coins}</Text>
-                </View>
-                {pendingPowerUnavailableMessage ? (
-                  <Text style={styles.powerPurchaseCondition}>
-                    {pendingPowerUnavailableMessage} A compra ficará no inventário.
-                  </Text>
-                ) : (
-                  <Text style={styles.powerPurchaseConditionReady}>
-                    Pronto para comprar e usar nesta jogada.
-                  </Text>
-                )}
-                {!pendingPowerHasEnoughCoins ? (
-                  <Text style={styles.powerPurchaseInsufficient}>Moedas insuficientes.</Text>
-                ) : null}
-                <View style={styles.purchaseModalActions}>
-                  <PrimaryButton
-                    disabled={isPowerPurchaseProcessing}
-                    size="small"
-                    title="Cancelar"
-                    variant="secondary"
-                    onPress={() => setPendingPowerPurchase(undefined)}
-                  />
-                  <PrimaryButton
-                    disabled={isPowerPurchaseProcessing || !pendingPowerHasEnoughCoins}
-                    size="small"
-                    title={
-                      isPowerPurchaseProcessing
-                        ? 'Comprando…'
-                        : pendingPowerCanUseImmediately
-                          ? 'Comprar e usar'
-                          : 'Comprar'
+            <View style={styles.practicalModalCard}>
+              {practicalTutorialPopupStep ? (
+                <>
+                  <Text style={styles.practicalModalTitle}>
+                    {
+                      PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep]
+                        .title
                     }
-                    onPress={confirmPendingPowerPurchase}
+                  </Text>
+                  <Text style={styles.practicalModalText}>
+                    {PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].text}
+                  </Text>
+                  <PrimaryButton
+                    title={
+                      PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep]
+                        .button
+                    }
+                    onPress={advancePracticalTutorialPopup}
                   />
-                </View>
-              </>
-            ) : null}
-          </View>
-        </SafeAreaView>
-      </Modal>
+                </>
+              ) : null}
+            </View>
+          </SafeAreaView>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent
+          visible={isMagicTripleRescueVisible}
+          onRequestClose={dismissMagicTripleRescue}
+        >
+          <SafeAreaView
+            edges={['top', 'bottom', 'left', 'right']}
+            style={styles.modalOverlay}
+          >
+            <View style={styles.rescueModalCard}>
+              <GameIcon name="powers" size={46} tone="purple" />
+              <Text style={styles.purchaseModalTitle}>Quase sem espaço!</Text>
+              <Text style={styles.purchaseModalText}>
+                A Trinca Mágica forma uma trinca possível automaticamente.
+              </Text>
+              <Text style={styles.rescueModalHint}>
+                Use uma vez grátis para salvar sua bandeja.
+              </Text>
+              <View style={styles.purchaseModalActions}>
+                <PrimaryButton
+                  size="small"
+                  title="Depois"
+                  variant="secondary"
+                  onPress={dismissMagicTripleRescue}
+                />
+                <PrimaryButton
+                  size="small"
+                  title="Usar grátis"
+                  onPress={useFreeMagicTripleRescue}
+                />
+              </View>
+            </View>
+          </SafeAreaView>
+        </Modal>
+        <Modal
+          animationType="fade"
+          statusBarTranslucent
+          transparent
+          visible={isBonusSlotConfirmVisible}
+          onRequestClose={() => {
+            if (!isBonusSlotProcessingRef.current) {
+              setIsBonusSlotConfirmVisible(false);
+            }
+          }}
+        >
+          <SafeAreaView
+            edges={['top', 'bottom', 'left', 'right']}
+            style={styles.modalOverlay}
+          >
+            <View style={styles.bonusPurchaseModalCard}>
+              <View style={styles.bonusModalIcon}>
+                <GameIcon name="bonus" size={34} tone="green" />
+              </View>
+              <Text style={styles.purchaseModalTitle}>
+                Liberar espaço bônus?
+              </Text>
+              <Text style={styles.purchaseModalText}>
+                Ganhe um sétimo espaço na bandeja e jogue com mais segurança.
+              </Text>
+              <View style={styles.bonusBenefitPill}>
+                <Text style={styles.bonusBenefitText}>+1 ESPAÇO · 30 MIN</Text>
+              </View>
+              <View style={styles.purchaseModalActions}>
+                <PrimaryButton
+                  disabled={isBonusSlotProcessing}
+                  size="small"
+                  title="Cancelar"
+                  variant="secondary"
+                  onPress={() => setIsBonusSlotConfirmVisible(false)}
+                />
+                <PrimaryButton
+                  disabled={isBonusSlotProcessing}
+                  size="small"
+                  title={
+                    isBonusSlotProcessing ? 'Liberando…' : 'Liberar grátis'
+                  }
+                  onPress={confirmBonusTraySlot}
+                />
+              </View>
+            </View>
+          </SafeAreaView>
+        </Modal>
+        <Modal
+          animationType="fade"
+          statusBarTranslucent
+          transparent
+          visible={pendingPowerPurchase !== undefined}
+          onRequestClose={() => {
+            if (!isPowerPurchaseProcessingRef.current) {
+              setPendingPowerPurchase(undefined);
+            }
+          }}
+        >
+          <SafeAreaView
+            edges={['top', 'bottom', 'left', 'right']}
+            style={styles.modalOverlay}
+          >
+            <View style={styles.powerPurchaseModalCard}>
+              {pendingPowerPurchase ? (
+                <>
+                  <View style={styles.powerPurchaseIcon}>
+                    <PowerIcon name={pendingPowerPurchase} size={38} />
+                  </View>
+                  <Text style={styles.purchaseModalTitle}>
+                    {POWER_UP_UI[pendingPowerPurchase].label}
+                  </Text>
+                  <Text style={styles.purchaseModalText}>
+                    {POWER_UP_UI[pendingPowerPurchase].description}
+                  </Text>
+                  <View style={styles.powerPriceRow}>
+                    <GameIcon name="coin" size={20} tone="gold" />
+                    <Text style={styles.powerPriceText}>
+                      {pendingPowerPurchaseCost}
+                    </Text>
+                    <Text style={styles.powerBalanceText}>Saldo: {coins}</Text>
+                  </View>
+                  {pendingPowerUnavailableMessage ? (
+                    <Text style={styles.powerPurchaseCondition}>
+                      {pendingPowerUnavailableMessage} A compra ficará no
+                      inventário.
+                    </Text>
+                  ) : (
+                    <Text style={styles.powerPurchaseConditionReady}>
+                      Pronto para comprar e usar nesta jogada.
+                    </Text>
+                  )}
+                  {!pendingPowerHasEnoughCoins ? (
+                    <Text style={styles.powerPurchaseInsufficient}>
+                      Moedas insuficientes.
+                    </Text>
+                  ) : null}
+                  <View style={styles.purchaseModalActions}>
+                    <PrimaryButton
+                      disabled={isPowerPurchaseProcessing}
+                      size="small"
+                      title="Cancelar"
+                      variant="secondary"
+                      onPress={() => setPendingPowerPurchase(undefined)}
+                    />
+                    <PrimaryButton
+                      disabled={
+                        isPowerPurchaseProcessing || !pendingPowerHasEnoughCoins
+                      }
+                      size="small"
+                      title={
+                        isPowerPurchaseProcessing
+                          ? 'Comprando…'
+                          : pendingPowerCanUseImmediately
+                            ? 'Comprar e usar'
+                            : 'Comprar'
+                      }
+                      onPress={confirmPendingPowerPurchase}
+                    />
+                  </View>
+                </>
+              ) : null}
+            </View>
+          </SafeAreaView>
+        </Modal>
       </ImageBackground>
     </ScreenShell>
   );

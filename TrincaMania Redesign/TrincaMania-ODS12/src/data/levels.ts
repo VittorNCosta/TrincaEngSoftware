@@ -208,7 +208,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 1,
     difficultyCurve: { gamma: 1.1, blockGrowth: 1.05 },
     difficultyBand: [
-      'easy', 'easy', 'easy', 'normal', 'normal', 'normal', 'hard', 'hard', 'hard', 'expert',
+      'easy',
+      'easy',
+      'easy',
+      'normal',
+      'normal',
+      'normal',
+      'hard',
+      'hard',
+      'hard',
+      'expert',
     ],
     mysteryRange: { min: 2, max: 4 },
     tileRange: { min: 9, max: 30 },
@@ -236,7 +245,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 2,
     difficultyCurve: { gamma: 1.2, blockGrowth: 1.1 },
     difficultyBand: [
-      'normal', 'normal', 'hard', 'hard', 'hard', 'hard', 'hard', 'expert', 'expert', 'expert',
+      'normal',
+      'normal',
+      'hard',
+      'hard',
+      'hard',
+      'hard',
+      'hard',
+      'expert',
+      'expert',
+      'expert',
     ],
     mysteryRange: { min: 3, max: 5 },
     tileRange: { min: 27, max: 39 },
@@ -264,7 +282,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 3,
     difficultyCurve: { gamma: 1.3, blockGrowth: 1.12 },
     difficultyBand: [
-      'hard', 'hard', 'hard', 'expert', 'expert', 'expert', 'expert', 'expert', 'master', 'master',
+      'hard',
+      'hard',
+      'hard',
+      'expert',
+      'expert',
+      'expert',
+      'expert',
+      'expert',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 3, max: 5 },
     tileRange: { min: 33, max: 45 },
@@ -292,7 +319,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 4,
     difficultyCurve: { gamma: 1.4, blockGrowth: 1.15 },
     difficultyBand: [
-      'expert', 'expert', 'expert', 'expert', 'expert', 'expert', 'master', 'master', 'master', 'master',
+      'expert',
+      'expert',
+      'expert',
+      'expert',
+      'expert',
+      'expert',
+      'master',
+      'master',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 4, max: 6 },
     tileRange: { min: 39, max: 48 },
@@ -320,7 +356,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 5,
     difficultyCurve: { gamma: 1.5, blockGrowth: 1.18 },
     difficultyBand: [
-      'expert', 'expert', 'expert', 'master', 'master', 'master', 'master', 'master', 'master', 'master',
+      'expert',
+      'expert',
+      'expert',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 4, max: 7 },
     tileRange: { min: 42, max: 51 },
@@ -348,7 +393,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 6,
     difficultyCurve: { gamma: 1.6, blockGrowth: 1.2 },
     difficultyBand: [
-      'expert', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master',
+      'expert',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 5, max: 7 },
     tileRange: { min: 45, max: 54 },
@@ -376,7 +430,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 7,
     difficultyCurve: { gamma: 1.7, blockGrowth: 1.25 },
     difficultyBand: [
-      'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 5, max: 8 },
     tileRange: { min: 48, max: 57 },
@@ -404,7 +467,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 8,
     difficultyCurve: { gamma: 1.8, blockGrowth: 1.3 },
     difficultyBand: [
-      'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 6, max: 8 },
     tileRange: { min: 51, max: 60 },
@@ -432,7 +504,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 9,
     difficultyCurve: { gamma: 1.9, blockGrowth: 1.35 },
     difficultyBand: [
-      'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 6, max: 9 },
     tileRange: { min: 54, max: 60 },
@@ -460,7 +541,16 @@ const GENERATED_WORLD_CONFIGS: GeneratedWorldConfig[] = [
     worldId: 10,
     difficultyCurve: { gamma: 2, blockGrowth: 1.4 },
     difficultyBand: [
-      'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master', 'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
+      'master',
     ],
     mysteryRange: { min: 7, max: 10 },
     tileRange: { min: 57, max: 60 },
@@ -491,7 +581,10 @@ const getGeneratedDifficulty = (
   worldLevelNumber: number,
 ): LevelDifficulty => config.difficultyBand[worldLevelNumber - 1];
 
-const getGeneratedTileCount = (config: GeneratedWorldConfig, curved: number) => {
+const getGeneratedTileCount = (
+  config: GeneratedWorldConfig,
+  curved: number,
+) => {
   const { min, max } = config.tileRange;
   const raw = min + (max - min) * curved;
 
@@ -520,7 +613,10 @@ const getGeneratedMysteryCount = (
   return Math.min(raw, cap);
 };
 
-const getGeneratedKindCount = (worldId: MainWorldId, worldLevelNumber: number) => {
+const getGeneratedKindCount = (
+  worldId: MainWorldId,
+  worldLevelNumber: number,
+) => {
   // O mundo 1 introduz os materiais aos poucos (3 → 5); os demais já abrem com todos.
   if (worldId === 1) {
     return Math.min(2 + worldLevelNumber, MATERIAL_TYPES.length);
@@ -581,7 +677,8 @@ const createGeneratedCampaignLevels = (): LevelSeed[] =>
   GENERATED_WORLD_CONFIGS.flatMap((config) =>
     config.titles.map((title, index) => {
       const worldLevelNumber = index + 1;
-      const displayNumber = (config.worldId - 1) * WORLD_LEVELS_PER_MAP + worldLevelNumber;
+      const displayNumber =
+        (config.worldId - 1) * WORLD_LEVELS_PER_MAP + worldLevelNumber;
       // Uma curva por fase, reaproveitada pelo tempo de estrela, pela contagem
       // de peças e pela de mistério — os três só precisam de onde a fase cai
       // na rampa de dificuldade do mundo, não de recalculá-la cada um.

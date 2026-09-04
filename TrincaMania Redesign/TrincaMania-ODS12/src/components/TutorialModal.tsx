@@ -96,7 +96,10 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
 
   return (
     <Modal animationType="none" transparent visible={visible}>
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.overlay}>
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.overlay}
+      >
         <Animated.View
           style={[
             styles.card,
@@ -112,7 +115,10 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
             {TUTORIAL_STEPS.map((_, index) => (
               <View
                 key={`tutorial-dot-${index}`}
-                style={[styles.stepDot, index === stepIndex ? styles.activeStepDot : null]}
+                style={[
+                  styles.stepDot,
+                  index === stepIndex ? styles.activeStepDot : null,
+                ]}
               />
             ))}
           </View>
@@ -129,8 +135,16 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
           </View>
 
           <View style={styles.actions}>
-            <PrimaryButton title={isLastStep ? 'Começar' : 'Próximo'} onPress={nextStep} />
-            <PrimaryButton size="compact" title="Pular" variant="secondary" onPress={finishTutorial} />
+            <PrimaryButton
+              title={isLastStep ? 'Começar' : 'Próximo'}
+              onPress={nextStep}
+            />
+            <PrimaryButton
+              size="compact"
+              title="Pular"
+              variant="secondary"
+              onPress={finishTutorial}
+            />
           </View>
         </Animated.View>
       </SafeAreaView>

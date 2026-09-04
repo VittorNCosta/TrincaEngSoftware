@@ -59,7 +59,13 @@ export function ResourcePill({
             pressed ? styles.pressed : null,
           ]}
         >
-          <Text style={addTone === 'green' ? styles.addTextGreen : styles.addTextGold}>+</Text>
+          <Text
+            style={
+              addTone === 'green' ? styles.addTextGreen : styles.addTextGold
+            }
+          >
+            +
+          </Text>
         </Pressable>
       ) : null}
     </View>

@@ -1,4 +1,11 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Animated,
   ImageBackground,
@@ -32,7 +39,12 @@ import { WORLDS, getWorldById } from '../data/worlds';
 import { LivesState, formatLifeTimer } from '../storage/livesStorage';
 import { getBonusWorldChestProgress } from '../storage/progressStorage';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
-import { Level, ProgressState, RestCheckpointRewardResult, WorldId } from '../types/game';
+import {
+  Level,
+  ProgressState,
+  RestCheckpointRewardResult,
+  WorldId,
+} from '../types/game';
 import { WindowTarget } from '../types/ui';
 import {
   getNextWorldLevelAfterLevel,
@@ -74,14 +86,23 @@ const LEGACY_MAP_OPENING_FOCUS_RATIO = 0.45;
 const LEGACY_MAP_OPENING_TOP_INSET = 170;
 
 const getWorldMapHeight = (levelCount: number) =>
-  Math.max(MAP_MIN_HEIGHT, MAP_NODE_TOP_PADDING + MAP_NODE_BOTTOM + Math.max(0, levelCount - 1) * MAP_NODE_STEP);
+  Math.max(
+    MAP_MIN_HEIGHT,
+    MAP_NODE_TOP_PADDING +
+      MAP_NODE_BOTTOM +
+      Math.max(0, levelCount - 1) * MAP_NODE_STEP,
+  );
 
 const getLevelNodePosition = (localIndex: number, mapHeight: number) => ({
   left: NODE_PATH_LEFTS[localIndex % NODE_PATH_LEFTS.length],
   top: mapHeight - MAP_NODE_BOTTOM - localIndex * MAP_NODE_STEP,
 });
 
-const getShopMarkerPosition = (localIndex: number, mapHeight: number, hasPortal: boolean) => {
+const getShopMarkerPosition = (
+  localIndex: number,
+  mapHeight: number,
+  hasPortal: boolean,
+) => {
   const levelPosition = getLevelNodePosition(localIndex, mapHeight);
   const sideLeft = levelPosition.left > MAP_WIDTH / 2 ? 18 : 186;
 
@@ -118,7 +139,9 @@ type LevelSelectScreenProps = {
   onOpenShop: (worldId?: WorldId) => void;
   onOpenSettings: () => void;
   onOpenWorldChest: (worldChestId?: string) => void;
-  onOpenRestCheckpoint: (afterLevelId: string) => Promise<RestCheckpointRewardResult>;
+  onOpenRestCheckpoint: (
+    afterLevelId: string,
+  ) => Promise<RestCheckpointRewardResult>;
   onResetProgress: () => void;
   onSelectLevel: (levelId: string) => void;
 };
@@ -156,7 +179,9 @@ const MAP_OBJECTIVE_SNIPPETS = [
 
 const getShortObjective = (level: Level) =>
   level.worldId === 1
-    ? MAP_OBJECTIVE_SNIPPETS[(level.worldLevelNumber - 1) % MAP_OBJECTIVE_SNIPPETS.length]
+    ? MAP_OBJECTIVE_SNIPPETS[
+        (level.worldLevelNumber - 1) % MAP_OBJECTIVE_SNIPPETS.length
+      ]
     : level.objectiveText.replace(/^Objetivo:\s*/, '');
 
 const getWorldSelectorSubtitle = (worldId: WorldId) => {
@@ -213,8 +238,16 @@ export function LevelSelectScreen({
     { height: number; worldId: WorldId } | undefined
   >();
   const selectedWorld = getWorldById(selectedWorldId);
-  const { completedCount, levels: worldLevels, progressPercent, totalCount, worldComplete } =
-    useMemo(() => getWorldProgress(selectedWorldId, progress), [progress, selectedWorldId]);
+  const {
+    completedCount,
+    levels: worldLevels,
+    progressPercent,
+    totalCount,
+    worldComplete,
+  } = useMemo(
+    () => getWorldProgress(selectedWorldId, progress),
+    [progress, selectedWorldId],
+  );
   const currentLevel = getCurrentLevelForWorld(selectedWorldId, progress);
   const selectedMapConfig = getWorldMapConfig(selectedWorldId);
   const segmentedMapConfig =
@@ -242,9 +275,14 @@ export function LevelSelectScreen({
       ? resolveLegacyCampaignMapAsset(selectedMapConfig.rendererKey)
       : undefined;
   const bonusWorldChest = getBonusWorldChestProgress(progress);
-  const bonusWorldChestPendingId = bonusWorldChest.available ? bonusWorldChest.id : undefined;
-  const bonusChestMarkerPosition = getBonusChestMarkerPosition(selectedMapHeight);
-  const [selectedTarget, setSelectedTarget] = useState<SelectedTarget | undefined>();
+  const bonusWorldChestPendingId = bonusWorldChest.available
+    ? bonusWorldChest.id
+    : undefined;
+  const bonusChestMarkerPosition =
+    getBonusChestMarkerPosition(selectedMapHeight);
+  const [selectedTarget, setSelectedTarget] = useState<
+    SelectedTarget | undefined
+  >();
   const [restCheckpointReward, setRestCheckpointReward] = useState<
     RestCheckpointRewardResult | undefined
   >();
@@ -275,7 +313,8 @@ export function LevelSelectScreen({
     const { height, width } = event.nativeEvent.layout;
 
     setMapViewport((previous) =>
-      Math.abs(previous.height - height) < 0.5 && Math.abs(previous.width - width) < 0.5
+      Math.abs(previous.height - height) < 0.5 &&
+      Math.abs(previous.width - width) < 0.5
         ? previous
         : { height, width },
     );
@@ -428,7 +467,10 @@ export function LevelSelectScreen({
     mapFade.stopAnimation();
     mapFade.setValue(0);
     mapScrollY.setValue(openingScrollTarget.y);
-    mapScrollRef.current?.scrollTo({ animated: false, y: openingScrollTarget.y });
+    mapScrollRef.current?.scrollTo({
+      animated: false,
+      y: openingScrollTarget.y,
+    });
 
     let fadeAnimation: Animated.CompositeAnimation | undefined;
     const frame = requestAnimationFrame(() => {
@@ -509,9 +551,15 @@ export function LevelSelectScreen({
     setSelectedTarget({ levelId, type: 'level' });
   }, []);
 
-  const selectShop = (afterLevelId: string, comingSoon: boolean, locked: boolean) => {
+  const selectShop = (
+    afterLevelId: string,
+    comingSoon: boolean,
+    locked: boolean,
+  ) => {
     if (locked) {
-      showToast('Complete as fases anteriores para liberar este ponto de descanso.');
+      showToast(
+        'Complete as fases anteriores para liberar este ponto de descanso.',
+      );
       return;
     }
 
@@ -551,14 +599,20 @@ export function LevelSelectScreen({
     onSelectLevel(levelId);
   };
 
-  const openSelectedShop = (afterLevelId: string, comingSoon: boolean, locked: boolean) => {
+  const openSelectedShop = (
+    afterLevelId: string,
+    comingSoon: boolean,
+    locked: boolean,
+  ) => {
     if (comingSoon) {
       showToast('Próximo capítulo em breve.');
       return;
     }
 
     if (locked) {
-      showToast('Complete as fases anteriores para liberar este ponto de descanso.');
+      showToast(
+        'Complete as fases anteriores para liberar este ponto de descanso.',
+      );
       return;
     }
 
@@ -615,7 +669,9 @@ export function LevelSelectScreen({
   const selectedLevelLocked = selectedLevel
     ? !progress.unlockedLevelIds.includes(selectedLevel.id)
     : false;
-  const selectedLevelStars = selectedLevel ? progress.levelStars[selectedLevel.id] ?? 0 : 0;
+  const selectedLevelStars = selectedLevel
+    ? (progress.levelStars[selectedLevel.id] ?? 0)
+    : 0;
   const selectedShopLocked =
     selectedTarget?.type === 'shop'
       ? !isShopUnlockedAfterLevel(selectedTarget.afterLevelId, progress)
@@ -630,9 +686,14 @@ export function LevelSelectScreen({
   });
   // As 3 abas de mundo viraram ‹ › com pontinhos: a navegação anda pela lista
   // de mundos já desbloqueados, na ordem em que aparecem no WORLDS.
-  const unlockedWorlds = WORLDS.filter((world) => isWorldUnlocked(world.id, progress));
-  const selectedWorldIndex = unlockedWorlds.findIndex((world) => world.id === selectedWorldId);
-  const previousWorld = selectedWorldIndex > 0 ? unlockedWorlds[selectedWorldIndex - 1] : undefined;
+  const unlockedWorlds = WORLDS.filter((world) =>
+    isWorldUnlocked(world.id, progress),
+  );
+  const selectedWorldIndex = unlockedWorlds.findIndex(
+    (world) => world.id === selectedWorldId,
+  );
+  const previousWorld =
+    selectedWorldIndex > 0 ? unlockedWorlds[selectedWorldIndex - 1] : undefined;
   const nextWorld =
     selectedWorldIndex >= 0 && selectedWorldIndex < unlockedWorlds.length - 1
       ? unlockedWorlds[selectedWorldIndex + 1]
@@ -646,7 +707,10 @@ export function LevelSelectScreen({
   const trailPoints: TrailPoint[] = useMemo(
     () =>
       worldLevels.map((level) => {
-        const position = getLevelNodePosition(level.worldLevelNumber - 1, selectedMapHeight);
+        const position = getLevelNodePosition(
+          level.worldLevelNumber - 1,
+          selectedMapHeight,
+        );
 
         return { left: position.left + 44, top: position.top + 35 };
       }),
@@ -676,7 +740,9 @@ export function LevelSelectScreen({
             selectedWorld.theme === 'mountain' ? styles.mapFrameMountain : null,
             selectedWorld.theme === 'crystal' ? styles.mapFrameCrystal : null,
             selectedWorld.theme === 'sweet' ? styles.mapFrameSweet : null,
-            segmentedMapConfig ? { backgroundColor: segmentedMapConfig.backgroundColor } : null,
+            segmentedMapConfig
+              ? { backgroundColor: segmentedMapConfig.backgroundColor }
+              : null,
             { opacity: mapFade },
           ]}
         >
@@ -689,7 +755,10 @@ export function LevelSelectScreen({
           {selectedMapBackground ? (
             <Animated.View
               pointerEvents="none"
-              style={[styles.mapParallax, { transform: [{ translateY: mapParallaxOffset }] }]}
+              style={[
+                styles.mapParallax,
+                { transform: [{ translateY: mapParallaxOffset }] },
+              ]}
             >
               <ImageBackground
                 imageStyle={styles.mapImageAsset}
@@ -725,294 +794,356 @@ export function LevelSelectScreen({
             {segmentedMapConfig ? (
               segmentedMapTransform ? (
                 <View
-                pointerEvents="box-none"
-                style={[
-                  styles.segmentedMapLayer,
-                  {
-                    height: segmentedMapTransform.contentHeight,
-                    width: segmentedMapTransform.width,
-                  },
-                ]}
-              >
-                {useWorld1SceneBackground ? null : (
-                  <CampaignMapSegments
-                    segments={segmentedMapConfig.segments}
-                    transform={segmentedMapTransform}
-                  />
-                )}
-                {segmentedMapConfig.levelAnchors.map((anchor) => {
-                  const level = worldLevelById.get(anchor.levelId);
-
-                  if (!level) {
-                    return null;
-                  }
-
-                  const state = deriveCampaignMapLevelState(
-                    level.id,
-                    currentLevel?.id,
-                    progress,
-                  );
-                  const frames = getCampaignMapEntityFrames(
-                    anchor.point,
-                    segmentedMapConfig.levelNodeSize,
-                    segmentedMapConfig.levelNodeOrigin,
-                    segmentedMapTransform,
-                    segmentedMapConfig.minimumTouchSize,
-                  );
-
-                  return (
-                    <View
-                      key={anchor.levelId}
-                      pointerEvents="box-none"
-                      style={[styles.segmentedEntityPosition, frames.visual]}
-                    >
-                      <View
-                        style={[
-                          styles.segmentedEntityScale,
-                          {
-                            height: segmentedMapConfig.levelNodeSize.height,
-                            transform: [{ scale: segmentedMapTransform.scale }],
-                            width: segmentedMapConfig.levelNodeSize.width,
-                          },
-                        ]}
-                      >
-                        <MapLevelNode
-                          completed={state === 'completed'}
-                          current={state === 'current'}
-                          level={level}
-                          locked={state === 'locked'}
-                          selected={
-                            selectedTarget?.type === 'level' &&
-                            selectedTarget.levelId === level.id
-                          }
-                          onPress={selectLevel}
-                          stars={progress.levelStars[level.id] ?? 0}
-                        />
-                      </View>
-                    </View>
-                  );
-                })}
-                {segmentedMapConfig.landmarks.map((landmark) => {
-                  const frames = getCampaignMapEntityFrames(
-                    landmark.point,
-                    landmark.visualSize,
-                    landmark.origin,
-                    segmentedMapTransform,
-                    segmentedMapConfig.minimumTouchSize,
-                  );
-                  const landmarkPosition = [styles.segmentedEntityPosition, frames.visual];
-                  const landmarkScale = [
-                    styles.segmentedEntityScale,
+                  pointerEvents="box-none"
+                  style={[
+                    styles.segmentedMapLayer,
                     {
-                      height: landmark.visualSize.height,
-                      transform: [{ scale: segmentedMapTransform.scale }],
-                      width: landmark.visualSize.width,
+                      height: segmentedMapTransform.contentHeight,
+                      width: segmentedMapTransform.width,
                     },
-                  ];
-
-                  if (
-                    (landmark.kind === 'rest' || landmark.kind === 'shop') &&
-                    landmark.afterLevelId &&
-                    shouldShowShopAfterLevel(landmark.afterLevelId)
-                  ) {
-                    const level = worldLevelById.get(landmark.afterLevelId);
+                  ]}
+                >
+                  {useWorld1SceneBackground ? null : (
+                    <CampaignMapSegments
+                      segments={segmentedMapConfig.segments}
+                      transform={segmentedMapTransform}
+                    />
+                  )}
+                  {segmentedMapConfig.levelAnchors.map((anchor) => {
+                    const level = worldLevelById.get(anchor.levelId);
 
                     if (!level) {
                       return null;
                     }
 
-                    const locked = !isShopUnlockedAfterLevel(level.id, progress);
-                    const selected =
-                      selectedTarget?.type === 'shop' &&
-                      selectedTarget.afterLevelId === level.id &&
-                      !selectedTarget.comingSoon;
+                    const state = deriveCampaignMapLevelState(
+                      level.id,
+                      currentLevel?.id,
+                      progress,
+                    );
+                    const frames = getCampaignMapEntityFrames(
+                      anchor.point,
+                      segmentedMapConfig.levelNodeSize,
+                      segmentedMapConfig.levelNodeOrigin,
+                      segmentedMapTransform,
+                      segmentedMapConfig.minimumTouchSize,
+                    );
 
                     return (
-                      <View key={landmark.id} pointerEvents="box-none" style={landmarkPosition}>
-                        <View style={landmarkScale}>
-                          <CampaignMapLandmarkMarker
-                            afterLevelLabel={getLevelDisplayLabel(level)}
-                            kind={landmark.kind}
-                            locked={locked}
-                            selected={selected}
-                            visualKey={landmark.visualKey}
-                            onPress={() => selectShop(level.id, false, locked)}
+                      <View
+                        key={anchor.levelId}
+                        pointerEvents="box-none"
+                        style={[styles.segmentedEntityPosition, frames.visual]}
+                      >
+                        <View
+                          style={[
+                            styles.segmentedEntityScale,
+                            {
+                              height: segmentedMapConfig.levelNodeSize.height,
+                              transform: [
+                                { scale: segmentedMapTransform.scale },
+                              ],
+                              width: segmentedMapConfig.levelNodeSize.width,
+                            },
+                          ]}
+                        >
+                          <MapLevelNode
+                            completed={state === 'completed'}
+                            current={state === 'current'}
+                            level={level}
+                            locked={state === 'locked'}
+                            selected={
+                              selectedTarget?.type === 'level' &&
+                              selectedTarget.levelId === level.id
+                            }
+                            onPress={selectLevel}
+                            stars={progress.levelStars[level.id] ?? 0}
                           />
                         </View>
                       </View>
                     );
-                  }
+                  })}
+                  {segmentedMapConfig.landmarks.map((landmark) => {
+                    const frames = getCampaignMapEntityFrames(
+                      landmark.point,
+                      landmark.visualSize,
+                      landmark.origin,
+                      segmentedMapTransform,
+                      segmentedMapConfig.minimumTouchSize,
+                    );
+                    const landmarkPosition = [
+                      styles.segmentedEntityPosition,
+                      frames.visual,
+                    ];
+                    const landmarkScale = [
+                      styles.segmentedEntityScale,
+                      {
+                        height: landmark.visualSize.height,
+                        transform: [{ scale: segmentedMapTransform.scale }],
+                        width: landmark.visualSize.width,
+                      },
+                    ];
 
-                  if (
-                    landmark.kind === 'portal' &&
-                    landmark.afterLevelId &&
-                    landmark.targetWorldId !== undefined &&
-                    shouldShowWorldPortalAfterLevel(landmark.afterLevelId)
-                  ) {
-                    const afterLevelId = landmark.afterLevelId;
-                    const targetWorldId = landmark.targetWorldId;
-                    const nextWorldLevel = getNextWorldLevelAfterLevel(afterLevelId);
+                    if (
+                      (landmark.kind === 'rest' || landmark.kind === 'shop') &&
+                      landmark.afterLevelId &&
+                      shouldShowShopAfterLevel(landmark.afterLevelId)
+                    ) {
+                      const level = worldLevelById.get(landmark.afterLevelId);
 
-                    if (!nextWorldLevel || nextWorldLevel.worldId !== targetWorldId) {
-                      return null;
+                      if (!level) {
+                        return null;
+                      }
+
+                      const locked = !isShopUnlockedAfterLevel(
+                        level.id,
+                        progress,
+                      );
+                      const selected =
+                        selectedTarget?.type === 'shop' &&
+                        selectedTarget.afterLevelId === level.id &&
+                        !selectedTarget.comingSoon;
+
+                      return (
+                        <View
+                          key={landmark.id}
+                          pointerEvents="box-none"
+                          style={landmarkPosition}
+                        >
+                          <View style={landmarkScale}>
+                            <CampaignMapLandmarkMarker
+                              afterLevelLabel={getLevelDisplayLabel(level)}
+                              kind={landmark.kind}
+                              locked={locked}
+                              selected={selected}
+                              visualKey={landmark.visualKey}
+                              onPress={() =>
+                                selectShop(level.id, false, locked)
+                              }
+                            />
+                          </View>
+                        </View>
+                      );
                     }
 
-                    const targetWorld = getWorldById(targetWorldId);
-                    const locked = !isWorldUnlocked(targetWorldId, progress);
-                    const selected =
-                      selectedTarget?.type === 'worldPortal' &&
-                      selectedTarget.afterLevelId === afterLevelId;
+                    if (
+                      landmark.kind === 'portal' &&
+                      landmark.afterLevelId &&
+                      landmark.targetWorldId !== undefined &&
+                      shouldShowWorldPortalAfterLevel(landmark.afterLevelId)
+                    ) {
+                      const afterLevelId = landmark.afterLevelId;
+                      const targetWorldId = landmark.targetWorldId;
+                      const nextWorldLevel =
+                        getNextWorldLevelAfterLevel(afterLevelId);
 
-                    return (
-                      <View key={landmark.id} pointerEvents="box-none" style={landmarkPosition}>
-                        <View style={landmarkScale}>
-                          <CampaignMapLandmarkMarker
-                            kind={landmark.kind}
-                            locked={locked}
-                            selected={selected}
-                            visualKey={landmark.visualKey}
-                            worldLabel={targetWorld.label}
-                            onPress={() => selectWorldPortal(afterLevelId, targetWorldId)}
-                          />
+                      if (
+                        !nextWorldLevel ||
+                        nextWorldLevel.worldId !== targetWorldId
+                      ) {
+                        return null;
+                      }
+
+                      const targetWorld = getWorldById(targetWorldId);
+                      const locked = !isWorldUnlocked(targetWorldId, progress);
+                      const selected =
+                        selectedTarget?.type === 'worldPortal' &&
+                        selectedTarget.afterLevelId === afterLevelId;
+
+                      return (
+                        <View
+                          key={landmark.id}
+                          pointerEvents="box-none"
+                          style={landmarkPosition}
+                        >
+                          <View style={landmarkScale}>
+                            <CampaignMapLandmarkMarker
+                              kind={landmark.kind}
+                              locked={locked}
+                              selected={selected}
+                              visualKey={landmark.visualKey}
+                              worldLabel={targetWorld.label}
+                              onPress={() =>
+                                selectWorldPortal(afterLevelId, targetWorldId)
+                              }
+                            />
+                          </View>
                         </View>
-                      </View>
-                    );
-                  }
+                      );
+                    }
 
-                  return null;
-                })}
+                    return null;
+                  })}
                 </View>
               ) : (
                 <View
                   pointerEvents="none"
                   style={[
                     styles.segmentedMapLayer,
-                    { height: selectedMapHeight, width: mapViewport.width || '100%' },
+                    {
+                      height: selectedMapHeight,
+                      width: mapViewport.width || '100%',
+                    },
                   ]}
                 />
               )
             ) : (
-              <View pointerEvents="box-none" style={[styles.mapLayer, { height: selectedMapHeight }]}>
+              <View
+                pointerEvents="box-none"
+                style={[styles.mapLayer, { height: selectedMapHeight }]}
+              >
                 <MapStoneTrail points={trailPoints} />
-              {worldLevels.map((level) => {
-                const localIndex = level.worldLevelNumber - 1;
-                const completed = completedLevelIdSet.has(level.id);
-                const locked = !unlockedLevelIdSet.has(level.id);
-                const current = currentLevel?.id === level.id && !completed && !locked;
-                const selected =
-                  selectedTarget?.type === 'level' && selectedTarget.levelId === level.id;
-                const showShop = shouldShowShopAfterLevel(level.id);
-                const showFutureMarker = isLastKnownShopMarker(level.id);
-                const shopLocked = showShop && !isShopUnlockedAfterLevel(level.id, progress);
-                const futureLocked = showFutureMarker && !isShopUnlockedAfterLevel(level.id, progress);
-                const shopSelected =
-                  selectedTarget?.type === 'shop' &&
-                  selectedTarget.afterLevelId === level.id &&
-                  !selectedTarget.comingSoon;
-                const futureSelected =
-                  selectedTarget?.type === 'shop' &&
-                  selectedTarget.afterLevelId === level.id &&
-                  selectedTarget.comingSoon;
-                const nextWorldLevel = getNextWorldLevelAfterLevel(level.id);
-                const nextWorld = nextWorldLevel ? getWorldById(nextWorldLevel.worldId) : undefined;
-                const showWorldPortal = shouldShowWorldPortalAfterLevel(level.id);
-                const position = getLevelNodePosition(localIndex, selectedMapHeight);
-                const portalPosition = showWorldPortal
-                  ? getPortalMarkerPosition(localIndex, selectedMapHeight)
-                  : undefined;
-                const shopPosition = showShop
-                  ? getShopMarkerPosition(
-                      localIndex,
-                      selectedMapHeight,
-                      showWorldPortal || showFutureMarker,
-                    )
-                  : undefined;
-                const futurePosition = showFutureMarker
-                  ? getPortalMarkerPosition(localIndex, selectedMapHeight)
-                  : undefined;
-                const portalSelected =
-                  selectedTarget?.type === 'worldPortal' &&
-                  selectedTarget.afterLevelId === level.id;
-                const portalLocked = nextWorldLevel
-                  ? !isWorldUnlocked(nextWorldLevel.worldId, progress)
-                  : false;
-                return (
-                  <Fragment key={level.id}>
-                    <View style={[styles.nodePosition, position]}>
-                      <MapLevelNode
-                        completed={completed}
-                        current={current}
-                        level={level}
-                        locked={locked}
-                        selected={selected}
-                        onPress={selectLevel}
-                        stars={progress.levelStars[level.id] ?? 0}
-                      />
-                    </View>
-                    {showShop && shopPosition ? (
-                      <View style={[styles.shopPosition, shopPosition]}>
-                        <ShopMapMarker
-                          afterLevelLabel={getLevelDisplayLabel(level)}
-                          locked={shopLocked}
-                          selected={shopSelected}
-                          onPress={() => selectShop(level.id, false, shopLocked)}
+                {worldLevels.map((level) => {
+                  const localIndex = level.worldLevelNumber - 1;
+                  const completed = completedLevelIdSet.has(level.id);
+                  const locked = !unlockedLevelIdSet.has(level.id);
+                  const current =
+                    currentLevel?.id === level.id && !completed && !locked;
+                  const selected =
+                    selectedTarget?.type === 'level' &&
+                    selectedTarget.levelId === level.id;
+                  const showShop = shouldShowShopAfterLevel(level.id);
+                  const showFutureMarker = isLastKnownShopMarker(level.id);
+                  const shopLocked =
+                    showShop && !isShopUnlockedAfterLevel(level.id, progress);
+                  const futureLocked =
+                    showFutureMarker &&
+                    !isShopUnlockedAfterLevel(level.id, progress);
+                  const shopSelected =
+                    selectedTarget?.type === 'shop' &&
+                    selectedTarget.afterLevelId === level.id &&
+                    !selectedTarget.comingSoon;
+                  const futureSelected =
+                    selectedTarget?.type === 'shop' &&
+                    selectedTarget.afterLevelId === level.id &&
+                    selectedTarget.comingSoon;
+                  const nextWorldLevel = getNextWorldLevelAfterLevel(level.id);
+                  const nextWorld = nextWorldLevel
+                    ? getWorldById(nextWorldLevel.worldId)
+                    : undefined;
+                  const showWorldPortal = shouldShowWorldPortalAfterLevel(
+                    level.id,
+                  );
+                  const position = getLevelNodePosition(
+                    localIndex,
+                    selectedMapHeight,
+                  );
+                  const portalPosition = showWorldPortal
+                    ? getPortalMarkerPosition(localIndex, selectedMapHeight)
+                    : undefined;
+                  const shopPosition = showShop
+                    ? getShopMarkerPosition(
+                        localIndex,
+                        selectedMapHeight,
+                        showWorldPortal || showFutureMarker,
+                      )
+                    : undefined;
+                  const futurePosition = showFutureMarker
+                    ? getPortalMarkerPosition(localIndex, selectedMapHeight)
+                    : undefined;
+                  const portalSelected =
+                    selectedTarget?.type === 'worldPortal' &&
+                    selectedTarget.afterLevelId === level.id;
+                  const portalLocked = nextWorldLevel
+                    ? !isWorldUnlocked(nextWorldLevel.worldId, progress)
+                    : false;
+                  return (
+                    <Fragment key={level.id}>
+                      <View style={[styles.nodePosition, position]}>
+                        <MapLevelNode
+                          completed={completed}
+                          current={current}
+                          level={level}
+                          locked={locked}
+                          selected={selected}
+                          onPress={selectLevel}
+                          stars={progress.levelStars[level.id] ?? 0}
                         />
                       </View>
-                    ) : null}
-                    {showFutureMarker && futurePosition ? (
-                      <View style={[styles.shopPosition, futurePosition]}>
-                        <ShopMapMarker
-                          afterLevelLabel={getLevelDisplayLabel(level)}
-                          comingSoon
-                          locked={futureLocked}
-                          selected={futureSelected}
-                          onPress={() => selectShop(level.id, true, futureLocked)}
-                        />
-                      </View>
-                    ) : null}
-                    {showWorldPortal && nextWorldLevel && nextWorld && portalPosition ? (
-                      <View style={[styles.portalPosition, portalPosition]}>
-                        <Pressable
-                          accessibilityRole="button"
-                          accessibilityState={{ disabled: portalLocked, selected: portalSelected }}
-                          hitSlop={8}
-                          onPress={() => {
-                            selectWorldPortal(level.id, nextWorldLevel.worldId);
-                          }}
-                          style={({ pressed }) => [
-                            styles.portalMarker,
-                            portalLocked ? styles.portalMarkerLocked : null,
-                            portalSelected ? styles.portalMarkerSelected : null,
-                            pressed ? styles.portalMarkerPressed : null,
-                          ]}
-                        >
-                          <View style={styles.portalGlow} />
-                          <GameIcon
-                            muted={portalLocked}
-                            name={portalLocked ? 'lock' : 'map'}
-                            size={28}
-                            tone={portalLocked ? 'neutral' : 'blue'}
+                      {showShop && shopPosition ? (
+                        <View style={[styles.shopPosition, shopPosition]}>
+                          <ShopMapMarker
+                            afterLevelLabel={getLevelDisplayLabel(level)}
+                            locked={shopLocked}
+                            selected={shopSelected}
+                            onPress={() =>
+                              selectShop(level.id, false, shopLocked)
+                            }
                           />
-                          <Text numberOfLines={1} style={styles.portalLabel}>
-                            {nextWorld.label}
-                          </Text>
-                        </Pressable>
-                      </View>
-                    ) : null}
-                  </Fragment>
-                );
-              })}
-              {selectedWorldId === 21 ? (
-                <View style={[styles.bonusChestPosition, bonusChestMarkerPosition]}>
-                  <BonusWorldChestMarker
-                    completedCount={bonusWorldChest.completedCount}
-                    selected={selectedTarget?.type === 'bonusChest'}
-                    state={bonusChestState}
-                    totalCount={bonusWorldChest.totalCount}
-                    onPress={selectBonusChest}
-                  />
-                </View>
-              ) : null}
+                        </View>
+                      ) : null}
+                      {showFutureMarker && futurePosition ? (
+                        <View style={[styles.shopPosition, futurePosition]}>
+                          <ShopMapMarker
+                            afterLevelLabel={getLevelDisplayLabel(level)}
+                            comingSoon
+                            locked={futureLocked}
+                            selected={futureSelected}
+                            onPress={() =>
+                              selectShop(level.id, true, futureLocked)
+                            }
+                          />
+                        </View>
+                      ) : null}
+                      {showWorldPortal &&
+                      nextWorldLevel &&
+                      nextWorld &&
+                      portalPosition ? (
+                        <View style={[styles.portalPosition, portalPosition]}>
+                          <Pressable
+                            accessibilityRole="button"
+                            accessibilityState={{
+                              disabled: portalLocked,
+                              selected: portalSelected,
+                            }}
+                            hitSlop={8}
+                            onPress={() => {
+                              selectWorldPortal(
+                                level.id,
+                                nextWorldLevel.worldId,
+                              );
+                            }}
+                            style={({ pressed }) => [
+                              styles.portalMarker,
+                              portalLocked ? styles.portalMarkerLocked : null,
+                              portalSelected
+                                ? styles.portalMarkerSelected
+                                : null,
+                              pressed ? styles.portalMarkerPressed : null,
+                            ]}
+                          >
+                            <View style={styles.portalGlow} />
+                            <GameIcon
+                              muted={portalLocked}
+                              name={portalLocked ? 'lock' : 'map'}
+                              size={28}
+                              tone={portalLocked ? 'neutral' : 'blue'}
+                            />
+                            <Text numberOfLines={1} style={styles.portalLabel}>
+                              {nextWorld.label}
+                            </Text>
+                          </Pressable>
+                        </View>
+                      ) : null}
+                    </Fragment>
+                  );
+                })}
+                {selectedWorldId === 21 ? (
+                  <View
+                    style={[
+                      styles.bonusChestPosition,
+                      bonusChestMarkerPosition,
+                    ]}
+                  >
+                    <BonusWorldChestMarker
+                      completedCount={bonusWorldChest.completedCount}
+                      selected={selectedTarget?.type === 'bonusChest'}
+                      state={bonusChestState}
+                      totalCount={bonusWorldChest.totalCount}
+                      onPress={selectBonusChest}
+                    />
+                  </View>
+                ) : null}
               </View>
             )}
           </Animated.ScrollView>
@@ -1078,7 +1209,10 @@ export function LevelSelectScreen({
             <Pressable
               accessibilityRole="button"
               onPress={closePanel}
-              style={({ pressed }) => [styles.closeButton, pressed ? styles.closeButtonPressed : null]}
+              style={({ pressed }) => [
+                styles.closeButton,
+                pressed ? styles.closeButtonPressed : null,
+              ]}
             >
               <GameIcon name="close" size={30} tone="danger" />
             </Pressable>
@@ -1088,11 +1222,17 @@ export function LevelSelectScreen({
                 <View
                   style={[
                     styles.panelBanner,
-                    bonusWorldChestPendingId ? styles.panelBannerPortal : styles.panelBannerLocked,
+                    bonusWorldChestPendingId
+                      ? styles.panelBannerPortal
+                      : styles.panelBannerLocked,
                   ]}
                 >
                   <Text style={styles.panelBannerText}>
-                    {bonusWorldChestPendingId ? 'Disponível' : bonusWorldChest.claimed ? 'Coletado' : 'Bloqueado'}
+                    {bonusWorldChestPendingId
+                      ? 'Disponível'
+                      : bonusWorldChest.claimed
+                        ? 'Coletado'
+                        : 'Bloqueado'}
                   </Text>
                 </View>
                 <View style={styles.lockedPanelBody}>
@@ -1104,7 +1244,9 @@ export function LevelSelectScreen({
                   />
                   <View style={styles.panelCopy}>
                     <Text numberOfLines={1} style={styles.panelTitle}>
-                      {bonusWorldChest.claimed ? 'Baú Especial coletado' : 'Baú Especial Bloqueado'}
+                      {bonusWorldChest.claimed
+                        ? 'Baú Especial coletado'
+                        : 'Baú Especial Bloqueado'}
                     </Text>
                     <Text numberOfLines={2} style={styles.panelDescription}>
                       {bonusWorldChest.claimed
@@ -1124,7 +1266,9 @@ export function LevelSelectScreen({
               </>
             ) : null}
 
-            {selectedTarget.type === 'level' && selectedLevel && selectedLevelLocked ? (
+            {selectedTarget.type === 'level' &&
+            selectedLevel &&
+            selectedLevelLocked ? (
               <>
                 <View style={[styles.panelBanner, styles.panelBannerLocked]}>
                   <Text style={styles.panelBannerText}>Bloqueada</Text>
@@ -1140,13 +1284,20 @@ export function LevelSelectScreen({
                     </Text>
                   </View>
                   <View style={styles.panelButton}>
-                    <PrimaryButton disabled size="small" title="Bloqueada" onPress={() => undefined} />
+                    <PrimaryButton
+                      disabled
+                      size="small"
+                      title="Bloqueada"
+                      onPress={() => undefined}
+                    />
                   </View>
                 </View>
               </>
             ) : null}
 
-            {selectedTarget.type === 'level' && selectedLevel && !selectedLevelLocked ? (
+            {selectedTarget.type === 'level' &&
+            selectedLevel &&
+            !selectedLevelLocked ? (
               <>
                 <View style={styles.panelBanner}>
                   <Text style={styles.panelBannerText}>
@@ -1160,7 +1311,9 @@ export function LevelSelectScreen({
                     </Text>
                     <View style={styles.panelDifficultyRow}>
                       <View style={styles.difficultyBadge}>
-                        <Text style={styles.difficultyText}>{selectedLevel.difficulty}</Text>
+                        <Text style={styles.difficultyText}>
+                          {selectedLevel.difficulty}
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -1172,7 +1325,10 @@ export function LevelSelectScreen({
                         const isEarned = index < selectedLevelStars;
 
                         return (
-                          <View key={`panel-star-${selectedLevel.id}-${index}`} style={styles.panelStarIcon}>
+                          <View
+                            key={`panel-star-${selectedLevel.id}-${index}`}
+                            style={styles.panelStarIcon}
+                          >
                             <GameIcon
                               muted={!isEarned}
                               name="star"
@@ -1201,7 +1357,12 @@ export function LevelSelectScreen({
 
             {selectedTarget.type === 'shop' && selectedShopLevel ? (
               <>
-                <View style={[styles.panelBanner, selectedTarget.comingSoon ? styles.panelBannerSoon : null]}>
+                <View
+                  style={[
+                    styles.panelBanner,
+                    selectedTarget.comingSoon ? styles.panelBannerSoon : null,
+                  ]}
+                >
                   <Text style={styles.panelBannerText}>
                     {selectedTarget.comingSoon ? 'Em breve' : 'Descanso'}
                   </Text>
@@ -1209,7 +1370,9 @@ export function LevelSelectScreen({
                 <View style={styles.panelHeader}>
                   <View style={styles.panelTitleBlock}>
                     <Text numberOfLines={1} style={styles.panelTitle}>
-                      {selectedTarget.comingSoon ? 'Novo mundo em breve' : 'Ponto de descanso'}
+                      {selectedTarget.comingSoon
+                        ? 'Novo mundo em breve'
+                        : 'Ponto de descanso'}
                     </Text>
                     <Text numberOfLines={1} style={styles.panelDescription}>
                       {selectedTarget.comingSoon
@@ -1224,7 +1387,9 @@ export function LevelSelectScreen({
                   <View style={styles.panelButton}>
                     <PrimaryButton
                       disabled={
-                        selectedTarget.comingSoon || selectedShopLocked || isOpeningRestCheckpoint
+                        selectedTarget.comingSoon ||
+                        selectedShopLocked ||
+                        isOpeningRestCheckpoint
                       }
                       size="small"
                       title={
@@ -1247,16 +1412,22 @@ export function LevelSelectScreen({
               </>
             ) : null}
 
-            {selectedTarget.type === 'worldPortal' && selectedPortalLevel && selectedPortalWorld ? (
+            {selectedTarget.type === 'worldPortal' &&
+            selectedPortalLevel &&
+            selectedPortalWorld ? (
               <>
                 <View
                   style={[
                     styles.panelBanner,
-                    selectedPortalLocked ? styles.panelBannerLocked : styles.panelBannerPortal,
+                    selectedPortalLocked
+                      ? styles.panelBannerLocked
+                      : styles.panelBannerPortal,
                   ]}
                 >
                   <Text style={styles.panelBannerText}>
-                    {selectedPortalLocked ? 'Bloqueado' : selectedPortalWorld.label}
+                    {selectedPortalLocked
+                      ? 'Bloqueado'
+                      : selectedPortalWorld.label}
                   </Text>
                 </View>
                 <View style={styles.panelHeader}>
@@ -1288,7 +1459,10 @@ export function LevelSelectScreen({
                             : 'Abrir mundo'
                       }
                       onPress={() =>
-                        openSelectedWorld(selectedPortalWorld.id, selectedPortalLocked)
+                        openSelectedWorld(
+                          selectedPortalWorld.id,
+                          selectedPortalLocked,
+                        )
                       }
                     />
                   </View>
@@ -1298,7 +1472,11 @@ export function LevelSelectScreen({
           </Animated.View>
         ) : null}
 
-        <Modal animationType="fade" transparent visible={restCheckpointReward !== undefined}>
+        <Modal
+          animationType="fade"
+          transparent
+          visible={restCheckpointReward !== undefined}
+        >
           <View style={styles.rewardOverlay}>
             <View style={styles.rewardCard}>
               <Text style={styles.rewardKicker}>Ponto de descanso</Text>
@@ -1311,7 +1489,8 @@ export function LevelSelectScreen({
               <PrimaryButton
                 title="Abrir loja"
                 onPress={() => {
-                  const worldId = restCheckpointReward?.worldId ?? selectedWorldId;
+                  const worldId =
+                    restCheckpointReward?.worldId ?? selectedWorldId;
                   setRestCheckpointReward(undefined);
                   setSelectedTarget(undefined);
                   onOpenShop(worldId);

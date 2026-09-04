@@ -101,3 +101,33 @@ export const curveProgress = (
 
   return rawMax > 0 ? raw / rawMax : raw;
 };
+
+/**
+ * Folga somada antes do `Math.floor` em `bandIndex`.
+ *
+ * Um score de fronteira quase nunca é exato em binário. `(4 - 1) / 9 * 0.6`,
+ * por exemplo, não dá `0.2`: dá `0.19999999999999998`, e multiplicado por 5
+ * vira `0.9999999999999999` em vez de `1`. Sem a folga o `floor` derruba uma
+ * faixa inteira — foi exatamente o que acontecia com o primeiro mapa dos
+ * capítulos 4 e 7.
+ *
+ * 1e-9 é ordens de grandeza maior que o erro acumulado de um `double` nessas
+ * contas e ordens de grandeza menor que a largura de uma faixa (0,2 com cinco
+ * faixas), então não existe score legítimo que ela desloque.
+ */
+const BORDA_DE_FAIXA = 1e-9;
+
+/**
+ * Em qual das `bandCount` faixas iguais de `[0, 1]` cai `score`, tolerando o
+ * erro de ponto flutuante na fronteira. Devolve um índice em
+ * `[0, bandCount - 1]`, pronto para indexar um array de faixas.
+ *
+ * Existe para que a correção da fronteira more num lugar só: toda derivação
+ * de faixa a partir de um progresso curvado (campanha e capítulos) passa por
+ * aqui em vez de repetir o `floor` com a folga na mão.
+ */
+export const bandIndex = (score: number, bandCount: number): number =>
+  Math.max(
+    0,
+    Math.min(bandCount - 1, Math.floor(score * bandCount + BORDA_DE_FAIXA)),
+  );

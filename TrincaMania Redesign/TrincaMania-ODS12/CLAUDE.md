@@ -42,8 +42,7 @@ código. Marcadores pontuais ainda com arte antiga:
 reestruturada de 203 fases (8 mundos × 25 + bônus 21 × 3) para 103 fases (10
 mundos × 10 + bônus 21 × 3), na branch `feat/campanha-10x10`. Isso quebrou de
 propósito o invariante #4 antigo (as 203 fases congeladas) — o hash de
-`tests/levelComposition.test.cjs` foi recalculado sobre o novo conjunto de
-103. Save de jogador com progresso no esquema antigo não quebra: como os ids
+`tests/levelComposition.test.cjs` foi recalculado sobre o novo conjunto de 103. Save de jogador com progresso no esquema antigo não quebra: como os ids
 `wN-001`…`wN-010` são idênticos entre os dois esquemas,
 `detectDroppedCampaignProgress`/`CampaignResizeNoticeModal`
 (`src/storage/progressStorage.ts`, `src/components/CampaignResizeNoticeModal.tsx`)
@@ -69,14 +68,14 @@ de assumir que é troca simples.
 Delegue por padrão quando a tarefa cair numa destas faixas. Use `Agent` com o
 `subagent_type` correspondente.
 
-| Se a tarefa é… | Agente |
-|---|---|
-| Implementar/alterar componente, tela, hook, storage, áudio, haptics | `react-native-engineer` |
-| Mecânica, economia (moedas/chaves/baús), progressão, balanceamento | `game-designer` |
-| Revisar diff pronto, auditar drift entre docs e código (somente leitura) | `code-reviewer` |
-| Escrever/atualizar teste, investigar bug reproduzível | `qa-engineer` |
-| Sintoma concreto de lentidão/jank/memória (nunca preventivo) | `performance-engineer` |
-| Revisar interface, feedback, acessibilidade, "sensação" de recompensa | `ui-ux-engineer` |
+| Se a tarefa é…                                                           | Agente                  |
+| ------------------------------------------------------------------------ | ----------------------- |
+| Implementar/alterar componente, tela, hook, storage, áudio, haptics      | `react-native-engineer` |
+| Mecânica, economia (moedas/chaves/baús), progressão, balanceamento       | `game-designer`         |
+| Revisar diff pronto, auditar drift entre docs e código (somente leitura) | `code-reviewer`         |
+| Escrever/atualizar teste, investigar bug reproduzível                    | `qa-engineer`           |
+| Sintoma concreto de lentidão/jank/memória (nunca preventivo)             | `performance-engineer`  |
+| Revisar interface, feedback, acessibilidade, "sensação" de recompensa    | `ui-ux-engineer`        |
 
 Composição usual: `game-designer` decide o **quê** → `react-native-engineer`
 implementa o **como** → `qa-engineer` cobre com teste → `code-reviewer` fecha.
@@ -105,15 +104,22 @@ tarefa não trivial concluída; `/security-review` antes de release;
 - **Apresentação**: `src/screens/`, `src/components/`. `GameScreen.tsx` já tem ~3000 linhas — não deixe crescer com lógica que pertence ao domínio.
 
 Duas trilhas de conteúdo, não confunda:
+
 - **Campanha** — 103 fases em `src/data/levels.ts` (mundos 1–10 × 10 + bônus 21 × 3). Tabuleiro varia a cada tentativa.
-- **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o *retry* re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
+- **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o _retry_ re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
 
 ## Verificação (sempre antes de reportar terminado)
 
 ```
 npm run typecheck
-npm test   # node --test tests — passar o diretório, não um glob: glob citado não expande no cmd/PowerShell, e sem aspas também não expande fora do bash
+npm test   # scripts/rodar-testes.js resolve a lista de tests/*.test.cjs no Node
 ```
+
+Quem lista os arquivos é o Node, não o shell nem o runner: `node --test tests`
+só funciona até o Node 21 (do 22 em diante o diretório vira `MODULE_NOT_FOUND`)
+e `node --test tests/*.test.cjs` depende do shell expandir o glob, o que o cmd
+e o PowerShell não fazem. Teste novo em `tests/` só precisa terminar em
+`.test.cjs` para entrar na rodada.
 
 `tests/levelComposition.test.cjs` trava um hash sha256 do JSON das 103 fases
 canônicas (`as 103 fases canonicas continuam byte-identicas`). Qualquer edição

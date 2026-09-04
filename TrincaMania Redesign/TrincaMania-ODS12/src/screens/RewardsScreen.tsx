@@ -6,7 +6,10 @@ import { GameIcon, GameIconName, GameIconTone } from '../components/GameIcon';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { ScreenShell } from '../components/ScreenShell';
 import { TabScene } from '../components/TabScene';
-import { CHEST_PHASES_REQUIRED, getBonusWorldChestProgress } from '../storage/progressStorage';
+import {
+  CHEST_PHASES_REQUIRED,
+  getBonusWorldChestProgress,
+} from '../storage/progressStorage';
 import {
   COIN_TRAY_SLOT_COST,
   MAX_TRAY_CAPACITY,
@@ -75,7 +78,12 @@ function RewardCard({
       <View style={styles.rewardTopRow}>
         <GameIcon muted={disabled} name={iconName} size={40} tone={iconTone} />
         {actionLabel ? (
-          <View style={[styles.rewardActionPill, disabled ? styles.rewardActionPillDisabled : null]}>
+          <View
+            style={[
+              styles.rewardActionPill,
+              disabled ? styles.rewardActionPillDisabled : null,
+            ]}
+          >
             <Text numberOfLines={1} style={styles.rewardActionText}>
               {actionLabel}
             </Text>
@@ -135,7 +143,12 @@ function HubShortcut({
         </View>
       ) : null}
       <GameIcon muted={muted} name={iconName} size={40} tone={iconTone} />
-      <Text adjustsFontSizeToFit minimumFontScale={0.78} numberOfLines={2} style={styles.hubShortcutLabel}>
+      <Text
+        adjustsFontSizeToFit
+        minimumFontScale={0.78}
+        numberOfLines={2}
+        style={styles.hubShortcutLabel}
+      >
         {label}
       </Text>
     </Pressable>
@@ -159,17 +172,30 @@ export function RewardsScreen({
 }: RewardsScreenProps) {
   const currentWorldId = getCurrentWorldId(progress);
   const [message, setMessage] = useState<string | undefined>();
-  const [trayBoostMessage, setTrayBoostMessage] = useState<string | undefined>();
-  const trayPlusActive = trayBoostState.coinSlotExpiresAt !== null && coinTraySlotRemainingMs > 0;
-  const bonusSlotActive = trayBoostState.adSlotExpiresAt !== null && bonusTraySlotRemainingMs > 0;
-  const missingTrayPlusCoins = Math.max(0, COIN_TRAY_SLOT_COST - progress.coins);
+  const [trayBoostMessage, setTrayBoostMessage] = useState<
+    string | undefined
+  >();
+  const trayPlusActive =
+    trayBoostState.coinSlotExpiresAt !== null && coinTraySlotRemainingMs > 0;
+  const bonusSlotActive =
+    trayBoostState.adSlotExpiresAt !== null && bonusTraySlotRemainingMs > 0;
+  const missingTrayPlusCoins = Math.max(
+    0,
+    COIN_TRAY_SLOT_COST - progress.coins,
+  );
   const canBuyTrayPlus = missingTrayPlusCoins === 0;
   const bonusWorldChest = getBonusWorldChestProgress(progress);
-  const pendingWorldChestId = bonusWorldChest.available ? bonusWorldChest.id : undefined;
-  const chestProgressCount = progress.chestProgressLevelIds.length % CHEST_PHASES_REQUIRED;
-  const chestProgressPercent = (chestProgressCount / CHEST_PHASES_REQUIRED) * 100;
+  const pendingWorldChestId = bonusWorldChest.available
+    ? bonusWorldChest.id
+    : undefined;
+  const chestProgressCount =
+    progress.chestProgressLevelIds.length % CHEST_PHASES_REQUIRED;
+  const chestProgressPercent =
+    (chestProgressCount / CHEST_PHASES_REQUIRED) * 100;
   const chestRemainingCount =
-    chestProgressCount === 0 ? CHEST_PHASES_REQUIRED : CHEST_PHASES_REQUIRED - chestProgressCount;
+    chestProgressCount === 0
+      ? CHEST_PHASES_REQUIRED
+      : CHEST_PHASES_REQUIRED - chestProgressCount;
 
   useEffect(() => {
     if (!message) {
@@ -236,7 +262,10 @@ export function RewardsScreen({
   return (
     <ScreenShell scroll={false}>
       <TabScene worldId={currentWorldId}>
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.topBar}>
             <View style={styles.titleBlock}>
               <Text style={styles.sectionKicker}>Recompensas</Text>
@@ -248,7 +277,10 @@ export function RewardsScreen({
               accessibilityRole="button"
               hitSlop={8}
               onPress={onOpenSettings}
-              style={({ pressed }) => [styles.settingsButton, pressed ? styles.buttonPressed : null]}
+              style={({ pressed }) => [
+                styles.settingsButton,
+                pressed ? styles.buttonPressed : null,
+              ]}
             >
               <GameIcon name="settings" size={30} tone="blue" />
               <Text style={styles.settingsText}>Menu</Text>
@@ -286,18 +318,28 @@ export function RewardsScreen({
                 status={specialChestStatus}
                 title="Baú Especial"
                 tone="purple"
-                onPress={pendingWorldChestId ? () => onOpenWorldChest(pendingWorldChestId) : undefined}
+                onPress={
+                  pendingWorldChestId
+                    ? () => onOpenWorldChest(pendingWorldChestId)
+                    : undefined
+                }
               />
               <RewardCard
                 iconName="bonus"
                 iconTone="blue"
-                status={bonusSlotActive ? bonusSlotStatus : 'Disponível na fase'}
+                status={
+                  bonusSlotActive ? bonusSlotStatus : 'Disponível na fase'
+                }
                 title="Espaço Bônus"
                 tone="blue"
               />
               <RewardCard
                 actionLabel={
-                  trayPlusActive ? undefined : canBuyTrayPlus ? 'Ativar' : `Faltam ${missingTrayPlusCoins}`
+                  trayPlusActive
+                    ? undefined
+                    : canBuyTrayPlus
+                      ? 'Ativar'
+                      : `Faltam ${missingTrayPlusCoins}`
                 }
                 disabled={!trayPlusActive && !canBuyTrayPlus}
                 iconName="tray"
@@ -336,7 +378,12 @@ export function RewardsScreen({
 
           <View style={styles.quickActions}>
             <View style={styles.howToAction}>
-              <PrimaryButton size="compact" title="Como jogar" variant="secondary" onPress={onShowTutorial} />
+              <PrimaryButton
+                size="compact"
+                title="Como jogar"
+                variant="secondary"
+                onPress={onShowTutorial}
+              />
             </View>
           </View>
         </ScrollView>

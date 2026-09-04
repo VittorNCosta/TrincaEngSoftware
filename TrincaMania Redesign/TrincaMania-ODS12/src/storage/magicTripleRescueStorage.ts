@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const MAGIC_TRIPLE_RESCUE_STORAGE_KEY = '@trinca-mania/magic-triple-rescue-v1';
+export const MAGIC_TRIPLE_RESCUE_STORAGE_KEY =
+  '@trinca-mania/magic-triple-rescue-v1';
 export const MAGIC_TRIPLE_RESCUE_MAX_PROMPTS = 2;
 
 export type MagicTripleRescueState = {
@@ -8,10 +9,11 @@ export type MagicTripleRescueState = {
   tutorialSeenCount: number;
 };
 
-export const createInitialMagicTripleRescueState = (): MagicTripleRescueState => ({
-  rescueUsed: false,
-  tutorialSeenCount: 0,
-});
+export const createInitialMagicTripleRescueState =
+  (): MagicTripleRescueState => ({
+    rescueUsed: false,
+    tutorialSeenCount: 0,
+  });
 
 export const normalizeMagicTripleRescueState = (
   state: Partial<MagicTripleRescueState> | undefined,
@@ -59,7 +61,9 @@ export const loadMagicTripleRescueState = async () => {
   }
 };
 
-export const saveMagicTripleRescueState = async (state: MagicTripleRescueState) => {
+export const saveMagicTripleRescueState = async (
+  state: MagicTripleRescueState,
+) => {
   const normalizedState = normalizeMagicTripleRescueState(state);
   await AsyncStorage.setItem(
     MAGIC_TRIPLE_RESCUE_STORAGE_KEY,

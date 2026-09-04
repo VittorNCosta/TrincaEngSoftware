@@ -48,7 +48,12 @@ function SettingsAction({
         pressed ? styles.pressed : null,
       ]}
     >
-      <GameIcon muted={!active} name={iconName} size={40} tone={active ? tone : 'neutral'} />
+      <GameIcon
+        muted={!active}
+        name={iconName}
+        size={40}
+        tone={active ? tone : 'neutral'}
+      />
       <View style={styles.actionCopy}>
         <Text numberOfLines={1} style={styles.actionLabel}>
           {label}
@@ -59,8 +64,18 @@ function SettingsAction({
           </Text>
         ) : null}
       </View>
-      <View style={[styles.stateBadge, active ? styles.activeBadge : styles.inactiveBadge]}>
-        <Text style={[styles.stateBadgeText, active ? styles.activeBadgeText : styles.inactiveBadgeText]}>
+      <View
+        style={[
+          styles.stateBadge,
+          active ? styles.activeBadge : styles.inactiveBadge,
+        ]}
+      >
+        <Text
+          style={[
+            styles.stateBadgeText,
+            active ? styles.activeBadgeText : styles.inactiveBadgeText,
+          ]}
+        >
           {stateMark}
         </Text>
       </View>
@@ -124,9 +139,21 @@ export function SettingsModal({
     );
 
   return (
-    <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.overlay}>
-        <Pressable accessibilityRole="button" style={styles.backdrop} onPress={onClose} />
+    <Modal
+      animationType="fade"
+      transparent
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.overlay}
+      >
+        <Pressable
+          accessibilityRole="button"
+          style={styles.backdrop}
+          onPress={onClose}
+        />
         <View style={styles.panel}>
           <View pointerEvents="none" style={styles.panelGlow} />
           <View style={styles.header}>
@@ -140,7 +167,10 @@ export function SettingsModal({
               accessibilityRole="button"
               hitSlop={8}
               onPress={onClose}
-              style={({ pressed }) => [styles.closeButton, pressed ? styles.pressed : null]}
+              style={({ pressed }) => [
+                styles.closeButton,
+                pressed ? styles.pressed : null,
+              ]}
             >
               <GameIcon name="close" size={30} tone="danger" />
             </Pressable>
@@ -157,7 +187,9 @@ export function SettingsModal({
             />
             <SettingsAction
               active={settings.hapticsEnabled}
-              iconName={settings.hapticsEnabled ? 'vibration-on' : 'vibration-off'}
+              iconName={
+                settings.hapticsEnabled ? 'vibration-on' : 'vibration-off'
+              }
               label={`Vibração: ${settings.hapticsEnabled ? 'Ligada' : 'Desligada'}`}
               status="Resposta ao toque"
               tone="green"
@@ -178,7 +210,10 @@ export function SettingsModal({
             <Pressable
               accessibilityRole="button"
               onPress={handleResetProgress}
-              style={({ pressed }) => [styles.resetButton, pressed ? styles.pressed : null]}
+              style={({ pressed }) => [
+                styles.resetButton,
+                pressed ? styles.pressed : null,
+              ]}
             >
               <Text style={styles.resetButtonText}>Resetar progresso</Text>
             </Pressable>
@@ -186,9 +221,14 @@ export function SettingsModal({
               <Pressable
                 accessibilityRole="button"
                 onPress={handleUnlockAllForDevMode}
-                style={({ pressed }) => [styles.devButton, pressed ? styles.pressed : null]}
+                style={({ pressed }) => [
+                  styles.devButton,
+                  pressed ? styles.pressed : null,
+                ]}
               >
-                <Text style={styles.devButtonText}>Modo dev: liberar todas as fases</Text>
+                <Text style={styles.devButtonText}>
+                  Modo dev: liberar todas as fases
+                </Text>
               </Pressable>
             ) : null}
           </View>
@@ -196,7 +236,10 @@ export function SettingsModal({
           <Pressable
             accessibilityRole="button"
             onPress={onClose}
-            style={({ pressed }) => [styles.doneButton, pressed ? styles.pressed : null]}
+            style={({ pressed }) => [
+              styles.doneButton,
+              pressed ? styles.pressed : null,
+            ]}
           >
             <Text style={styles.doneButtonText}>Fechar</Text>
           </Pressable>

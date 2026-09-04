@@ -83,7 +83,11 @@ function BoardTileBase({
   }, [blocked, highlighted, scale]);
 
   useEffect(() => {
-    if (wasMysteryHiddenRef.current && tile.mystery === true && tile.revealed === true) {
+    if (
+      wasMysteryHiddenRef.current &&
+      tile.mystery === true &&
+      tile.revealed === true
+    ) {
       revealFlash.setValue(0);
       Animated.sequence([
         Animated.timing(revealFlash, {
@@ -240,14 +244,35 @@ function BoardTileBase({
         },
       ]}
     >
-      <Animated.View pointerEvents="none" style={[styles.tapFlash, { opacity: tapFlash }]} />
-      <Animated.View pointerEvents="none" style={[styles.blockedFlash, { opacity: blockedFlash }]} />
-      <Animated.View pointerEvents="none" style={[styles.revealFlash, { opacity: revealFlash }]} />
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.tapFlash, { opacity: tapFlash }]}
+      />
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.blockedFlash, { opacity: blockedFlash }]}
+      />
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.revealFlash, { opacity: revealFlash }]}
+      />
       <View pointerEvents="none" style={styles.innerBottomShade} />
       <View pointerEvents="none" style={styles.specular} />
       {isMysteryHidden ? (
-        <View style={[styles.mysteryMarkWrap, blocked ? styles.mysteryMarkWrapBlocked : null]}>
-          <Text style={[styles.mysteryMark, blocked ? styles.mysteryMarkBlocked : null]}>?</Text>
+        <View
+          style={[
+            styles.mysteryMarkWrap,
+            blocked ? styles.mysteryMarkWrapBlocked : null,
+          ]}
+        >
+          <Text
+            style={[
+              styles.mysteryMark,
+              blocked ? styles.mysteryMarkBlocked : null,
+            ]}
+          >
+            ?
+          </Text>
         </View>
       ) : (
         <View pointerEvents="none" style={blocked ? styles.blockedIcon : null}>
@@ -273,7 +298,9 @@ function BoardTileBase({
           </View>
         </>
       ) : null}
-      {highlighted && !blocked ? <View pointerEvents="none" style={styles.hintGlow} /> : null}
+      {highlighted && !blocked ? (
+        <View pointerEvents="none" style={styles.hintGlow} />
+      ) : null}
     </AnimatedPressable>
   );
 }

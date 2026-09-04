@@ -36,11 +36,18 @@ const { LEVELS } = require('../src/data/levels.ts');
  * ANTERIOR a otimizacao. Se qualquer assert aqui falhar, a otimizacao mudou
  * regra de negocio — nao e um teste desatualizado.
  */
-const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
+const sha256 = (value) =>
+  crypto.createHash('sha256').update(value).digest('hex');
 
-const campaignLevelIds = LEVELS.filter((level) => level.worldId !== 21).map((level) => level.id);
-const bonusLevelIds = LEVELS.filter((level) => level.worldId === 21).map((level) => level.id);
-const world1LevelIds = LEVELS.filter((level) => level.worldId === 1).map((level) => level.id);
+const campaignLevelIds = LEVELS.filter((level) => level.worldId !== 21).map(
+  (level) => level.id,
+);
+const bonusLevelIds = LEVELS.filter((level) => level.worldId === 21).map(
+  (level) => level.id,
+);
+const world1LevelIds = LEVELS.filter((level) => level.worldId === 1).map(
+  (level) => level.id,
+);
 
 const starsFor = (levelIds, value) =>
   levelIds.reduce((stars, levelId) => {
@@ -53,94 +60,139 @@ const base = createInitialProgress();
 const SCENARIOS = [
   ['vazio', {}],
   ['inicial', { ...base }],
-  ['parcial-40', {
-    ...base,
-    coins: 1234,
-    keys: 2,
-    completedLevelIds: campaignLevelIds.slice(0, 40),
-    levelStars: starsFor(campaignLevelIds.slice(0, 40), (id) => (id.charCodeAt(4) % 3) + 1),
-    itemCounts: { hint: 3, shuffle: 1, undo: 7 },
-  }],
-  ['campanha-completa-100', {
-    ...base,
-    coins: 99999,
-    keys: 5,
-    chestProgressLevelIds: campaignLevelIds,
-    completedLevelIds: campaignLevelIds,
-    levelStars: starsFor(campaignLevelIds, 3),
-    itemCounts: { hint: 10, shuffle: 10, undo: 10 },
-  }],
-  ['ids-invalidos', {
-    ...base,
-    completedLevelIds: ['w1-001', 'NAO-EXISTE', 'w1-002', 'w1-001', 42, null, undefined, 'w99-999'],
-    unlockedLevelIds: ['zzz', 'w1-003', 'w1-003', {}, 'chapter-0001'],
-    collectedRestCheckpointIds: ['w1-005', 'lixo', 7],
-    chestProgressLevelIds: ['w1-001', 'inexistente', 'bonus-w1-001'],
-    levelStars: { 'w1-001': 3, 'nao-existe': 3, 'w1-002': 2 },
-  }],
-  ['estrelas-fora-de-faixa', {
-    ...base,
-    completedLevelIds: world1LevelIds.slice(0, 10),
-    levelStars: {
-      'w1-001': 0,
-      'w1-002': -5,
-      'w1-003': 7,
-      'w1-004': 2.7,
-      'w1-005': NaN,
-      'w1-006': '3',
-      'w1-007': null,
-      'w1-008': Infinity,
-      'w1-009': 1.999,
-      'w1-010': 3,
-      'w2-001': true,
+  [
+    'parcial-40',
+    {
+      ...base,
+      coins: 1234,
+      keys: 2,
+      completedLevelIds: campaignLevelIds.slice(0, 40),
+      levelStars: starsFor(
+        campaignLevelIds.slice(0, 40),
+        (id) => (id.charCodeAt(4) % 3) + 1,
+      ),
+      itemCounts: { hint: 3, shuffle: 1, undo: 7 },
     },
-  }],
-  ['bonus-desbloqueado', {
-    ...base,
-    completedLevelIds: world1LevelIds,
-    levelStars: starsFor(world1LevelIds, 3),
-  }],
-  ['bonus-nao-desbloqueado', {
-    ...base,
-    completedLevelIds: world1LevelIds,
-    levelStars: { ...starsFor(world1LevelIds, 3), 'w1-005': 2 },
-  }],
-  ['bau-pendente', {
-    ...base,
-    completedLevelIds: [...world1LevelIds, ...bonusLevelIds],
-    levelStars: starsFor([...world1LevelIds, ...bonusLevelIds], 3),
-  }],
-  ['bau-reivindicado', {
-    ...base,
-    completedLevelIds: [...world1LevelIds, ...bonusLevelIds],
-    levelStars: starsFor([...world1LevelIds, ...bonusLevelIds], 3),
-    claimedWorldChestIds: ['bonus-world-21'],
-    pendingWorldChestIds: ['bonus-world-21', 'lixo'],
-  }],
-  ['tipos-lixo', {
-    completedLevelIds: 'nao-e-array',
-    unlockedLevelIds: null,
-    chestProgressLevelIds: undefined,
-    claimedWorldChestIds: 12,
-    pendingWorldChestIds: {},
-    collectedRestCheckpointIds: false,
-    levelStars: [1, 2, 3],
-    itemCounts: 'nada',
-    coins: -50.9,
-    keys: 3.9,
-    bonusWorldAchievementShown: 'sim',
-  }],
-  ['coins-keys-negativos', { ...base, coins: -1, keys: -10, bonusWorldAchievementShown: true }],
-  ['campanha-mais-bonus-parcial', {
-    ...base,
-    completedLevelIds: [...campaignLevelIds, bonusLevelIds[0]],
-    levelStars: { ...starsFor(campaignLevelIds, 3), [bonusLevelIds[0]]: 2 },
-    coins: 500,
-  }],
+  ],
+  [
+    'campanha-completa-100',
+    {
+      ...base,
+      coins: 99999,
+      keys: 5,
+      chestProgressLevelIds: campaignLevelIds,
+      completedLevelIds: campaignLevelIds,
+      levelStars: starsFor(campaignLevelIds, 3),
+      itemCounts: { hint: 10, shuffle: 10, undo: 10 },
+    },
+  ],
+  [
+    'ids-invalidos',
+    {
+      ...base,
+      completedLevelIds: [
+        'w1-001',
+        'NAO-EXISTE',
+        'w1-002',
+        'w1-001',
+        42,
+        null,
+        undefined,
+        'w99-999',
+      ],
+      unlockedLevelIds: ['zzz', 'w1-003', 'w1-003', {}, 'chapter-0001'],
+      collectedRestCheckpointIds: ['w1-005', 'lixo', 7],
+      chestProgressLevelIds: ['w1-001', 'inexistente', 'bonus-w1-001'],
+      levelStars: { 'w1-001': 3, 'nao-existe': 3, 'w1-002': 2 },
+    },
+  ],
+  [
+    'estrelas-fora-de-faixa',
+    {
+      ...base,
+      completedLevelIds: world1LevelIds.slice(0, 10),
+      levelStars: {
+        'w1-001': 0,
+        'w1-002': -5,
+        'w1-003': 7,
+        'w1-004': 2.7,
+        'w1-005': NaN,
+        'w1-006': '3',
+        'w1-007': null,
+        'w1-008': Infinity,
+        'w1-009': 1.999,
+        'w1-010': 3,
+        'w2-001': true,
+      },
+    },
+  ],
+  [
+    'bonus-desbloqueado',
+    {
+      ...base,
+      completedLevelIds: world1LevelIds,
+      levelStars: starsFor(world1LevelIds, 3),
+    },
+  ],
+  [
+    'bonus-nao-desbloqueado',
+    {
+      ...base,
+      completedLevelIds: world1LevelIds,
+      levelStars: { ...starsFor(world1LevelIds, 3), 'w1-005': 2 },
+    },
+  ],
+  [
+    'bau-pendente',
+    {
+      ...base,
+      completedLevelIds: [...world1LevelIds, ...bonusLevelIds],
+      levelStars: starsFor([...world1LevelIds, ...bonusLevelIds], 3),
+    },
+  ],
+  [
+    'bau-reivindicado',
+    {
+      ...base,
+      completedLevelIds: [...world1LevelIds, ...bonusLevelIds],
+      levelStars: starsFor([...world1LevelIds, ...bonusLevelIds], 3),
+      claimedWorldChestIds: ['bonus-world-21'],
+      pendingWorldChestIds: ['bonus-world-21', 'lixo'],
+    },
+  ],
+  [
+    'tipos-lixo',
+    {
+      completedLevelIds: 'nao-e-array',
+      unlockedLevelIds: null,
+      chestProgressLevelIds: undefined,
+      claimedWorldChestIds: 12,
+      pendingWorldChestIds: {},
+      collectedRestCheckpointIds: false,
+      levelStars: [1, 2, 3],
+      itemCounts: 'nada',
+      coins: -50.9,
+      keys: 3.9,
+      bonusWorldAchievementShown: 'sim',
+    },
+  ],
+  [
+    'coins-keys-negativos',
+    { ...base, coins: -1, keys: -10, bonusWorldAchievementShown: true },
+  ],
+  [
+    'campanha-mais-bonus-parcial',
+    {
+      ...base,
+      completedLevelIds: [...campaignLevelIds, bonusLevelIds[0]],
+      levelStars: { ...starsFor(campaignLevelIds, 3), [bonusLevelIds[0]]: 2 },
+      coins: 500,
+    },
+  ],
 ];
 
 const GOLDEN = {
-  'vazio': {
+  vazio: {
     chestProgressCount: 0,
     claimedWorldChestIds: [],
     coins: 0,
@@ -152,7 +204,7 @@ const GOLDEN = {
     starsCount: 0,
     unlockedCount: 1,
   },
-  'inicial': {
+  inicial: {
     chestProgressCount: 0,
     claimedWorldChestIds: [],
     coins: 0,
@@ -308,18 +360,50 @@ test('normalizeProgress preserva a saida byte-a-byte apos a troca por Set/Map', 
     const output = normalizeProgress(structuredClone(input));
 
     // Os campos legiveis vem primeiro: quando algo quebra, eles dizem O QUE mudou.
-    assert.equal(output.completedLevelIds.length, expected.completedCount, `${name}: completedLevelIds`);
-    assert.equal(output.unlockedLevelIds.length, expected.unlockedCount, `${name}: unlockedLevelIds`);
-    assert.equal(Object.keys(output.levelStars).length, expected.starsCount, `${name}: levelStars`);
-    assert.equal(output.chestProgressLevelIds.length, expected.chestProgressCount, `${name}: chestProgressLevelIds`);
-    assert.equal(output.collectedRestCheckpointIds.length, expected.restCount, `${name}: collectedRestCheckpointIds`);
+    assert.equal(
+      output.completedLevelIds.length,
+      expected.completedCount,
+      `${name}: completedLevelIds`,
+    );
+    assert.equal(
+      output.unlockedLevelIds.length,
+      expected.unlockedCount,
+      `${name}: unlockedLevelIds`,
+    );
+    assert.equal(
+      Object.keys(output.levelStars).length,
+      expected.starsCount,
+      `${name}: levelStars`,
+    );
+    assert.equal(
+      output.chestProgressLevelIds.length,
+      expected.chestProgressCount,
+      `${name}: chestProgressLevelIds`,
+    );
+    assert.equal(
+      output.collectedRestCheckpointIds.length,
+      expected.restCount,
+      `${name}: collectedRestCheckpointIds`,
+    );
     assert.equal(output.coins, expected.coins, `${name}: coins`);
     assert.equal(output.keys, expected.keys, `${name}: keys`);
-    assert.deepEqual(output.pendingWorldChestIds, expected.pendingWorldChestIds, `${name}: pendingWorldChestIds`);
-    assert.deepEqual(output.claimedWorldChestIds, expected.claimedWorldChestIds, `${name}: claimedWorldChestIds`);
+    assert.deepEqual(
+      output.pendingWorldChestIds,
+      expected.pendingWorldChestIds,
+      `${name}: pendingWorldChestIds`,
+    );
+    assert.deepEqual(
+      output.claimedWorldChestIds,
+      expected.claimedWorldChestIds,
+      `${name}: claimedWorldChestIds`,
+    );
 
     // E o hash fecha o que os campos acima nao cobrem (ordem, estrelas por fase).
-    assert.equal(sha256(JSON.stringify(output)), expected.sha256, `${name}: saida divergiu do golden pre-otimizacao`);
+    assert.equal(
+      sha256(JSON.stringify(output)),
+      expected.sha256,
+      `${name}: saida divergiu do golden pre-otimizacao`,
+    );
   });
 });
 
@@ -329,13 +413,23 @@ test('normalizeProgress e idempotente — encadear chamadas nao muda o estado', 
     const twice = normalizeProgress(once);
     const thrice = normalizeProgress(twice);
 
-    assert.equal(JSON.stringify(twice), JSON.stringify(once), `${name}: 2a normalizacao mudou o estado`);
-    assert.equal(JSON.stringify(thrice), JSON.stringify(once), `${name}: 3a normalizacao mudou o estado`);
+    assert.equal(
+      JSON.stringify(twice),
+      JSON.stringify(once),
+      `${name}: 2a normalizacao mudou o estado`,
+    );
+    assert.equal(
+      JSON.stringify(thrice),
+      JSON.stringify(once),
+      `${name}: 3a normalizacao mudou o estado`,
+    );
   });
 });
 
 test('estrelas invalidas continuam sendo fixadas na faixa 1..3 e ids desconhecidos sao descartados', () => {
-  const [, input] = SCENARIOS.find(([name]) => name === 'estrelas-fora-de-faixa');
+  const [, input] = SCENARIOS.find(
+    ([name]) => name === 'estrelas-fora-de-faixa',
+  );
   const { levelStars } = normalizeProgress(structuredClone(input));
 
   assert.equal(levelStars['w1-001'], 1); // 0 -> completada -> 1
@@ -346,7 +440,9 @@ test('estrelas invalidas continuam sendo fixadas na faixa 1..3 e ids desconhecid
   assert.equal(levelStars['w1-009'], 1); // 1.999 -> truncado para 1
   assert.equal(levelStars['w1-010'], 3);
   assert.equal(levelStars['w2-001'], undefined); // true nao e number
-  assert.ok(Object.values(levelStars).every((value) => value >= 1 && value <= 3));
+  assert.ok(
+    Object.values(levelStars).every((value) => value >= 1 && value <= 3),
+  );
 });
 
 test('a cadeia de 4 normalizeProgress de uma compra-e-uso continua consistente', () => {
@@ -364,7 +460,10 @@ test('a cadeia de 4 normalizeProgress de uma compra-e-uso continua consistente',
   assert.equal(result.itemCounts.hint, 0);
   assert.equal(result.completedLevelIds.length, 100);
   assert.equal(result.unlockedLevelIds.length, 101);
-  assert.equal(JSON.stringify(normalizeProgress(result)), JSON.stringify(result));
+  assert.equal(
+    JSON.stringify(normalizeProgress(result)),
+    JSON.stringify(result),
+  );
 });
 
 test('applyLevelCompletion no fim da campanha mantem contagens e desbloqueios', () => {
@@ -381,5 +480,8 @@ test('applyLevelCompletion no fim da campanha mantem contagens e desbloqueios', 
   assert.equal(result.progress.completedLevelIds.length, 100);
   assert.equal(result.progress.chestProgressLevelIds.length, 100);
   assert.equal(result.progress.levelStars['w10-010'], 3);
-  assert.equal(JSON.stringify(normalizeProgress(result.progress)), JSON.stringify(result.progress));
+  assert.equal(
+    JSON.stringify(normalizeProgress(result.progress)),
+    JSON.stringify(result.progress),
+  );
 });

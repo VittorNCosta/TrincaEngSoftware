@@ -97,51 +97,91 @@ export const BOSQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
   openingFocusRatio: 0.45,
   openingInsets: { bottom: 48, top: 170 },
   progressionDirection: 'bottom-to-top',
-  road: [BOSQUE_ENTRY, ...BOSQUE_LEVEL_ANCHORS.map(({ point }) => point), BOSQUE_EXIT],
+  road: [
+    BOSQUE_ENTRY,
+    ...BOSQUE_LEVEL_ANCHORS.map(({ point }) => point),
+    BOSQUE_EXIT,
+  ],
   roadWidth: 68,
   segmentOverlap: 24,
   segments: [
     {
       height: 324,
       id: 'bosque-segment-canopy',
-      layers: [{ assetKey: 'forest-canopy', id: 'bosque-canopy-terrain', role: 'terrain' }],
+      layers: [
+        {
+          assetKey: 'forest-canopy',
+          id: 'bosque-canopy-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 0,
     },
     {
       height: 564,
       id: 'bosque-segment-gate',
-      layers: [{ assetKey: 'forest-gate', id: 'bosque-gate-terrain', role: 'terrain' }],
+      layers: [
+        { assetKey: 'forest-gate', id: 'bosque-gate-terrain', role: 'terrain' },
+      ],
       top: 300,
     },
     {
       height: 564,
       id: 'bosque-segment-river',
-      layers: [{ assetKey: 'forest-river', id: 'bosque-river-terrain', role: 'terrain' }],
+      layers: [
+        {
+          assetKey: 'forest-river',
+          id: 'bosque-river-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 840,
     },
     {
       height: 564,
       id: 'bosque-segment-grove',
-      layers: [{ assetKey: 'forest-grove', id: 'bosque-grove-terrain', role: 'terrain' }],
+      layers: [
+        {
+          assetKey: 'forest-grove',
+          id: 'bosque-grove-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 1380,
     },
     {
       height: 564,
       id: 'bosque-segment-sunlit',
-      layers: [{ assetKey: 'forest-sunlit', id: 'bosque-sunlit-terrain', role: 'terrain' }],
+      layers: [
+        {
+          assetKey: 'forest-sunlit',
+          id: 'bosque-sunlit-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 1920,
     },
     {
       height: 564,
       id: 'bosque-segment-entry',
-      layers: [{ assetKey: 'forest-entry', id: 'bosque-entry-terrain', role: 'terrain' }],
+      layers: [
+        {
+          assetKey: 'forest-entry',
+          id: 'bosque-entry-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 2460,
     },
     {
       height: 160,
       id: 'bosque-segment-trailhead',
       layers: [
-        { assetKey: 'forest-trailhead', id: 'bosque-trailhead-terrain', role: 'terrain' },
+        {
+          assetKey: 'forest-trailhead',
+          id: 'bosque-trailhead-terrain',
+          role: 'terrain',
+        },
       ],
       top: 3000,
     },
@@ -206,5 +246,6 @@ export const CHAPTER_WORLD_IDS: readonly ChapterWorldId[] = [
   101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
 ];
 
-export const getWorldMapConfig = (worldId: WorldId): WorldMapConfig | undefined =>
-  WORLD_MAP_CONFIGS[worldId];
+export const getWorldMapConfig = (
+  worldId: WorldId,
+): WorldMapConfig | undefined => WORLD_MAP_CONFIGS[worldId];

@@ -10,8 +10,18 @@ import type {
 import type { ProgressState, WorldId } from '../types/game';
 
 const GEOMETRY_EPSILON = 0.000001;
-const CAMPAIGN_MAP_SITES = new Set(['bridge', 'clearing', 'crossing', 'curve', 'platform']);
-const CAMPAIGN_MAP_SEGMENT_LAYER_ROLES = new Set(['effect', 'foreground', 'terrain']);
+const CAMPAIGN_MAP_SITES = new Set([
+  'bridge',
+  'clearing',
+  'crossing',
+  'curve',
+  'platform',
+]);
+const CAMPAIGN_MAP_SEGMENT_LAYER_ROLES = new Set([
+  'effect',
+  'foreground',
+  'terrain',
+]);
 
 export type CampaignMapTransform = Readonly<{
   contentHeight: number;
@@ -101,7 +111,9 @@ export const getCampaignMapFrame = (
     origin.y < 0 ||
     origin.y > 1
   ) {
-    throw new RangeError('origin coordinates must be finite numbers between 0 and 1');
+    throw new RangeError(
+      'origin coordinates must be finite numbers between 0 and 1',
+    );
   }
 
   const transformedPoint = transformCampaignMapPoint(point, transform);
@@ -116,7 +128,9 @@ export const getCampaignMapFrame = (
   };
 };
 
-export const getCampaignMapFrameCenter = (frame: CampaignMapFrame): CampaignMapPoint => ({
+export const getCampaignMapFrameCenter = (
+  frame: CampaignMapFrame,
+): CampaignMapPoint => ({
   x: frame.left + frame.width / 2,
   y: frame.top + frame.height / 2,
 });
@@ -145,7 +159,10 @@ export const getCampaignMapEntityFrames = (
   };
 };
 
-export const getCampaignMapScrollBounds = (contentHeight: number, viewportHeight: number) => {
+export const getCampaignMapScrollBounds = (
+  contentHeight: number,
+  viewportHeight: number,
+) => {
   assertPositiveFinite(contentHeight, 'contentHeight');
   assertPositiveFinite(viewportHeight, 'viewportHeight');
 
@@ -181,14 +198,19 @@ export const getCampaignMapOpeningScrollOffset = ({
   }
 
   if (!isFiniteNumber(fixedBottomInset) || fixedBottomInset < 0) {
-    throw new RangeError('fixedBottomInset must be a non-negative finite number');
+    throw new RangeError(
+      'fixedBottomInset must be a non-negative finite number',
+    );
   }
 
   if (!isFiniteNumber(focusRatio) || focusRatio < 0 || focusRatio > 1) {
     throw new RangeError('focusRatio must be a finite number between 0 and 1');
   }
 
-  const usableHeight = Math.max(0, viewportHeight - fixedTopInset - fixedBottomInset);
+  const usableHeight = Math.max(
+    0,
+    viewportHeight - fixedTopInset - fixedBottomInset,
+  );
   const desiredViewportY = clamp(
     fixedTopInset + usableHeight * focusRatio,
     0,
@@ -266,7 +288,9 @@ export const createSelectedWorldMapModel = <TLevel extends LevelIdentity>(
     return undefined;
   }
 
-  const selectedLevels = levels.filter((level) => level.worldId === selectedWorldId);
+  const selectedLevels = levels.filter(
+    (level) => level.worldId === selectedWorldId,
+  );
 
   return {
     config,
@@ -310,7 +334,11 @@ const validateOrigin = (
   });
 };
 
-const validateSize = (label: string, size: CampaignMapSize, errors: string[]) => {
+const validateSize = (
+  label: string,
+  size: CampaignMapSize,
+  errors: string[],
+) => {
   if (!isPositiveFinite(size.width)) {
     errors.push(`${label}.width:must-be-positive-finite`);
   }
@@ -360,7 +388,10 @@ export const validateWorldMapConfig = (
 ): string[] => {
   const errors: string[] = [];
 
-  if (context.expectedWorldId !== undefined && config.worldId !== context.expectedWorldId) {
+  if (
+    context.expectedWorldId !== undefined &&
+    config.worldId !== context.expectedWorldId
+  ) {
     errors.push(`worldId:expected-${context.expectedWorldId}`);
   }
 
@@ -368,12 +399,18 @@ export const validateWorldMapConfig = (
     errors.push('worldId:unknown');
   }
 
-  if (typeof config.identityKey !== 'string' || config.identityKey.trim().length === 0) {
+  if (
+    typeof config.identityKey !== 'string' ||
+    config.identityKey.trim().length === 0
+  ) {
     errors.push('identityKey:required');
   }
 
   if (config.mode === 'legacy') {
-    if (typeof config.rendererKey !== 'string' || config.rendererKey.trim().length === 0) {
+    if (
+      typeof config.rendererKey !== 'string' ||
+      config.rendererKey.trim().length === 0
+    ) {
       errors.push('rendererKey:required');
     }
 
@@ -384,7 +421,10 @@ export const validateWorldMapConfig = (
   validateSize('levelNodeSize', config.levelNodeSize, errors);
   validateOrigin('levelNodeOrigin', config.levelNodeOrigin, errors);
 
-  if (typeof config.backgroundColor !== 'string' || config.backgroundColor.trim().length === 0) {
+  if (
+    typeof config.backgroundColor !== 'string' ||
+    config.backgroundColor.trim().length === 0
+  ) {
     errors.push('backgroundColor:required');
   }
 
@@ -408,11 +448,17 @@ export const validateWorldMapConfig = (
     errors.push('openingFocusRatio:must-be-between-0-and-1');
   }
 
-  if (!isFiniteNumber(config.openingInsets?.top) || config.openingInsets.top < 0) {
+  if (
+    !isFiniteNumber(config.openingInsets?.top) ||
+    config.openingInsets.top < 0
+  ) {
     errors.push('openingInsets.top:must-be-non-negative-finite');
   }
 
-  if (!isFiniteNumber(config.openingInsets?.bottom) || config.openingInsets.bottom < 0) {
+  if (
+    !isFiniteNumber(config.openingInsets?.bottom) ||
+    config.openingInsets.bottom < 0
+  ) {
     errors.push('openingInsets.bottom:must-be-non-negative-finite');
   }
 
@@ -446,28 +492,35 @@ export const validateWorldMapConfig = (
 
     if (!Array.isArray(segment.layers) || segment.layers.length === 0) {
       errors.push(`${label}.layers:required`);
-    } else segment.layers.forEach((layer, layerIndex) => {
-      const layerLabel = `${label}.layers[${layerIndex}]`;
+    } else
+      segment.layers.forEach((layer, layerIndex) => {
+        const layerLabel = `${label}.layers[${layerIndex}]`;
 
-      if (segmentLayerIds.has(layer.id)) {
-        errors.push(`${layerLabel}.id:duplicate`);
-      }
-      segmentLayerIds.add(layer.id);
+        if (segmentLayerIds.has(layer.id)) {
+          errors.push(`${layerLabel}.id:duplicate`);
+        }
+        segmentLayerIds.add(layer.id);
 
-      if (typeof layer.id !== 'string' || layer.id.trim().length === 0) {
-        errors.push(`${layerLabel}.id:required`);
-      }
+        if (typeof layer.id !== 'string' || layer.id.trim().length === 0) {
+          errors.push(`${layerLabel}.id:required`);
+        }
 
-      if (typeof layer.assetKey !== 'string' || layer.assetKey.trim().length === 0) {
-        errors.push(`${layerLabel}.assetKey:required`);
-      } else if (context.knownAssetKeys && !context.knownAssetKeys.has(layer.assetKey)) {
-        errors.push(`${layerLabel}.assetKey:unknown`);
-      }
+        if (
+          typeof layer.assetKey !== 'string' ||
+          layer.assetKey.trim().length === 0
+        ) {
+          errors.push(`${layerLabel}.assetKey:required`);
+        } else if (
+          context.knownAssetKeys &&
+          !context.knownAssetKeys.has(layer.assetKey)
+        ) {
+          errors.push(`${layerLabel}.assetKey:unknown`);
+        }
 
-      if (!CAMPAIGN_MAP_SEGMENT_LAYER_ROLES.has(layer.role)) {
-        errors.push(`${layerLabel}.role:unknown`);
-      }
-    });
+        if (!CAMPAIGN_MAP_SEGMENT_LAYER_ROLES.has(layer.role)) {
+          errors.push(`${layerLabel}.role:unknown`);
+        }
+      });
 
     if (!isFiniteNumber(segment.top) || segment.top < 0) {
       errors.push(`${label}.top:must-be-non-negative-finite`);
@@ -524,7 +577,8 @@ export const validateWorldMapConfig = (
     lastSegment &&
     isFiniteNumber(lastSegment.top) &&
     isPositiveFinite(lastSegment.height) &&
-    Math.abs(lastSegment.top + lastSegment.height - config.designSize.height) > GEOMETRY_EPSILON
+    Math.abs(lastSegment.top + lastSegment.height - config.designSize.height) >
+      GEOMETRY_EPSILON
   ) {
     errors.push('segments:last-must-end-at-design-height');
   }
@@ -655,7 +709,10 @@ export const validateWorldMapConfig = (
     if (!CAMPAIGN_MAP_SITES.has(landmark.site)) {
       errors.push(`${label}.site:unknown`);
     }
-    if (typeof landmark.visualKey !== 'string' || landmark.visualKey.trim().length === 0) {
+    if (
+      typeof landmark.visualKey !== 'string' ||
+      landmark.visualKey.trim().length === 0
+    ) {
       errors.push(`${label}.visualKey:required`);
     } else if (
       context.knownLandmarkVisualKeys &&
@@ -682,7 +739,10 @@ export const validateWorldMapConfig = (
       errors.push(`${label}.afterLevelId:unknown`);
     }
 
-    if ((landmark.kind === 'rest' || landmark.kind === 'shop') && !landmark.afterLevelId) {
+    if (
+      (landmark.kind === 'rest' || landmark.kind === 'shop') &&
+      !landmark.afterLevelId
+    ) {
       errors.push(`${label}.afterLevelId:required-for-${landmark.kind}`);
     }
 

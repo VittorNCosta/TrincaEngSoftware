@@ -47,7 +47,11 @@ function BinArtwork({ color, colorDark, colorLight, size }: ArtworkProps) {
           strokeWidth={3.2}
         />
         <Path d="M24.6 28.5h7.2l-2.4 28h-2z" fill={colorLight} opacity={0.55} />
-        <Path d="M44.4 28.5h3.2l-2.6 28h-3.2z" fill={colorDark} opacity={0.35} />
+        <Path
+          d="M44.4 28.5h3.2l-2.6 28h-3.2z"
+          fill={colorDark}
+          opacity={0.35}
+        />
         <Rect
           fill={colorLight}
           height={9}
@@ -79,13 +83,24 @@ const RECYCLE_VERTICES: { rotation: number; x: number; y: number }[] = [
 ];
 
 /** Símbolo de reciclagem: as três setas em ciclo, na cor do material. */
-function RecycleSymbolArtwork({ color, colorDark, colorLight, size }: ArtworkProps) {
+function RecycleSymbolArtwork({
+  color,
+  colorDark,
+  colorLight,
+  size,
+}: ArtworkProps) {
   const artSize = size * 0.92;
 
   return (
     <View style={{ height: artSize, width: artSize }}>
       <Svg height={artSize} viewBox="0 0 72 72" width={artSize}>
-        <Ellipse cx={36} cy={62} fill="rgba(38, 24, 8, 0.18)" rx={17} ry={3.6} />
+        <Ellipse
+          cx={36}
+          cy={62}
+          fill="rgba(38, 24, 8, 0.18)"
+          rx={17}
+          ry={3.6}
+        />
         <Circle cx={36} cy={37} fill={colorLight} opacity={0.28} r={25} />
         <Path
           d="M36 16 53.3 46 18.7 46Z"
@@ -155,13 +170,20 @@ function ResidueArtwork({
           pointerEvents="none"
           style={[
             styles.residueInnerRing,
-            { backgroundColor: color, borderRadius: size * 0.24, opacity: 0.32 },
+            {
+              backgroundColor: color,
+              borderRadius: size * 0.24,
+              opacity: 0.32,
+            },
           ]}
         />
         <Text
           adjustsFontSizeToFit
           numberOfLines={1}
-          style={[styles.residueEmoji, { fontSize: size * 0.5, lineHeight: size * 0.6 }]}
+          style={[
+            styles.residueEmoji,
+            { fontSize: size * 0.5, lineHeight: size * 0.6 },
+          ]}
         >
           {emoji}
         </Text>

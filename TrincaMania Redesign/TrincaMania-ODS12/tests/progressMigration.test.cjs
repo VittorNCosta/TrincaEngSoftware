@@ -46,13 +46,19 @@ const oldLevelId = (worldNumber, levelNumber) =>
   `w${worldNumber}-${String(levelNumber).padStart(3, '0')}`;
 
 const oldWorldLevelIds = (worldNumber, count = 25) =>
-  Array.from({ length: count }, (_, index) => oldLevelId(worldNumber, index + 1));
+  Array.from({ length: count }, (_, index) =>
+    oldLevelId(worldNumber, index + 1),
+  );
 
 const base = createInitialProgress();
 
 test('detectDroppedCampaignProgress não acusa nada para save vazio, nulo ou ausente', () => {
-  assert.deepEqual(detectDroppedCampaignProgress(undefined), { droppedLevelCount: 0 });
-  assert.deepEqual(detectDroppedCampaignProgress(null), { droppedLevelCount: 0 });
+  assert.deepEqual(detectDroppedCampaignProgress(undefined), {
+    droppedLevelCount: 0,
+  });
+  assert.deepEqual(detectDroppedCampaignProgress(null), {
+    droppedLevelCount: 0,
+  });
   assert.deepEqual(detectDroppedCampaignProgress({}), { droppedLevelCount: 0 });
   assert.deepEqual(
     detectDroppedCampaignProgress({ completedLevelIds: undefined }),
@@ -65,10 +71,9 @@ test('detectDroppedCampaignProgress ignora completedLevelIds que não é array',
     detectDroppedCampaignProgress({ completedLevelIds: 'w1-001' }),
     { droppedLevelCount: 0 },
   );
-  assert.deepEqual(
-    detectDroppedCampaignProgress({ completedLevelIds: 42 }),
-    { droppedLevelCount: 0 },
-  );
+  assert.deepEqual(detectDroppedCampaignProgress({ completedLevelIds: 42 }), {
+    droppedLevelCount: 0,
+  });
 });
 
 test('detectDroppedCampaignProgress não acusa nada quando o save já cabe no esquema novo (até a fase 10 de cada mundo)', () => {
@@ -82,7 +87,9 @@ test('detectDroppedCampaignProgress não acusa nada quando o save já cabe no es
     ],
   };
 
-  assert.deepEqual(detectDroppedCampaignProgress(raw), { droppedLevelCount: 0 });
+  assert.deepEqual(detectDroppedCampaignProgress(raw), {
+    droppedLevelCount: 0,
+  });
 });
 
 test('detectDroppedCampaignProgress conta exatamente as fases de campanha que deixaram de existir', () => {
@@ -93,7 +100,9 @@ test('detectDroppedCampaignProgress conta exatamente as fases de campanha que de
 
   // Mundo 3 completo no esquema antigo (25 fases): só w3-001..w3-010
   // continuam existindo no esquema novo, as outras 15 caem fora.
-  assert.deepEqual(detectDroppedCampaignProgress(raw), { droppedLevelCount: 15 });
+  assert.deepEqual(detectDroppedCampaignProgress(raw), {
+    droppedLevelCount: 15,
+  });
 });
 
 test('detectDroppedCampaignProgress nunca conta ids de bônus ou de capítulo, mesmo formatados como texto plausível', () => {
@@ -109,7 +118,9 @@ test('detectDroppedCampaignProgress nunca conta ids de bônus ou de capítulo, m
     ],
   };
 
-  assert.deepEqual(detectDroppedCampaignProgress(raw), { droppedLevelCount: 0 });
+  assert.deepEqual(detectDroppedCampaignProgress(raw), {
+    droppedLevelCount: 0,
+  });
 });
 
 test('detectDroppedCampaignProgress no save de um jogador que zerou os 8 mundos antigos (203 fases)', () => {
@@ -120,12 +131,19 @@ test('detectDroppedCampaignProgress no save de um jogador que zerou os 8 mundos 
     ...base,
     coins: 99999,
     keys: 7,
-    completedLevelIds: [...oldCompletionistIds, 'bonus-w1-001', 'bonus-w1-002', 'bonus-w1-003'],
+    completedLevelIds: [
+      ...oldCompletionistIds,
+      'bonus-w1-001',
+      'bonus-w1-002',
+      'bonus-w1-003',
+    ],
     itemCounts: { hint: 4, shuffle: 2, undo: 9 },
   };
 
   // 8 mundos x (25 - 10) fases que não existem mais no esquema novo.
-  assert.deepEqual(detectDroppedCampaignProgress(raw), { droppedLevelCount: 120 });
+  assert.deepEqual(detectDroppedCampaignProgress(raw), {
+    droppedLevelCount: 120,
+  });
 
   // O descarte é seguro por construção: normalizeProgress não perde nada
   // além das próprias fases que não existem mais — moedas, chaves e itens

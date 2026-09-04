@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { GameIcon } from './GameIcon';
 import { TileIcon } from './TileIcon';
@@ -140,36 +147,42 @@ function TraySlot({
     inputRange: [0, 1],
     outputRange: [0, 0.9],
   });
-  const slotContent = isFilled && tile ? (
-    <>
-      <View pointerEvents="none" style={styles.slotInsetShade} />
-      <View pointerEvents="none" style={styles.slotSpecular} />
-      <TileIcon
-        fallbackEmoji={tile.emoji}
-        highlighted={false}
-        kind={tile.kind}
-        role={tile.role}
-        size={30}
-      />
-    </>
-  ) : isActiveSlot ? (
-    isBonusSlot ? (
-      <View pointerEvents="none" style={styles.activeBonusSlotContent}>
-        <GameIcon name="bonus" size={15} tone="green" />
+  const slotContent =
+    isFilled && tile ? (
+      <>
+        <View pointerEvents="none" style={styles.slotInsetShade} />
+        <View pointerEvents="none" style={styles.slotSpecular} />
+        <TileIcon
+          fallbackEmoji={tile.emoji}
+          highlighted={false}
+          kind={tile.kind}
+          role={tile.role}
+          size={30}
+        />
+      </>
+    ) : isActiveSlot ? (
+      isBonusSlot ? (
+        <View pointerEvents="none" style={styles.activeBonusSlotContent}>
+          <GameIcon name="bonus" size={15} tone="green" />
+        </View>
+      ) : null
+    ) : (
+      <View style={styles.lockedSlotContent}>
+        <GameIcon
+          name={isCoinSlot ? 'coin' : 'bonus'}
+          size={16}
+          tone={isCoinSlot ? 'gold' : 'green'}
+        />
+        <Text
+          style={[
+            styles.lockedLabel,
+            isBonusSlot ? styles.lockedLabelBonus : null,
+          ]}
+        >
+          {lockedLabel}
+        </Text>
       </View>
-    ) : null
-  ) : (
-    <View style={styles.lockedSlotContent}>
-      <GameIcon
-        name={isCoinSlot ? 'coin' : 'bonus'}
-        size={16}
-        tone={isCoinSlot ? 'gold' : 'green'}
-      />
-      <Text style={[styles.lockedLabel, isBonusSlot ? styles.lockedLabelBonus : null]}>
-        {lockedLabel}
-      </Text>
-    </View>
-  );
+    );
 
   return (
     <Animated.View
@@ -197,7 +210,10 @@ function TraySlot({
         />
         <Animated.View
           pointerEvents="none"
-          style={[styles.slotActivationGlow, { opacity: activationGlowOpacity }]}
+          style={[
+            styles.slotActivationGlow,
+            { opacity: activationGlowOpacity },
+          ]}
         />
         {slotContent}
       </Pressable>
@@ -217,8 +233,10 @@ export function Tray({
   onCoinSlotPress,
 }: TrayProps) {
   const nearlyFull = tiles.length >= activeCapacity - 1;
-  const coinSlotEnabled = coinSlotActive ?? activeCapacity >= BASE_TRAY_CAPACITY + 1;
-  const bonusSlotEnabled = bonusSlotActive ?? activeCapacity >= MAX_TRAY_CAPACITY;
+  const coinSlotEnabled =
+    coinSlotActive ?? activeCapacity >= BASE_TRAY_CAPACITY + 1;
+  const bonusSlotEnabled =
+    bonusSlotActive ?? activeCapacity >= MAX_TRAY_CAPACITY;
   const activeSlotIndexes = Array.from({ length: MAX_TRAY_CAPACITY })
     .map((_, index) => index)
     .filter(
@@ -229,12 +247,7 @@ export function Tray({
     );
 
   return (
-    <View
-      style={[
-        styles.wrapper,
-        nearlyFull ? styles.wrapperDanger : null,
-      ]}
-    >
+    <View style={[styles.wrapper, nearlyFull ? styles.wrapperDanger : null]}>
       <View pointerEvents="none" style={styles.topGloss} />
       {Array.from({ length: MAX_TRAY_CAPACITY }).map((_, index) => {
         const tileIndex = activeSlotIndexes.indexOf(index);
@@ -245,7 +258,8 @@ export function Tray({
         const isBonusSlot = index === MAX_TRAY_CAPACITY - 1;
         const lockedLabel = isCoinSlot ? `${COIN_TRAY_SLOT_COST}` : 'Bônus';
         const onLockedPress = isCoinSlot ? onCoinSlotPress : onAdSlotPress;
-        const onSlotPress = isActiveSlot && isBonusSlot ? onAdSlotPress : onLockedPress;
+        const onSlotPress =
+          isActiveSlot && isBonusSlot ? onAdSlotPress : onLockedPress;
 
         return (
           <TraySlot

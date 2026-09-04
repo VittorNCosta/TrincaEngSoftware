@@ -56,7 +56,10 @@ const normalizeExpiresAt = (value: unknown, now = Date.now()) => {
   return value;
 };
 
-const normalizeTrayBoostState = (value: unknown, now = Date.now()): TrayBoostState => {
+const normalizeTrayBoostState = (
+  value: unknown,
+  now = Date.now(),
+): TrayBoostState => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return createInitialTrayBoostState();
   }
@@ -100,13 +103,26 @@ export const isCoinTraySlotActive = (state: TrayBoostState, now = Date.now()) =>
 export const isAdTraySlotActive = (state: TrayBoostState, now = Date.now()) =>
   typeof state.adSlotExpiresAt === 'number' && state.adSlotExpiresAt > now;
 
-export const getCoinTraySlotRemaining = (state: TrayBoostState, now = Date.now()) =>
-  isCoinTraySlotActive(state, now) ? Math.max(0, (state.coinSlotExpiresAt ?? now) - now) : 0;
+export const getCoinTraySlotRemaining = (
+  state: TrayBoostState,
+  now = Date.now(),
+) =>
+  isCoinTraySlotActive(state, now)
+    ? Math.max(0, (state.coinSlotExpiresAt ?? now) - now)
+    : 0;
 
-export const getBonusTraySlotRemaining = (state: TrayBoostState, now = Date.now()) =>
-  isAdTraySlotActive(state, now) ? Math.max(0, (state.adSlotExpiresAt ?? now) - now) : 0;
+export const getBonusTraySlotRemaining = (
+  state: TrayBoostState,
+  now = Date.now(),
+) =>
+  isAdTraySlotActive(state, now)
+    ? Math.max(0, (state.adSlotExpiresAt ?? now) - now)
+    : 0;
 
-export const getActiveTrayCapacity = (state: TrayBoostState, now = Date.now()) => {
+export const getActiveTrayCapacity = (
+  state: TrayBoostState,
+  now = Date.now(),
+) => {
   const capacity =
     BASE_TRAY_CAPACITY +
     (isCoinTraySlotActive(state, now) ? 1 : 0) +
@@ -115,7 +131,10 @@ export const getActiveTrayCapacity = (state: TrayBoostState, now = Date.now()) =
   return Math.max(BASE_TRAY_CAPACITY, Math.min(MAX_TRAY_CAPACITY, capacity));
 };
 
-export const getTraySlotStatus = (state: TrayBoostState, now = Date.now()): TraySlotStatus[] => {
+export const getTraySlotStatus = (
+  state: TrayBoostState,
+  now = Date.now(),
+): TraySlotStatus[] => {
   const activeCapacity = getActiveTrayCapacity(state, now);
 
   return Array.from({ length: MAX_TRAY_CAPACITY }, (_, index) => {
@@ -174,30 +193,31 @@ export const purchaseCoinTraySlot = async (
   };
 };
 
-export const activateBonusTraySlot = async (): Promise<BonusTraySlotActivationResult> => {
-  const now = Date.now();
-  const state = await getTrayBoostState();
+export const activateBonusTraySlot =
+  async (): Promise<BonusTraySlotActivationResult> => {
+    const now = Date.now();
+    const state = await getTrayBoostState();
 
-  if (isAdTraySlotActive(state, now)) {
-    return {
-      activated: false,
-      reason: 'active',
-      state,
+    if (isAdTraySlotActive(state, now)) {
+      return {
+        activated: false,
+        reason: 'active',
+        state,
+      };
+    }
+
+    const nextState: TrayBoostState = {
+      ...state,
+      adSlotExpiresAt: now + BONUS_TRAY_SLOT_DURATION_MS,
     };
-  }
 
-  const nextState: TrayBoostState = {
-    ...state,
-    adSlotExpiresAt: now + BONUS_TRAY_SLOT_DURATION_MS,
+    await saveTrayBoostState(nextState);
+
+    return {
+      activated: true,
+      state: nextState,
+    };
   };
-
-  await saveTrayBoostState(nextState);
-
-  return {
-    activated: true,
-    state: nextState,
-  };
-};
 
 export const unlockAdTraySlotForOneLevel = async () => {
   const state = await getTrayBoostState();

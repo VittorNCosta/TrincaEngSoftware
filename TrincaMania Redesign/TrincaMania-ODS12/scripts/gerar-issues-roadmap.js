@@ -15,7 +15,8 @@ const fs = require('fs');
 const path = require('path');
 
 const repoRoot = path.join(__dirname, '..');
-const input = process.argv[2] ?? path.join(repoRoot, 'docs/roadmap/roadmap.html');
+const input =
+  process.argv[2] ?? path.join(repoRoot, 'docs/roadmap/roadmap.html');
 const output =
   process.argv[3] ?? path.join(repoRoot, 'scripts/criar-issues-roadmap.sh');
 
@@ -24,7 +25,8 @@ const html = fs.readFileSync(input, 'utf8');
 // Recorta o literal `const BLOCKS = [ ... ];` e avalia como JS.
 const start = html.indexOf('const BLOCKS = [');
 const end = html.indexOf('\n];', start);
-if (start < 0 || end < 0) throw new Error('BLOCKS não encontrado em roadmap.html');
+if (start < 0 || end < 0)
+  throw new Error('BLOCKS não encontrado em roadmap.html');
 const BLOCKS = eval(html.slice(start + 'const BLOCKS = '.length, end + 2));
 
 const LABELS = [
@@ -169,9 +171,13 @@ BLOCKS.forEach((block) => {
       'Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.',
     ].join('\n');
     if (!WHO_LABEL[who] || !WHO_TEXT[who]) {
-      throw new Error(`"${id}": valor de "quem" sem mapeamento em WHO_LABEL/WHO_TEXT: ${JSON.stringify(who)}`);
+      throw new Error(
+        `"${id}": valor de "quem" sem mapeamento em WHO_LABEL/WHO_TEXT: ${JSON.stringify(who)}`,
+      );
     }
-    const labels = [STREAM_LABEL[block.k], `P${prio}`, WHO_LABEL[who]].join(',');
+    const labels = [STREAM_LABEL[block.k], `P${prio}`, WHO_LABEL[who]].join(
+      ',',
+    );
 
     lines.push(
       `mk ${isDone ? 'done' : 'open'} --title ${shq(`${id} · ${title}`)} \\`,
@@ -188,4 +194,6 @@ lines.push(
 );
 
 fs.writeFileSync(output, lines.join('\n'), { mode: 0o755 });
-console.log(`${total} issues, ${closed} já fechadas → ${path.relative(repoRoot, output)}`);
+console.log(
+  `${total} issues, ${closed} já fechadas → ${path.relative(repoRoot, output)}`,
+);

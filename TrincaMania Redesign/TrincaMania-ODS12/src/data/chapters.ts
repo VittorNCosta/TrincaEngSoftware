@@ -63,7 +63,11 @@ import {
   mixSeed,
   stableHash,
 } from '../utils/deterministicRandom';
-import { curveProgress, DifficultyCurve } from '../utils/difficultyCurve';
+import {
+  bandIndex,
+  curveProgress,
+  DifficultyCurve,
+} from '../utils/difficultyCurve';
 import { generatePlayableLevelFrom } from '../utils/levelGenerator';
 import { MAX_TILE_POSITIONS, takeTilePositions } from './boardPositions';
 import {
@@ -563,7 +567,7 @@ const createChapterLevelSummary = (
     chapterMapNumber: mapNumber,
     difficulty:
       CHAPTER_DIFFICULTY_ORDER[
-        Math.min(CHAPTER_DIFFICULTY_ORDER.length - 1, Math.floor(score * 5))
+        bandIndex(score, CHAPTER_DIFFICULTY_ORDER.length)
       ],
     displayLabel: String(mapNumber),
     id: buildChapterMapId(blueprint.id, mapNumber),

@@ -10,6 +10,7 @@ Você é responsável pela estratégia de testes do TrincaMania. O projeto testa
 ## Onde focar
 
 Prioridade, nesta ordem:
+
 1. `src/domain/recycling/` — é onde a regra mora. `policies/RecyclingCycleMatchRule.ts` (o que fecha uma trinca), `services/TrayService.ts`, `PlayService.ts`, `BoardService.ts`, `ScoringService.ts`, `ShuffleService.ts`, `LevelCompositionService.ts`.
 2. `src/storage/*.ts` — transições de estado com lógica condicional (progresso, capítulos, vidas, boosts). Atenção a concorrência: já houve corrida real em vidas e progresso.
 3. `src/data/chapters.ts`, `src/utils/levelGenerator.ts`, `src/data/boardPositions.ts` — geração procedural.

@@ -73,11 +73,23 @@ const BIN_CARDS: RecyclingCard[] = [
 ];
 
 const SYMBOL_CARDS: RecyclingCard[] = [
-  card('plastico', 'simbolo', 'padrao', '\u{267B}\u{FE0F}', 'Plástico reciclado'),
+  card(
+    'plastico',
+    'simbolo',
+    'padrao',
+    '\u{267B}\u{FE0F}',
+    'Plástico reciclado',
+  ),
   card('papel', 'simbolo', 'padrao', '\u{267B}\u{FE0F}', 'Papel reciclado'),
   card('vidro', 'simbolo', 'padrao', '\u{267B}\u{FE0F}', 'Vidro reciclado'),
   card('metal', 'simbolo', 'padrao', '\u{267B}\u{FE0F}', 'Metal reciclado'),
-  card('organico', 'simbolo', 'padrao', '\u{267B}\u{FE0F}', 'Orgânico compostado'),
+  card(
+    'organico',
+    'simbolo',
+    'padrao',
+    '\u{267B}\u{FE0F}',
+    'Orgânico compostado',
+  ),
 ];
 
 export const RECYCLING_CARDS: RecyclingCard[] = [
@@ -88,21 +100,22 @@ export const RECYCLING_CARDS: RecyclingCard[] = [
 
 const CARDS_BY_ID = new Map(RECYCLING_CARDS.map((entry) => [entry.id, entry]));
 
-const CARDS_BY_MATERIAL_ROLE = RECYCLING_CARDS.reduce<Map<string, RecyclingCard[]>>(
-  (index, entry) => {
-    const key = `${entry.material}:${entry.role}`;
-    index.set(key, [...(index.get(key) ?? []), entry]);
+const CARDS_BY_MATERIAL_ROLE = RECYCLING_CARDS.reduce<
+  Map<string, RecyclingCard[]>
+>((index, entry) => {
+  const key = `${entry.material}:${entry.role}`;
+  index.set(key, [...(index.get(key) ?? []), entry]);
 
-    return index;
-  },
-  new Map<string, RecyclingCard[]>(),
-);
+  return index;
+}, new Map<string, RecyclingCard[]>());
 
 export const getCardById = (cardId: string): RecyclingCard | undefined =>
   CARDS_BY_ID.get(cardId);
 
-export const getCardsFor = (material: MaterialType, role: CardRole): RecyclingCard[] =>
-  CARDS_BY_MATERIAL_ROLE.get(`${material}:${role}`) ?? [];
+export const getCardsFor = (
+  material: MaterialType,
+  role: CardRole,
+): RecyclingCard[] => CARDS_BY_MATERIAL_ROLE.get(`${material}:${role}`) ?? [];
 
 /**
  * Escolhe uma variante de forma determinística a partir de um índice, para que
@@ -115,7 +128,8 @@ export const getCardVariantAt = (
   variantIndex: number,
 ): RecyclingCard => {
   const candidates = getCardsFor(material, role);
-  const safeIndex = Math.abs(Math.floor(variantIndex)) % Math.max(1, candidates.length);
+  const safeIndex =
+    Math.abs(Math.floor(variantIndex)) % Math.max(1, candidates.length);
 
   return candidates[safeIndex] ?? candidates[0];
 };

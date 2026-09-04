@@ -24,7 +24,12 @@ function StatCard({ iconName, iconTone, label, value }: StatCardProps) {
   return (
     <View style={styles.statCard}>
       <GameIcon name={iconName} size={38} tone={iconTone} />
-      <Text adjustsFontSizeToFit minimumFontScale={0.7} numberOfLines={1} style={styles.statValue}>
+      <Text
+        adjustsFontSizeToFit
+        minimumFontScale={0.7}
+        numberOfLines={1}
+        style={styles.statValue}
+      >
         {value}
       </Text>
       <Text numberOfLines={1} style={styles.statLabel}>
@@ -40,12 +45,18 @@ function StatCard({ iconName, iconTone, label, value }: StatCardProps) {
  */
 export function ProfileScreen({ progress }: ProfileScreenProps) {
   const currentWorldId = getCurrentWorldId(progress);
-  const totalStars = Object.values(progress.levelStars).reduce((sum, stars) => sum + stars, 0);
+  const totalStars = Object.values(progress.levelStars).reduce(
+    (sum, stars) => sum + stars,
+    0,
+  );
 
   return (
     <ScreenShell scroll={false}>
       <TabScene worldId={currentWorldId}>
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.profilePill}>
             <View style={styles.avatar}>
               <GameIcon name="avatar" size={44} variant="plain" />
@@ -67,9 +78,24 @@ export function ProfileScreen({ progress }: ProfileScreenProps) {
               label="Fases"
               value={`${progress.completedLevelIds.length}/${LEVELS.length}`}
             />
-            <StatCard iconName="star" iconTone="gold" label="Estrelas" value={`${totalStars}`} />
-            <StatCard iconName="coin" iconTone="gold" label="Moedas" value={`${progress.coins}`} />
-            <StatCard iconName="key" iconTone="purple" label="Chaves" value={`${progress.keys}`} />
+            <StatCard
+              iconName="star"
+              iconTone="gold"
+              label="Estrelas"
+              value={`${totalStars}`}
+            />
+            <StatCard
+              iconName="coin"
+              iconTone="gold"
+              label="Moedas"
+              value={`${progress.coins}`}
+            />
+            <StatCard
+              iconName="key"
+              iconTone="purple"
+              label="Chaves"
+              value={`${progress.keys}`}
+            />
           </View>
 
           <View style={styles.notePanel}>

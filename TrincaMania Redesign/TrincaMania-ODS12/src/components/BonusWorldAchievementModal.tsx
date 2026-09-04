@@ -44,8 +44,16 @@ export function BonusWorldAchievementModal({
   });
 
   return (
-    <Modal animationType="none" statusBarTranslucent transparent visible={visible}>
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.overlay}>
+    <Modal
+      animationType="none"
+      statusBarTranslucent
+      transparent
+      visible={visible}
+    >
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.overlay}
+      >
         <Animated.View
           style={[
             styles.card,
@@ -56,13 +64,31 @@ export function BonusWorldAchievementModal({
           ]}
         >
           <View pointerEvents="none" style={styles.sparkleLayer}>
-            <Animated.Text style={[styles.sparkle, styles.sparkleTop, { transform: [{ scale: starScale }] }]}>
+            <Animated.Text
+              style={[
+                styles.sparkle,
+                styles.sparkleTop,
+                { transform: [{ scale: starScale }] },
+              ]}
+            >
               {'\u2728'}
             </Animated.Text>
-            <Animated.Text style={[styles.sparkle, styles.sparkleLeft, { transform: [{ scale: starScale }] }]}>
+            <Animated.Text
+              style={[
+                styles.sparkle,
+                styles.sparkleLeft,
+                { transform: [{ scale: starScale }] },
+              ]}
+            >
               {'\u2B50'}
             </Animated.Text>
-            <Animated.Text style={[styles.sparkle, styles.sparkleRight, { transform: [{ scale: starScale }] }]}>
+            <Animated.Text
+              style={[
+                styles.sparkle,
+                styles.sparkleRight,
+                { transform: [{ scale: starScale }] },
+              ]}
+            >
               {'\u2728'}
             </Animated.Text>
           </View>
@@ -73,11 +99,15 @@ export function BonusWorldAchievementModal({
           <Text style={styles.subtitle}>Jardim Renascido está disponível.</Text>
           <View style={styles.rewardBox}>
             <Text style={styles.rewardText}>
-              Você conquistou 3 estrelas em todas as fases do Parque da Coleta Seletiva.
+              Você conquistou 3 estrelas em todas as fases do Parque da Coleta
+              Seletiva.
             </Text>
           </View>
           <View style={styles.actions}>
-            <PrimaryButton title="Ir para o mundo bônus" onPress={onGoToBonusWorld} />
+            <PrimaryButton
+              title="Ir para o mundo bônus"
+              onPress={onGoToBonusWorld}
+            />
             <PrimaryButton
               size="compact"
               title="Continuar no mapa"

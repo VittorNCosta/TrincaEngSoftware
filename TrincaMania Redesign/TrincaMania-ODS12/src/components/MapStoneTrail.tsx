@@ -37,7 +37,8 @@ function MapStoneTrailBase({ points }: MapStoneTrailProps) {
     const to = points[index + 1];
 
     for (let step = 0; step < STONES_PER_GAP; step += 1) {
-      const ratio = GAP_START + ((GAP_END - GAP_START) * step) / (STONES_PER_GAP - 1);
+      const ratio =
+        GAP_START + ((GAP_END - GAP_START) * step) / (STONES_PER_GAP - 1);
       const size = STONE_SIZES[step % STONE_SIZES.length];
       const drift = STONE_DRIFT[(index + step) % STONE_DRIFT.length];
 

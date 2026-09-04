@@ -133,7 +133,9 @@ export type ChapterMapCoordinates = {
 export const buildChapterMapId = (chapterNumber: number, mapNumber: number) =>
   `ch${String(chapterNumber).padStart(2, '0')}-${String(mapNumber).padStart(3, '0')}`;
 
-export const parseChapterMapId = (mapId: string): ChapterMapCoordinates | undefined => {
+export const parseChapterMapId = (
+  mapId: string,
+): ChapterMapCoordinates | undefined => {
   const match = CHAPTER_ID_PATTERN.exec(mapId);
 
   if (!match) {
@@ -193,7 +195,11 @@ const hslToHex = (hue: number, saturation: number, lightness: number) => {
  * colisão, porque duas permutações diferentes podem começar igual. Este é o
  * detalhe que faz a garantia valer de verdade.
  */
-const pickOrderedSubset = <T>(items: readonly T[], size: number, rank: number): T[] => {
+const pickOrderedSubset = <T>(
+  items: readonly T[],
+  size: number,
+  rank: number,
+): T[] => {
   const pool = [...items];
   const safeSize = Math.max(1, Math.min(size, pool.length));
   const total = arrangementCount(pool.length, safeSize);
@@ -217,14 +223,16 @@ const pickOrderedSubset = <T>(items: readonly T[], size: number, rank: number): 
  * caem numa coordenada derivada do próprio hash. A garantia de não-colisão vale
  * para os ids canônicos de capítulo, que são os 1000 que o jogo usa.
  */
-export const getChapterVisualIdentity = (mapId: string): ChapterVisualIdentity => {
+export const getChapterVisualIdentity = (
+  mapId: string,
+): ChapterVisualIdentity => {
   const hash = stableHash(mapId);
   const coordinates = parseChapterMapId(mapId) ?? {
     chapterNumber: (hash % CHAPTER_COUNT) + 1,
     mapNumber: (mixSeed(hash, 7) % CHAPTER_MAPS_PER_CHAPTER) + 1,
   };
   const slot = coordinates.mapNumber - 1;
-  const baseHue = CHAPTER_BASE_HUE[coordinates.chapterNumber] ?? (hash % 360);
+  const baseHue = CHAPTER_BASE_HUE[coordinates.chapterNumber] ?? hash % 360;
 
   // Jitter mantido em ±1° de propósito: tempera a paleta sem chegar perto de
   // fechar o vão entre dois matizes vizinhos da rotação áurea.
@@ -245,8 +253,16 @@ export const getChapterVisualIdentity = (mapId: string): ChapterVisualIdentity =
     slot * ARRANGEMENT_STRIDE + coordinates.chapterNumber * 509;
 
   return {
-    accentColor: hslToHex(hue + 42, Math.min(0.92, saturation + 0.3), lightness + 0.26),
-    backgroundColor: hslToHex(hue - 8, saturation * 0.55, 0.12 + lightnessTier * 0.02),
+    accentColor: hslToHex(
+      hue + 42,
+      Math.min(0.92, saturation + 0.3),
+      lightness + 0.26,
+    ),
+    backgroundColor: hslToHex(
+      hue - 8,
+      saturation * 0.55,
+      0.12 + lightnessTier * 0.02,
+    ),
     baseColor: hslToHex(hue, saturation, lightness),
     cardVariantSeed: mixSeed(hash, 31) % 997,
     mapId,

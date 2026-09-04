@@ -57,14 +57,18 @@ require.cache[expoAudioId] = {
 // `sounds.ts` -> `settingsStorage.ts` -> AsyncStorage. Nunca é de fato lido
 // neste teste (só chamamos a leitura pura de `getAmbientKeyForWorld`), mas o
 // import no topo do arquivo precisa resolver.
-const asyncStorageId = require.resolve('@react-native-async-storage/async-storage');
+const asyncStorageId =
+  require.resolve('@react-native-async-storage/async-storage');
 require.cache[asyncStorageId] = {
   id: asyncStorageId,
   filename: asyncStorageId,
   loaded: true,
   children: [],
   paths: [],
-  exports: { __esModule: true, default: { getItem: async () => null, setItem: async () => undefined } },
+  exports: {
+    __esModule: true,
+    default: { getItem: async () => null, setItem: async () => undefined },
+  },
 };
 
 // `sounds.ts` também faz `require('*.mp3'/'*.wav')` no topo do arquivo, só
@@ -78,15 +82,28 @@ require.extensions['.wav'] = (module) => {
 };
 
 const { WORLDS } = require('../src/data/worlds.ts');
-const { getAmbientExpectedFiles, getAmbientKeyForWorld } = require('../src/utils/sounds.ts');
+const {
+  getAmbientExpectedFiles,
+  getAmbientKeyForWorld,
+} = require('../src/utils/sounds.ts');
 
 const BONUS_WORLD_ID = 21;
-const mainWorldIds = WORLDS.map(({ id }) => id).filter((id) => id !== BONUS_WORLD_ID);
+const mainWorldIds = WORLDS.map(({ id }) => id).filter(
+  (id) => id !== BONUS_WORLD_ID,
+);
 
 test('todo mundo numerado (1-10) tem ambiente sonoro mapeado e válido', () => {
-  const knownAmbientKeys = new Set(getAmbientExpectedFiles().map(({ key }) => key));
-  assert.ok(knownAmbientKeys.size > 0, 'getAmbientExpectedFiles não deveria vir vazio');
-  assert.ok(mainWorldIds.length >= 10, 'esperava pelo menos os 10 mundos numerados em WORLDS');
+  const knownAmbientKeys = new Set(
+    getAmbientExpectedFiles().map(({ key }) => key),
+  );
+  assert.ok(
+    knownAmbientKeys.size > 0,
+    'getAmbientExpectedFiles não deveria vir vazio',
+  );
+  assert.ok(
+    mainWorldIds.length >= 10,
+    'esperava pelo menos os 10 mundos numerados em WORLDS',
+  );
 
   mainWorldIds.forEach((worldId) => {
     const ambientKey = getAmbientKeyForWorld(worldId);
@@ -118,18 +135,31 @@ test('getGameBackground (GameScreen.tsx) cobre todo mundo em WORLDS com um case 
     /const getGameBackground = \(worldId: WorldId\) => \{([\s\S]*?)\n};/,
   );
 
-  assert.ok(functionMatch, 'não encontrou a função getGameBackground em GameScreen.tsx — teste desatualizado?');
+  assert.ok(
+    functionMatch,
+    'não encontrou a função getGameBackground em GameScreen.tsx — teste desatualizado?',
+  );
 
   const functionBody = functionMatch[1];
-  assert.ok(/default:/.test(functionBody), 'esperava um default: de segurança em getGameBackground');
+  assert.ok(
+    /default:/.test(functionBody),
+    'esperava um default: de segurança em getGameBackground',
+  );
 
   const coveredWorldIds = new Set(
-    Array.from(functionBody.matchAll(/case (\d+):/g), (match) => Number(match[1])),
+    Array.from(functionBody.matchAll(/case (\d+):/g), (match) =>
+      Number(match[1]),
+    ),
   );
-  assert.ok(coveredWorldIds.size > 0, 'não encontrou nenhum case numérico — regex desatualizada?');
+  assert.ok(
+    coveredWorldIds.size > 0,
+    'não encontrou nenhum case numérico — regex desatualizada?',
+  );
 
   const allWorldIds = WORLDS.map(({ id }) => id);
-  const missingWorldIds = allWorldIds.filter((worldId) => !coveredWorldIds.has(worldId));
+  const missingWorldIds = allWorldIds.filter(
+    (worldId) => !coveredWorldIds.has(worldId),
+  );
 
   assert.deepEqual(
     missingWorldIds,

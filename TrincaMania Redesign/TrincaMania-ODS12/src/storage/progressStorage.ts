@@ -21,9 +21,12 @@ import { isBonusWorldUnlocked } from '../utils/worldProgress';
 
 const STORAGE_KEY = '@trinca-mania/progress-v2';
 const TUTORIAL_STORAGE_KEY = '@trinca-mania/tutorial-seen-v1';
-export const PRACTICAL_TUTORIAL_STORAGE_KEY = '@trinca-mania/practical-tutorial-seen-v1';
-export const MYSTERY_TUTORIAL_STORAGE_KEY = '@trinca-mania/mystery-tutorial-seen-v1';
-const CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY = '@trinca-mania/campaign-resize-notice-seen-v1';
+export const PRACTICAL_TUTORIAL_STORAGE_KEY =
+  '@trinca-mania/practical-tutorial-seen-v1';
+export const MYSTERY_TUTORIAL_STORAGE_KEY =
+  '@trinca-mania/mystery-tutorial-seen-v1';
+const CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY =
+  '@trinca-mania/campaign-resize-notice-seen-v1';
 export const CHEST_PHASES_REQUIRED = 5;
 export const CHEST_COIN_REWARD = 50;
 export const KEY_COST = 100;
@@ -38,7 +41,9 @@ const BONUS_WORLD_CHEST_SUMMARY: WorldChestSummary = {
 };
 const LEVEL_IDS = LEVELS.map((level) => level.id);
 const LEVEL_ID_SET = new Set(LEVEL_IDS);
-const LEVEL_INDEX_BY_ID = new Map(LEVEL_IDS.map((levelId, index) => [levelId, index]));
+const LEVEL_INDEX_BY_ID = new Map(
+  LEVEL_IDS.map((levelId, index) => [levelId, index]),
+);
 const POWER_UP_TYPES: PowerUpType[] = ['hint', 'shuffle', 'undo'];
 const WORLD_CHEST_IDS = [BONUS_WORLD_CHEST_SUMMARY.id];
 
@@ -59,7 +64,9 @@ const uniqueKnownLevelIds = (ids: unknown): string[] => {
     return [];
   }
 
-  return Array.from(new Set(ids.filter((id): id is string => LEVEL_ID_SET.has(id))));
+  return Array.from(
+    new Set(ids.filter((id): id is string => LEVEL_ID_SET.has(id))),
+  );
 };
 
 const isChestEligibleLevelId = (levelId: string) => {
@@ -76,7 +83,9 @@ const uniqueWorldChestIds = (ids: unknown): string[] => {
     return [];
   }
 
-  return Array.from(new Set(ids.filter((id): id is string => WORLD_CHEST_IDS.includes(id))));
+  return Array.from(
+    new Set(ids.filter((id): id is string => WORLD_CHEST_IDS.includes(id))),
+  );
 };
 
 export const createChestProgressSummary = (
@@ -103,30 +112,41 @@ const normalizeStars = (stars: unknown) => {
     return {};
   }
 
-  return Object.entries(stars).reduce<Record<string, number>>((knownStars, [levelId, value]) => {
-    if (!LEVEL_ID_SET.has(levelId) || typeof value !== 'number') {
-      return knownStars;
-    }
+  return Object.entries(stars).reduce<Record<string, number>>(
+    (knownStars, [levelId, value]) => {
+      if (!LEVEL_ID_SET.has(levelId) || typeof value !== 'number') {
+        return knownStars;
+      }
 
-    knownStars[levelId] = Math.max(1, Math.min(3, Math.floor(value)));
-    return knownStars;
-  }, {});
+      knownStars[levelId] = Math.max(1, Math.min(3, Math.floor(value)));
+      return knownStars;
+    },
+    {},
+  );
 };
 
-const hasThreeStarsInWorldByStars = (worldId: WorldId, levelStars: Record<string, number>) => {
+const hasThreeStarsInWorldByStars = (
+  worldId: WorldId,
+  levelStars: Record<string, number>,
+) => {
   const worldLevels = LEVELS.filter((level) => level.worldId === worldId);
 
-  return worldLevels.length > 0 && worldLevels.every((level) => levelStars[level.id] === 3);
+  return (
+    worldLevels.length > 0 &&
+    worldLevels.every((level) => levelStars[level.id] === 3)
+  );
 };
 
-const getBonusLevels = () => LEVELS.filter((level) => level.worldId === BONUS_WORLD_ID);
+const getBonusLevels = () =>
+  LEVELS.filter((level) => level.worldId === BONUS_WORLD_ID);
 
 const getCompletedBonusLevelCount = (
   completedLevelIds: string[],
   levelStars: Record<string, number>,
 ) =>
   getBonusLevels().filter(
-    (level) => completedLevelIds.includes(level.id) || (levelStars[level.id] ?? 0) > 0,
+    (level) =>
+      completedLevelIds.includes(level.id) || (levelStars[level.id] ?? 0) > 0,
   ).length;
 
 const isBonusWorldChestUnlockedByProgress = (
@@ -137,24 +157,32 @@ const isBonusWorldChestUnlockedByProgress = (
 
   return (
     bonusLevels.length > 0 &&
-    getCompletedBonusLevelCount(completedLevelIds, levelStars) === bonusLevels.length
+    getCompletedBonusLevelCount(completedLevelIds, levelStars) ===
+      bonusLevels.length
   );
 };
 
 const getFirstBonusLevelIds = () => {
   const bonusWorldIds = new Set(
-    LEVELS.filter((level) => getWorldById(level.worldId).isBonus).map((level) => level.worldId),
+    LEVELS.filter((level) => getWorldById(level.worldId).isBonus).map(
+      (level) => level.worldId,
+    ),
   );
 
   return Array.from(bonusWorldIds)
     .map((worldId) =>
-      LEVELS.find((level) => level.worldId === worldId && level.worldLevelNumber === 1),
+      LEVELS.find(
+        (level) => level.worldId === worldId && level.worldLevelNumber === 1,
+      ),
     )
     .filter((level): level is (typeof LEVELS)[number] => level !== undefined)
     .map((level) => level.id);
 };
 
-const canUnlockLevel = (levelId: string, levelStars: Record<string, number>) => {
+const canUnlockLevel = (
+  levelId: string,
+  levelStars: Record<string, number>,
+) => {
   const level = LEVEL_BY_ID.get(levelId);
 
   if (!level) {
@@ -177,12 +205,18 @@ export const createInitialItemCounts = (): PowerUpInventory => ({
 const normalizeItemCounts = (itemCounts: unknown): PowerUpInventory => {
   const normalizedCounts = createInitialItemCounts();
 
-  if (!itemCounts || typeof itemCounts !== 'object' || Array.isArray(itemCounts)) {
+  if (
+    !itemCounts ||
+    typeof itemCounts !== 'object' ||
+    Array.isArray(itemCounts)
+  ) {
     return normalizedCounts;
   }
 
   POWER_UP_TYPES.forEach((powerType) => {
-    const value = (itemCounts as Partial<Record<PowerUpType, unknown>>)[powerType];
+    const value = (itemCounts as Partial<Record<PowerUpType, unknown>>)[
+      powerType
+    ];
 
     if (typeof value === 'number') {
       normalizedCounts[powerType] = Math.max(0, Math.floor(value));
@@ -206,16 +240,20 @@ export const createInitialProgress = (): ProgressState => ({
   unlockedLevelIds: LEVEL_IDS[0] ? [LEVEL_IDS[0]] : [],
 });
 
-export const normalizeProgress = (progress: Partial<ProgressState>): ProgressState => {
+export const normalizeProgress = (
+  progress: Partial<ProgressState>,
+): ProgressState => {
   const completedLevelIds = uniqueKnownLevelIds(progress.completedLevelIds);
   const chestProgressLevelIds = Array.isArray(progress.chestProgressLevelIds)
     ? uniqueKnownChestLevelIds(progress.chestProgressLevelIds)
     : uniqueKnownChestLevelIds(completedLevelIds);
   const chestProgressSet = new Set(chestProgressLevelIds);
-  const claimedWorldChestIds = uniqueWorldChestIds(progress.claimedWorldChestIds);
-  const pendingWorldChestIds = uniqueWorldChestIds(progress.pendingWorldChestIds).filter(
-    (worldChestId) => !claimedWorldChestIds.includes(worldChestId),
+  const claimedWorldChestIds = uniqueWorldChestIds(
+    progress.claimedWorldChestIds,
   );
+  const pendingWorldChestIds = uniqueWorldChestIds(
+    progress.pendingWorldChestIds,
+  ).filter((worldChestId) => !claimedWorldChestIds.includes(worldChestId));
   const pendingWorldChestSet = new Set(pendingWorldChestIds);
   const unlockedSet = new Set(uniqueKnownLevelIds(progress.unlockedLevelIds));
   const levelStars = normalizeStars(progress.levelStars);
@@ -255,21 +293,32 @@ export const normalizeProgress = (progress: Partial<ProgressState>): ProgressSta
 
   return {
     bonusWorldAchievementShown: progress.bonusWorldAchievementShown === true,
-    chestProgressLevelIds: LEVEL_IDS.filter((levelId) => chestProgressSet.has(levelId)),
+    chestProgressLevelIds: LEVEL_IDS.filter((levelId) =>
+      chestProgressSet.has(levelId),
+    ),
     claimedWorldChestIds: WORLD_CHEST_IDS.filter((worldChestId) =>
       claimedWorldChestIds.includes(worldChestId),
     ),
-    collectedRestCheckpointIds: uniqueKnownLevelIds(progress.collectedRestCheckpointIds),
-    coins: typeof progress.coins === 'number' ? Math.max(0, Math.floor(progress.coins)) : 0,
+    collectedRestCheckpointIds: uniqueKnownLevelIds(
+      progress.collectedRestCheckpointIds,
+    ),
+    coins:
+      typeof progress.coins === 'number'
+        ? Math.max(0, Math.floor(progress.coins))
+        : 0,
     completedLevelIds,
     itemCounts: normalizeItemCounts(progress.itemCounts),
-    keys: typeof progress.keys === 'number' ? Math.max(0, Math.floor(progress.keys)) : 0,
+    keys:
+      typeof progress.keys === 'number'
+        ? Math.max(0, Math.floor(progress.keys))
+        : 0,
     levelStars,
     pendingWorldChestIds: WORLD_CHEST_IDS.filter((worldChestId) =>
       pendingWorldChestSet.has(worldChestId),
     ),
     unlockedLevelIds: LEVEL_IDS.filter(
-      (levelId) => unlockedSet.has(levelId) && canUnlockLevel(levelId, levelStars),
+      (levelId) =>
+        unlockedSet.has(levelId) && canUnlockLevel(levelId, levelStars),
     ),
   };
 };
@@ -283,7 +332,9 @@ export const normalizeProgress = (progress: Partial<ProgressState>): ProgressSta
  * isso a estrela de cada fase do mundo 1 é forçada para 3 aqui, senão
  * `normalizeProgress` continuaria filtrando o bônus fora da lista liberada.
  */
-export const unlockAllLevelsForDevMode = (progress: ProgressState): ProgressState => {
+export const unlockAllLevelsForDevMode = (
+  progress: ProgressState,
+): ProgressState => {
   const currentProgress = normalizeProgress(progress);
   const levelStars = { ...currentProgress.levelStars };
 
@@ -313,7 +364,9 @@ export const applyLevelCompletion = (
   const savedStars = Math.max(previousStars, normalizedStars);
   const completedLevel = LEVELS.find((level) => level.id === levelId);
   const isFirstNormalCompletion =
-    completedLevel !== undefined && !completedSet.has(levelId) && isChestEligibleLevelId(levelId);
+    completedLevel !== undefined &&
+    !completedSet.has(levelId) &&
+    isChestEligibleLevelId(levelId);
   const coinsEarned = getIncrementalCoinRewardForLevel(
     previousStars,
     normalizedStars,
@@ -333,7 +386,9 @@ export const applyLevelCompletion = (
     ...currentProgress,
     chestProgressLevelIds,
     coins: currentProgress.coins + coinsEarned,
-    completedLevelIds: LEVEL_IDS.filter((knownLevelId) => completedSet.has(knownLevelId)),
+    completedLevelIds: LEVEL_IDS.filter((knownLevelId) =>
+      completedSet.has(knownLevelId),
+    ),
     levelStars: {
       ...currentProgress.levelStars,
       [levelId]: savedStars,
@@ -342,10 +397,14 @@ export const applyLevelCompletion = (
   });
 
   const newlyUnlockedLevel = LEVELS.find(
-    (level) => !previouslyUnlockedIds.has(level.id) && nextProgress.unlockedLevelIds.includes(level.id),
+    (level) =>
+      !previouslyUnlockedIds.has(level.id) &&
+      nextProgress.unlockedLevelIds.includes(level.id),
   );
   const newlyUnlockedWorld =
-    completedLevel && newlyUnlockedLevel && completedLevel.worldId !== newlyUnlockedLevel.worldId
+    completedLevel &&
+    newlyUnlockedLevel &&
+    completedLevel.worldId !== newlyUnlockedLevel.worldId
       ? getWorldById(newlyUnlockedLevel.worldId)
       : undefined;
   const bonusWorldAchievementUnlocked =
@@ -388,7 +447,8 @@ export const getBonusWorldChestProgress = (progress: ProgressState) => {
     normalizedProgress.completedLevelIds,
     normalizedProgress.levelStars,
   );
-  const claimed = normalizedProgress.claimedWorldChestIds.includes(BONUS_WORLD_CHEST_ID);
+  const claimed =
+    normalizedProgress.claimedWorldChestIds.includes(BONUS_WORLD_CHEST_ID);
   const available =
     bonusLevels.length > 0 && completedCount === bonusLevels.length && !claimed;
 
@@ -408,7 +468,9 @@ export const getWorldChestLabel = (worldChestId: string) => {
     return 'Jardim Renascido: Baú Especial';
   }
 
-  const world = WORLDS.find((knownWorld) => `world-${knownWorld.id}` === worldChestId);
+  const world = WORLDS.find(
+    (knownWorld) => `world-${knownWorld.id}` === worldChestId,
+  );
 
   return world ? `${world.label}: ${world.name}` : 'Baú Especial';
 };
@@ -419,7 +481,9 @@ export const addKey = (progress: ProgressState, amount = 1): ProgressState =>
     keys: progress.keys + Math.max(0, Math.floor(amount)),
   });
 
-export const spendKey = (progress: ProgressState): ProgressState | undefined => {
+export const spendKey = (
+  progress: ProgressState,
+): ProgressState | undefined => {
   if (progress.keys <= 0) {
     return undefined;
   }
@@ -511,7 +575,9 @@ export const openWorldChest = (
     keyPurchased = true;
   }
 
-  const coinReward = livesAreFull ? WORLD_CHEST_COINS_FULL_LIVES : WORLD_CHEST_COINS_WITH_LIFE;
+  const coinReward = livesAreFull
+    ? WORLD_CHEST_COINS_FULL_LIVES
+    : WORLD_CHEST_COINS_WITH_LIFE;
   const rewardItemCounts = createInitialItemCounts();
   rewardItemCounts.hint = 1;
   rewardItemCounts.shuffle = 1;
@@ -519,7 +585,10 @@ export const openWorldChest = (
 
   const nextProgress = normalizeProgress({
     ...currentProgress,
-    claimedWorldChestIds: [...currentProgress.claimedWorldChestIds, worldChestId],
+    claimedWorldChestIds: [
+      ...currentProgress.claimedWorldChestIds,
+      worldChestId,
+    ],
     coins: nextCoins + coinReward,
     itemCounts: {
       hint: currentProgress.itemCounts.hint + rewardItemCounts.hint,
@@ -545,7 +614,10 @@ export const openWorldChest = (
   };
 };
 
-export const spendCoins = (progress: ProgressState, cost: number): ProgressState =>
+export const spendCoins = (
+  progress: ProgressState,
+  cost: number,
+): ProgressState =>
   normalizeProgress({
     ...progress,
     coins: Math.max(0, progress.coins - cost),
@@ -565,12 +637,16 @@ export const collectRestCheckpoint = (
 
   return normalizeProgress({
     ...progress,
-    collectedRestCheckpointIds: LEVEL_IDS.filter((levelId) => collectedSet.has(levelId)),
+    collectedRestCheckpointIds: LEVEL_IDS.filter((levelId) =>
+      collectedSet.has(levelId),
+    ),
     coins: progress.coins + Math.max(0, Math.floor(coinReward)),
   });
 };
 
-export const markBonusWorldAchievementShown = (progress: ProgressState): ProgressState =>
+export const markBonusWorldAchievementShown = (
+  progress: ProgressState,
+): ProgressState =>
   normalizeProgress({
     ...progress,
     bonusWorldAchievementShown: true,
@@ -668,7 +744,10 @@ export const loadProgress = async (): Promise<ProgressState> => {
 };
 
 export const saveProgress = async (progress: ProgressState) => {
-  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeProgress(progress)));
+  await AsyncStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(normalizeProgress(progress)),
+  );
 };
 
 export type ProgressMigrationInfo = {
@@ -691,11 +770,16 @@ const CAMPAIGN_LEVEL_ID_PATTERN = /^w\d+-\d{3}$/;
 export const detectDroppedCampaignProgress = (
   raw: Partial<ProgressState> | null | undefined,
 ): ProgressMigrationInfo => {
-  const rawCompletedLevelIds = Array.isArray(raw?.completedLevelIds) ? raw.completedLevelIds : [];
+  const rawCompletedLevelIds = Array.isArray(raw?.completedLevelIds)
+    ? raw.completedLevelIds
+    : [];
   const rawCampaignLevelIds = rawCompletedLevelIds.filter(
-    (id): id is string => typeof id === 'string' && CAMPAIGN_LEVEL_ID_PATTERN.test(id),
+    (id): id is string =>
+      typeof id === 'string' && CAMPAIGN_LEVEL_ID_PATTERN.test(id),
   );
-  const stillKnownCount = rawCampaignLevelIds.filter((id) => LEVEL_ID_SET.has(id)).length;
+  const stillKnownCount = rawCampaignLevelIds.filter((id) =>
+    LEVEL_ID_SET.has(id),
+  ).length;
 
   return { droppedLevelCount: rawCampaignLevelIds.length - stillKnownCount };
 };
@@ -705,27 +789,35 @@ export const detectDroppedCampaignProgress = (
  * apagado por uma reestruturação — não substitui `loadProgress`, roda em
  * paralelo a ele.
  */
-export const loadStoredProgressMigrationInfo = async (): Promise<ProgressMigrationInfo> => {
-  const rawProgress = await AsyncStorage.getItem(STORAGE_KEY);
+export const loadStoredProgressMigrationInfo =
+  async (): Promise<ProgressMigrationInfo> => {
+    const rawProgress = await AsyncStorage.getItem(STORAGE_KEY);
 
-  if (!rawProgress) {
-    return { droppedLevelCount: 0 };
-  }
+    if (!rawProgress) {
+      return { droppedLevelCount: 0 };
+    }
 
-  try {
-    return detectDroppedCampaignProgress(JSON.parse(rawProgress) as Partial<ProgressState>);
-  } catch {
-    return { droppedLevelCount: 0 };
-  }
-};
+    try {
+      return detectDroppedCampaignProgress(
+        JSON.parse(rawProgress) as Partial<ProgressState>,
+      );
+    } catch {
+      return { droppedLevelCount: 0 };
+    }
+  };
 
 export const getCampaignResizeNoticeSeen = async () => {
-  const rawValue = await AsyncStorage.getItem(CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY);
+  const rawValue = await AsyncStorage.getItem(
+    CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY,
+  );
   return rawValue === 'true';
 };
 
 export const saveCampaignResizeNoticeSeen = async (seen: boolean) => {
-  await AsyncStorage.setItem(CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY, seen ? 'true' : 'false');
+  await AsyncStorage.setItem(
+    CAMPAIGN_RESIZE_NOTICE_STORAGE_KEY,
+    seen ? 'true' : 'false',
+  );
 };
 
 export const getTutorialSeen = async () => {
@@ -743,7 +835,10 @@ export const getPracticalTutorialSeen = async () => {
 };
 
 export const savePracticalTutorialSeen = async (seen: boolean) => {
-  await AsyncStorage.setItem(PRACTICAL_TUTORIAL_STORAGE_KEY, seen ? 'true' : 'false');
+  await AsyncStorage.setItem(
+    PRACTICAL_TUTORIAL_STORAGE_KEY,
+    seen ? 'true' : 'false',
+  );
 };
 
 export const getMysteryTutorialSeen = async () => {
@@ -752,5 +847,8 @@ export const getMysteryTutorialSeen = async () => {
 };
 
 export const saveMysteryTutorialSeen = async (seen: boolean) => {
-  await AsyncStorage.setItem(MYSTERY_TUTORIAL_STORAGE_KEY, seen ? 'true' : 'false');
+  await AsyncStorage.setItem(
+    MYSTERY_TUTORIAL_STORAGE_KEY,
+    seen ? 'true' : 'false',
+  );
 };

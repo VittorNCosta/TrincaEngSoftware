@@ -9,7 +9,8 @@ export const REST_CHECKPOINT_COIN_REWARDS: Record<number, number> = {
   10: 40,
 };
 
-const getLevelById = (levelId: string) => LEVELS.find((knownLevel) => knownLevel.id === levelId);
+const getLevelById = (levelId: string) =>
+  LEVELS.find((knownLevel) => knownLevel.id === levelId);
 
 const getWorldLevelIds = (levelId: string) => {
   const level = getLevelById(levelId);
@@ -55,13 +56,17 @@ export const shouldShowShopAfterLevel = (levelId: string) => {
   return localLevelNumber % SHOP_INTERVAL === 0;
 };
 
-export const isShopUnlockedAfterLevel = (levelId: string, progress: ProgressState) =>
-  progress.completedLevelIds.includes(levelId);
+export const isShopUnlockedAfterLevel = (
+  levelId: string,
+  progress: ProgressState,
+) => progress.completedLevelIds.includes(levelId);
 
 export const getRestCheckpointCoinReward = (levelId: string) => {
   const localLevelNumber = getLocalLevelNumber(levelId);
 
-  return localLevelNumber ? REST_CHECKPOINT_COIN_REWARDS[localLevelNumber] ?? 0 : 0;
+  return localLevelNumber
+    ? (REST_CHECKPOINT_COIN_REWARDS[localLevelNumber] ?? 0)
+    : 0;
 };
 
 const isLastLevelInWorld = (levelId: string) => {
@@ -84,7 +89,9 @@ export const getNextWorldLevelAfterLevel = (levelId: string) => {
   }
 
   const mainWorlds = WORLDS.filter((knownWorld) => !knownWorld.isBonus);
-  const worldIndex = mainWorlds.findIndex((knownWorld) => knownWorld.id === world.id);
+  const worldIndex = mainWorlds.findIndex(
+    (knownWorld) => knownWorld.id === world.id,
+  );
   const nextWorld = mainWorlds[worldIndex + 1];
 
   if (!nextWorld) {

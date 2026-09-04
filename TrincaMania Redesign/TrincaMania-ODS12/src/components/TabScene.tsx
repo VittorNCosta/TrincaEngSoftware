@@ -1,14 +1,23 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { ReactNode, useMemo } from 'react';
-import { ImageBackground, ImageSourcePropType, StyleSheet, View } from 'react-native';
+import {
+  ImageBackground,
+  ImageSourcePropType,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { colors, spacing } from '../styles/theme';
 import { WorldId } from '../types/game';
 
-const tabWorld1Bg = require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
-const tabWorld2Bg = require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
-const tabWorld3Bg = require('../../assets/map/map_world3_home_bg.png') as ImageSourcePropType;
-const tabBonusBg = require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType;
+const tabWorld1Bg =
+  require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
+const tabWorld2Bg =
+  require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
+const tabWorld3Bg =
+  require('../../assets/map/map_world3_home_bg.png') as ImageSourcePropType;
+const tabBonusBg =
+  require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType;
 
 const getTabBackground = (worldId: WorldId) => {
   switch (worldId) {
@@ -50,8 +59,12 @@ export function TabScene({ children, worldId }: TabSceneProps) {
       source={background}
       style={[
         styles.container,
-        worldId === 2 || worldId === 5 || worldId === 7 ? styles.containerMountain : null,
-        worldId === 3 || worldId === 6 || worldId === 8 ? styles.containerCrystal : null,
+        worldId === 2 || worldId === 5 || worldId === 7
+          ? styles.containerMountain
+          : null,
+        worldId === 3 || worldId === 6 || worldId === 8
+          ? styles.containerCrystal
+          : null,
         worldId === 21 ? styles.containerBonus : null,
       ]}
     >

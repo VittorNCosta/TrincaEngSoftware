@@ -1,3 +1,12 @@
+# Um job por tipo de verificacao, todos em paralelo.
+#
+# Antes era um job sequencial: lint quebrado escondia se os testes passariam,
+# e cada ida ao CI devolvia um problema de cada vez. Agora um PR volta com a
+# lista inteira do que esta errado.
+#
+# O preco e um `npm ci` por job. Sai barato porque o cache do setup-node e
+# compartilhado entre eles, e o gargalo real (playthrough, ~1 min) passa a
+# rodar ao lado do resto em vez de depois de tudo.
 name: CI
 
 on:
@@ -6,30 +15,206 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Menor privilegio. Sem isto o workflow herda o escopo padrao do repositorio,
+# que inclui escrita — nenhum job aqui precisa de mais que leitura.
+permissions:
+  contents: read
+
+# Push novo no mesmo PR cancela o run anterior: o resultado dele ja nao
+# interessa a ninguem. Em push para main/develop nao cancela, porque ali cada
+# commit e um estado que vale ter verificado por si.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 defaults:
   run:
     working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
 
 jobs:
-  typecheck-and-test:
+  mudancas:
+    name: O que mudou
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      codigo: ${{ steps.filtro.outputs.codigo }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          # Precisa do historico para achar a base da comparacao; o checkout
+          # raso padrao traz um commit so. `blob:none` busca os commits sem os
+          # arquivos — importa num repo com 85 MB de PNG.
+          fetch-depth: 0
+          filter: blob:none
+      - id: filtro
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="origin/${{ github.base_ref }}"
+          else
+            base="${{ github.event.before }}"
+          fi
 
-      - uses: actions/setup-node@v4
+          # Branch nova, force-push ou base fora de alcance: sem comparacao
+          # possivel, roda tudo. Errar para o lado de rodar demais custa
+          # minutos; errar para o lado de pular o teste que importava, nao.
+          if ! git rev-parse --verify --quiet "$base^{commit}" >/dev/null; then
+            echo "base inacessivel ($base) — rodando tudo"
+            echo "codigo=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          alterados=$(git diff --name-only "$base"...HEAD)
+          echo "arquivos alterados:"
+          echo "$alterados" | sed 's/^/  /'
+
+          # Documentacao e o que casa com *.md ou mora em docs/. Qualquer outra
+          # coisa conta como codigo. O job de lint roda sempre, entao o
+          # format:check continua cobrindo a formatacao dos .md.
+          if printf '%s\n' "$alterados" | grep -q . && \
+             ! printf '%s\n' "$alterados" | grep -qvE '\.md$|(^|/)docs/'; then
+            echo "so documentacao — pulando os jobs de codigo"
+            echo "codigo=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "codigo=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  lint:
+    name: Lint e formatacao
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
-
       - run: npm ci
-
       - run: npm run lint
+      - run: npm run format:check
 
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
       - run: npm run typecheck
 
+  guardas:
+    name: Guardas de conteudo
+    runs-on: ubuntu-latest
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+      # Comparam com um livro-razao versionado (scripts/*-baseline.json) em vez
+      # de reprovar no saldo atual, que e divida conhecida com tarefa no
+      # roadmap. Falham em ocorrencia nova e em entrada morta.
+      - run: npm run guarda:ods12
+      - run: npm run valida:assets
+
+  test:
+    name: Testes de dominio (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    timeout-minutes: 15
+    strategy:
+      # Sem isto o Node 20 quebrado cancela o 22 e a matrix perde a graca:
+      # a pergunta e exatamente em qual das duas versoes falha.
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
       - run: npm test
 
+  cobertura:
+    name: Piso de cobertura
+    runs-on: ubuntu-latest
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          # Fixo de proposito, sem matrix: o V8 conta cobertura diferente entre
+          # versoes (85,70% no 20 contra 79,57% no 24, mesmo codigo e mesmos
+          # testes), entao o piso so tem sentido contra uma regua estavel.
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+      - run: npm run cobertura
+
+  test-ui:
+    name: Testes de componente
+    runs-on: ubuntu-latest
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
       - run: npm run test:ui
 
+  playthrough:
+    name: Playthrough completo
+    runs-on: ubuntu-latest
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
       - run: npm run test:playthrough
+
+  expo-doctor:
+    name: expo-doctor
+    runs-on: ubuntu-latest
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+      - run: npx expo-doctor

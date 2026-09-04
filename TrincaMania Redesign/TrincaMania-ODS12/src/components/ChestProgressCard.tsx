@@ -177,7 +177,10 @@ export function ChestProgressCard({
 
   return (
     <View style={[styles.card, opened ? styles.cardUnlocked : null]}>
-      <View pointerEvents="none" style={[styles.cardGlow, opened ? styles.cardGlowUnlocked : null]} />
+      <View
+        pointerEvents="none"
+        style={[styles.cardGlow, opened ? styles.cardGlowUnlocked : null]}
+      />
       <Animated.View
         pointerEvents="none"
         style={[
@@ -194,18 +197,32 @@ export function ChestProgressCard({
           <Text numberOfLines={1} style={styles.title}>
             Baú Comum
           </Text>
-          <Text numberOfLines={1} style={[styles.message, isUnlocked ? styles.unlockedText : null]}>
+          <Text
+            numberOfLines={1}
+            style={[styles.message, isUnlocked ? styles.unlockedText : null]}
+          >
             {message}
           </Text>
         </View>
-        <Animated.Text style={[styles.counter, { transform: [{ scale: counterScale }] }]}>
+        <Animated.Text
+          style={[styles.counter, { transform: [{ scale: counterScale }] }]}
+        >
           {progressLabel}
         </Animated.Text>
       </View>
 
       <View style={styles.track}>
-        <Animated.View style={[styles.fill, opened ? styles.fillUnlocked : null, { width: fillWidth }]} />
-        <Animated.View pointerEvents="none" style={[styles.unlockTrackGlow, { opacity: unlockTrackOpacity }]} />
+        <Animated.View
+          style={[
+            styles.fill,
+            opened ? styles.fillUnlocked : null,
+            { width: fillWidth },
+          ]}
+        />
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.unlockTrackGlow, { opacity: unlockTrackOpacity }]}
+        />
         <Animated.View
           pointerEvents="none"
           style={[

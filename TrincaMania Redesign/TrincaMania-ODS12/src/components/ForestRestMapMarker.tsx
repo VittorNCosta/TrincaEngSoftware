@@ -1,9 +1,17 @@
-import { Image, Pressable, StyleSheet, Text, type ImageSourcePropType, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  type ImageSourcePropType,
+  View,
+} from 'react-native';
 
 import { GameIcon } from './GameIcon';
 import { colors, radii } from '../styles/theme';
 
-const restCartImage = require('../../assets/map/world1/forest_rest_cart.png') as ImageSourcePropType;
+const restCartImage =
+  require('../../assets/map/world1/forest_rest_cart.png') as ImageSourcePropType;
 
 export type ForestRestMapMarkerProps = {
   afterLevelLabel: string;
@@ -20,7 +28,11 @@ export function ForestRestMapMarker({
   selected,
   onPress,
 }: ForestRestMapMarkerProps) {
-  const label = comingSoon ? 'Em breve' : locked ? `Após ${afterLevelLabel}` : 'Descanso';
+  const label = comingSoon
+    ? 'Em breve'
+    : locked
+      ? `Após ${afterLevelLabel}`
+      : 'Descanso';
   const isOpen = !locked && !comingSoon;
 
   return (
@@ -37,7 +49,10 @@ export function ForestRestMapMarker({
       accessibilityState={{ disabled: locked, selected }}
       hitSlop={4}
       onPress={onPress}
-      style={({ pressed }) => [styles.pressable, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [
+        styles.pressable,
+        pressed ? styles.pressed : null,
+      ]}
     >
       <View pointerEvents="none" style={styles.scene}>
         <View style={styles.groundShadow} />
@@ -67,7 +82,9 @@ export function ForestRestMapMarker({
           </View>
         )}
 
-        <View style={[styles.plaquePost, !isOpen ? styles.plaquePostMuted : null]} />
+        <View
+          style={[styles.plaquePost, !isOpen ? styles.plaquePostMuted : null]}
+        />
         <View
           style={[
             styles.plaque,
@@ -76,7 +93,12 @@ export function ForestRestMapMarker({
             selected ? styles.plaqueSelected : null,
           ]}
         >
-          <Text adjustsFontSizeToFit minimumFontScale={0.78} numberOfLines={1} style={styles.plaqueText}>
+          <Text
+            adjustsFontSizeToFit
+            minimumFontScale={0.78}
+            numberOfLines={1}
+            style={styles.plaqueText}
+          >
             {label}
           </Text>
         </View>

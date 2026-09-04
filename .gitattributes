@@ -1,7 +1,36 @@
 * text=auto eol=lf
 
+# Imagem
 *.png binary
 *.jpg binary
 *.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+
+# Áudio
 *.mp3 binary
 *.wav binary
+*.ogg binary
+*.m4a binary
+
+# Fonte tipográfica
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+
+# Artefato de build e assinatura Android.
+# Nenhum destes deveria entrar no repositório — o `.gitignore` do projeto barra
+# `*.apk`, `*.aab`, `*.jks`, `*.p12` e `*.key`, e a assinatura vive no EAS
+# credentials. Ficam marcados como binário para que, se algum escapar, o git
+# não tente normalizar fim de linha e corromper o arquivo em silêncio.
+*.aab binary
+*.apk binary
+*.keystore binary
+*.jks binary
+*.p12 binary
+
+# Gerado — colapsa no diff da revisão em vez de somar centenas de linhas.
+package-lock.json linguist-generated=true
+scripts/criar-issues-roadmap.sh linguist-generated=true

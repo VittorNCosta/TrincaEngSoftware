@@ -6,11 +6,7 @@
  * ensina (ODS 12 — Consumo e Produção Responsáveis).
  */
 export type MaterialType =
-  | 'plastico'
-  | 'papel'
-  | 'vidro'
-  | 'metal'
-  | 'organico';
+  'plastico' | 'papel' | 'vidro' | 'metal' | 'organico';
 
 export type MaterialDefinition = {
   /** Cor oficial da lixeira segundo a CONAMA 275/2001. */

@@ -77,7 +77,10 @@ function MapLevelNodeBase({
       accessibilityState={{ disabled: locked, selected }}
       hitSlop={4}
       onPress={() => onPress(level.id)}
-      style={({ pressed }) => [styles.pressable, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [
+        styles.pressable,
+        pressed ? styles.pressed : null,
+      ]}
     >
       <View style={styles.nodeWrap}>
         <View style={styles.groundShadow} />
@@ -145,7 +148,11 @@ function MapLevelNodeBase({
               return (
                 <View
                   key={`star-${level.id}-${index}`}
-                  style={[styles.starMark, styles[STAR_TILT[index]], !isEarned ? styles.starDimmed : null]}
+                  style={[
+                    styles.starMark,
+                    styles[STAR_TILT[index]],
+                    !isEarned ? styles.starDimmed : null,
+                  ]}
                 >
                   <GameIcon
                     muted={!isEarned}

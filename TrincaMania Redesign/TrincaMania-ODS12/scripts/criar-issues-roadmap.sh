@@ -69,7 +69,7 @@ mk open --title 'F0-02 · Expor `node` no PATH não-interativo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P0,humano' --milestone 'Fundação'
 mk done --title 'F0-03 · Fixar a versão de Node do projeto' \
-  --body '**Feito 03/09:** `.nvmrc` e `engines.node` em `>=20.19.4 <21` — não é só "20": `npm ci` acusou `EBADENGINE` porque `react-native@0.81.5` exige `>=20.19.4` e a máquina local tinha `v20.19.1`. Quem rodar local precisa de `nvm install` na versão do `.nvmrc`.
+  --body '**Feito 03/09**, em duas etapas. O commit `c8311ab` pôs `.nvmrc` em `20` e `engines: node >=20.19.0` — e foi o `engines` que revelou o CI-06: se a versão mínima é a 20, o `npm test` tinha de funcionar da 20 em diante, e não funcionava da 22. Depois o piso subiu para `>=20.19.4 <21` (e o `.nvmrc` para `20.19.4`): `npm ci` acusou `EBADENGINE` porque `react-native@0.81.5` exige `>=20.19.4` e a máquina local tinha `v20.19.1`. Quem rodar local precisa de `nvm install` na versão do `.nvmrc`.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1005,8 +1005,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
-mk open --title 'G-01 · Adotar Conventional Commits formalmente' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
+  --body '**Feito 03/09** (commit `c8311ab`). O historico ja seguia a convencao na pratica; isto trava o habito, porque o `release-please` versiona lendo o log — sem tipo confiavel na mensagem nao da para decidir entre major, minor e patch.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1014,8 +1014,8 @@ mk open --title 'G-01 · Adotar Conventional Commits formalmente' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-02 · `commitlint` + config convencional' \
-  --body 'Rejeita mensagem fora do padrão.
+mk done --title 'G-02 · `commitlint` + config convencional' \
+  --body '**Feito 03/09** (commit `c8311ab`). `commitlint.config.js` estendendo `config-conventional`, com `scope-enum` nas fatias reais do projeto (campanha, capitulos, dominio, ui, storage, audio, mapa, ci, deps, roadmap, testes) em vez de uma lista generica. Escopo segue **opcional**: obrigar em todo commit gera escopo inventado, que e pior que nenhum.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1023,8 +1023,8 @@ mk open --title 'G-02 · `commitlint` + config convencional' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-03 · `husky` com hook `commit-msg`' \
-  --body 'Depende de F0-02 — sem node no PATH o hook não roda.
+mk done --title 'G-03 · Hook `commit-msg` rodando o commitlint' \
+  --body '**Feito 03/09** (commit `c8311ab`). **Sem husky, de proposito:** o husky espera o `.git` no diretorio de onde roda, e aqui nao esta — o repositorio e `TrincaEngSoftware/` e o projeto vive dois niveis abaixo. O que o husky faria de util e um `git config core.hooksPath`, entao `scripts/instalar-hooks.js` faz essa linha com o calculo de caminho certo, no `prepare`. Hooks versionados em `.githooks/`. O que travava era F0-02: hook roda em shell nao-interativo, que nao le o `.zshrc` onde o nvm vive — o `common.sh` procura no nvm a versao do `.nvmrc` antes de desistir. Testado com `env -i PATH=/usr/bin:/bin`.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1032,8 +1032,8 @@ mk open --title 'G-03 · `husky` com hook `commit-msg`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-04 · `lint-staged` no `pre-commit`' \
-  --body 'eslint + prettier só nos arquivos staged.
+mk done --title 'G-04 · `lint-staged` no `pre-commit`' \
+  --body '**Feito 03/09** (commit `c8311ab`). `eslint --fix` e `prettier --write` so nos arquivos staged.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1041,8 +1041,8 @@ mk open --title 'G-04 · `lint-staged` no `pre-commit`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-05 · Hook `pre-push` com typecheck' \
-  --body 'Barato e evita CI vermelho.
+mk done --title 'G-05 · Hook `pre-push` com typecheck' \
+  --body '**Feito 03/09** (commit `c8311ab`). Barato e evita CI vermelho por erro de tipo.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1068,8 +1068,8 @@ mk open --title 'G-07 · Criar o `CHANGELOG.md`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-08 · Alinhar `package.json:version` com `app.json:version`' \
-  --body 'Hoje ambos 1.0.0, mas sem sincronia automática.
+mk done --title 'G-08 · Versão num lugar só' \
+  --body '**Feito 03/09** (commit `c8311ab`). `app.config.js` deriva `version` do `package.json`, e o campo saiu do `app.json`. Sem isso o release-please bumparia o `package.json` e o APK sairia com a versao anterior — **sem quebrar nada**, que e o pior tipo de erro. `versionCode`/`buildNumber` ficam com o EAS. De tabela, o `app.json` ainda publicava `TileAdventure-ODS`, sobra do jogo pre-redesign.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1131,8 +1131,8 @@ mk open --title 'G-14 · Padronizar as labels' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-15 · Revisar o `.gitattributes`' \
-  --body 'Faltam `*.ttf`, `*.otf`, `*.aab`, `*.keystore`.
+mk done --title 'G-15 · Revisar o `.gitattributes`' \
+  --body '**Feito 03/09** (commit `c8311ab`). `*.ttf`, `*.otf`, `*.aab` e `*.keystore` marcados como binario.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1149,8 +1149,8 @@ mk open --title 'G-16 · Decidir sobre Git LFS para os PNGs' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,humano' --milestone 'Git e versionamento'
-mk open --title 'G-17 · `.gitignore`: `.eas/`, `*.aab`, `coverage/`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-17 · `.gitignore`: build do EAS, `*.aab`, `coverage/`' \
+  --body '**Feito 03/09** (commit `c8311ab`). **Divergencia do texto original:** pedia ignorar `.eas/` inteiro, mas CI-23 quer `.eas/workflows/` versionado — ignora `.eas/build-cache/` no lugar.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1160,8 +1160,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code' --milestone 'Git e versionamento'
 
 # --- CI/CD ---
-mk open --title 'CI-01 · Quebrar o CI em jobs paralelos' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-01 · Quebrar o CI em jobs paralelos' \
+  --body '**Feito 03/09.** Sete jobs no lugar de um sequencial: `lint`, `typecheck`, `guardas`, `test`, `test-ui`, `playthrough` e `expo-doctor`. Antes, lint quebrado escondia se os testes passariam e cada ida ao CI devolvia um problema de cada vez; agora o PR volta com a lista inteira. O preço é um `npm ci` por job, barato porque o cache do `setup-node` e compartilhado e o gargalo real (playthrough, ~1 min) passa a rodar ao lado do resto.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1169,8 +1169,8 @@ mk open --title 'CI-01 · Quebrar o CI em jobs paralelos' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-02 · `concurrency` com cancelamento de runs antigos' \
-  --body 'Economiza minutos em PR com vários pushes.
+mk done --title 'CI-02 · `concurrency` com cancelamento de runs antigos' \
+  --body '**Feito 03/09.** Push novo no mesmo PR cancela o run anterior. Em push para `main`/`develop` nao cancela — `cancel-in-progress` so liga quando `github.event_name == '\''pull_request'\''`, porque ali cada commit e um estado que vale ter verificado por si.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1178,8 +1178,8 @@ mk open --title 'CI-02 · `concurrency` com cancelamento de runs antigos' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-03 · `timeout-minutes` em todo job' \
-  --body 'Sem isso um job travado queima 6 h.
+mk done --title 'CI-03 · `timeout-minutes` em todo job' \
+  --body '**Feito 03/09.** 10 min nos jobs curtos, 15 nos de teste, 20 no playthrough. Sem isso um job travado queima as 6 h de teto padrao do runner.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1187,8 +1187,8 @@ mk open --title 'CI-03 · `timeout-minutes` em todo job' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-04 · `permissions: contents: read` no topo' \
-  --body 'Menor privilégio. Hoje o workflow herda tudo.
+mk done --title 'CI-04 · `permissions: contents: read` no topo' \
+  --body '**Feito 03/09.** Declarado no nivel do workflow. Sem a chave o `GITHUB_TOKEN` herda o escopo padrao do repositorio, que inclui escrita — e nenhum dos sete jobs precisa de mais que leitura.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -1196,8 +1196,8 @@ mk open --title 'CI-04 · `permissions: contents: read` no topo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-05 · Fixar as actions por SHA, não por tag' \
-  --body 'Tag é mutável — é vetor de supply chain.
+mk done --title 'CI-05 · Fixar as actions por SHA, não por tag' \
+  --body '**Feito 03/09.** `actions/checkout` em `11d5960` e `actions/setup-node` em `49933ea`, ambos a v4.4.0, com a versao no comentario ao lado para o bump continuar legivel. Tag e ponteiro mutavel: quem controla o repositorio da action pode reapontar `v4` para outro commit sem que nada aqui mude.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1205,8 +1205,8 @@ mk open --title 'CI-05 · Fixar as actions por SHA, não por tag' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-06 · Matrix de Node 20 e 22' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-06 · Matrix de Node 20 e 22' \
+  --body '**Feito 03/09**, com `fail-fast: false` — se o 20 quebra e o 22 e cancelado, a matrix perde a graca, porque a pergunta e em qual das duas falha. **Achou um bug de verdade:** `npm test` era `node --test tests`, e passar diretorio so funciona ate o Node 21 — do 22 em diante o runner trata o argumento como arquivo e morre com `MODULE_NOT_FOUND`. Como `engines` declara `>=20.19.0`, o comando estava quebrado em metade das versoes suportadas. Ver CI-06a.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1214,8 +1214,8 @@ mk open --title 'CI-06 · Matrix de Node 20 e 22' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-07 · Rodar `npm run format:check` no CI' \
-  --body 'O script existe e nunca é chamado.
+mk done --title 'CI-06a · Corrigir `npm test` para qualquer Node >= 20' \
+  --body '**Feito 03/09.** Saiu de CI-06. Agora `npm test` chama `scripts/rodar-testes.js`, que le `tests/` e passa a lista de `*.test.cjs` explicita ao `--test`. A alternativa obvia, `node --test tests/*.test.cjs`, trocaria um problema por outro: depende do shell expandir o glob, o que o cmd e o PowerShell nao fazem — armadilha que o `CLAUDE.md` ja avisava. Assim quem lista os arquivos e o Node. 128/128 no Node 20 e no 24.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1223,8 +1223,8 @@ mk open --title 'CI-07 · Rodar `npm run format:check` no CI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-08 · Rodar `npx expo-doctor` no CI' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-07 · Rodar `npm run format:check` no CI' \
+  --body '**Feito 03/09.** Segundo passo do job `lint`, junto da checagem que ja existia — as duas sao analise estatica barata e falham pelo mesmo motivo: alguem commitou sem passar o prettier.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1232,8 +1232,8 @@ mk open --title 'CI-08 · Rodar `npx expo-doctor` no CI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-09 · Cobertura de teste com threshold' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-08 · Rodar `npx expo-doctor` no CI' \
+  --body '**Feito 03/09.** Job proprio. Verificado antes de ligar: 18/18 checks passam hoje, entao entra verde em vez de repetir a armadilha de deixar o CI vermelho de saida.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1241,8 +1241,26 @@ mk open --title 'CI-09 · Cobertura de teste com threshold' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-10 · Publicar o relatório de cobertura no PR' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'CI-09 · Cobertura de teste com threshold' \
+  --body '**Feito 03/09.** `npm run cobertura` (`scripts/cobertura.js`), job proprio no CI. **Nao e `jest --coverage`, de proposito:** o Jest aqui roda 4 smoke tests de componente, e as 128 assercoes de regra de jogo, storage e dominio sao `node:test` em `tests/*.test.cjs`, que ele nao coleta — um threshold sobre o Jest mediria 4 arquivos de UI e chamaria isso de cobertura do projeto. O piso usa a cobertura nativa do `node:test` e segue o idioma dos outros guardas: e o que a suite cobre hoje (85,70% linha / 87,42% ramo / 87,03% funcao), gravado em `scripts/cobertura-minima.json`, e cair reprova. Baixar exige `--atualizar --permitir-queda`, para afrouxar a regua aparecer no diff. A conta e nossa porque o Node 20 nao tem `--test-coverage-lines` — so o 22+ tem — e a matrix roda os dois.
+
+**Responsável:** Claude Code
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
+mk done --title 'CI-09a · Fixar o job de cobertura numa versao de Node' \
+  --body '**Feito 03/09.** Saiu de CI-09. O mesmo codigo e os mesmos 128 testes medem 85,70% de linha no Node 20 e 79,57% no Node 24: seis pontos que nao tem nada a ver com teste, e sim com o que cada V8 instrumenta. Entao o job de cobertura fica fora da matrix, no Node 20 do `engines`, e o piso grava o `nodeMajor` em que foi medido — rodar noutra versao devolve a explicacao em vez de um vermelho falso.
+
+**Responsável:** Claude Code
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
+mk done --title 'CI-10 · Publicar o relatório de cobertura' \
+  --body '**Feito 03/09.** Vai para o **resumo do job** (`$GITHUB_STEP_SUMMARY`), que o GitHub renderiza na pagina do run, e nao para um comentario no PR. Comentar exigiria `pull-requests: write`, reabrindo justamente o privilegio que CI-04 acabou de fechar, e por um relatorio que ninguem le duas vezes. O resumo nao pede permissao nenhuma. Traz as tres metricas contra o piso e, num `<details>`, os 10 arquivos de `src/` menos cobertos — que e a parte acionavel: hoje aponta `MatchRule.ts` e `ShuffleService.ts` em 24,56%. Sem a variavel de ambiente o script nao escreve nada, entao rodar local continua limpo.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1250,8 +1268,8 @@ mk open --title 'CI-10 · Publicar o relatório de cobertura no PR' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-11 · Path filters' \
-  --body 'Não rodar a suíte de código quando só mudou `.md`.
+mk done --title 'CI-11 · Path filters' \
+  --body '**Feito 03/09.** Job `mudancas` compara com a base e exporta `codigo=true|false`; os sete jobs de codigo ganham `if: needs.mudancas.outputs.codigo == '\''true'\''`. **Nao** foi usado `paths:` no nivel do workflow, que e a forma obvia e a errada: com ela o workflow nao roda, o check obrigatorio nunca reporta e o PR de documentacao trava sem poder mergear. Job pulado por `if:`, ao contrario, conta como sucesso. `lint` fica de fora do gate porque o `format:check` tambem cobre `.md`. Na duvida — branch nova, force-push, base fora de alcance — roda tudo. O checkout usa `filter: blob:none` para pegar o historico sem os 85 MB de PNG.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1259,8 +1277,8 @@ mk open --title 'CI-11 · Path filters' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-12 · Job de validação de peso de asset' \
-  --body 'Falha se entrar PNG acima de 400 KB.
+mk done --title 'CI-12 · Job de validação de peso de asset' \
+  --body '**Feito 03/09.** `scripts/valida-assets.js` roda no CI e cobre três coisas: teto de 400 KB por arquivo, asset órfão que nada em `src/` referencia, e extensão duplicada (`.png.png`, sempre erro de exportação). Reprovar no saldo atual era inviável — 42 arquivos já estouram o teto e 51 são órfãos —, então compara com o livro-razão `scripts/assets-baseline.json`: falha em arquivo novo acima do limite, em arquivo conhecido que engordou e em entrada que saiu da lista sem o saldo ser atualizado. Assim a dívida só pode encolher. Hoje: 100 arquivos, 84,9 MB.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1268,8 +1286,8 @@ mk open --title 'CI-12 · Job de validação de peso de asset' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-13 · Job de guarda ODS12' \
-  --body 'Grep barrando `reino|castelo|dragão|cristal mágico|doce|pirata|tesouro|anjo` em `src/`. Automatiza a regra permanente.
+mk done --title 'CI-13 · Job de guarda ODS12' \
+  --body '**Feito 03/09.** `scripts/guarda-ods12.js` roda no CI varrendo `src/` e também o **nome** dos assets — `ambient_celestial.mp3` é conteúdo tanto quanto uma string. Grep puro reprovaria o repositório hoje (`theme: '\''sweet'\''`, `identityKey` legado, trilha do Mundo 8) e reprovaria ocorrência legítima ("restos de fruta" é o que é resíduo orgânico), então compara com o livro-razão `scripts/ods12-baseline.json`: falha em ocorrência nova e em entrada morta, com a chave em `arquivo::termo` e não na linha. Restam 19 pendências classificadas, todas com tarefa nos blocos L, S e C-08b.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1286,8 +1304,8 @@ mk open --title 'CI-14 · Criar o secret `EXPO_TOKEN`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,humano' --milestone 'CI/CD'
-mk open --title 'CI-15 · Migrar `eas.json` para `appVersionSource: "remote"`' \
-  --body 'Hoje é `local`. Remote é o recomendado e habilita o auto-incremento.
+mk done --title 'CI-15 · Migrar `eas.json` para `appVersionSource: "remote"`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Sai de tabela com G-08: com a versao derivada do `package.json`, `versionCode` e `buildNumber` precisam de dono, e o dono e o EAS.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1295,8 +1313,8 @@ mk open --title 'CI-15 · Migrar `eas.json` para `appVersionSource: "remote"`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-16 · `autoIncrement: true` no perfil de produção' \
-  --body 'Incrementa `versionCode` sozinho.
+mk done --title 'CI-16 · `autoIncrement: true` no perfil de produção' \
+  --body '**Feito 03/09** (commit `c8311ab`).
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1304,8 +1322,8 @@ mk open --title 'CI-16 · `autoIncrement: true` no perfil de produção' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
-  --body 'Hoje só existem `preview` e `production`.
+mk done --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Com `developmentClient: true` e APK de distribuicao interna. O `preview` tambem ganhou `distribution: internal`.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1313,8 +1331,8 @@ mk open --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-18 · Workflow de build de preview em PR' \
-  --body 'APK por PR para testar no aparelho.
+mk done --title 'CI-18 · Workflow de build de preview em PR' \
+  --body '**Feito 03/09.** `.github/workflows/build.yml`, separado do `ci.yml`: o CI verifica todo push e tem de ser rapido e gratuito, isto gasta minuto de build de terceiro. **Divergencia:** o texto pedia APK por PR, e saiu APK por PR **rotulado** com `build:preview` — buildar todo push de todo PR queimaria a cota do EAS em troca de APKs que ninguem instala. Com o rotulo o build sai quando alguem de fato quer testar no aparelho, e `synchronize` faz o PR rotulado rebuildar a cada push. Enquanto CI-14 nao existir, o job `checagem` devolve um aviso e os builds sao pulados: o workflow fica **verde e inerte** em vez de vermelho.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1322,8 +1340,8 @@ mk open --title 'CI-18 · Workflow de build de preview em PR' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code' --milestone 'CI/CD'
-mk open --title 'CI-19 · Workflow de build de produção em tag' \
-  --body 'Dispara na tag do release-please.
+mk done --title 'CI-19 · Workflow de build de produção em tag' \
+  --body '**Feito 03/09.** Dispara em `push` de tag `v*` — a que o release-please cria — e tambem por `workflow_dispatch` com escolha de perfil. Usa `--no-wait`: esperar o build custa 15 a 30 min de runner do GitHub olhando uma fila que nao e nossa, e o link no resumo do job resolve. Nao usa `expo/expo-github-action` — o que ela faz de essencial e exportar o `EXPO_TOKEN`, que o `env:` ja faz, e uma action a menos e um terceiro a menos com acesso ao token (CI-05).
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1468,8 +1486,8 @@ mk open --title 'SEC-10 · OpenSSF Scorecard' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-11 · Auditar `android.permissions`' \
-  --body 'Hoje é `[]` — confirmar que continua assim depois de cada lib nova.
+mk done --title 'SEC-11 · Auditar `android.permissions`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Continua `[]`, e agora `tests/appConfig.test.cjs` reprova se deixar de ser — que era a parte que faltava, porque o risco nao e o valor de hoje, e a lib nova de amanha.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1477,8 +1495,8 @@ mk open --title 'SEC-11 · Auditar `android.permissions`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-12 · Travar a config do `expo-audio` em teste' \
-  --body '`microphonePermission: false`, `recordAudioAndroid: false` — está certo hoje.
+mk done --title 'SEC-12 · Travar a config do `expo-audio` em teste' \
+  --body '**Feito 03/09** (commit `c8311ab`). `microphonePermission: false` e `recordAudioAndroid: false` travados em teste.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1486,8 +1504,8 @@ mk open --title 'SEC-12 · Travar a config do `expo-audio` em teste' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-13 · Confirmar que não há segredo em `app.json`/`eas.json`' \
-  --body 'O `projectId` é público; conferir o resto.
+mk done --title 'SEC-13 · Confirmar que não há segredo em `app.json`/`eas.json`' \
+  --body '**Feito 03/09** (commit `c8311ab`). Conferido e travado em teste. O `projectId` e publico por definicao; o resto esta limpo.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -1652,6 +1670,15 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code' --milestone 'Qualidade'
 mk open --title 'Q-14 · Atualizar o `CONTEXT.md` com o vocabulário dos 10 mundos' \
   --body '_Sem detalhe adicional no roadmap._
+
+**Responsável:** Claude Code
+**Prioridade:** P1
+**Fluxo:** Qualidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'qualidade,P1,claude-code' --milestone 'Qualidade'
+mk done --title 'Q-15 · Corrigir a faixa de dificuldade do primeiro mapa dos capítulos 4 e 7' \
+  --body '**Feito 03/09.** Defeito real em produção, achado ao prototipar a curva do bloco C. `Math.floor(score * 5)` em `src/data/chapters.ts` rotulava `ch04-001` como easy (devia ser normal) e `ch07-001` como normal (devia ser hard). Não era regra de negócio: `(n-1)/9*0,6` cai abaixo da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o `floor` derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma `BORDA_DE_FAIXA = 1e-9` documentada e teste de regressão fixando as 10 faixas de abertura.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1824,4 +1851,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 195 issues (6 já criadas fechadas) =="
+echo "== pronto: 198 issues (38 já criadas fechadas) =="

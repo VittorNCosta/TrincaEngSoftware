@@ -17,7 +17,7 @@ const toCardIdentity = (tile: Tile): CardIdentity => ({
 
 const identityKey = (identity: CardIdentity) => `${identity.cardId}`;
 
-const shuffleList = <T,>(items: T[], random: () => number = Math.random) => {
+const shuffleList = <T>(items: T[], random: () => number = Math.random) => {
   const shuffledItems = [...items];
 
   for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
@@ -39,9 +39,15 @@ const shuffleList = <T,>(items: T[], random: () => number = Math.random) => {
  * Cartas distintas são empurradas para peças visíveis primeiro, para que o
  * jogador enxergue a variedade em vez de olhar para uma parede de repetidos.
  */
-export const shuffleRemainingTiles = (board: Tile[], random: () => number = Math.random) => {
+export const shuffleRemainingTiles = (
+  board: Tile[],
+  random: () => number = Math.random,
+) => {
   const remainingTiles = board.filter((tile) => !isTileRemoved(tile));
-  const shuffledIdentities = shuffleList(remainingTiles.map(toCardIdentity), random);
+  const shuffledIdentities = shuffleList(
+    remainingTiles.map(toCardIdentity),
+    random,
+  );
   const visibleTargets = shuffleList(
     remainingTiles.filter((tile) => !isMysteryTileHidden(tile)),
     random,

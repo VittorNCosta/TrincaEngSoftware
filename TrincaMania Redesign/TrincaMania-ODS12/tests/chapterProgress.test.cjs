@@ -42,7 +42,9 @@ const {
 } = require('../src/data/chapters.ts');
 const { LEVELS } = require('../src/data/levels.ts');
 const { generatePlayableLevel } = require('../src/utils/levelGenerator.ts');
-const { getIncrementalCoinRewardForLevel } = require('../src/utils/gameLogic.ts');
+const {
+  getIncrementalCoinRewardForLevel,
+} = require('../src/utils/gameLogic.ts');
 
 const FIRST_MAP_ID = CHAPTER_LEVELS[0].id;
 const SECOND_MAP_ID = CHAPTER_LEVELS[1].id;
@@ -64,7 +66,10 @@ test('progresso de capítulo mora fora da campanha e não a corrompe', () => {
     levelStars: { 'w1-001': 3, [FIRST_MAP_ID]: 3 },
   });
 
-  assert.equal(campaignProgress.completedLevelIds.includes(FIRST_MAP_ID), false);
+  assert.equal(
+    campaignProgress.completedLevelIds.includes(FIRST_MAP_ID),
+    false,
+  );
   assert.equal(campaignProgress.levelStars[FIRST_MAP_ID], undefined);
   assert.deepEqual(campaignProgress.completedLevelIds, ['w1-001']);
 
@@ -105,7 +110,10 @@ test('concluir o mapa 100 abre o capítulo seguinte e só ele', () => {
   const secondChapter = CHAPTERS[1];
   const beforeGuardian = completeMaps(firstChapter.levelIds.slice(0, -1));
 
-  assert.equal(isChapterMapUnlocked(secondChapter.levelIds[0], beforeGuardian), false);
+  assert.equal(
+    isChapterMapUnlocked(secondChapter.levelIds[0], beforeGuardian),
+    false,
+  );
   assert.equal(
     getChapterProgressSummaries(beforeGuardian)[1].unlocked,
     false,
@@ -114,9 +122,18 @@ test('concluir o mapa 100 abre o capítulo seguinte e só ele', () => {
 
   const afterGuardian = completeMaps(firstChapter.levelIds);
 
-  assert.equal(isChapterMapUnlocked(secondChapter.levelIds[0], afterGuardian), true);
-  assert.equal(isChapterMapUnlocked(secondChapter.levelIds[1], afterGuardian), false);
-  assert.equal(isChapterMapUnlocked(CHAPTERS[2].levelIds[0], afterGuardian), false);
+  assert.equal(
+    isChapterMapUnlocked(secondChapter.levelIds[0], afterGuardian),
+    true,
+  );
+  assert.equal(
+    isChapterMapUnlocked(secondChapter.levelIds[1], afterGuardian),
+    false,
+  );
+  assert.equal(
+    isChapterMapUnlocked(CHAPTERS[2].levelIds[0], afterGuardian),
+    false,
+  );
 
   const summaries = getChapterProgressSummaries(afterGuardian);
   assert.equal(summaries.length, CHAPTERS.length);
@@ -145,7 +162,11 @@ test('estrela guardada é sempre a melhor e nunca é rebaixada', () => {
   assert.equal(afterThree.savedStars, 3);
   assert.equal(afterThree.starsEarned, 3);
 
-  const afterOne = applyChapterMapCompletion(afterThree.progress, FIRST_MAP_ID, 1);
+  const afterOne = applyChapterMapCompletion(
+    afterThree.progress,
+    FIRST_MAP_ID,
+    1,
+  );
 
   assert.equal(afterOne.previousStars, 3);
   assert.equal(afterOne.savedStars, 3);
@@ -159,11 +180,15 @@ test('a conclusão não muta o estado recebido e anuncia o mapa liberado', () =>
   const result = applyChapterMapCompletion(before, FIRST_MAP_ID, 2);
 
   assert.deepEqual(before, snapshot);
-  assert.equal(result.unlockedMapTitle, getChapterLevelSummary(SECOND_MAP_ID).title);
+  assert.equal(
+    result.unlockedMapTitle,
+    getChapterLevelSummary(SECOND_MAP_ID).title,
+  );
 
   // Repetir a mesma fase não anuncia desbloqueio de novo.
   assert.equal(
-    applyChapterMapCompletion(result.progress, FIRST_MAP_ID, 3).unlockedMapTitle,
+    applyChapterMapCompletion(result.progress, FIRST_MAP_ID, 3)
+      .unlockedMapTitle,
     undefined,
   );
   assert.equal(
@@ -174,9 +199,18 @@ test('a conclusão não muta o estado recebido e anuncia o mapa liberado', () =>
 });
 
 test('a normalização descarta lixo vindo do armazenamento', () => {
-  assert.deepEqual(normalizeChapterProgress(undefined), createInitialChapterProgress());
-  assert.deepEqual(normalizeChapterProgress({}), createInitialChapterProgress());
-  assert.deepEqual(normalizeChapterProgress({ mapStars: [] }), createInitialChapterProgress());
+  assert.deepEqual(
+    normalizeChapterProgress(undefined),
+    createInitialChapterProgress(),
+  );
+  assert.deepEqual(
+    normalizeChapterProgress({}),
+    createInitialChapterProgress(),
+  );
+  assert.deepEqual(
+    normalizeChapterProgress({ mapStars: [] }),
+    createInitialChapterProgress(),
+  );
   assert.deepEqual(
     normalizeChapterProgress({
       mapStars: {
@@ -244,7 +278,9 @@ test('o tabuleiro de um mapa de capítulo é o dele, não o de w1-001', () => {
   assert.equal(chapterLevel.id, 'ch05-042');
   assert.equal(chapterLevel.tiles.length, summary.tileCount);
   assert.equal(chapterLevel.worldId, summary.worldId);
-  assert.ok(chapterLevel.tiles.every((tile) => tile.id.startsWith('ch05-042-')));
+  assert.ok(
+    chapterLevel.tiles.every((tile) => tile.id.startsWith('ch05-042-')),
+  );
   assert.equal(buildChapterLevel('w1-001'), undefined);
 });
 
@@ -255,7 +291,9 @@ test('os 1000 mapas atravessam a normalização sem perder nenhum', () => {
   assert.deepEqual(normalizeChapterProgress(full), full);
   assert.equal(isChapterMapUnlocked(LAST_MAP_ID, full), true);
   assert.ok(CHAPTER_LEVELS.every(({ id }) => full.mapStars[id] === 3));
-  assert.ok(getChapterProgressSummaries(full).every((summary) => summary.unlocked));
+  assert.ok(
+    getChapterProgressSummaries(full).every((summary) => summary.unlocked),
+  );
 });
 
 test('cada emenda entre capítulos abre exatamente um mapa', () => {
@@ -265,8 +303,17 @@ test('cada emenda entre capítulos abre exatamente um mapa', () => {
       CHAPTERS.slice(0, index + 1).flatMap(({ levelIds }) => levelIds),
     );
 
-    assert.equal(getNextChapterMapId(chapter.levelIds[99]), nextChapter.levelIds[0]);
-    assert.equal(isChapterMapUnlocked(nextChapter.levelIds[0], upToGuardian), true);
-    assert.equal(isChapterMapUnlocked(nextChapter.levelIds[1], upToGuardian), false);
+    assert.equal(
+      getNextChapterMapId(chapter.levelIds[99]),
+      nextChapter.levelIds[0],
+    );
+    assert.equal(
+      isChapterMapUnlocked(nextChapter.levelIds[0], upToGuardian),
+      true,
+    );
+    assert.equal(
+      isChapterMapUnlocked(nextChapter.levelIds[1], upToGuardian),
+      false,
+    );
   });
 });

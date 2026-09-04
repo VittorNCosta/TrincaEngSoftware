@@ -86,7 +86,14 @@ test('bounds vazios usam o canvas legado como fallback seguro', () => {
 });
 
 test('fit responsivo da Fase 61 e uniforme nas tres larguras alvo', () => {
-  const bounds = { bottom: 300, height: 256, left: 6, right: 296, top: 44, width: 290 };
+  const bounds = {
+    bottom: 300,
+    height: 256,
+    left: 6,
+    right: 296,
+    top: 44,
+    width: 290,
+  };
   const cases = [
     { expectedScale: 316 / 290, viewport: { height: 400, width: 336 } },
     { expectedScale: 1.2, viewport: { height: 430, width: 368 } },
@@ -118,7 +125,14 @@ test('fase pequena respeita a escala maxima e nao cria pecas exageradas', () => 
 });
 
 test('contencao vence a escala minima em viewport excepcionalmente pequeno', () => {
-  const bounds = { bottom: 300, height: 256, left: 6, right: 296, top: 44, width: 290 };
+  const bounds = {
+    bottom: 300,
+    height: 256,
+    left: 6,
+    right: 296,
+    top: 44,
+    width: 290,
+  };
   const viewport = { height: 100, width: 120 };
   const frame = fitBoardToViewport(bounds, viewport);
 
@@ -139,21 +153,56 @@ test('frame renderizado preserva deslocamentos, sobreposicao e alvo de toque', (
   closeTo(second.y - first.y, (secondTile.y - firstTile.y) * scale);
   closeTo(first.width, 52 * scale);
   closeTo(first.height, 52 * scale);
-  assert.equal(rectanglesOverlap(
-    { left: firstTile.x, right: firstTile.x + 52, top: firstTile.y, bottom: firstTile.y + 52 },
-    { left: secondTile.x, right: secondTile.x + 52, top: secondTile.y, bottom: secondTile.y + 52 },
-  ), true);
-  assert.equal(rectanglesOverlap(
-    { left: first.x, right: first.x + first.width, top: first.y, bottom: first.y + first.height },
-    { left: second.x, right: second.x + second.width, top: second.y, bottom: second.y + second.height },
-  ), true);
+  assert.equal(
+    rectanglesOverlap(
+      {
+        left: firstTile.x,
+        right: firstTile.x + 52,
+        top: firstTile.y,
+        bottom: firstTile.y + 52,
+      },
+      {
+        left: secondTile.x,
+        right: secondTile.x + 52,
+        top: secondTile.y,
+        bottom: secondTile.y + 52,
+      },
+    ),
+    true,
+  );
+  assert.equal(
+    rectanglesOverlap(
+      {
+        left: first.x,
+        right: first.x + first.width,
+        top: first.y,
+        bottom: first.y + first.height,
+      },
+      {
+        left: second.x,
+        right: second.x + second.width,
+        top: second.y,
+        bottom: second.y + second.height,
+      },
+    ),
+    true,
+  );
 });
 
 test('mudancas subpixel nao disparam novo enquadramento', () => {
   const current = { height: 420, width: 368 };
 
   assert.equal(hasMeaningfulViewportChange(undefined, current), true);
-  assert.equal(hasMeaningfulViewportChange(current, { height: 420.7, width: 368.4 }), false);
-  assert.equal(hasMeaningfulViewportChange(current, { height: 421, width: 368 }), true);
-  assert.equal(hasMeaningfulViewportChange(current, { height: 420, width: 369 }), true);
+  assert.equal(
+    hasMeaningfulViewportChange(current, { height: 420.7, width: 368.4 }),
+    false,
+  );
+  assert.equal(
+    hasMeaningfulViewportChange(current, { height: 421, width: 368 }),
+    true,
+  );
+  assert.equal(
+    hasMeaningfulViewportChange(current, { height: 420, width: 369 }),
+    true,
+  );
 });
