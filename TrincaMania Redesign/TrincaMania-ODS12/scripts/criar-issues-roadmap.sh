@@ -1060,8 +1060,8 @@ mk done --title 'G-05 · Hook `pre-push` com typecheck' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code' --milestone 'Git e versionamento'
-mk open --title 'G-06 · `release-please` para versão e CHANGELOG' \
-  --body 'Lê o log e abre PR de release. Casa com o `autoIncrement` do EAS.
+mk done --title 'G-06 · `release-please` para versão e CHANGELOG' \
+  --body '**Feito 04/09.** Config em `release-please-config.json` + `.release-please-manifest.json`, workflow em `.github/workflows/release.yml`. Le os Conventional Commits, mantem um PR de release com o CHANGELOG acumulado e, no merge, cria a tag — que e o gatilho que o `build.yml` ja esperava. `include-component-in-tag: false` e obrigatorio: o padrao taggearia `trincamania-v1.0.0` e o `on: push: tags: ["v*"]` do build nao casaria. `target-branch: develop` porque `main` nao existe (ver G-09).
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1207,7 +1207,7 @@ mk done --title 'CI-04 · `permissions: contents: read` no topo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,claude-code' --milestone 'CI/CD'
 mk done --title 'CI-05 · Fixar as actions por SHA, não por tag' \
-  --body '**Feito 03/09.** `actions/checkout` em `11d5960` e `actions/setup-node` em `49933ea`, ambos a v4.4.0, com a versao no comentario ao lado para o bump continuar legivel. Tag e ponteiro mutavel: quem controla o repositorio da action pode reapontar `v4` para outro commit sem que nada aqui mude.
+  --body '**Feito 03/09, pins atualizados 04/09.** `actions/checkout` em `3d3c42e` (v7.0.1) e `actions/setup-node` em `8207627` (v7.0.0), com a versao no comentario ao lado — e o comentario nao e decoracao: e por ele que o Dependabot (SEC-04) sabe qual versao esta fixada e consegue abrir o bump. Tag e ponteiro mutavel: quem controla o repositorio da action pode reapontar `v4` para outro commit sem que nada aqui mude.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1406,8 +1406,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code' --milestone 'CI/CD'
 
 # --- DevSecOps ---
-mk open --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
-  --body 'SAST nativo do GitHub.
+mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
+  --body '**Feito 04/09.** Job `codeql` em `.github/workflows/seguranca.yml`, linguagem `javascript-typescript` com o pacote `security-and-quality`. O `security-events: write` fica escopado so nesse job; o topo do workflow e `contents: read`.
 
 **Responsável:** Claude Code
 **Prioridade:** P0
@@ -1433,8 +1433,8 @@ mk open --title 'SEC-03 · Habilitar Dependabot alerts e security updates' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P0,humano' --milestone 'DevSecOps'
-mk open --title 'SEC-04 · `dependabot.yml` para npm e github-actions' \
-  --body 'Atualiza dependência e versão de action.
+mk done --title 'SEC-04 · `dependabot.yml` para npm e github-actions' \
+  --body '**Feito 04/09.** `.github/dependabot.yml` para npm (no subdiretorio do projeto) e github-actions (na raiz), semanal. Agrupa minor e patch; **ignora major** de expo, react, react-native, jest e typescript — porque foi exatamente um major solto (`@types/jest` ^30 contra o jest ~29 que o `jest-expo ~54` fixa) que deixou o develop vermelho. Esses sobem junto com o SDK, por decisao. Prefixo `chore(deps)`/`chore(ci)` para passar no commitlint.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1451,8 +1451,8 @@ mk open --title 'SEC-05 · Avaliar Renovate no lugar do Dependabot' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,humano' --milestone 'DevSecOps'
-mk open --title 'SEC-06 · `npm audit --audit-level=high` no CI' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'SEC-06 · `npm audit --audit-level=high` no CI' \
+  --body '**Feito 04/09.** Nao entrou como `--audit-level=high` puro porque nasceria vermelho: 11 advisories abertos (6 high) que chegam pela cadeia do Expo e cuja correcao passa por subir o major. Gate que nasce vermelho alguem desliga. Entao `scripts/auditoria.js` usa o livro-razao das outras guardas: reprova em advisory novo acima do piso e em entrada morta, chaveado por `pacote::id-do-advisory` (nao pela versao, que muda a cada install). Registry fora do ar nao reprova — 3 tentativas, teto de 90s, e sai verde avisando.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1460,8 +1460,8 @@ mk open --title 'SEC-06 · `npm audit --audit-level=high` no CI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-07 · `gitleaks` no CI' \
-  --body 'Varre o histórico, não só o diff.
+mk done --title 'SEC-07 · `gitleaks` no CI' \
+  --body '**Feito 04/09.** Job `segredos`, com `fetch-depth: 0` para varrer o historico e nao so o diff. Baixa o binario do gitleaks 8.30.1 da release em vez de usar a action de terceiro — mesma razao ja registrada no CI-05: nao dar acesso a token para action de terceiro.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1469,8 +1469,8 @@ mk open --title 'SEC-07 · `gitleaks` no CI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-08 · `dependency-review` em PR' \
-  --body 'Action oficial — barra dependência com CVE conhecida.
+mk done --title 'SEC-08 · `dependency-review` em PR' \
+  --body '**Feito 04/09.** Job `dependencias`, so em PR (a action exige o par base/head). Barra severidade >= high e licenca GPL-2.0/GPL-3.0/AGPL-3.0.
 
 **Responsável:** Claude Code
 **Prioridade:** P1
@@ -1523,8 +1523,8 @@ mk done --title 'SEC-13 · Confirmar que não há segredo em `app.json`/`eas.jso
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P0,claude-code' --milestone 'DevSecOps'
-mk open --title 'SEC-14 · Escrever o `SECURITY.md`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'SEC-14 · Escrever o `SECURITY.md`' \
+  --body '**Feito 04/09.** `.github/SECURITY.md`. Aponta para o **private vulnerability reporting** do GitHub em vez de um e-mail — o repositorio e publico e o endereco seria pessoal. Traz a tabela das verificacoes automaticas e o que cada uma cobre.
 
 **Responsável:** Claude Code
 **Prioridade:** P2
@@ -1861,4 +1861,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (69 já criadas fechadas) =="
+echo "== pronto: 199 issues (76 já criadas fechadas) =="
