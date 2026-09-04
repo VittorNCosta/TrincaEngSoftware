@@ -1,0 +1,75 @@
+# Versao, CHANGELOG e tag a partir do historico de commits (G-06/G-07).
+#
+# Esta e a peca que fechava a linha e faltava. O `commitlint.config.js` diz, no
+# proprio cabecalho, que trava Conventional Commits "para que o release-please
+# possa versionar lendo o log"; o `app.config.js` deriva a versao do Expo do
+# `package.json` "porque o release-please escreve o numero nele". As duas
+# pontas existiam ha semanas — o meio, nao.
+#
+# ## Como funciona
+#
+# A cada push na branch de release, o release-please le os commits desde a
+# ultima tag e mantem **um PR aberto** com a versao proxima ja calculada e o
+# CHANGELOG ja escrito. Enquanto voce continua empurrando commit, ele atualiza
+# esse mesmo PR. No dia em que voce quiser publicar, faz merge: o merge cria a
+# tag `vX.Y.Z` e o release do GitHub.
+#
+# Sim, o mecanismo e um PR — nao ha modo sem PR. O PR e o lugar onde a versao
+# proposta pode ser revisada antes de virar tag, e a tag e o que dispara o
+# build de producao no `build.yml` (`on: push: tags: ["v*"]`). Merge do PR e o
+# unico gesto manual do release inteiro.
+#
+# ## A versao do lancamento
+#
+# O manifesto comeca em `1.0.0`, que e o que o `package.json` ja dizia. Como
+# nunca houve release, o primeiro PR vai propor `1.0.1` ou `1.1.0` conforme os
+# commits. Se voce quiser que o lancamento na Play Store seja exatamente
+# `v1.0.0` (R-17), escreva num commit do release o rodape:
+#
+#     Release-As: 1.0.0
+#
+# ## Branch
+#
+# Aponta para `develop` porque `main` nao existe neste repositorio e `develop`
+# e a branch padrao. Quando a estrategia de branch for decidida (G-09) e `main`
+# passar a existir, e trocar `target-branch` aqui e o `branches:` do gatilho.
+name: Release
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Dois pushes seguidos nao podem recalcular o mesmo PR de release ao mesmo
+# tempo — o segundo veria o estado do primeiro pela metade.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: PR de release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      # `contents: write` cria a tag e o release; `pull-requests: write` abre e
+      # atualiza o PR de release. Sao as duas unicas escritas de todo o
+      # repositorio, e ficam confinadas a este job.
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          target-branch: develop
+          # Sem `token:` explicito ele usa o GITHUB_TOKEN do job. Consequencia
+          # conhecida e aceita: PR aberto com esse token nao dispara outros
+          # workflows, entao o CI nao roda no PR de release. Nao e perda real —
+          # o conteudo do PR e so `package.json` e `CHANGELOG.md`, e o commit
+          # que os originou ja passou pelo CI. Trocar por um PAT so para ver o
+          # CI verde de novo custaria um segredo de longa duracao no
+          # repositorio, que e um risco maior que o problema.

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "bootstrap-sha": "e9483e458208b87ffc039866f211b2c39c076c83",
+  "include-component-in-tag": false,
+  "separate-pull-requests": false,
+  "packages": {
+    "TrincaMania Redesign/TrincaMania-ODS12": {
+      "package-name": "trincamania",
+      "changelog-path": "CHANGELOG.md"
+    }
+  },
+  "changelog-sections": [
+    { "type": "feat", "section": "Novidades" },
+    { "type": "fix", "section": "Correções" },
+    { "type": "perf", "section": "Desempenho" },
+    { "type": "refactor", "section": "Refatoração" },
+    { "type": "docs", "section": "Documentação" },
+    { "type": "test", "section": "Testes" },
+    { "type": "build", "section": "Build" },
+    { "type": "ci", "section": "Integração contínua", "hidden": true },
+    { "type": "chore", "section": "Manutenção", "hidden": true },
+    { "type": "style", "section": "Estilo", "hidden": true },
+    { "type": "revert", "section": "Revertido" }
+  ]
+}
