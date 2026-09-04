@@ -48,9 +48,17 @@ name: Abrir o app do zero e entrar na primeira fase
 - tapOn:
     id: 'jogar-fase'
 
+# A primeira fase de um save em branco abre o tutorial prático por cima do
+# tabuleiro — o tabuleiro está lá atrás, mas coberto, e é assim que o Maestro
+# (com razão) o relata. `optional` pela mesma razão do guia do mapa: ele só
+# aparece uma vez na vida do save.
+- tapOn:
+    id: 'tutorial-pratico-avancar'
+    optional: true
+
+# `extendedWaitUntil` já é a asserção, não só uma espera: se o tabuleiro não
+# aparecer dentro do prazo, o fluxo falha aqui.
 - extendedWaitUntil:
     visible:
       id: 'game-board'
     timeout: 30000
-- assertVisible:
-    id: 'game-board'

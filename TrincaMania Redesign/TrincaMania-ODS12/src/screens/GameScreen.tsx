@@ -2692,6 +2692,10 @@ export function GameScreen({
                     {PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].text}
                   </Text>
                   <PrimaryButton
+                    // O rótulo muda a cada passo ("Começar", "Entendi",
+                    // "Continuar", "Jogar"), então texto não serve de
+                    // endereço: o id é o mesmo botão nos quatro.
+                    testID="tutorial-pratico-avancar"
                     title={
                       PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep]
                         .button
