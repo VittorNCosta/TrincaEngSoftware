@@ -317,10 +317,12 @@ const getGameBackground = (worldId: WorldId) => {
     case 2:
     case 5:
     case 7:
+    case 9:
       return gameWorld2Bg;
     case 3:
     case 6:
     case 8:
+    case 10:
       return gameWorld3Bg;
     case 4:
       return gameWorld1Bg;

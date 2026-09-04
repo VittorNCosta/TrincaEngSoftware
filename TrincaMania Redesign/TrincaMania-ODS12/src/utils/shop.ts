@@ -6,10 +6,7 @@ export const SHOP_INTERVAL = 5;
 
 export const REST_CHECKPOINT_COIN_REWARDS: Record<number, number> = {
   5: 15,
-  10: 20,
-  15: 25,
-  20: 30,
-  25: 40,
+  10: 40,
 };
 
 const getLevelById = (levelId: string) => LEVELS.find((knownLevel) => knownLevel.id === levelId);

@@ -431,9 +431,9 @@ test('cada capítulo tem entrada própria no registry de mapas, sem colisão', (
   assert.equal(new Set(identityKeys).size, identityKeys.length);
 });
 
-test('as 203 fases canônicas continuam intactas ao lado dos capítulos', () => {
-  assert.equal(LEVELS.length, 203);
-  assert.equal(new Set(LEVELS.map(({ id }) => id)).size, 203);
+test('as 103 fases canônicas continuam intactas ao lado dos capítulos', () => {
+  assert.equal(LEVELS.length, 103);
+  assert.equal(new Set(LEVELS.map(({ id }) => id)).size, 103);
   assert.deepEqual(
     new Set(LEVELS.map(({ id }) => id)),
     new Set(WORLDS.flatMap(({ levelIds }) => levelIds)),
@@ -444,11 +444,11 @@ test('as 203 fases canônicas continuam intactas ao lado dos capítulos', () => 
   assert.ok(LEVELS.every(({ id }) => !chapterIds.has(id)));
   assert.ok(LEVELS.every(({ worldId }) => worldId < 100));
   assert.ok(WORLDS.every(({ id }) => id < 100));
-  assert.equal(WORLDS.length, 9);
+  assert.equal(WORLDS.length, 11);
 
   // O layout autoral não pode ter mudado com a correção das posições.
   const level61 = LEVELS.find(({ number }) => number === 61);
-  assert.equal(level61.tiles.length, 57);
+  assert.equal(level61.tiles.length, 48);
   assert.deepEqual(
     level61.tiles.slice(0, 3).map(({ x, y, z }) => [x, y, z]),
     [

@@ -196,9 +196,9 @@ test('fase 64 mantém os dados de campanha esperados', () => {
   const level = LEVELS.find((candidate) => candidate.number === 64);
 
   assert.ok(level);
-  assert.equal(level.worldId, 3);
-  assert.equal(level.worldLevelNumber, 14);
-  assert.equal(level.tiles.length, 60);
+  assert.equal(level.worldId, 7);
+  assert.equal(level.worldLevelNumber, 4);
+  assert.equal(level.tiles.length, 51);
   assert.equal(new Set(level.tiles.map((tile) => tile.id)).size, level.tiles.length);
 });
 

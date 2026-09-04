@@ -78,7 +78,7 @@ test('frame visual e toque compartilham exatamente o mesmo centro', () => {
 
 test('nós usam a âncora de contato no solo sem separar arte e hitbox', () => {
   const transform = createCampaignMapTransform(BOSQUE_MAP_CONFIG, 392);
-  const anchor = BOSQUE_MAP_CONFIG.levelAnchors[12];
+  const anchor = BOSQUE_MAP_CONFIG.levelAnchors[4];
   const frames = getCampaignMapEntityFrames(
     anchor.point,
     BOSQUE_MAP_CONFIG.levelNodeSize,
@@ -129,10 +129,10 @@ test('abertura respeita HUD, começo, meio e fim nas três telas alvo', () => {
       });
 
     closeTo(openingFor(0), bounds.maximum);
-    closeTo(openingFor(24), bounds.minimum);
-    assert.ok(openingFor(12) > bounds.minimum);
-    assert.ok(openingFor(12) < bounds.maximum);
-    closeTo(openingFor(12), openingFor(12));
+    closeTo(openingFor(9), bounds.minimum);
+    assert.ok(openingFor(4) > bounds.minimum);
+    assert.ok(openingFor(4) < bounds.maximum);
+    closeTo(openingFor(4), openingFor(4));
   });
 });
 
@@ -146,14 +146,14 @@ test('primeira fase e conjunto final permanecem fora dos overlays fixos', () => 
     BOSQUE_MAP_CONFIG.minimumTouchSize,
   );
   const finalFrames = getCampaignMapEntityFrames(
-    BOSQUE_MAP_CONFIG.levelAnchors[24].point,
+    BOSQUE_MAP_CONFIG.levelAnchors[9].point,
     BOSQUE_MAP_CONFIG.levelNodeSize,
     BOSQUE_MAP_CONFIG.levelNodeOrigin,
     transform,
     BOSQUE_MAP_CONFIG.minimumTouchSize,
   );
   const finalLandmarks = BOSQUE_MAP_CONFIG.landmarks.filter(
-    ({ afterLevelId }) => afterLevelId === 'w1-025',
+    ({ afterLevelId }) => afterLevelId === 'w1-010',
   );
 
   assert.ok(
@@ -202,7 +202,7 @@ test('foco preserva primeira desbloqueada incompleta e final do mundo concluído
       completedLevelIds: levelIds,
       unlockedLevelIds: levelIds,
     }),
-    'w1-025',
+    'w1-010',
   );
   assert.equal(
     getCampaignMapFocusLevelId(levelIds, { completedLevelIds: [], unlockedLevelIds: [] }),

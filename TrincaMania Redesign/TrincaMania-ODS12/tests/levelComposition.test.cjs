@@ -102,15 +102,16 @@ test('o clamp nao altera a saida para os kindCount reais (3..8)', () => {
 });
 
 /**
- * Trava de integridade: as 203 fases canonicas sao dados de producao. Qualquer
- * mudanca em `levels.ts` que altere UMA peca quebra este hash de proposito.
+ * Trava de integridade: as 103 fases canonicas (100 principais + 3 bonus) sao
+ * dados de producao. Qualquer mudanca em `levels.ts` que altere UMA peca
+ * quebra este hash de proposito.
  */
-test('as 203 fases canonicas continuam byte-identicas', () => {
-  assert.equal(LEVELS.length, 203);
-  assert.equal(LEVELS.reduce((total, level) => total + level.tiles.length, 0), 11415);
+test('as 103 fases canonicas continuam byte-identicas', () => {
+  assert.equal(LEVELS.length, 103);
+  assert.equal(LEVELS.reduce((total, level) => total + level.tiles.length, 0), 4668);
   assert.equal(
     sha256(JSON.stringify(LEVELS)),
-    'b1a762759e537452db9c465071bd3946b9ce8ff7f8fa512857e2a0a4c3e66bfa',
+    '55e70bd5a6905155058d9a0bae4236911cc208401b2d35504a1e24ec0fadc4ce',
   );
 });
 
@@ -135,7 +136,7 @@ test('getLevelsForWorld memoizado devolve as fases certas de cada mundo', () => 
   });
 });
 
-test('getLevelsForWorld e estavel entre chamadas e cobre as 203 fases', () => {
+test('getLevelsForWorld e estavel entre chamadas e cobre as 103 fases', () => {
   WORLDS.forEach((world) => {
     const first = getLevelsForWorld(world.id);
     const second = getLevelsForWorld(world.id);
@@ -145,6 +146,6 @@ test('getLevelsForWorld e estavel entre chamadas e cobre as 203 fases', () => {
 
   const todas = WORLDS.flatMap((world) => getLevelsForWorld(world.id).map((level) => level.id));
 
-  assert.equal(todas.length, 203);
-  assert.equal(new Set(todas).size, 203);
+  assert.equal(todas.length, 103);
+  assert.equal(new Set(todas).size, 103);
 });

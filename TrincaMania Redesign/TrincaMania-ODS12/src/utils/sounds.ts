@@ -162,6 +162,9 @@ const AMBIENT_CONFIGS: Record<AmbientKey, AmbientConfig> = {
   },
 };
 
+// Não há áudio novo gerado para os mundos 9 e 10 (mesma lacuna documentada
+// para a arte de mapa em CLAUDE.md) — reaproveitam ambientes existentes que
+// combinam com o tema de cada mundo (forja industrial / cúpula global).
 const AMBIENT_BY_WORLD_ID: Partial<Record<WorldId, AmbientKey>> = {
   1: 'forest',
   2: 'mountain',
@@ -171,6 +174,8 @@ const AMBIENT_BY_WORLD_ID: Partial<Record<WorldId, AmbientKey>> = {
   6: 'stars',
   7: 'snow',
   8: 'celestial',
+  9: 'volcano',
+  10: 'celestial',
 };
 
 const players: Partial<Record<SoundKey, AudioPlayer>> = {};

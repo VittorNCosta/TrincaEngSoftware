@@ -20,6 +20,8 @@ export const LEGACY_CAMPAIGN_MAP_ASSETS = {
   'legacy-world-6': require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
   'legacy-world-7': require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
   'legacy-world-8': require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
+  'legacy-world-9': require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
+  'legacy-world-10': require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
   'legacy-world-21': require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType,
 } as const;
 

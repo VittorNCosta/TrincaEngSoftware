@@ -41,7 +41,7 @@ const { createSeededRandom, stableHash } = require('../src/utils/deterministicRa
  * ## Por que não é `npm test`
  *
  * `npm test` roda em poucos segundos e trava o build no CI. Esta simulação
- * joga milhares de partidas completas (203 fases x 3 sementes + 1000 mapas x
+ * joga milhares de partidas completas (103 fases x 3 sementes + 1000 mapas x
  * 3 sessões) e leva dezenas de segundos — é ferramenta de auditoria sob
  * demanda (`npm run test:playthrough`), não gate de commit. Por isso o nome
  * do arquivo não termina em `.test.cjs`: `node --test tests` (o `npm test`)
@@ -64,8 +64,7 @@ const { createSeededRandom, stableHash } = require('../src/utils/deterministicRa
  * abrir um material novo só se as outras duas peças dele já estão jogáveis
  * agora (abertura segura); e evita abrir material novo com a bandeja
  * apertada. É retrocesso, não só um palpite guloso — sem ele, fases
- * legítimas (achado nesta auditoria: `w1-012`..`w1-020`, `ch04-099`,
- * `ch08-078`) apareceriam como "impossíveis" só porque a primeira escolha
+ * legítimas apareceriam como "impossíveis" só porque a primeira escolha
  * gulosa não era a certa, o que seria falso positivo.
  */
 
@@ -207,7 +206,7 @@ const playSession = (label, level, trayCapacity, rule) => {
   }
 };
 
-test('todas as 203 fases da campanha são vencíveis por um jogador simulado, bandeja base (sem boost pago)', () => {
+test('todas as 103 fases da campanha são vencíveis por um jogador simulado, bandeja base (sem boost pago)', () => {
   const failures = [];
 
   LEVELS.forEach((baseLevel, index) => {

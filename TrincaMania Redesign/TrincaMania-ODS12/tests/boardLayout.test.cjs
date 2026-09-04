@@ -38,7 +38,7 @@ const closeTo = (actual, expected, epsilon = 0.000001) => {
 test('bounds da Fase 61 usam apenas a extensao estrutural real', () => {
   const level = LEVELS.find((candidate) => candidate.number === 61);
   assert.ok(level);
-  assert.equal(level.tiles.length, 57);
+  assert.equal(level.tiles.length, 48);
 
   assert.deepEqual(getBoardBounds(level.tiles), {
     bottom: 300,

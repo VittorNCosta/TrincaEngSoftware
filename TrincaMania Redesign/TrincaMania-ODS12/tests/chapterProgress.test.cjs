@@ -77,7 +77,7 @@ test('progresso de capítulo mora fora da campanha e não a corrompe', () => {
 });
 
 test('a campanha canônica segue intocada pelos capítulos', () => {
-  assert.equal(LEVELS.length, 203);
+  assert.equal(LEVELS.length, 103);
   assert.deepEqual(createInitialProgress().unlockedLevelIds, ['w1-001']);
   assert.equal(
     LEVELS.some((level) => getChapterLevelSummary(level.id) !== undefined),

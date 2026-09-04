@@ -54,23 +54,25 @@ const bosqueSegmentAssetFiles = {
   'forest-trailhead': 'forest_06_trailhead.png',
 };
 
-test('dados existentes continuam formando 203 fases canônicas sem lacunas', () => {
+test('dados existentes continuam formando 103 fases canônicas sem lacunas', () => {
   const expectedCounts = new Map([
-    [1, 25],
-    [2, 25],
-    [3, 25],
-    [4, 25],
-    [5, 25],
-    [6, 25],
-    [7, 25],
-    [8, 25],
+    [1, 10],
+    [2, 10],
+    [3, 10],
+    [4, 10],
+    [5, 10],
+    [6, 10],
+    [7, 10],
+    [8, 10],
+    [9, 10],
+    [10, 10],
     [21, 3],
   ]);
   const levelIds = LEVELS.map(({ id }) => id);
   const configuredIds = WORLDS.flatMap(({ levelIds: ids }) => ids);
 
-  assert.equal(LEVELS.length, 203);
-  assert.equal(new Set(levelIds).size, 203);
+  assert.equal(LEVELS.length, 103);
+  assert.equal(new Set(levelIds).size, 103);
   assert.deepEqual(new Set(levelIds), new Set(configuredIds));
 
   WORLDS.forEach((world) => {
@@ -83,16 +85,13 @@ test('dados existentes continuam formando 203 fases canônicas sem lacunas', () 
   });
 });
 
-test('Bosque possui as 25 âncoras exatas e bijetivas em ordem de campanha', () => {
+test('Bosque possui as 10 âncoras exatas e bijetivas em ordem de campanha', () => {
   const expectedPoints = [
-    [190, 2945], [180, 2850], [178, 2755], [188, 2660], [195, 2560],
-    [190, 2400], [180, 2305], [150, 2210], [180, 2115], [205, 2020],
-    [195, 1860], [200, 1765], [190, 1670], [170, 1575], [155, 1480],
-    [180, 1320], [160, 1225], [185, 1130], [175, 1035], [150, 940],
-    [185, 780], [180, 685], [155, 590], [170, 505], [180, 415],
+    [190, 2945], [188, 2660], [190, 2400], [180, 2115], [200, 1765],
+    [170, 1575], [160, 1225], [150, 940], [180, 685], [180, 415],
   ];
 
-  assert.equal(BOSQUE_LEVEL_ANCHORS.length, 25);
+  assert.equal(BOSQUE_LEVEL_ANCHORS.length, 10);
   assert.deepEqual(BOSQUE_LEVEL_ANCHORS.map(({ levelId }) => levelId), worldOne.levelIds);
   assert.deepEqual(
     BOSQUE_LEVEL_ANCHORS.map(({ point }) => [point.x, point.y]),
@@ -161,9 +160,9 @@ test('descansos e portal preservam checkpoints e usam posições distintas', () 
 
   assert.deepEqual(
     rests.map(({ afterLevelId }) => afterLevelId),
-    ['w1-005', 'w1-010', 'w1-015', 'w1-020', 'w1-025'],
+    ['w1-005', 'w1-010'],
   );
-  assert.equal(portal.afterLevelId, 'w1-025');
+  assert.equal(portal.afterLevelId, 'w1-010');
   assert.equal(portal.targetWorldId, 2);
   assert.equal(new Set(positions).size, positions.length);
 });
@@ -196,7 +195,7 @@ test('validação inválida é determinística e denuncia a causa real', () => {
   assert.ok(first.includes('segments:first-must-start-at-zero'));
   assert.ok(first.includes('segments:last-must-end-at-design-height'));
   assert.ok(first.includes('levelAnchors[0].point.x:out-of-bounds'));
-  assert.ok(first.includes('levelAnchors:missing-w1-025'));
+  assert.ok(first.includes('levelAnchors:missing-w1-010'));
   assert.ok(first.includes('road:must-contain-entry-levels-and-exit'));
   assert.ok(first.includes('road:level-point-mismatch-w1-001'));
   assert.ok(first.includes('landmarks[0].afterLevelId:unknown'));
@@ -215,7 +214,7 @@ test('duplicatas e referências ausentes também são rejeitadas', () => {
 
   assert.ok(errors.includes('levelAnchors[1].levelId:duplicate'));
   assert.ok(errors.includes('landmarks[1].id:duplicate'));
-  assert.ok(errors.includes('landmarks[5].targetWorldId:required-for-portal'));
+  assert.ok(errors.includes('landmarks[2].targetWorldId:required-for-portal'));
 });
 
 test('todos os mundos têm modo explícito e nenhum usa fallback visual do Bosque', () => {
@@ -239,11 +238,11 @@ test('modelo de render contém somente níveis e segmentos do mundo escolhido', 
   const vales = createSelectedWorldMapModel(2, WORLD_MAP_CONFIGS, LEVELS);
   const bonus = createSelectedWorldMapModel(21, WORLD_MAP_CONFIGS, LEVELS);
 
-  assert.equal(bosque.levels.length, 25);
+  assert.equal(bosque.levels.length, 10);
   assert.ok(bosque.levels.every(({ worldId }) => worldId === 1));
   assert.equal(bosque.segments.length, 7);
 
-  assert.equal(vales.levels.length, 25);
+  assert.equal(vales.levels.length, 10);
   assert.ok(vales.levels.every(({ worldId }) => worldId === 2));
   assert.deepEqual(vales.segments, []);
 
