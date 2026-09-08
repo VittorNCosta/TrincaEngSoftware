@@ -41,7 +41,11 @@ export type ChapterWorldId =
 
 export type WorldId = CampaignWorldId | ChapterWorldId;
 
-export type WorldTheme = 'forest' | 'mountain' | 'crystal' | 'sweet';
+// Variante de cor do quadro do mapa na seleção de fase — decorativo, sem
+// ligação com o material/CONAMA de cada mundo. Nomeado pelo acento em vez de
+// vocabulário de fantasia (L-02): 'padrao' é o verde-base (sem override),
+// 'azulado'/'violeta' alternam nos mundos 1-10, 'rosado' é só do bônus.
+export type WorldTheme = 'padrao' | 'azulado' | 'violeta' | 'rosado';
 
 export type WorldUnlockRule =
   'complete-world-1' | 'three-stars-world-1' | 'three-stars-world-2';

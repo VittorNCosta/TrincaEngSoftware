@@ -213,8 +213,8 @@ mk done --title 'C-08a · Reposicionar o bônus de `25.1–25.3` para `10.1–10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
-mk open --title 'C-08b · Trocar o `theme: '\''sweet'\''` do bônus' \
-  --body 'Vocabulário de fantasia num mundo que fica. Cai junto com L-02. Reavaliar também `unlockRule: '\''three-stars-world-1'\''`, que fica mais fácil com o Mundo 1 em 10 fases.
+mk done --title 'C-08b · Trocar o `theme: '\''sweet'\''` do bônus' \
+  --body '**Feito 08/09,** junto com L-02: bônus agora é `theme: '\''rosado'\''`. **Em aberto:** a reavaliação de `unlockRule: '\''three-stars-world-1'\''` (fica mais fácil com o Mundo 1 em 10 fases) é decisão de balanceamento, não renomeação — não mexida aqui.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
@@ -965,8 +965,8 @@ mk open --title 'L-01 · Renomear a union `AmbientKey`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
-mk open --title 'L-02 · Renomear `WorldTheme`' \
-  --body '`'\''forest'\'' | '\''mountain'\'' | '\''crystal'\'' | '\''sweet'\''` em `src/types/game.ts:42`.
+mk done --title 'L-02 · Renomear `WorldTheme`' \
+  --body '**Feito 08/09.** `'\''forest'\''|'\''mountain'\''|'\''crystal'\''|'\''sweet'\''` → `'\''padrao'\''|'\''azulado'\''|'\''violeta'\''|'\''rosado'\''`: nome pelo acento de cor do quadro do mapa, sem ligação com material/CONAMA nem vocabulário de fantasia. Só decorativo (não persiste em save), 3 arquivos (`types/game.ts`, `data/worlds.ts`, `screens/LevelSelectScreen.tsx`).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (80 já criadas fechadas) =="
+echo "== pronto: 199 issues (82 já criadas fechadas) =="

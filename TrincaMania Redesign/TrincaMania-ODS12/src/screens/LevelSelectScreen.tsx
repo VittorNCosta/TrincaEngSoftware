@@ -737,9 +737,9 @@ export function LevelSelectScreen({
         <Animated.View
           style={[
             styles.mapFrame,
-            selectedWorld.theme === 'mountain' ? styles.mapFrameMountain : null,
-            selectedWorld.theme === 'crystal' ? styles.mapFrameCrystal : null,
-            selectedWorld.theme === 'sweet' ? styles.mapFrameSweet : null,
+            selectedWorld.theme === 'azulado' ? styles.mapFrameAzulado : null,
+            selectedWorld.theme === 'violeta' ? styles.mapFrameVioleta : null,
+            selectedWorld.theme === 'rosado' ? styles.mapFrameRosado : null,
             segmentedMapConfig
               ? { backgroundColor: segmentedMapConfig.backgroundColor }
               : null,
@@ -1648,13 +1648,13 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
   },
-  mapFrameMountain: {
+  mapFrameAzulado: {
     backgroundColor: '#89B7CF',
   },
-  mapFrameCrystal: {
+  mapFrameVioleta: {
     backgroundColor: '#988BEA',
   },
-  mapFrameSweet: {
+  mapFrameRosado: {
     backgroundColor: '#FFE4F0',
   },
   mapBottomScrim: {
