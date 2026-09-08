@@ -594,11 +594,11 @@ const BLOCKS = [
  ["SEC-17","Revisar os dados coletados (LGPD)","voce",1,"Hoje é tudo AsyncStorage local. Se entrar analytics, a política muda."],
 ]},
 {k:"q", h:"Qualidade e DX", note:"Já existem 19 arquivos de teste. Falta cobertura de ponta a ponta e quebrar os três arquivos que passaram do tamanho gerenciável.", t:[
- ["Q-01","Montar E2E com Maestro","cc",1,"YAML, fora do build, roda em CI. Melhor custo/benefício que Detox aqui."],
+ ["Q-01","✅ Montar E2E com Maestro","cc",1,"<b>Feito 08/09.</b> <code>.maestro/01-entrar-numa-fase.yaml</code> e <code>02-configuracao-sobrevive-ao-reinicio.yaml</code>: YAML, fora do build, roda em CI. Melhor custo/benefício que Detox aqui."],
  ["Q-02","Fluxo E2E: abrir, escolher fase, jogar e vencer","cc",1],
  ["Q-03","Fluxo E2E: comprar na loja","cc",2],
  ["Q-04","Fluxo E2E: perder vida e esperar a recarga","cc",2],
- ["Q-05","Rodar o Maestro no CI","cc",2,"Emulador Android em GitHub Actions."],
+ ["Q-05","✅ Rodar o Maestro no CI","cc",2,"<b>Feito 08/09.</b> <code>.github/workflows/e2e.yml</code>: prebuild + <code>assembleRelease</code> + emulador Android (<code>reactivecircus/android-emulator-runner</code>) em push na branch, <code>workflow_dispatch</code> e cron semanal. Maestro baixado com sha256 fixado, sem action de terceiro. Recolhe diagnóstico (captura/hierarquia) em falha."],
  ["Q-06","Teste de acessibilidade","cc",1,"Labels e alvo de toque ≥ 44 px. O <code>minimumTouchSize: 44</code> já existe no config de mapa, mas ninguém testa."],
  ["Q-07","Quebrar <code>GameScreen.tsx</code>","cc",1,"3166 linhas. O <code>CLAUDE.md</code> já avisa para não deixar crescer."],
  ["Q-08","Quebrar <code>LevelSelectScreen.tsx</code>","cc",2,"1879 linhas."],

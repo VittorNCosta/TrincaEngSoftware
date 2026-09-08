@@ -1710,8 +1710,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,humano' --milestone 'DevSecOps'
 
 # --- Qualidade ---
-mk open --title 'Q-01 · Montar E2E com Maestro' \
-  --body 'YAML, fora do build, roda em CI. Melhor custo/benefício que Detox aqui.
+mk done --title 'Q-01 · Montar E2E com Maestro' \
+  --body '**Feito 08/09.** `.maestro/01-entrar-numa-fase.yaml` e `02-configuracao-sobrevive-ao-reinicio.yaml`: YAML, fora do build, roda em CI. Melhor custo/benefício que Detox aqui.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1750,8 +1750,8 @@ mk open --title 'Q-04 · Fluxo E2E: perder vida e esperar a recarga' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
-mk open --title 'Q-05 · Rodar o Maestro no CI' \
-  --body 'Emulador Android em GitHub Actions.
+mk done --title 'Q-05 · Rodar o Maestro no CI' \
+  --body '**Feito 08/09.** `.github/workflows/e2e.yml`: prebuild + `assembleRelease` + emulador Android (`reactivecircus/android-emulator-runner`) em push na branch, `workflow_dispatch` e cron semanal. Maestro baixado com sha256 fixado, sem action de terceiro. Recolhe diagnóstico (captura/hierarquia) em falha.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (83 já criadas fechadas) =="
+echo "== pronto: 199 issues (85 já criadas fechadas) =="
