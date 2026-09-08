@@ -16,6 +16,7 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "estado": "node scripts/estado.js",
     "guarda:ods12": "node scripts/guarda-ods12.js",
     "auditoria": "node scripts/auditoria.js",
     "valida:assets": "node scripts/valida-assets.js",

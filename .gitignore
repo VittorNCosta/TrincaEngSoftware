@@ -1,1 +1,8 @@
 .claude/settings.local.json
+
+# Retrato de onde o trabalho parou, reescrito a cada turno pelo hook Stop
+# (scripts/estado.js). Versionar faria a arvore ficar suja em todo turno,
+# brigando com o fluxo de commit que ele existe para proteger. O status
+# compartilhavel e o backlog de issues no GitHub.
+.claude/estado.md
+.claude/estado-nota.txt

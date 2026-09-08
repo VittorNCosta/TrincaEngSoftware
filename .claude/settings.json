@@ -1,0 +1,40 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/estado-sessao.sh\" --injetar",
+            "timeout": 20,
+            "statusMessage": "Lendo o estado da sessao anterior..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/sync-repo.sh\"",
+            "timeout": 20,
+            "statusMessage": "Sincronizando com origin..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/estado-sessao.sh\"",
+            "timeout": 20,
+            "statusMessage": "Anotando o estado..."
+          }
+        ]
+      }
+    ]
+  }
+}
