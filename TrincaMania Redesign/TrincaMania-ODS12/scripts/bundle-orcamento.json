@@ -1,0 +1,6 @@
+{
+  "_leia": "Teto do bundle Android (Hermes), gerado por scripts/orcamento-bundle.js --atualizar. `teto` = `medido` * (1 + MARGEM_DE_RUIDO), e e o numero que a checagem de fato usa. So sobe de proposito: aumentar exige --atualizar --permitir-alta.",
+  "medido": 2620795,
+  "teto": 2647003,
+  "megabytes": 2.52
+}

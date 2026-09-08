@@ -1800,8 +1800,8 @@ mk open --title 'Q-09 · Quebrar `App.tsx`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
-mk open --title 'Q-10 · Orçamento de tamanho de bundle no CI' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'Q-10 · Orçamento de tamanho de bundle no CI' \
+  --body '**Feito 08/09.** Novo job `orcamento-bundle` em `ci.yml`: roda `npx expo export --platform android` (o mesmo artefato que o build de produção embarca, so local, sem consumir cota do EAS nem exigir `EXPO_TOKEN`) e mede o `.hbc` resultante contra um teto em `scripts/bundle-orcamento.json`, mesmo idioma de `cobertura`/assets/ODS12: só sobe de propósito (`--atualizar --permitir-alta`). Achado no caminho: o bundle não é 100% reprodutível byte a byte — cinco execuções seguidas sobre o mesmo código variaram 2 bytes, porque o Metro não garante ordem estável de módulo — então o teto tem 1% de folga sobre o medido para não reprovar PR ao acaso. Hoje: ~2,50 MB.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (90 já criadas fechadas) =="
+echo "== pronto: 199 issues (91 já criadas fechadas) =="
