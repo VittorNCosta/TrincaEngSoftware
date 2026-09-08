@@ -19,30 +19,8 @@ ESTADO="$ROOT/.claude/estado.md"
 
 [ -d "$APP" ] || exit 0
 
-# Hook roda em shell nao-interativo, que nao carrega o nvm do .zshrc — dai o
-# `node: command not found` (e o F0-02 do roadmap). Resolve na mao: PATH
-# primeiro, depois a versao do .nvmrc, depois qualquer uma instalada.
-resolver_node() {
-  if command -v node >/dev/null 2>&1; then
-    command -v node
-    return
-  fi
-
-  local versoes="$HOME/.nvm/versions/node"
-  [ -d "$versoes" ] || return 1
-
-  local pedida
-  pedida=$(tr -d '[:space:]' <"$APP/.nvmrc" 2>/dev/null)
-  if [ -n "$pedida" ] && [ -x "$versoes/v$pedida/bin/node" ]; then
-    echo "$versoes/v$pedida/bin/node"
-    return
-  fi
-
-  local ultima
-  ultima=$(ls -1 "$versoes" 2>/dev/null | sort -V | tail -1)
-  [ -n "$ultima" ] && [ -x "$versoes/$ultima/bin/node" ] || return 1
-  echo "$versoes/$ultima/bin/node"
-}
+# shellcheck source=./resolver-node.sh
+. "$(dirname -- "$0")/resolver-node.sh"
 
 aviso() {
   python3 -c 'import json,sys; print(json.dumps({"systemMessage": sys.argv[1]}))' "$1" 2>/dev/null

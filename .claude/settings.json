@@ -20,6 +20,25 @@
             "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/sync-repo.sh\"",
             "timeout": 20,
             "statusMessage": "Sincronizando com origin..."
+          },
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/janela-de-trabalho.sh\" UserPromptSubmit",
+            "timeout": 20,
+            "statusMessage": "Renovando a janela de trabalho..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/janela-de-trabalho.sh\" PreToolUse",
+            "timeout": 120,
+            "statusMessage": "Conferindo a janela de trabalho..."
           }
         ]
       }

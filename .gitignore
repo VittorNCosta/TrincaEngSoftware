@@ -6,3 +6,7 @@
 # compartilhavel e o backlog de issues no GitHub.
 .claude/estado.md
 .claude/estado-nota.txt
+
+# Licenca e ultimo encerramento da janela de trabalho (scripts/janela.js).
+# Estado de relogio da maquina, nao do projeto.
+.claude/janela.json
