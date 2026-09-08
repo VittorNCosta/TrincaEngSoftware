@@ -975,8 +975,8 @@ mk done --title 'L-02 · Renomear `WorldTheme`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
-mk open --title 'L-03 · Trocar os `identityKey` dos mundos 2–8 e bônus' \
-  --body '`vales-montanhosos`, `ruinas-de-cristal`, `praia-dos-tesouros`, `vulcao-doce`, `cidade-das-estrelas`, `neve-cristalina`, `reino-celestial`, `reino-acucarado`.
+mk done --title 'L-03 · Trocar os `identityKey` dos mundos 2–8 e bônus' \
+  --body '**Feito 04/09 (via L-04).** Duplicata de escopo: o commit 51e02f8 que fechou o L-04 já trocou os oito `identityKey` daqui (`vales-montanhosos`, `ruinas-de-cristal`, `praia-dos-tesouros`, `vulcao-doce`, `cidade-das-estrelas`, `neve-cristalina`, `reino-celestial`, `reino-acucarado`) pelos nomes ODS12 (`vale-da-reciclagem`, `central-de-materiais`, `viveiro-comunitario`, `usina-de-compostagem`, `cooperativa-dos-catadores`, `rota-da-logistica-reversa`, `forum-da-economia-circular`, `jardim-renascido`). Conferido em `worldMapConfigs.ts`, nada pendente.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (82 já criadas fechadas) =="
+echo "== pronto: 199 issues (83 já criadas fechadas) =="
