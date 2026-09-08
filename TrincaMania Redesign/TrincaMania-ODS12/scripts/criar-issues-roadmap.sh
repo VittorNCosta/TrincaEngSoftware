@@ -1839,8 +1839,8 @@ mk open --title 'Q-13 · Resolver o gap do Modo Dev' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
-mk open --title 'Q-14 · Atualizar o `CONTEXT.md` com o vocabulário dos 10 mundos' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'Q-14 · Atualizar o `CONTEXT.md` com o vocabulário dos 10 mundos' \
+  --body '**Feito 08/09.** Seção `## Mundos` nova: os 10 nomes ODS12 + bônus, o que cada um representa na cadeia da reciclagem e o nome de fantasia a evitar (mundos 1–8 e bônus só, 9 e 10 nasceram já no tema).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (85 já criadas fechadas) =="
+echo "== pronto: 199 issues (86 já criadas fechadas) =="

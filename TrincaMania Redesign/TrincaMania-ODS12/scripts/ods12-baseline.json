@@ -33,25 +33,25 @@
     },
     "src/components/BoardTile.tsx::candy": {
       "count": 1,
-      "linhas": [441],
+      "linhas": [446],
       "motivo": "Comentario do tratamento visual da peca ainda usa o vocabulario do jogo pre-redesign. Bloco L.",
       "situacao": "pendente"
     },
     "src/components/BoardTile.tsx::doce": {
       "count": 2,
-      "linhas": [441, 461],
+      "linhas": [446, 466],
       "motivo": "Idem: os comentarios chamam a peca de doce. Bloco L.",
       "situacao": "pendente"
     },
     "src/components/BoardTile.tsx::fruta": {
       "count": 1,
-      "linhas": [442],
+      "linhas": [447],
       "motivo": "Comentario descreve o bug antigo em termos de fruta. Reescrever no bloco L.",
       "situacao": "pendente"
     },
     "src/components/BoardTile.tsx::jelly": {
       "count": 1,
-      "linhas": [441],
+      "linhas": [446],
       "motivo": "Nome do tratamento visual (Jelly/Candy) herdado do jogo original. Bloco L.",
       "situacao": "pendente"
     },
@@ -67,37 +67,17 @@
       "motivo": "Comentario do encaixe ocupado chama o tile de doce. Bloco L.",
       "situacao": "pendente"
     },
-    "src/data/worlds.ts::sweet": {
-      "count": 1,
-      "linhas": [147],
-      "motivo": "theme sweet do mundo bonus. C-08b.",
-      "situacao": "pendente"
-    },
     "src/domain/recycling/value-objects/RecyclingCard.ts::fruta": {
       "count": 1,
       "linhas": [59],
       "motivo": "LEGITIMO: Restos de fruta e a descricao correta de residuo organico. Nao e o tema de frutas do jogo antigo, e o dominio ODS 12.",
       "situacao": "ok"
     },
-    "src/screens/LevelSelectScreen.tsx::sweet": {
-      "count": 12,
-      "linhas": [
-        742, 1965, 1975, 1979, 1983, 1989, 1994, 1999, 2004, 2013, 2018, 2023
-      ],
-      "motivo": "Maior concentracao de drift do repo: 1 tema + 11 identificadores camelCase (sweetCrystal, sweetEmoji...). L-02.",
-      "situacao": "pendente"
-    },
     "src/types/game.ts::fruta": {
       "count": 1,
       "linhas": [6],
       "motivo": "LEGITIMO: o comentario define TileKind dizendo que a especie e o MATERIAL e nao mais uma fruta. E a documentacao da mudanca.",
       "situacao": "ok"
-    },
-    "src/types/game.ts::sweet": {
-      "count": 1,
-      "linhas": [44],
-      "motivo": "WorldTheme ainda tem sweet na uniao. L-02 — a raiz de onde sai o drift do LevelSelectScreen.",
-      "situacao": "pendente"
     },
     "src/utils/sounds.ts::celestial": {
       "count": 6,
