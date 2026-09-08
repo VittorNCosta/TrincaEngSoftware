@@ -1819,8 +1819,8 @@ mk open --title 'Q-11 · Perfilar performance em aparelho de entrada' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,humano' --milestone 'Qualidade'
-mk open --title 'Q-12 · Escrever o ADR da mudança 203 → 100' \
-  --body '`docs/adr/0004-*.md`. Os três ADRs existentes documentam decisões desse porte.
+mk done --title 'Q-12 · Escrever o ADR da mudança 203 → 100' \
+  --body '**Feito 08/09.** `docs/adr/0004-campanha-vira-10-mundos-de-10-fases.md`: por que 10×10 em vez de 8×25, opções consideradas (manter 203 fixas) e consequências (hash quebrado de propósito, migração de save foi não-evento, gap de arte/som dos mundos 9/10, destino dos Capítulos ainda em aberto no C-30).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (86 já criadas fechadas) =="
+echo "== pronto: 199 issues (87 já criadas fechadas) =="
