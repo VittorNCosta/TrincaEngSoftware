@@ -33,6 +33,10 @@ const LABELS = [
   ['P2', 'BFC7C2'],
   ['claude-code', '0E8A6B'],
   ['humano', '8A4FBE'],
+  ['modelo-opus', '5A32A3'],
+  ['modelo-sonnet', '1B7FBD'],
+  ['modelo-fable', 'C2410C'],
+  ['modelo-haiku', '6B7280'],
 ];
 
 const STREAM_LABEL = {
@@ -75,6 +79,44 @@ const WHO_TEXT = {
   both: 'Claude Code + Você',
   'cc-voce': 'Claude Code → você',
   'voce-cc': 'Você → Claude Code',
+};
+
+const MODEL_INFO = {
+  opus: { display: 'Claude Opus 5', label: 'modelo-opus' },
+  sonnet: { display: 'Claude Sonnet 5', label: 'modelo-sonnet' },
+  fable: { display: 'Claude Fable 5.1', label: 'modelo-fable' },
+  haiku: { display: 'Claude Haiku 4.5', label: 'modelo-haiku' },
+};
+
+/**
+ * Qual modelo da família Claude é o mais indicado para executar a tarefa.
+ *
+ * Heurística, não benchmark: dá um ponto de partida defensável por tarefa a
+ * partir do que o roadmap já registra (fluxo, prioridade, responsável) — não
+ * é medição de qualidade por modelo. Ajuste manual na issue sempre pode
+ * sobrepor. Ordem de regras, a primeira que bater decide:
+ *
+ *   1. Tarefa 100% manual (`quem === 'voce'`) — nenhuma IA executa, não há
+ *      recomendação.
+ *   2. Fluxo de conteúdo/narrativa (`c`) — Fable, o modelo de escrita
+ *      criativa da família Claude 5; texto de jogo é o caso de uso dele.
+ *   3. Fluxo de segurança (`sec`) — Opus, o de maior capacidade: erro de
+ *      segurança custa caro, então aqui não se otimiza por custo.
+ *   4. Prioridade P0 (bloqueia o resto do roadmap) — Opus, mesmo motivo.
+ *   5. Tarefa mecânica e de baixo risco (`git`/limpeza em P2) — Haiku, rápido
+ *      e barato; sobraria capacidade de Sonnet/Opus para isso.
+ *   6. Default — Sonnet, o equilíbrio custo/capacidade do dia a dia
+ *      (implementação, QA, CI/CD, release).
+ */
+const recomendarModelo = ({ bloco, prioridade, quem }) => {
+  if (quem === 'voce') return null;
+  if (bloco === 'c') return 'fable';
+  if (bloco === 'sec') return 'opus';
+  if (Number(prioridade) === 0) return 'opus';
+  if ((bloco === 'g' || bloco === 'l') && Number(prioridade) === 2) {
+    return 'haiku';
+  }
+  return 'sonnet';
 };
 
 /** HTML dos detalhes → markdown de issue. */
@@ -132,6 +174,7 @@ const lerTarefas = (caminho = CAMINHO_PADRAO) => {
       const feita = String(tituloBruto).startsWith('✅');
       const titulo = toMarkdown(String(tituloBruto).replace(/^✅\s*/, ''));
       const milestone = MILESTONE[bloco.k];
+      const modelo = recomendarModelo({ bloco: bloco.k, prioridade, quem });
 
       tarefas.push({
         id,
@@ -140,20 +183,29 @@ const lerTarefas = (caminho = CAMINHO_PADRAO) => {
         feita,
         prioridade,
         quem,
+        modelo,
         titulo,
         tituloIssue: `${id} · ${titulo}`,
         corpo: [
           toMarkdown(detalhe) || '_Sem detalhe adicional no roadmap._',
           '',
           `**Responsável:** ${WHO_TEXT[quem]}`,
+          ...(modelo
+            ? [`**Modelo recomendado:** ${MODEL_INFO[modelo].display}`]
+            : []),
           `**Prioridade:** P${prioridade}`,
           `**Fluxo:** ${milestone}`,
           '',
           'Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.',
         ].join('\n'),
-        labels: [STREAM_LABEL[bloco.k], `P${prioridade}`, WHO_LABEL[quem]].join(
-          ',',
-        ),
+        labels: [
+          STREAM_LABEL[bloco.k],
+          `P${prioridade}`,
+          WHO_LABEL[quem],
+          modelo ? MODEL_INFO[modelo].label : null,
+        ]
+          .filter(Boolean)
+          .join(','),
       });
     }
   }
@@ -171,12 +223,14 @@ module.exports = {
   CAMINHO_PADRAO,
   LABELS,
   MILESTONE,
+  MODEL_INFO,
   STREAM_LABEL,
   WHO_LABEL,
   WHO_TEXT,
   idDoTitulo,
   lerBlocos,
   lerTarefas,
+  recomendarModelo,
   repoRoot,
   toMarkdown,
 };
