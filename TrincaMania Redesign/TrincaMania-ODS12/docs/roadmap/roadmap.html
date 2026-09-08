@@ -571,7 +571,7 @@ const BLOCKS = [
  ["CI-20","Configurar EAS Submit para a Play Store","voce",1,"Exige o service account JSON do Google Play."],
  ["CI-21","<code>--auto-submit</code> no build de produção","cc",2],
  ["CI-22","Configurar EAS Update (OTA)","cc",1,"Correção de JS sem passar pela revisão da loja."],
- ["CI-23","Avaliar EAS Workflows em <code>.eas/workflows/</code>","cc",2,"Alternativa nativa ao GitHub Actions no lado mobile."],
+ ["CI-23","✅ Avaliar EAS Workflows em <code>.eas/workflows/</code>","cc",2,"<b>Feito 08/09.</b> <code>docs/adr/0005-eas-workflows-nao-substitui-o-github-actions.md</code>: decisao de nao adotar por ora. O material oficial da Expo descreve EAS Workflows como complemento ao GitHub Actions, nao substituto — nenhum dos guardas hoje (ODS12, assets, cobertura, orcamento de bundle, gitleaks, CodeQL, dependency-review, SBOM, Scorecard) e job pre-empacotado do EAS, e o unico uso real de EAS hoje (<code>eas build</code>, via <code>disparar-build.js</code>) ja roda direto pelo <code>eas-cli</code> dentro do Actions — migrar trocaria um orquestrador gratuito por outro com quota paga sem ganhar capacidade nova. Reavaliar se surgir dor concreta que o Actions nao resolva bem."],
  ["CI-24","Canal de update por branch","cc",2,"<code>preview</code> e <code>production</code>."],
 ]},
 {k:"sec", h:"DevSecOps", note:"O último commit do repositório é <code>chore: corrige vulnerabilidades</code> — feito à mão. O objetivo deste fluxo é que isso não volte a ser manual.", t:[

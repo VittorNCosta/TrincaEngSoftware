@@ -1521,8 +1521,8 @@ mk open --title 'CI-22 · Configurar EAS Update (OTA)' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
-mk open --title 'CI-23 · Avaliar EAS Workflows em `.eas/workflows/`' \
-  --body 'Alternativa nativa ao GitHub Actions no lado mobile.
+mk done --title 'CI-23 · Avaliar EAS Workflows em `.eas/workflows/`' \
+  --body '**Feito 08/09.** `docs/adr/0005-eas-workflows-nao-substitui-o-github-actions.md`: decisao de nao adotar por ora. O material oficial da Expo descreve EAS Workflows como complemento ao GitHub Actions, nao substituto — nenhum dos guardas hoje (ODS12, assets, cobertura, orcamento de bundle, gitleaks, CodeQL, dependency-review, SBOM, Scorecard) e job pre-empacotado do EAS, e o unico uso real de EAS hoje (`eas build`, via `disparar-build.js`) ja roda direto pelo `eas-cli` dentro do Actions — migrar trocaria um orquestrador gratuito por outro com quota paga sem ganhar capacidade nova. Reavaliar se surgir dor concreta que o Actions nao resolva bem.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (91 já criadas fechadas) =="
+echo "== pronto: 199 issues (92 já criadas fechadas) =="
