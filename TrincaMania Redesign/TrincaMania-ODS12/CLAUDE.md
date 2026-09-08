@@ -131,3 +131,28 @@ esperado nesse teste; não ignore nem delete a asserção.
 Outros arquivos de referência úteis: `docs/adr/` (decisões arquiteturais),
 `src/domain/recycling/` (regras de material/ciclo/trinca, o núcleo que já é
 100% ODS12 e não deveria precisar mudar por causa de tema).
+
+## Regra permanente: trabalho sem task não existe
+
+**Todo trabalho vira task no roadmap — inclusive o que não foi planejado.** Se
+uma sessão construiu algo que não estava no roadmap (ferramenta, hook, script,
+correção de processo), o trabalho não está terminado enquanto não houver
+tarefa registrada para ele. Sem isso o que sobra é um commit solto: some do
+placar, some da fila do GitHub, e a sessão seguinte não tem como saber que
+existiu.
+
+O fluxo é o mesmo de fechar tarefa (o array `BLOCKS` de
+`docs/roadmap/roadmap.html` é a fonte de dados):
+
+1. Acrescentar a tarefa em `roadmap.html` — já com `✅` e
+   `<b>Feito DD/MM.</b>` se ela nasce concluída, com o hash do commit.
+2. Espelhar a linha em `docs/ROADMAP-JOGO-COMPLETO.md`.
+3. `node scripts/gerar-issues-roadmap.js` (regenera o `.sh`, que **nunca** é
+   editado à mão) e `npx prettier --write` nos arquivos tocados.
+4. `node scripts/sincronizar-issues.js` para conferir o delta e
+   `--aplicar` para executá-lo. **Este passo é parte de terminar**, não um
+   extra: marcar ✅ no roadmap sem sincronizar deixa a issue aberta no GitHub
+   dizendo o contrário — já aconteceu com o CI-23.
+
+Sem `--aplicar` o script sai com código 1 quando há divergência, então ele
+também serve para responder "o backlog está mentindo?" a qualquer momento.

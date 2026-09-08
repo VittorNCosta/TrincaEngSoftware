@@ -1281,6 +1281,16 @@ mk done --title 'G-17 · `.gitignore`: build do EAS, `*.aab`, `coverage/`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+mk done --title 'G-18 · Liberar `git push` sem prompt no modo `auto`' \
+  --body '**Feito 08/09** (commit `cf38a0f`). O `defaultMode: "auto"` mandava todo push para o classificador de permissão, que barrava — e isso esvaziava o CI-26 justamente no ponto dele: o commit de ponto de parada ficava preso na máquina de onde ele estava saindo. `permissions.allow` com `Bash(git push)` e `Bash(git push:*)` em `.claude/settings.json` (versionado, então a regra viaja para a outra máquina). Force-push fica de fora, no `deny`; a regra casa por prefixo, então `git push origin main --force` escapa — é rede contra descuido, não contra intenção.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** Git e versionamento
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
 
 # --- CI/CD ---
 mk done --title 'CI-01 · Quebrar o CI em jobs paralelos' \
@@ -1541,6 +1551,26 @@ mk open --title 'CI-24 · Canal de update por branch' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+mk done --title 'CI-25 · Registrar o estado da sessão a cada turno' \
+  --body '**Feito 08/09** (commit `047bc74`). Sessão do Claude Code não tem memória entre execuções, e a que estoura o limite de 5h morre no meio da tarefa — sobra só o que estiver em disco. `scripts/estado.js` escreve `.claude/estado.md` (branch, divergência com o origin, arquivos não commitados, últimos commits, placar do backlog lido daqui e a fila por prioridade); os hooks `Stop` e `SessionStart` de `.claude/settings.json` regeneram a cada turno e injetam no contexto da sessão seguinte. O que o script não deriva — a intenção — entra por `--nota`, escrita ao **começar** a tarefa, não ao terminar. De quebra, o registro dos hooks saiu do `settings.local.json` (gitignored, então um clone novo ficava sem hook nenhum) para o `settings.json` versionado.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+mk done --title 'CI-26 · Janela de trabalho: parar nos cortes de 16h e 22h' \
+  --body '**Feito 08/09** (commit `00d416e`). Vittor troca de máquina às 16h e sai da faculdade às 22h; sessão que segue sozinha depois disso produz commit que a outra máquina não vê. `scripts/janela.js` + hook em `PreToolUse`/`UserPromptSubmit`: aviso 20 min antes, corte devolvendo `continue: false` (interrompe de verdade), 90 min de bloqueio cobrindo o deslocamento, e reabertura automática. No corte faz `git add -A`, commit de checkpoint e push, os dois com `--no-verify` — o `pre-push` roda `tsc --noEmit` e trabalho pela metade não compila. Saída de emergência é o próprio usuário: um prompt dele renova licença de 45 min, nunca além do próximo corte. Decisão de fase é função pura sobre o relógio de Brasília, com 12 testes em `tests/janela.test.cjs`. Depende do G-18.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2030,4 +2060,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (92 já criadas fechadas) =="
+echo "== pronto: 202 issues (95 já criadas fechadas) =="
