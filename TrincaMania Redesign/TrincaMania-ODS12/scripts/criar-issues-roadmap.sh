@@ -1760,8 +1760,8 @@ mk done --title 'Q-05 · Rodar o Maestro no CI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
-mk open --title 'Q-06 · Teste de acessibilidade' \
-  --body 'Labels e alvo de toque ≥ 44 px. O `minimumTouchSize: 44` já existe no config de mapa, mas ninguém testa.
+mk done --title 'Q-06 · Teste de acessibilidade' \
+  --body '**Feito 08/09.** `tests/touchTargets.test.cjs` novo: trava `TILE_SIZE` (peça do tabuleiro) e `levelNodeSize`/`minimumTouchSize` de todo mundo `segmented` em ≥44px, e recalcula o alvo de toque de todo nó/marco do Mundo 1 nas três larguras alvo. Achado no caminho: `frames.touch` (a caixa expandida que `getCampaignMapEntityFrames` calcula) não é consumida por nenhum renderer hoje — o alvo real em tela é `levelNodeSize`, porque `transform: scale` não encolhe área de toque no React Native. Rótulo de acessibilidade já tinha cobertura em `BoardTile.test.tsx`/`mapLevelNode.test.tsx`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (89 já criadas fechadas) =="
+echo "== pronto: 199 issues (90 já criadas fechadas) =="

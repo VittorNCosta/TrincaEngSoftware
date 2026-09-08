@@ -599,7 +599,7 @@ const BLOCKS = [
  ["Q-03","Fluxo E2E: comprar na loja","cc",2],
  ["Q-04","Fluxo E2E: perder vida e esperar a recarga","cc",2],
  ["Q-05","✅ Rodar o Maestro no CI","cc",2,"<b>Feito 08/09.</b> <code>.github/workflows/e2e.yml</code>: prebuild + <code>assembleRelease</code> + emulador Android (<code>reactivecircus/android-emulator-runner</code>) em push na branch, <code>workflow_dispatch</code> e cron semanal. Maestro baixado com sha256 fixado, sem action de terceiro. Recolhe diagnóstico (captura/hierarquia) em falha."],
- ["Q-06","Teste de acessibilidade","cc",1,"Labels e alvo de toque ≥ 44 px. O <code>minimumTouchSize: 44</code> já existe no config de mapa, mas ninguém testa."],
+ ["Q-06","✅ Teste de acessibilidade","cc",1,"<b>Feito 08/09.</b> <code>tests/touchTargets.test.cjs</code> novo: trava <code>TILE_SIZE</code> (peça do tabuleiro) e <code>levelNodeSize</code>/<code>minimumTouchSize</code> de todo mundo <code>segmented</code> em ≥44px, e recalcula o alvo de toque de todo nó/marco do Mundo 1 nas três larguras alvo. Achado no caminho: <code>frames.touch</code> (a caixa expandida que <code>getCampaignMapEntityFrames</code> calcula) não é consumida por nenhum renderer hoje — o alvo real em tela é <code>levelNodeSize</code>, porque <code>transform: scale</code> não encolhe área de toque no React Native. Rótulo de acessibilidade já tinha cobertura em <code>BoardTile.test.tsx</code>/<code>mapLevelNode.test.tsx</code>."],
  ["Q-07","Quebrar <code>GameScreen.tsx</code>","cc",1,"3166 linhas. O <code>CLAUDE.md</code> já avisa para não deixar crescer."],
  ["Q-08","Quebrar <code>LevelSelectScreen.tsx</code>","cc",2,"1879 linhas."],
  ["Q-09","Quebrar <code>App.tsx</code>","cc",2,"1169 linhas."],
