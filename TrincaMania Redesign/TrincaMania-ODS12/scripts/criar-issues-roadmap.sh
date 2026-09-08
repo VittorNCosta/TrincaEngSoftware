@@ -1620,8 +1620,8 @@ mk done --title 'SEC-08 · `dependency-review` em PR' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code,modelo-opus' --milestone 'DevSecOps'
-mk open --title 'SEC-09 · Gerar SBOM CycloneDX por release' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'SEC-09 · Gerar SBOM CycloneDX por release' \
+  --body '**Feito 08/09.** Job `sbom` novo em `.github/workflows/release.yml`, depois do `release-please` e so quando ele de fato cria release (`release_created == '\''true'\''`). Gera com `npx @cyclonedx/cyclonedx-npm@6.0.1` a partir do `package-lock.json` e publica o arquivo no release via `gh release upload`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -1630,8 +1630,8 @@ mk open --title 'SEC-09 · Gerar SBOM CycloneDX por release' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,claude-code,modelo-opus' --milestone 'DevSecOps'
-mk open --title 'SEC-10 · OpenSSF Scorecard' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'SEC-10 · OpenSSF Scorecard' \
+  --body '**Feito 08/09.** Job `scorecard` novo em `.github/workflows/seguranca.yml`, fora de PR. `ossf/scorecard-action@v2.4.4` gera o SARIF e publica no registro publico do OpenSSF; `github/codeql-action/upload-sarif@v4` sobe o mesmo resultado para a aba Security.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (87 já criadas fechadas) =="
+echo "== pronto: 199 issues (89 já criadas fechadas) =="

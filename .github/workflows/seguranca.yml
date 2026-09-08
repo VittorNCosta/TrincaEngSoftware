@@ -125,3 +125,36 @@ jobs:
       - uses: github/codeql-action/analyze@a35ac6e6798d72df5475948b28efb89edc2e19ca # v4
         with:
           category: "/language:javascript-typescript"
+
+  scorecard:
+    name: OpenSSF Scorecard
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # So faz sentido fora de PR: o Scorecard avalia a postura de seguranca do
+    # repositorio como um todo (branch protection, permissao de token,
+    # dependencia pinada etc.), nao o diff de uma mudanca — nao ha "antes" e
+    # "depois" para comparar dentro de um PR, e a maioria dos checks olha para
+    # configuracao do GitHub que um PR nem consegue alterar.
+    if: github.event_name != 'pull_request'
+    permissions:
+      # `security-events: write` publica o SARIF na aba Security. `id-token:
+      # write` assina o resultado (Sigstore) para publicacao no registro
+      # publico de badges do OpenSSF — nenhuma das duas escritas sai deste job.
+      security-events: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc # v2.4.4
+        with:
+          results_file: resultados-scorecard.sarif
+          results_format: sarif
+          # Sem token de admin: da para avaliar branch protection so com um PAT
+          # que tenha `administration: read` no repositorio, e este repositorio
+          # nao tem esse segredo configurado. Sem ele, so esse check individual
+          # fica sem nota — o resto do Scorecard roda normalmente.
+          publish_results: true
+      - uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          sarif_file: resultados-scorecard.sarif
