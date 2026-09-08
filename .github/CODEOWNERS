@@ -1,0 +1,4 @@
+# Revisor padrao para qualquer PR neste repositorio (G-13).
+# Projeto de uma pessoa so por enquanto (ver .github/SECURITY.md) - quando
+# houver mais de um mantenedor, quebrar por diretorio em vez de manter o `*`.
+* @VittorNCosta

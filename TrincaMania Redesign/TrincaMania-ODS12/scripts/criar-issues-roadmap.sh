@@ -1073,8 +1073,8 @@ mk open --title 'L-12 · Remover `TrincaMania Redesign/patch/` aninhado' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,humano' --milestone 'Limpeza ODS12'
-mk open --title 'L-13 · Escrever o `README.md` de verdade' \
-  --body 'Hoje tem 13 bytes.
+mk done --title 'L-13 · Escrever o `README.md` de verdade' \
+  --body '**Feito 08/09.** Pitch do jogo, as duas trilhas de conteudo, setup local, checklist de antes do PR e uma tabela de ponteiros pros outros docs (CONTEXT/CLAUDE/CONTRIBUTING/ADRs/roadmap) em vez de duplicar o conteudo deles.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1212,8 +1212,8 @@ mk open --title 'G-10 · Branch protection em `main` e `develop`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P0,humano' --milestone 'Git e versionamento'
-mk open --title 'G-11 · Template de PR' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-11 · Template de PR' \
+  --body '**Feito 08/09.** `.github/PULL_REQUEST_TEMPLATE.md`: o que muda, como testar, checklist (typecheck/test, hash de levels.ts, vocabulario ODS12, Conventional Commits).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1222,8 +1222,8 @@ mk open --title 'G-11 · Template de PR' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
-mk open --title 'G-12 · Templates de issue: bug, arte, conteúdo' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-12 · Templates de issue: bug, arte, conteúdo' \
+  --body '**Feito 08/09.** `.github/ISSUE_TEMPLATE/{bug,arte,conteudo}.yml`, formulario estruturado, cada um com a label correspondente ja aplicada.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1232,8 +1232,8 @@ mk open --title 'G-12 · Templates de issue: bug, arte, conteúdo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
-mk open --title 'G-13 · `CODEOWNERS`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-13 · `CODEOWNERS`' \
+  --body '**Feito 08/09.** `.github/CODEOWNERS`: `* @VittorNCosta` — projeto de uma pessoa so por enquanto (ver SECURITY.md).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -2030,4 +2030,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (76 já criadas fechadas) =="
+echo "== pronto: 199 issues (80 já criadas fechadas) =="
