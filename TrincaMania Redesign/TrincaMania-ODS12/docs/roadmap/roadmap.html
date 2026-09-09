@@ -525,7 +525,7 @@ const BLOCKS = [
  ["L-13","✅ Escrever o <code>README.md</code> de verdade","cc",1,"<b>Feito 08/09.</b> Pitch do jogo, as duas trilhas de conteudo, setup local, checklist de antes do PR e uma tabela de ponteiros pros outros docs (CONTEXT/CLAUDE/CONTRIBUTING/ADRs/roadmap) em vez de duplicar o conteudo deles."],
  ["L-14","Decidir o nome do app","voce",0,"<code>app.json</code> diz <code>TileAdventure-ODS</code>, o slug é <code>trinca-mania</code> e o pacote Android é <code>br.com.mhvtech.trincamania</code>. Três nomes diferentes."],
  ["L-15","Consolidar os dois manuais de APK","cc",2,"<code>COMO_GERAR_APK.md</code> e <code>ManualParaGerarApk.txt</code>."],
- ["L-16","Rodar <code>/code-review</code> na limpeza","cc",1],
+ ["L-16","✅ Rodar <code>/code-review</code> na limpeza","cc",1,"<b>Feito 09/09</b> (commit <code>2c6e4a1</code>). Revisão dos 4 commits da leva (<code>cd5b008..HEAD</code>) — sem bug de correção: renames rastreados em todo o código, conjuntos de chaves em sincronia, livros-razão só encolheram, typecheck + 188 testes + guardas verdes. Dois achados de baixa severidade (texto que envelheceu com o <code>f771981</code>: o docstring da guarda e um <code>motivo</code> do livro-razão) corrigidos no mesmo commit."],
 ]},
 {k:"g", h:"Git e versionamento", note:"Os commits já seguem Conventional Commits na prática. Falta travar isso em ferramenta e ligar a versão ao histórico.", t:[
  ["G-01","✅ Adotar Conventional Commits formalmente","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). O historico ja seguia a convencao na pratica; isto trava o habito, porque o <code>release-please</code> versiona lendo o log — sem tipo confiavel na mensagem nao da para decidir entre major, minor e patch."],

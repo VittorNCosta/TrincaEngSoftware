@@ -1102,8 +1102,8 @@ mk open --title 'L-15 · Consolidar os dois manuais de APK' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku' --milestone 'Limpeza ODS12'
-mk open --title 'L-16 · Rodar `/code-review` na limpeza' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-16 · Rodar `/code-review` na limpeza' \
+  --body '**Feito 09/09** (commit `2c6e4a1`). Revisão dos 4 commits da leva (`cd5b008..HEAD`) — sem bug de correção: renames rastreados em todo o código, conjuntos de chaves em sincronia, livros-razão só encolheram, typecheck + 188 testes + guardas verdes. Dois achados de baixa severidade (texto que envelheceu com o `f771981`: o docstring da guarda e um `motivo` do livro-razão) corrigidos no mesmo commit.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2060,4 +2060,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 202 issues (104 já criadas fechadas) =="
+echo "== pronto: 202 issues (105 já criadas fechadas) =="
