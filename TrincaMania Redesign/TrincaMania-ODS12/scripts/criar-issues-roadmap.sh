@@ -772,8 +772,8 @@ mk open --title 'A-33 · Comprimir todos os PNGs para ≤ 400 KB' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,humano' --milestone 'Arte'
-mk open --title 'A-34 · Remover `Identidade visual de TrincaMania.png` da raiz' \
-  --body '6 MB versionados, duplicata byte-idêntica de `map_world1_scene_bg.png`.
+mk done --title 'A-34 · Remover `Identidade visual de TrincaMania.png` da raiz' \
+  --body '**Feito 09/09** (commit `cd5b008`). 6 MB versionados, duplicata byte-idêntica (sha256 `aca4253d…`) de `assets/map/map_world1_scene_bg.png`, sem nenhuma referência em código.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -782,8 +782,8 @@ mk open --title 'A-34 · Remover `Identidade visual de TrincaMania.png` da raiz'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,modelo-sonnet' --milestone 'Arte'
-mk open --title 'A-35 · Remover os 6 arquivos `.png.png`' \
-  --body '`map_bonus_bg.png.png`, `map_shop.png.png`, os três `map_path_pieces_*` e `map_world2_bg.png.png`.
+mk done --title 'A-35 · Remover os 6 arquivos `.png.png`' \
+  --body '**Feito 09/09** (commit `cd5b008`). `map_bonus_bg.png.png`, `map_shop.png.png`, `map_world2_bg.png.png` e os três `map_path_pieces_*.png.png` — extensão dupla, órfãos, zero referência em `src/`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -904,8 +904,8 @@ mk open --title 'S-10 · `ambient_cupula.mp3` — Mundo 10' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
-mk open --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
-  --body '`beach | celestial | crystal | forest | mountain | snow | stars | volcano`.
+mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
+  --body '**Feito 09/09** (commit `f771981`, junto de L-01 — mesmo alvo). `beach | celestial | crystal | forest | mountain | snow | stars | volcano` → identidade dos mundos (`central | cooperativa | forum | parque | rota | usina | vale | viveiro`); os `ambient_*.mp3` ficam com o nome antigo até S-13.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -943,8 +943,8 @@ mk open --title 'S-14 · Revisar os SFX de voz' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P2,humano' --milestone 'Som'
-mk open --title 'S-15 · Travar em teste que todo mundo tem ambiente' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'S-15 · Travar em teste que todo mundo tem ambiente' \
+  --body '**Feito 09/09** (commit `6aebd00`). Quatro testes novos em `worldAmbientAndBackgroundCoverage.test.cjs` sobre o que o C-27 não pega: chave com `source` resolvido (não só existente), nenhuma trilha órfã, mundos 1-8 distintos entre si e `AmbientKey` sem regressão ao vocabulário de fantasia. 184 → 188 testes.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -955,8 +955,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P1,claude-code,modelo-sonnet' --milestone 'Som'
 
 # --- Limpeza ODS12 ---
-mk open --title 'L-01 · Renomear a union `AmbientKey`' \
-  --body '`src/utils/sounds.ts:32-39`
+mk done --title 'L-01 · Renomear a union `AmbientKey`' \
+  --body '**Feito 09/09** (commit `f771981`, mesmo commit que S-11). `src/utils/sounds.ts`: a union, as chaves de `ambientSources`/`AMBIENT_CONFIGS` e `AMBIENT_BY_WORLD_ID` passaram ao vocabulário ODS12. Efeito colateral: a entrada `sounds.ts::celestial` do livro-razão ODS12 sumiu inteira (as 6 ocorrências eram só a chave) — a guarda baixou de 7 para 6 pendências.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -995,8 +995,8 @@ mk done --title 'L-04 · Renomear os `BOSQUE_*` e os `identityKey` legados' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
-mk open --title 'L-05 · Renomear as chaves `forest-*` de asset' \
-  --body '`campaignMapAssets.ts:3-11`
+mk done --title 'L-05 · Renomear as chaves `forest-*` de asset' \
+  --body '**Feito 09/09** (commit `f771981`). `forest-*` → `parque-*` em `campaignMapAssets.ts`, `chapterVisualIdentity.ts`, `worldMapConfigs.ts` e `tests/worldMapConfig.test.cjs`. `forest-portal-rune` fica como está — é território da A-31 (`humano`). Os `.png` ficam com o nome antigo até L-07.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1005,8 +1005,8 @@ mk open --title 'L-05 · Renomear as chaves `forest-*` de asset' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
-mk open --title 'L-06 · Renomear `ForestRestMapMarker.tsx`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-06 · Renomear `ForestRestMapMarker.tsx`' \
+  --body '**Feito 09/09** (commit `f771981`). Arquivo, tipo e função → `RestStopMapMarker`; o único importador (`CampaignMapLandmarkMarker.tsx`) e a `visualKey` `forest-rest-cart` → `parque-rest-cart` acompanham. `forest_rest_cart.png` fica até A-28.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1025,8 +1025,8 @@ mk open --title 'L-07 · Renomear os 8 `assets/map/world1/forest_*.png`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku' --milestone 'Limpeza ODS12'
-mk open --title 'L-08 · Renomear `map_path_pieces_bonus_reino_acucarado.png`' \
-  --body 'Nome de arquivo com “reino açucarado”.
+mk done --title 'L-08 · Renomear `map_path_pieces_bonus_reino_acucarado.png`' \
+  --body '**Feito 09/09** (commit `cd5b008`). **Divergência do enunciado:** a issue pedia renomear, mas o arquivo é órfão (zero referências) e carrega nome banido — renomear só preservaria 2,5 MB de peso morto. **Removido**, como o livro-razão da guarda ODS12 já previa (“Apagar no bloco L”).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1174,8 +1174,8 @@ mk done --title 'G-06 · `release-please` para versão e CHANGELOG' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
-mk open --title 'G-07 · Criar o `CHANGELOG.md`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'G-07 · Criar o `CHANGELOG.md`' \
+  --body '**Feito 09/09** (commit `38bde35`). O G-06 já apontava `changelog-path: CHANGELOG.md`, mas o arquivo nunca existiu — sem ele o primeiro PR de release não teria onde prepender. Semente mínima no formato do `release-type: node`: cabeçalho `Changelog` + seção `1.0.0` casando com o `.release-please-manifest.json`, sem preâmbulo entre o cabeçalho e a primeira versão. Seções nos rótulos PT-BR de `changelog-sections`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2060,4 +2060,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 202 issues (95 já criadas fechadas) =="
+echo "== pronto: 202 issues (104 já criadas fechadas) =="
