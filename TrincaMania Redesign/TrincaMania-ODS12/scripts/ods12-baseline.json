@@ -4,7 +4,7 @@
     "assets/sfx/ambient/ambient_celestial.mp3::celestial": {
       "count": 1,
       "linhas": [0],
-      "motivo": "Trilha ambiente do Mundo 8, referenciada por src/utils/sounds.ts. Renomear arquivo e constante juntos — bloco S.",
+      "motivo": "Nome de arquivo da trilha ambiente do Mundo 8. A constante em src/utils/sounds.ts ja virou 'forum' no L-01/S-11; falta so renomear o .mp3 — bloco S (S-12/S-13).",
       "situacao": "pendente"
     },
     "src/components/BoardTile.tsx::candy": {

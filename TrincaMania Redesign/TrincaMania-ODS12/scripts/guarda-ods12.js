@@ -7,10 +7,10 @@
  *
  * ## Por que é um livro-razão e não um `grep` que reprova
  *
- * Um grep puro reprovaria hoje mesmo: ainda existe `theme: 'sweet'`, ainda
- * existem `identityKey` de `reino-celestial` e `vulcao-doce`, e a trilha
- * ambiente do Mundo 8 se chama `celestial`. Isso é dívida conhecida, com
- * tarefa marcada no roadmap (bloco L e C-08b) — não é regressão.
+ * Um grep puro reprovaria hoje mesmo: o arquivo `ambient_celestial.mp3` ainda
+ * carrega o nome antigo no disco, e há comentários em `BoardTile.tsx` e
+ * `Tray.tsx` que chamam a peça de `doce`/`jelly`/`candy`. Isso é dívida
+ * conhecida, com tarefa marcada no roadmap (blocos S e L) — não é regressão.
  *
  * E existe o inverso: ocorrência legítima. "Restos de fruta" é literalmente o
  * que é resíduo orgânico, e há comentário que só existe para dizer que o tema
