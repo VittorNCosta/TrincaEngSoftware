@@ -1,30 +1,6 @@
 {
   "_leia": "Livro-razão da guarda ODS 12. Gerado por scripts/guarda-ods12.js --atualizar. \"situacao\": \"ok\" = ocorrência legítima; \"pendente\" = dívida com tarefa no roadmap. A lista só pode encolher.",
   "entradas": {
-    "assets/map/map_path_pieces_bonus_reino_acucarado.png.png::acucar": {
-      "count": 1,
-      "linhas": [0],
-      "motivo": "Asset orfao: nenhum arquivo de src/ referencia. Nome banido + extensao duplicada (.png.png) + 1,5 MB. Apagar no bloco L.",
-      "situacao": "pendente"
-    },
-    "assets/map/map_path_pieces_bonus_reino_acucarado.png.png::reino": {
-      "count": 1,
-      "linhas": [0],
-      "motivo": "Mesmo arquivo orfao da entrada acima.",
-      "situacao": "pendente"
-    },
-    "assets/map/map_path_pieces_bonus_reino_acucarado.png::acucar": {
-      "count": 1,
-      "linhas": [0],
-      "motivo": "Asset orfao (2,5 MB), sem referencia em src/. Apagar no bloco L.",
-      "situacao": "pendente"
-    },
-    "assets/map/map_path_pieces_bonus_reino_acucarado.png::reino": {
-      "count": 1,
-      "linhas": [0],
-      "motivo": "Mesmo arquivo orfao da entrada acima.",
-      "situacao": "pendente"
-    },
     "assets/sfx/ambient/ambient_celestial.mp3::celestial": {
       "count": 1,
       "linhas": [0],
