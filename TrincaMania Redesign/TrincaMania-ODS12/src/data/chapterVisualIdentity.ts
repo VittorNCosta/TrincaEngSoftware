@@ -52,13 +52,13 @@ export type ChapterVisualIdentity = {
  * Nenhuma imagem nova é gerada — o que varia é a ordem e o recorte.
  */
 export const CHAPTER_ART_SEGMENT_KEYS = [
-  'forest-canopy',
-  'forest-entry',
-  'forest-gate',
-  'forest-grove',
-  'forest-river',
-  'forest-sunlit',
-  'forest-trailhead',
+  'parque-canopy',
+  'parque-entry',
+  'parque-gate',
+  'parque-grove',
+  'parque-river',
+  'parque-sunlit',
+  'parque-trailhead',
 ] as const;
 
 export const CHAPTER_MAPS_PER_CHAPTER = 100;

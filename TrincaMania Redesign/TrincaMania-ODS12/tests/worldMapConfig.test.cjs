@@ -45,13 +45,13 @@ const validationContext = {
 };
 
 const parqueSegmentAssetFiles = {
-  'forest-canopy': 'forest_00_canopy.png',
-  'forest-entry': 'forest_01_entrance.png',
-  'forest-grove': 'forest_02_grove.png',
-  'forest-river': 'forest_03_river_ruins.png',
-  'forest-sunlit': 'forest_04_sunlit_grove.png',
-  'forest-gate': 'forest_05_ancient_gate.png',
-  'forest-trailhead': 'forest_06_trailhead.png',
+  'parque-canopy': 'forest_00_canopy.png',
+  'parque-entry': 'forest_01_entrance.png',
+  'parque-grove': 'forest_02_grove.png',
+  'parque-river': 'forest_03_river_ruins.png',
+  'parque-sunlit': 'forest_04_sunlit_grove.png',
+  'parque-gate': 'forest_05_ancient_gate.png',
+  'parque-trailhead': 'forest_06_trailhead.png',
 };
 
 test('dados existentes continuam formando 103 fases canônicas sem lacunas', () => {
@@ -119,13 +119,13 @@ test('segmentos seguem a composição e o overlap canônico de 24 unidades', () 
       top,
     })),
     [
-      { assetKey: 'forest-canopy', height: 324, top: 0 },
-      { assetKey: 'forest-gate', height: 564, top: 300 },
-      { assetKey: 'forest-river', height: 564, top: 840 },
-      { assetKey: 'forest-grove', height: 564, top: 1380 },
-      { assetKey: 'forest-sunlit', height: 564, top: 1920 },
-      { assetKey: 'forest-entry', height: 564, top: 2460 },
-      { assetKey: 'forest-trailhead', height: 160, top: 3000 },
+      { assetKey: 'parque-canopy', height: 324, top: 0 },
+      { assetKey: 'parque-gate', height: 564, top: 300 },
+      { assetKey: 'parque-river', height: 564, top: 840 },
+      { assetKey: 'parque-grove', height: 564, top: 1380 },
+      { assetKey: 'parque-sunlit', height: 564, top: 1920 },
+      { assetKey: 'parque-entry', height: 564, top: 2460 },
+      { assetKey: 'parque-trailhead', height: 160, top: 3000 },
     ],
   );
 

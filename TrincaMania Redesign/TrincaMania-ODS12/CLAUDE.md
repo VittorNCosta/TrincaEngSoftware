@@ -35,7 +35,7 @@ inclui os 10 capítulos novos de `src/data/chapters.ts` (que reaproveitam os
 mesmos PNGs como placeholder). Reformar essa arte exige ilustração nova
 (fora do alcance de edição de código/texto); não tente gerar PNG de jogo via
 código. Marcadores pontuais ainda com arte antiga:
-`src/components/ForestRestMapMarker.tsx` (`forest_rest_cart.png`) e o layout
+`src/components/RestStopMapMarker.tsx` (`forest_rest_cart.png`) e o layout
 `PARQUE_MAP_CONFIG` do Mundo 1 em `src/data/worldMapConfigs.ts`.
 
 **Contexto histórico — resize da campanha (2026-09-03)**: a campanha foi

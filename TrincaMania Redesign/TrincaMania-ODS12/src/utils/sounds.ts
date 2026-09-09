@@ -32,14 +32,14 @@ type SoundConfig = {
   volume: number;
 };
 type AmbientKey =
-  | 'beach'
-  | 'celestial'
-  | 'crystal'
-  | 'forest'
-  | 'mountain'
-  | 'snow'
-  | 'stars'
-  | 'volcano';
+  | 'central'
+  | 'cooperativa'
+  | 'forum'
+  | 'parque'
+  | 'rota'
+  | 'usina'
+  | 'vale'
+  | 'viveiro';
 
 type AmbientConfig = {
   expectedFile: string;
@@ -73,19 +73,22 @@ const soundSources: Record<SoundKey, AudioSource | undefined> = {
   worldUnlock: require('../../assets/sfx/world_unlock.mp3') as AudioSource,
 };
 
+// As chaves são o vocabulário ODS12 (L-01/S-11); os arquivos `.mp3` mantêm o
+// nome antigo até S-13 trocar o áudio e S-12 apagar os antigos.
 const ambientSources: Record<AmbientKey, AudioSource | undefined> = {
-  beach: require('../../assets/sfx/ambient/ambient_beach.mp3') as AudioSource,
-  celestial:
-    require('../../assets/sfx/ambient/ambient_celestial.mp3') as AudioSource,
-  crystal:
+  central:
     require('../../assets/sfx/ambient/ambient_crystal.mp3') as AudioSource,
-  forest: require('../../assets/sfx/ambient/ambient_forest.mp3') as AudioSource,
-  mountain:
-    require('../../assets/sfx/ambient/ambient_mountain.mp3') as AudioSource,
-  snow: require('../../assets/sfx/ambient/ambient_snow.mp3') as AudioSource,
-  stars: require('../../assets/sfx/ambient/ambient_stars.mp3') as AudioSource,
-  volcano:
+  cooperativa:
+    require('../../assets/sfx/ambient/ambient_stars.mp3') as AudioSource,
+  forum:
+    require('../../assets/sfx/ambient/ambient_celestial.mp3') as AudioSource,
+  parque: require('../../assets/sfx/ambient/ambient_forest.mp3') as AudioSource,
+  rota: require('../../assets/sfx/ambient/ambient_snow.mp3') as AudioSource,
+  usina:
     require('../../assets/sfx/ambient/ambient_volcano.mp3') as AudioSource,
+  vale:
+    require('../../assets/sfx/ambient/ambient_mountain.mp3') as AudioSource,
+  viveiro: require('../../assets/sfx/ambient/ambient_beach.mp3') as AudioSource,
 };
 
 // Expected files:
@@ -136,62 +139,63 @@ export const AMBIENT_FADE_MS = 500;
 // Expected ambient files. If an asset is ever removed locally, leave its source
 // as `undefined` above so the bundle keeps building and the sound becomes a no-op.
 const AMBIENT_CONFIGS: Record<AmbientKey, AmbientConfig> = {
-  beach: {
-    expectedFile: 'assets/sfx/ambient/ambient_beach.mp3',
-    source: ambientSources.beach,
-    volume: AMBIENT_VOLUME,
-  },
-  celestial: {
-    expectedFile: 'assets/sfx/ambient/ambient_celestial.mp3',
-    source: ambientSources.celestial,
-    volume: AMBIENT_VOLUME,
-  },
-  crystal: {
+  central: {
     expectedFile: 'assets/sfx/ambient/ambient_crystal.mp3',
-    source: ambientSources.crystal,
+    source: ambientSources.central,
     volume: AMBIENT_VOLUME,
   },
-  forest: {
-    expectedFile: 'assets/sfx/ambient/ambient_forest.mp3',
-    source: ambientSources.forest,
-    volume: AMBIENT_VOLUME,
-  },
-  mountain: {
-    expectedFile: 'assets/sfx/ambient/ambient_mountain.mp3',
-    source: ambientSources.mountain,
-    volume: AMBIENT_VOLUME,
-  },
-  snow: {
-    expectedFile: 'assets/sfx/ambient/ambient_snow.mp3',
-    source: ambientSources.snow,
-    volume: AMBIENT_VOLUME,
-  },
-  stars: {
+  cooperativa: {
     expectedFile: 'assets/sfx/ambient/ambient_stars.mp3',
-    source: ambientSources.stars,
+    source: ambientSources.cooperativa,
     volume: AMBIENT_VOLUME,
   },
-  volcano: {
+  forum: {
+    expectedFile: 'assets/sfx/ambient/ambient_celestial.mp3',
+    source: ambientSources.forum,
+    volume: AMBIENT_VOLUME,
+  },
+  parque: {
+    expectedFile: 'assets/sfx/ambient/ambient_forest.mp3',
+    source: ambientSources.parque,
+    volume: AMBIENT_VOLUME,
+  },
+  rota: {
+    expectedFile: 'assets/sfx/ambient/ambient_snow.mp3',
+    source: ambientSources.rota,
+    volume: AMBIENT_VOLUME,
+  },
+  usina: {
     expectedFile: 'assets/sfx/ambient/ambient_volcano.mp3',
-    source: ambientSources.volcano,
+    source: ambientSources.usina,
+    volume: AMBIENT_VOLUME,
+  },
+  vale: {
+    expectedFile: 'assets/sfx/ambient/ambient_mountain.mp3',
+    source: ambientSources.vale,
+    volume: AMBIENT_VOLUME,
+  },
+  viveiro: {
+    expectedFile: 'assets/sfx/ambient/ambient_beach.mp3',
+    source: ambientSources.viveiro,
     volume: AMBIENT_VOLUME,
   },
 };
 
 // Não há áudio novo gerado para os mundos 9 e 10 (mesma lacuna documentada
 // para a arte de mapa em CLAUDE.md) — reaproveitam ambientes existentes que
-// combinam com o tema de cada mundo (forja industrial / cúpula global).
+// combinam com o tema de cada mundo: o 9 (distrito industrial) repete `usina`
+// e o 10 (cúpula global) repete `forum`.
 const AMBIENT_BY_WORLD_ID: Partial<Record<WorldId, AmbientKey>> = {
-  1: 'forest',
-  2: 'mountain',
-  3: 'crystal',
-  4: 'beach',
-  5: 'volcano',
-  6: 'stars',
-  7: 'snow',
-  8: 'celestial',
-  9: 'volcano',
-  10: 'celestial',
+  1: 'parque',
+  2: 'vale',
+  3: 'central',
+  4: 'viveiro',
+  5: 'usina',
+  6: 'cooperativa',
+  7: 'rota',
+  8: 'forum',
+  9: 'usina',
+  10: 'forum',
 };
 
 const players: Partial<Record<SoundKey, AudioPlayer>> = {};

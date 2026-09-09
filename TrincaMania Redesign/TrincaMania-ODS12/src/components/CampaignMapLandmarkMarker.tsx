@@ -1,4 +1,4 @@
-import { ForestRestMapMarker } from './ForestRestMapMarker';
+import { RestStopMapMarker } from './RestStopMapMarker';
 import { WorldPortalMapMarker } from './WorldPortalMapMarker';
 import type { CampaignMapLandmarkKind } from '../types/campaignMap';
 
@@ -23,14 +23,14 @@ export function CampaignMapLandmarkMarker({
 }: CampaignMapLandmarkMarkerProps) {
   if (
     (kind === 'rest' || kind === 'shop') &&
-    visualKey === 'forest-rest-cart'
+    visualKey === 'parque-rest-cart'
   ) {
     if (!afterLevelLabel) {
       return null;
     }
 
     return (
-      <ForestRestMapMarker
+      <RestStopMapMarker
         afterLevelLabel={afterLevelLabel}
         locked={locked}
         selected={selected}

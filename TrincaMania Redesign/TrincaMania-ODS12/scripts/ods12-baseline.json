@@ -54,12 +54,6 @@
       "linhas": [6],
       "motivo": "LEGITIMO: o comentario define TileKind dizendo que a especie e o MATERIAL e nao mais uma fruta. E a documentacao da mudanca.",
       "situacao": "ok"
-    },
-    "src/utils/sounds.ts::celestial": {
-      "count": 6,
-      "linhas": [36, 78, 144, 146, 192, 194],
-      "motivo": "Chave da trilha ambiente do Mundo 8 e caminho do mp3. Renomear junto com o arquivo — bloco S.",
-      "situacao": "pendente"
     }
   }
 }

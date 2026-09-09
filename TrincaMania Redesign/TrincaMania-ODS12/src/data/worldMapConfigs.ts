@@ -9,18 +9,18 @@ import type {
 import type { ChapterWorldId, WorldId } from '../types/game';
 
 export const PARQUE_MAP_ASSET_KEYS = [
-  'forest-canopy',
-  'forest-gate',
-  'forest-river',
-  'forest-grove',
-  'forest-sunlit',
-  'forest-entry',
-  'forest-trailhead',
+  'parque-canopy',
+  'parque-gate',
+  'parque-river',
+  'parque-grove',
+  'parque-sunlit',
+  'parque-entry',
+  'parque-trailhead',
 ] as const;
 
 export const PARQUE_MAP_LANDMARK_VISUAL_KEYS = [
   'forest-portal-rune',
-  'forest-rest-cart',
+  'parque-rest-cart',
 ] as const;
 
 const PARQUE_LEVEL_ANCHOR_DEFINITIONS: readonly Readonly<{
@@ -64,7 +64,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       origin: { x: 0.5, y: 1 },
       point: { x: 82, y: 1705 },
       site: 'clearing',
-      visualKey: 'forest-rest-cart',
+      visualKey: 'parque-rest-cart',
       visualSize: { height: 96, width: 104 },
     },
     {
@@ -74,7 +74,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       origin: { x: 0.5, y: 1 },
       point: { x: 72, y: 420 },
       site: 'clearing',
-      visualKey: 'forest-rest-cart',
+      visualKey: 'parque-rest-cart',
       visualSize: { height: 96, width: 104 },
     },
     {
@@ -110,7 +110,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       id: 'parque-segment-canopy',
       layers: [
         {
-          assetKey: 'forest-canopy',
+          assetKey: 'parque-canopy',
           id: 'parque-canopy-terrain',
           role: 'terrain',
         },
@@ -121,7 +121,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       height: 564,
       id: 'parque-segment-gate',
       layers: [
-        { assetKey: 'forest-gate', id: 'parque-gate-terrain', role: 'terrain' },
+        { assetKey: 'parque-gate', id: 'parque-gate-terrain', role: 'terrain' },
       ],
       top: 300,
     },
@@ -130,7 +130,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       id: 'parque-segment-river',
       layers: [
         {
-          assetKey: 'forest-river',
+          assetKey: 'parque-river',
           id: 'parque-river-terrain',
           role: 'terrain',
         },
@@ -142,7 +142,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       id: 'parque-segment-grove',
       layers: [
         {
-          assetKey: 'forest-grove',
+          assetKey: 'parque-grove',
           id: 'parque-grove-terrain',
           role: 'terrain',
         },
@@ -154,7 +154,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       id: 'parque-segment-sunlit',
       layers: [
         {
-          assetKey: 'forest-sunlit',
+          assetKey: 'parque-sunlit',
           id: 'parque-sunlit-terrain',
           role: 'terrain',
         },
@@ -166,7 +166,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       id: 'parque-segment-entry',
       layers: [
         {
-          assetKey: 'forest-entry',
+          assetKey: 'parque-entry',
           id: 'parque-entry-terrain',
           role: 'terrain',
         },
@@ -178,7 +178,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       id: 'parque-segment-trailhead',
       layers: [
         {
-          assetKey: 'forest-trailhead',
+          assetKey: 'parque-trailhead',
           id: 'parque-trailhead-terrain',
           role: 'terrain',
         },

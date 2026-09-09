@@ -10,10 +10,12 @@ import {
 import { GameIcon } from './GameIcon';
 import { colors, radii } from '../styles/theme';
 
+// O arquivo `forest_rest_cart.png` mantém o nome antigo até A-28 substituir a
+// arte pelo selo de "Descanso" no tema ODS12.
 const restCartImage =
   require('../../assets/map/world1/forest_rest_cart.png') as ImageSourcePropType;
 
-export type ForestRestMapMarkerProps = {
+export type RestStopMapMarkerProps = {
   afterLevelLabel: string;
   comingSoon?: boolean;
   locked: boolean;
@@ -21,13 +23,13 @@ export type ForestRestMapMarkerProps = {
   onPress: () => void;
 };
 
-export function ForestRestMapMarker({
+export function RestStopMapMarker({
   afterLevelLabel,
   comingSoon = false,
   locked,
   selected,
   onPress,
-}: ForestRestMapMarkerProps) {
+}: RestStopMapMarkerProps) {
   const label = comingSoon
     ? 'Em breve'
     : locked

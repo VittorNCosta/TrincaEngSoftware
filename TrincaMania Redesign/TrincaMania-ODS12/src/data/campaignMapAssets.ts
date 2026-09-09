@@ -1,19 +1,21 @@
 import type { ImageSourcePropType } from 'react-native';
 
+// Chaves no vocabulário ODS12 do Mundo 1 (Parque); os arquivos `.png` mantêm o
+// nome antigo `forest_*` até L-07 renomeá-los.
 export const CAMPAIGN_MAP_SEGMENT_ASSETS = {
-  'forest-canopy':
+  'parque-canopy':
     require('../../assets/map/world1/forest_00_canopy.png') as ImageSourcePropType,
-  'forest-entry':
+  'parque-entry':
     require('../../assets/map/world1/forest_01_entrance.png') as ImageSourcePropType,
-  'forest-grove':
+  'parque-grove':
     require('../../assets/map/world1/forest_02_grove.png') as ImageSourcePropType,
-  'forest-river':
+  'parque-river':
     require('../../assets/map/world1/forest_03_river_ruins.png') as ImageSourcePropType,
-  'forest-sunlit':
+  'parque-sunlit':
     require('../../assets/map/world1/forest_04_sunlit_grove.png') as ImageSourcePropType,
-  'forest-gate':
+  'parque-gate':
     require('../../assets/map/world1/forest_05_ancient_gate.png') as ImageSourcePropType,
-  'forest-trailhead':
+  'parque-trailhead':
     require('../../assets/map/world1/forest_06_trailhead.png') as ImageSourcePropType,
 } as const;
 
