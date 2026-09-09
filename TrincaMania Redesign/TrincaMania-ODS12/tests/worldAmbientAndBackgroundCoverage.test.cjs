@@ -126,6 +126,85 @@ test('Mundo bônus (21) permanece deliberadamente sem ambiente sonoro próprio',
   assert.equal(getAmbientKeyForWorld(BONUS_WORLD_ID), undefined);
 });
 
+// S-15: o C-27 já garante que todo mundo aponta para *alguma* chave conhecida.
+// Estes quatro fecham o resto do contrato do bloco S: a chave tem áudio de
+// fato, nenhuma trilha registrada fica sem dono, os mundos 1-8 não repetem
+// ambiente, e a `AmbientKey` não volta ao vocabulário de fantasia do L-01/S-11.
+
+test('S-15: todo mundo numerado (1-10) aponta para um ambiente com áudio resolvido', () => {
+  const configByKey = new Map(
+    getAmbientExpectedFiles().map(({ key, file, ready }) => [
+      key,
+      { file, ready },
+    ]),
+  );
+
+  mainWorldIds.forEach((worldId) => {
+    const ambientKey = getAmbientKeyForWorld(worldId);
+    const config = configByKey.get(ambientKey);
+    assert.ok(
+      config,
+      `Mundo ${worldId} aponta para chave sem config: ${ambientKey}`,
+    );
+    assert.ok(
+      config.ready,
+      `Mundo ${worldId} -> ${ambientKey} (${config.file}) sem source resolvido: a chave existe mas o jogador ouve silêncio`,
+    );
+  });
+});
+
+test('S-15: nenhuma trilha de ambiente registrada fica sem um mundo que a use', () => {
+  const usedKeys = new Set(
+    mainWorldIds.map((worldId) => getAmbientKeyForWorld(worldId)),
+  );
+  const orphans = getAmbientExpectedFiles()
+    .map(({ key }) => key)
+    .filter((key) => !usedKeys.has(key));
+
+  assert.deepEqual(
+    orphans,
+    [],
+    `Ambiente(s) em AMBIENT_CONFIGS sem nenhum mundo apontando: ${orphans.join(', ')}`,
+  );
+});
+
+test('S-15: mundos 1-8 têm ambientes distintos entre si', () => {
+  // 9 e 10 reaproveitam de propósito (usina/forum) até S-13 gerar trilha
+  // própria; 1-8 já são 1:1 e devem continuar assim depois do S-13.
+  const keys = [1, 2, 3, 4, 5, 6, 7, 8].map((worldId) =>
+    getAmbientKeyForWorld(worldId),
+  );
+
+  assert.equal(
+    new Set(keys).size,
+    keys.length,
+    `ambientes repetidos em 1-8: ${keys.join(', ')}`,
+  );
+});
+
+test('S-15: AmbientKey não regride ao vocabulário de fantasia (L-01/S-11)', () => {
+  const FANTASIA = [
+    'beach',
+    'celestial',
+    'crystal',
+    'forest',
+    'mountain',
+    'snow',
+    'stars',
+    'sweet',
+    'volcano',
+  ];
+  const regressoes = getAmbientExpectedFiles()
+    .map(({ key }) => key)
+    .filter((key) => FANTASIA.includes(key));
+
+  assert.deepEqual(
+    regressoes,
+    [],
+    `AmbientKey voltou a nomes do jogo de fantasia: ${regressoes.join(', ')}`,
+  );
+});
+
 test('getGameBackground (GameScreen.tsx) cobre todo mundo em WORLDS com um case explícito', () => {
   const gameScreenSource = fs.readFileSync(
     path.join(__dirname, '..', 'src', 'screens', 'GameScreen.tsx'),
