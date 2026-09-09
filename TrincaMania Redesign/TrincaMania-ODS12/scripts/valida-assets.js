@@ -14,6 +14,7 @@
  *    que ser atualizado e a dívida encolher de verdade.
  *
  * 2. **Órfão** — asset que nenhum arquivo de `src/` referencia. Peso puro.
+ *    `README.md` é a única exceção: é documentação da pasta, não asset.
  *
  * 3. **Extensão duplicada** — `.png.png`. Sempre erro de exportação, e o par
  *    sempre é um dos dois arquivos duplicado.
@@ -62,11 +63,27 @@ const walkSource = (dir, found = []) => {
 
 const kb = (bytes) => `${(bytes / 1024).toFixed(0)} KB`;
 
+/**
+ * `README.md` ao lado dos assets é documentação, não asset.
+ *
+ * A convenção do bloco A é que a pasta que recebe imagem explique o nome que a
+ * imagem tem que ter (`assets/map/worlds/README.md`), porque é ali que quem vai
+ * soltar o arquivo olha primeiro. Sem esta exceção o próprio README entraria na
+ * conta como "órfão novo" — nada em `src/` referencia um arquivo de texto — e a
+ * validação reprovaria a documentação dela mesma.
+ *
+ * Só `README.md`, de propósito: liberar `.md` inteiro abriria a porta para
+ * despejar qualquer coisa em `assets/` chamando de documentação.
+ */
+const ehDocumentacao = (relative) => /(^|\/)README\.md$/.test(relative);
+
 const collect = () => {
-  const files = walk(assetsDir).map((full) => ({
-    bytes: fs.statSync(full).size,
-    relative: path.relative(projectRoot, full).split(path.sep).join('/'),
-  }));
+  const files = walk(assetsDir)
+    .map((full) => ({
+      bytes: fs.statSync(full).size,
+      relative: path.relative(projectRoot, full).split(path.sep).join('/'),
+    }))
+    .filter((file) => !ehDocumentacao(file.relative));
 
   // Referência por nome de arquivo. O código usa `require('../../assets/...')`
   // com caminho literal, então o basename aparece cru na fonte.
