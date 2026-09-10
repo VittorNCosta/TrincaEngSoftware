@@ -1104,7 +1104,7 @@ mk done --title 'L-13 · Escrever o `README.md` de verdade' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
 mk open --title 'L-14 · Decidir o nome do app' \
-  --body '`app.json` diz `TileAdventure-ODS`, o slug é `trinca-mania` e o pacote Android é `br.com.mhvtech.trincamania`. Três nomes diferentes.
+  --body '**Nota corrigida 09/09:** a versão anterior dizia que o `app.json` trazia `TileAdventure-ODS` — não traz, e não trazia; `grep TileAdventure` não acha nada no repositório. O estado real hoje: nome `TrincaMania`, slug `tileclear-ods12` (herdado do projeto EAS no CI-28, e o EAS não deixa divergir do `projectId`), pacote Android `br.com.mhvtech.trincamania`, pacote npm `trincamania`. Continua sendo três nomes, mas outros três.
 
 **Responsável:** Você
 **Prioridade:** P0
@@ -1601,6 +1601,16 @@ mk done --title 'CI-27 · Ignorar `README.md` na checagem de órfão de asset' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+mk done --title 'CI-28 · Apontar o `app.json` para o projeto EAS certo' \
+  --body '**Feito 09/09.** O `extra.eas.projectId` apontava para `083f0c73-59f4-49b8-badc-a219daf61640`, um projeto que não é o que existe hoje no expo.dev. Isso sozinho já anularia o CI-14: `eas build --non-interactive` resolve o projeto **só por esse id** — nunca pelo `slug` nem pelo `name` — então com o token certo e o id errado a falha vem como `project not found`, que se lê como problema de permissão e manda depurar o lugar errado. Três campos passaram a descrever o mesmo projeto: `projectId` `42d46466-3a11-41c1-9f2e-bd17829c7356`, `owner` `vittorbestys-team` e `slug` `tileclear-ods12`. O `slug` teve que mudar porque o EAS recusa build quando o `slug` do `app.json` não bate com o do projeto apontado pelo `projectId` — não é campo cosmético. Isso deixa o app com **três nomes diferentes** (nome `TrincaMania`, slug `tileclear-ods12`, package `br.com.mhvtech.trincamania`); é dívida do R-02, registrada lá. Quem pegou isso foi o `tests/appConfig.test.cjs`, que travava `slug === '\''trinca-mania'\''` sob o título “a identidade publicada é a do jogo atual” — a trava funcionou como devia. Ela não foi apagada: passou a exigir `tileclear-ods12` e `owner`, com o porquê no comentário, para a divergência ficar registrada como decisão em vez de virar descuido silencioso.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Prioridade:** P0
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P0,claude-code,modelo-opus' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2090,4 +2100,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 205 issues (108 já criadas fechadas) =="
+echo "== pronto: 206 issues (109 já criadas fechadas) =="

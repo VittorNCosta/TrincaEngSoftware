@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "TrincaMania",
-    "slug": "trinca-mania",
+    "slug": "tileclear-ods12",
+    "owner": "vittorbestys-team",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
@@ -21,7 +22,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "083f0c73-59f4-49b8-badc-a219daf61640"
+        "projectId": "42d46466-3a11-41c1-9f2e-bd17829c7356"
       }
     },
     "plugins": [

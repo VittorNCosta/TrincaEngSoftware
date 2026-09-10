@@ -32,8 +32,15 @@ test('a identidade publicada é a do jogo atual, não a do jogo pré-redesign', 
   const config = resolveConfig();
 
   assert.equal(config.name, 'TrincaMania');
-  assert.equal(config.slug, 'trinca-mania');
   assert.equal(config.android.package, 'br.com.mhvtech.trincamania');
+
+  // O `slug` é o único destes três que não escolhemos livremente: ele tem que
+  // ser igual ao slug do projeto EAS apontado por `extra.eas.projectId`, senão
+  // `eas build` recusa antes de compilar. O projeto no expo.dev nasceu como
+  // `tileclear-ods12` (CI-28) e a decisão foi acompanhar em vez de recriar o
+  // projeto. Divergência aceita, não descuido — o R-02 decide o nome final.
+  assert.equal(config.slug, 'tileclear-ods12');
+  assert.equal(config.owner, 'vittorbestys-team');
 });
 
 test('o app não pede nenhuma permissão Android', () => {
