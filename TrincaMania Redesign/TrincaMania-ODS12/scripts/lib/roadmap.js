@@ -28,6 +28,7 @@ const LABELS = [
   ['devsecops', 'CC5F00'],
   ['qualidade', '574E6B'],
   ['release', '0E6F6B'],
+  ['observabilidade', 'B31D8C'],
   ['P0', 'D73A4A'],
   ['P1', 'E5A000'],
   ['P2', 'BFC7C2'],
@@ -49,6 +50,7 @@ const STREAM_LABEL = {
   ci: 'ci-cd',
   sec: 'devsecops',
   q: 'qualidade',
+  o: 'observabilidade',
   r: 'release',
 };
 
@@ -62,6 +64,7 @@ const MILESTONE = {
   ci: 'CI/CD',
   sec: 'DevSecOps',
   q: 'Qualidade',
+  o: 'Observabilidade',
   r: 'Release',
 };
 

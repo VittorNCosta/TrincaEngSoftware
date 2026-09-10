@@ -24,6 +24,7 @@
   --s-ci: #2F6478;
   --s-sec:#CC5F00;
   --s-q:  #574E6B;
+  --s-o:  #B31D8C;
   --s-r:  #0E6F6B;
 
   --done: #00803B;
@@ -54,6 +55,7 @@
     --s-ci: #6FAEC4;
     --s-sec:#F0913C;
     --s-q:  #A093C0;
+    --s-o:  #E86BC0;
     --s-r:  #4FB8B2;
 
     --done: #4FBE7C;
@@ -84,6 +86,7 @@
   --s-ci: #6FAEC4;
   --s-sec:#F0913C;
   --s-q:  #A093C0;
+  --s-o:  #E86BC0;
   --s-r:  #4FB8B2;
 
   --done: #4FBE7C;
@@ -407,6 +410,7 @@ const S = {
   ci:  {n:"CI/CD",            c:"var(--s-ci)",  code:"CI"},
   sec: {n:"DevSecOps",        c:"var(--s-sec)", code:"SEC"},
   q:   {n:"Qualidade",        c:"var(--s-q)",   code:"Q"},
+  o:   {n:"Observabilidade",  c:"var(--s-o)",   code:"O"},
   r:   {n:"Release",          c:"var(--s-r)",   code:"R"},
 };
 
@@ -537,7 +541,7 @@ const BLOCKS = [
  ["G-05","✅ Hook <code>pre-push</code> com typecheck","cc",2,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). Barato e evita CI vermelho por erro de tipo."],
  ["G-06","✅ <code>release-please</code> para versão e CHANGELOG","cc",1,"<b>Feito 04/09.</b> Config em <code>release-please-config.json</code> + <code>.release-please-manifest.json</code>, workflow em <code>.github/workflows/release.yml</code>. Le os Conventional Commits, mantem um PR de release com o CHANGELOG acumulado e, no merge, cria a tag — que e o gatilho que o <code>build.yml</code> ja esperava. <code>include-component-in-tag: false</code> e obrigatorio: o padrao taggearia <code>trincamania-v1.0.0</code> e o <code>on: push: tags: [\"v*\"]</code> do build nao casaria. <code>target-branch: develop</code> porque <code>main</code> nao existe (ver G-09)."],
  ["G-07","✅ Criar o <code>CHANGELOG.md</code>","cc",1,"<b>Feito 09/09</b> (commit <code>38bde35</code>). O G-06 já apontava <code>changelog-path: CHANGELOG.md</code>, mas o arquivo nunca existiu — sem ele o primeiro PR de release não teria onde prepender. Semente mínima no formato do <code>release-type: node</code>: cabeçalho <code>Changelog</code> + seção <code>1.0.0</code> casando com o <code>.release-please-manifest.json</code>, sem preâmbulo entre o cabeçalho e a primeira versão. Seções nos rótulos PT-BR de <code>changelog-sections</code>."],
- ["G-08","✅ Versão num lugar só","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <code>app.config.js</code> deriva <code>version</code> do <code>package.json</code>, e o campo saiu do <code>app.json</code>. Sem isso o release-please bumparia o <code>package.json</code> e o APK sairia com a versao anterior — <b>sem quebrar nada</b>, que e o pior tipo de erro. <code>versionCode</code>/<code>buildNumber</code> ficam com o EAS. De tabela, o <code>app.json</code> ainda publicava <code>TileAdventure-ODS</code>, sobra do jogo pre-redesign."],
+ ["G-08","✅ Versão num lugar só","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <code>app.config.js</code> deriva <code>version</code> do <code>package.json</code>, e o campo saiu do <code>app.json</code>. Sem isso o release-please bumparia o <code>package.json</code> e o APK sairia com a versao anterior — <b>sem quebrar nada</b>, que e o pior tipo de erro. <code>versionCode</code>/<code>buildNumber</code> ficam com o EAS. <b>Correcao 09/09:</b> esta nota afirmava que o <code>app.json</code> ainda publicava <code>TileAdventure-ODS</code>. Nao publicava — <code>grep TileAdventure</code> nao acha nada no repositorio. O nome sempre foi <code>TrincaMania</code>; a divergencia real esta no slug e no pacote, e e o L-14 que decide."],
  ["G-09","Definir a estratégia de branch","voce",1,"Hoje só existe <code>develop</code>. O CI já espera <code>main</code> também."],
  ["G-10","Branch protection em <code>main</code> e <code>develop</code>","voce",0,"Exigir PR, checks verdes, sem force-push."],
  ["G-11","✅ Template de PR","cc",2,"<b>Feito 08/09.</b> <code>.github/PULL_REQUEST_TEMPLATE.md</code>: o que muda, como testar, checklist (typecheck/test, hash de levels.ts, vocabulario ODS12, Conventional Commits)."],
@@ -616,6 +620,18 @@ const BLOCKS = [
  ["Q-13","Resolver o gap do Modo Dev","cc",2,"Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa."],
  ["Q-14","✅ Atualizar o <code>CONTEXT.md</code> com o vocabulário dos 10 mundos","cc",1,"<b>Feito 08/09.</b> Seção <code>## Mundos</code> nova: os 10 nomes ODS12 + bônus, o que cada um representa na cadeia da reciclagem e o nome de fantasia a evitar (mundos 1–8 e bônus só, 9 e 10 nasceram já no tema)."],
  ["Q-15","✅ Corrigir a faixa de dificuldade do primeiro mapa dos capítulos 4 e 7","cc",1,"<b>Feito 03/09.</b> Defeito real em produção, achado ao prototipar a curva do bloco C. <code>Math.floor(score * 5)</code> em <code>src/data/chapters.ts</code> rotulava <code>ch04-001</code> como <i>easy</i> (devia ser <i>normal</i>) e <code>ch07-001</code> como <i>normal</i> (devia ser <i>hard</i>). Não era regra de negócio: <code>(n-1)/9*0,6</code> cai <i>abaixo</i> da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o <code>floor</code> derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma <code>BORDA_DE_FAIXA = 1e-9</code> documentada e teste de regressão fixando as 10 faixas de abertura."],
+]},
+{k:"o", h:"Observabilidade e diagnóstico", note:"O CI já cobre tudo que dá para saber <b>antes</b> de o app rodar: lint, formato, tipo, 188 testes, piso de cobertura, orçamento de bundle, guardas de conteúdo, CodeQL, gitleaks, SBOM, Scorecard. O que não existe é o outro lado — <b>o que acontece no aparelho, na mão do jogador</b>. Hoje, se o jogo quebrar num build de release, não sobra nada: nenhum log, nenhum stack, nenhuma tela de erro, nada para pedir a quem reportou. Este bloco fecha o buraco de dentro para fora: primeiro o que funciona offline e sem terceiro (O-01…O-06), depois o relato remoto (O-07…O-10).", t:[
+ ["O-01","Logger estruturado em <code>src/utils/log.ts</code>","cc",0,"Nível (<code>debug</code>/<code>info</code>/<code>warn</code>/<code>error</code>) e namespace por módulo, silencioso em release menos <code>warn</code> e <code>error</code>. Sem dependência nova: é uma função e um <code>switch</code>. Toda a graça está em existir <b>um</b> ponto por onde o erro passa — sem isso o O-03, o O-04 e o O-09 não têm onde se plugar. Substitui os <code>console.log</code> espalhados hoje. É a base do bloco: nada aqui anda antes dela."],
+ ["O-02","Error boundary global com tela de erro","cc",0,"<code>App.tsx</code> envolvido num boundary: stack visível em <code>__DEV__</code>, e em release uma tela sóbria com botão de copiar o relatório. Regra dura — a tela de erro <b>não escreve no storage</b>. O invariante 1 diz que progresso só passa por <code>commitProgress</code>, e um boundary que tenta “salvar antes de morrer” é exatamente o caminho por onde save de jogador já foi apagado. Hoje um erro de render dá tela branca, sem nada escrito."],
+ ["O-03","Capturar erro não tratado e promise rejeitada","cc",0,"<code>ErrorUtils.setGlobalHandler</code> mais o handler de <code>unhandledrejection</code>. O boundary do O-02 só pega o que acontece dentro do ciclo de render; um <code>throw</code> dentro de <code>setTimeout</code>, de listener de áudio ou de promise de storage passa por fora e some — o app fecha e não fica rastro. Depende do O-01."],
+ ["O-04","Tela de Diagnóstico com os últimos logs","cc",1,"Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste interno do R-13, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01."],
+ ["O-05","Transformar os invariantes do <code>CLAUDE.md</code> em assert de runtime","cc",0,"Os sete invariantes que já quebraram (<code>commitProgress</code>, <code>mutateLives</code>, id de capítulo no storage da campanha, <code>tileCount</code> múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e <b>loga</b>, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01."],
+ ["O-06","Proibir <code>console.*</code> fora do logger","cc",2,"Regra <code>no-console</code> do ESLint com exceção só em <code>src/utils/log.ts</code>. Sem isso o O-01 vira <i>mais um</i> caminho em vez do único caminho, e em seis meses metade do código volta para o <code>console.log</code> — que não aparece em release e não entra no buffer do O-04. Entra no job de lint que o CI-07 já roda, então não custa workflow novo. Depende do O-01."],
+ ["O-07","Criar a conta no Sentry e gerar o DSN","voce",1,"O free tier cobre com folga o volume deste projeto. Precisa de você porque envolve criar conta e aceitar termos. O DSN não é segredo forte — ele vai embutido no app, qualquer um que abra o APK acha — mas entra como secret do mesmo jeito, para não ficar chumbado no repositório e para trocar sem recompilar. Bloqueia o O-08."],
+ ["O-08","Integrar o Sentry com upload de sourcemap","cc",1,"<code>@sentry/react-native</code>, DSN por variável de ambiente, e o upload de sourcemap no build do EAS. O sourcemap é a parte que costuma ser esquecida e é a que decide se serve para alguma coisa: sem ele o stack que chega é bundle minificado, ou seja, ilegível. Depende do O-07 e do CI-14."],
+ ["O-09","Anexar contexto de domínio a todo erro","cc",1,"Erro sem contexto é <code>TypeError: undefined</code> numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01."],
+ ["O-10","Revisar o que sai para o Sentry à luz da LGPD","voce",1,"Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do <i>Data safety form</i> do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário."],
 ]},
 {k:"r", h:"Release e publicação", note:"Quase tudo aqui é conta, formulário e captura de tela — trabalho seu, não de código. Vale começar cedo: a conta do Play Console e a política de privacidade travam a submissão.", t:[
  ["R-01","Criar ou confirmar a conta Google Play Console","voce",0,"US$ 25, uma vez."],

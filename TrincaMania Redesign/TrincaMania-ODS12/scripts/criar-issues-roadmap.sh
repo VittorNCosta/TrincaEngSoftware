@@ -18,6 +18,7 @@ gh label create 'ci-cd' --repo "$REPO" --color 2F6478 --force >/dev/null
 gh label create 'devsecops' --repo "$REPO" --color CC5F00 --force >/dev/null
 gh label create 'qualidade' --repo "$REPO" --color 574E6B --force >/dev/null
 gh label create 'release' --repo "$REPO" --color 0E6F6B --force >/dev/null
+gh label create 'observabilidade' --repo "$REPO" --color B31D8C --force >/dev/null
 gh label create 'P0' --repo "$REPO" --color D73A4A --force >/dev/null
 gh label create 'P1' --repo "$REPO" --color E5A000 --force >/dev/null
 gh label create 'P2' --repo "$REPO" --color BFC7C2 --force >/dev/null
@@ -39,6 +40,7 @@ ms 'Git e versionamento' 'Os commits já seguem Conventional Commits na prática
 ms 'CI/CD' 'O `ci.yml` atual roda lint, typecheck, test, test:ui e test:playthrough em **um job sequencial**. Se o lint falha, você não descobre se os testes passariam.'
 ms 'DevSecOps' 'O último commit do repositório é `chore: corrige vulnerabilidades` — feito à mão. O objetivo deste fluxo é que isso não volte a ser manual.'
 ms 'Qualidade' 'Já existem 19 arquivos de teste. Falta cobertura de ponta a ponta e quebrar os três arquivos que passaram do tamanho gerenciável.'
+ms 'Observabilidade' 'O CI já cobre tudo que dá para saber **antes** de o app rodar: lint, formato, tipo, 188 testes, piso de cobertura, orçamento de bundle, guardas de conteúdo, CodeQL, gitleaks, SBOM, Scorecard. O que não existe é o outro lado — **o que aconte'
 ms 'Release' 'Quase tudo aqui é conta, formulário e captura de tela — trabalho seu, não de código. Vale começar cedo: a conta do Play Console e a política de privacidade travam a submissão.'
 
 # Cria a issue e, quando a tarefa já foi concluída, fecha em seguida.
@@ -1205,7 +1207,7 @@ mk done --title 'G-07 · Criar o `CHANGELOG.md`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
 mk done --title 'G-08 · Versão num lugar só' \
-  --body '**Feito 03/09** (commit `c8311ab`). `app.config.js` deriva `version` do `package.json`, e o campo saiu do `app.json`. Sem isso o release-please bumparia o `package.json` e o APK sairia com a versao anterior — **sem quebrar nada**, que e o pior tipo de erro. `versionCode`/`buildNumber` ficam com o EAS. De tabela, o `app.json` ainda publicava `TileAdventure-ODS`, sobra do jogo pre-redesign.
+  --body '**Feito 03/09** (commit `c8311ab`). `app.config.js` deriva `version` do `package.json`, e o campo saiu do `app.json`. Sem isso o release-please bumparia o `package.json` e o APK sairia com a versao anterior — **sem quebrar nada**, que e o pior tipo de erro. `versionCode`/`buildNumber` ficam com o EAS. **Correcao 09/09:** esta nota afirmava que o `app.json` ainda publicava `TileAdventure-ODS`. Nao publicava — `grep TileAdventure` nao acha nada no repositorio. O nome sempre foi `TrincaMania`; a divergencia real esta no slug e no pacote, e e o L-14 que decide.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1930,6 +1932,106 @@ mk done --title 'Q-15 · Corrigir a faixa de dificuldade do primeiro mapa dos ca
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
 
+# --- Observabilidade ---
+mk open --title 'O-01 · Logger estruturado em `src/utils/log.ts`' \
+  --body 'Nível (`debug`/`info`/`warn`/`error`) e namespace por módulo, silencioso em release menos `warn` e `error`. Sem dependência nova: é uma função e um `switch`. Toda a graça está em existir **um** ponto por onde o erro passa — sem isso o O-03, o O-04 e o O-09 não têm onde se plugar. Substitui os `console.log` espalhados hoje. É a base do bloco: nada aqui anda antes dela.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Prioridade:** P0
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+mk open --title 'O-02 · Error boundary global com tela de erro' \
+  --body '`App.tsx` envolvido num boundary: stack visível em `__DEV__`, e em release uma tela sóbria com botão de copiar o relatório. Regra dura — a tela de erro **não escreve no storage**. O invariante 1 diz que progresso só passa por `commitProgress`, e um boundary que tenta “salvar antes de morrer” é exatamente o caminho por onde save de jogador já foi apagado. Hoje um erro de render dá tela branca, sem nada escrito.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Prioridade:** P0
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+mk open --title 'O-03 · Capturar erro não tratado e promise rejeitada' \
+  --body '`ErrorUtils.setGlobalHandler` mais o handler de `unhandledrejection`. O boundary do O-02 só pega o que acontece dentro do ciclo de render; um `throw` dentro de `setTimeout`, de listener de áudio ou de promise de storage passa por fora e some — o app fecha e não fica rastro. Depende do O-01.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Prioridade:** P0
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+mk open --title 'O-04 · Tela de Diagnóstico com os últimos logs' \
+  --body 'Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste interno do R-13, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P1,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+mk open --title 'O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime' \
+  --body 'Os sete invariantes que já quebraram (`commitProgress`, `mutateLives`, id de capítulo no storage da campanha, `tileCount` múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e **loga**, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Prioridade:** P0
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+mk open --title 'O-06 · Proibir `console.*` fora do logger' \
+  --body 'Regra `no-console` do ESLint com exceção só em `src/utils/log.ts`. Sem isso o O-01 vira mais um caminho em vez do único caminho, e em seis meses metade do código volta para o `console.log` — que não aparece em release e não entra no buffer do O-04. Entra no job de lint que o CI-07 já roda, então não custa workflow novo. Depende do O-01.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P2
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P2,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+mk open --title 'O-07 · Criar a conta no Sentry e gerar o DSN' \
+  --body 'O free tier cobre com folga o volume deste projeto. Precisa de você porque envolve criar conta e aceitar termos. O DSN não é segredo forte — ele vai embutido no app, qualquer um que abra o APK acha — mas entra como secret do mesmo jeito, para não ficar chumbado no repositório e para trocar sem recompilar. Bloqueia o O-08.
+
+**Responsável:** Você
+**Prioridade:** P1
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P1,humano' --milestone 'Observabilidade'
+mk open --title 'O-08 · Integrar o Sentry com upload de sourcemap' \
+  --body '`@sentry/react-native`, DSN por variável de ambiente, e o upload de sourcemap no build do EAS. O sourcemap é a parte que costuma ser esquecida e é a que decide se serve para alguma coisa: sem ele o stack que chega é bundle minificado, ou seja, ilegível. Depende do O-07 e do CI-14.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P1,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
+  --body 'Erro sem contexto é `TypeError: undefined` numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P1,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+mk open --title 'O-10 · Revisar o que sai para o Sentry à luz da LGPD' \
+  --body 'Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do Data safety form do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário.
+
+**Responsável:** Você
+**Prioridade:** P1
+**Fluxo:** Observabilidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'observabilidade,P1,humano' --milestone 'Observabilidade'
+
 # --- Release ---
 mk open --title 'R-01 · Criar ou confirmar a conta Google Play Console' \
   --body 'US$ 25, uma vez.
@@ -2100,4 +2202,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 206 issues (109 já criadas fechadas) =="
+echo "== pronto: 216 issues (109 já criadas fechadas) =="
