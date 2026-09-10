@@ -277,7 +277,7 @@ no magic, no candy, no treasure chests, no angels), no fruit, no photorealism.
 | ID   | Tarefa                                                                                                                                                                                                                                                                                                                                       | Quem   | Prio |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---- |
 | A-01 | ✅ Escrever o art bible (paleta, estilo, do/don't ODS12) — **Feito 09/09** (`de7afdc`). `docs/ART-BIBLE.md`: o material deste bloco consolidado num documento de consulta, mais o que faltava (o porquê de cada proibição, fruta-resíduo vs. fruta-tema, dominante de cor por mundo, onde cada arquivo entra no código, ressalva do Mundo 6) | [CC]   | P0   |
-| A-02 | ✅ Criar `assets/map/worlds/` e definir convenção de nome — **Feito 09/09** (`de7afdc`). `wNN_<slug>_<map\|game>.png` + os 20 nomes esperados no `README.md` da pasta; slugs iguais aos das `AmbientKey` do L-01/S-11. Exigiu o CI-27                                                                                                        | [CC]   | P0   |
+| A-02 | ✅ Criar `assets/map/worlds/` e definir convenção de nome — **Feito 09/09** (`de7afdc`). `wNN_<slug>_<map\|game>.png` + os 22 nomes esperados no `README.md` da pasta; slugs iguais aos das `AmbientKey` do L-01/S-11. O mundo bônus 21 entra como `w21_jardim_*` (A-24a/A-24b), fora do lote crítico. Exigiu o CI-27                        | [CC]   | P0   |
 | A-03 | Escolher a ferramenta de geração e travar a seed/estilo                                                                                                                                                                                                                                                                                      | [VOCÊ] | P0   |
 | A-04 | Gerar **1 imagem-piloto** (Mundo 1, fundo de jogo) e validar in-game antes de gerar as outras 19                                                                                                                                                                                                                                             | [VOCÊ] | P0   |
 
@@ -426,6 +426,30 @@ and hopeful climax mood, full CONAMA color accents.
 | ---- | --------------------------------------- | ------------- | --------- |
 | A-23 | `assets/map/worlds/w10_cupula_map.png`  | Fundo de mapa | [CC→VOCÊ] |
 | A-24 | `assets/map/worlds/w10_cupula_game.png` | Fundo de jogo | [CC→VOCÊ] |
+
+### Mundo bônus 21 — Jardim Renascido
+
+Terreno degradado que virou jardim — o fecho otimista do ciclo, e o único mundo
+onde flor é o elemento principal. Dominante rosa-dourada, casando com o
+`theme: 'rosado'` do `worlds.ts`. "Renascido" é recuperação de área, não
+fantasia: nada de brilho mágico, portal ou fada.
+
+```
+SCENE: a former degraded lot reclaimed as a community garden, flowering beds
+laid out over recovered ground, raised planters built from reused pallets and
+crates, a rainwater cistern, compost bins, butterflies and pollinators, soft
+pink and gold dawn light.
+```
+
+| ID    | Arquivo                                 | Tipo          | Quem      | Prio |
+| ----- | --------------------------------------- | ------------- | --------- | ---- |
+| A-24a | `assets/map/worlds/w21_jardim_map.png`  | Fundo de mapa | [CC→VOCÊ] | P1   |
+| A-24b | `assets/map/worlds/w21_jardim_game.png` | Fundo de jogo | [CC→VOCÊ] | P1   |
+
+> **Fora do lote crítico.** O mundo bônus é conteúdo opcional (destrava com 3
+> estrelas no Mundo 1), por isso P1 e não P0. E substituir a arte dele não
+> libera peso: o `map_bonus_bg.png` de hoje também é o fundo do capítulo 10
+> (`CHAPTER_MAP_ASSETS`), então continua no repositório de qualquer jeito.
 
 ## A.3 — Arte global (fora dos 10 mapas)
 

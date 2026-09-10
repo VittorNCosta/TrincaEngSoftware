@@ -221,12 +221,27 @@ projected world map and target dashboards, daylight through a glass dome,
 circular flow motif in the floor mosaic, full CONAMA color accents.
 ```
 
-### Mundo bônus 21 — Jardim Renascido
+### Mundo bônus 21 — Jardim Renascido · `jardim`
 
-**Fora dos 20 arquivos do bloco A.** Não tem prompt definido e continua usando
-`assets/map/map_bonus_bg.png` (arte antiga, 2,5 MB). Dívida conhecida — quando
-entrar na fila, ganha entrada própria aqui e um `w21_jardim_*` seguindo a mesma
-convenção.
+Dominante rosa-dourada de amanhecer — é o único mundo com `theme: 'rosado'` em
+`worlds.ts`, e a arte acompanha. Conteúdo opcional (destrava com 3 estrelas no
+Mundo 1), então este par fica **fora do lote crítico** A-05…A-24: são as tarefas
+A-24a e A-24b, em P1.
+
+O assunto é terreno degradado que virou jardim — o fecho otimista do ciclo, e o
+único mundo onde flor é o elemento principal. Cuidado com o nome: "renascido" é
+recuperação de área, não fantasia. Nada de brilho mágico, portal ou fada.
+
+```
+SCENE: a former degraded lot reclaimed as a community garden, flowering beds
+laid out over recovered ground, raised planters built from reused pallets and
+crates, a rainwater cistern, compost bins, butterflies and pollinators, soft
+pink and gold dawn light.
+```
+
+Hoje o mundo 21 cai no `map_bonus_bg.png`. Substituir não libera peso nenhum: o
+mesmo arquivo é o fundo do capítulo 10 (`CHAPTER_MAP_ASSETS`), então ele
+continua no repositório de qualquer jeito. Este par é arte própria, não faxina.
 
 ---
 
@@ -249,15 +264,16 @@ prompt fala em "mundo".
 
 ## 7. Onde o arquivo entra no código
 
-Os 20 arquivos vão para `assets/map/worlds/` seguindo a convenção do
+Os 22 arquivos vão para `assets/map/worlds/` seguindo a convenção do
 `README.md` de lá. Depois de gerados, os dois pontos de ligação são:
 
 - **Fundo de jogo** → `getGameBackground(worldId)` em
   `src/screens/GameScreen.tsx`. Hoje é um `switch` que reaproveita 4 PNGs para
-  os 10 mundos (mundos 2/5/7/9 dividem um, 3/6/8/10 dividem outro).
+  os 10 mundos (mundos 2/5/7/9 dividem um, 3/6/8/10 dividem outro); o mundo 21
+  tem o seu, `gameBonusBg`.
 - **Fundo de mapa** → `LEGACY_CAMPAIGN_MAP_ASSETS` em
-  `src/data/campaignMapAssets.ts`, chaves `legacy-world-2` … `legacy-world-10`.
-  Mesmo reaproveitamento.
+  `src/data/campaignMapAssets.ts`, chaves `legacy-world-2` … `legacy-world-10`,
+  mais `legacy-world-21`. Mesmo reaproveitamento.
 
 Ou seja: hoje **8 dos 10 mundos não têm arte própria**. Cada par de arquivos
 novo substitui uma entrada dessas duas tabelas — não precisa de refatoração,
@@ -265,7 +281,9 @@ só de trocar o `require`.
 
 Os PNGs antigos (`map_world1_bg.png`, `map_world2_bg.png`, …) só podem ser
 apagados quando **nenhuma** das duas tabelas apontar mais para eles;
-`scripts/valida-assets.js` acusa se sobrar órfão.
+`scripts/valida-assets.js` acusa se sobrar órfão. Atenção ao
+`map_bonus_bg.png`: ele é fundo do mundo 21 **e** do capítulo 10
+(`CHAPTER_MAP_ASSETS`), então substituir o mundo 21 não o torna órfão.
 
 ---
 

@@ -27,7 +27,7 @@ duplicada é erro de exportação e `scripts/valida-assets.js` reprova.
 O zero à esquerda existe para o `w10` não vir antes do `w02` na ordenação
 alfabética da pasta.
 
-## Os 20 arquivos esperados
+## Os 22 arquivos esperados
 
 | Mundo | Nome em `worlds.ts`            | Slug          | Mapa                      | Jogo                       |
 | ----- | ------------------------------ | ------------- | ------------------------- | -------------------------- |
@@ -41,12 +41,13 @@ alfabética da pasta.
 | 8     | Fórum da Economia Circular     | `forum`       | `w08_forum_map.png`       | `w08_forum_game.png`       |
 | 9     | Distrito da Reindustrialização | `distrito`    | `w09_distrito_map.png`    | `w09_distrito_game.png`    |
 | 10    | Cúpula da Reciclagem Global    | `cupula`      | `w10_cupula_map.png`      | `w10_cupula_game.png`      |
+| 21    | Jardim Renascido (bônus)       | `jardim`      | `w21_jardim_map.png`      | `w21_jardim_game.png`      |
 
 Os slugs são os mesmos das `AmbientKey` de `src/utils/sounds.ts` (renomeadas no
 L-01/S-11), de propósito: um mundo tem um nome só no código inteiro.
 
-O mundo bônus 21 (Jardim Renascido) **não** está nos 20 — continua com
-`assets/map/map_bonus_bg.png`. Se ganhar arte, entra como `w21_jardim_*`.
+O mundo 21 é bônus e fica **fora do lote crítico** A-05…A-24 — o par dele é
+A-24a/A-24b, em P1. Até chegar a vez, ele segue com `map_bonus_bg.png`.
 
 ## Ao adicionar um arquivo
 

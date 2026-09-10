@@ -32,7 +32,7 @@ echo "== milestones =="
 ms() { gh api -X POST "repos/$REPO/milestones" -f title="$1" -f description="$2" >/dev/null 2>&1 || true; }
 ms 'Fundação' 'Desbloqueia todo o resto. Duas destas travam ferramenta: `gh` não existe no WSL e `node` só resolve em shell interativo.'
 ms 'Conteúdo 10×10' 'O bloco de maior risco. Hoje são 203 fases em 8 mundos × 25 + bônus, e `tests/levelComposition.test.cjs` trava um sha256 do JSON delas. Quebrar esse hash é intencional aqui — mas exige atualizar seis arquivos de teste e migrar o save de que'
-ms 'Arte' 'Vinte imagens de mapa mais oito assets globais. É o maior gargalo do projeto e tudo depende do portão A-04. Alvo de peso: **≤ 400 KB por PNG** — hoje `map_world1_scene_bg.png` sozinho tem 5,8 MB.'
+ms 'Arte' 'Vinte imagens de mapa dos mundos principais (A-05…A-24, o lote crítico), mais duas do mundo bônus fora dele (A-24a/A-24b) e oito assets globais. É o maior gargalo do projeto e tudo depende do portão A-04. Alvo de peso: **≤ 400 KB por PNG** '
 ms 'Som' 'MP3 em loop sem emenda audível, 30–60 s, 128 kbps, ≤ 800 KB. Sem melodia forte — o jogo é de concentração.'
 ms 'Limpeza ODS12' 'A regra permanente do `CLAUDE.md` trata sobra de vocabulário de fantasia como **bug de conteúdo**. Isto é o que ainda existe hoje, verificado no código.'
 ms 'Git e versionamento' 'Os commits já seguem Conventional Commits na prática. Falta travar isso em ferramenta e ligar a versão ao histórico.'
@@ -456,7 +456,7 @@ mk done --title 'A-01 · Escrever o art bible' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,modelo-opus' --milestone 'Arte'
 mk done --title 'A-02 · Criar `assets/map/worlds/` e a convenção de nome' \
-  --body '**Feito 09/09** (commit `de7afdc`). `wNN_<slug>_<map|game>.png`, com os 20 nomes esperados no `README.md` da pasta. Os slugs são os mesmos das `AmbientKey` do L-01/S-11, de propósito: um mundo tem um nome só no código inteiro. O zero à esquerda existe para o `w10` não vir antes do `w02` na ordenação da pasta. O mundo bônus 21 fica fora dos 20 — continua com `map_bonus_bg.png`, dívida registrada no art bible. Exigiu o CI-27.
+  --body '**Feito 09/09** (commit `de7afdc`). `wNN_<slug>_<map|game>.png`, com os 22 nomes esperados no `README.md` da pasta. Os slugs são os mesmos das `AmbientKey` do L-01/S-11, de propósito: um mundo tem um nome só no código inteiro. O zero à esquerda existe para o `w10` não vir antes do `w02` na ordenação da pasta. O mundo bônus 21 entra como `w21_jardim_*` (A-24a/A-24b), fora do lote crítico. Exigiu o CI-27.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -683,6 +683,26 @@ mk open --title 'A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de j
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+mk open --title 'A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa' \
+  --body 'Fora do lote crítico A-05…A-24: o mundo bônus é conteúdo opcional (destrava com 3 estrelas no Mundo 1). P1 por isso, não P0. Hoje cai no `map_bonus_bg.png`, que **não** é exclusivo dele — o capítulo 10 usa o mesmo arquivo, então este par não libera peso nenhum; é arte própria, não faxina.
+
+**Responsável:** Claude Code + Você
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** Arte
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+mk open --title 'A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo' \
+  --body '_Sem detalhe adicional no roadmap._
+
+**Responsável:** Claude Code + Você
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** Arte
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
 mk open --title 'A-25 · Ícone do app 1024×1024' \
   --body 'Hoje 1254×1254, fora do padrão Expo. Símbolo de reciclagem + trinca, sem texto.
 
@@ -2070,4 +2090,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 203 issues (108 já criadas fechadas) =="
+echo "== pronto: 205 issues (108 já criadas fechadas) =="
