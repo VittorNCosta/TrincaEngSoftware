@@ -445,8 +445,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,claude-code,humano,modelo-fable' --milestone 'Conteúdo 10×10'
 
 # --- Arte ---
-mk open --title 'A-01 · Escrever o art bible' \
-  --body 'Paleta CONAMA, estilo, do/don'\''t ODS12.
+mk done --title 'A-01 · Escrever o art bible' \
+  --body '**Feito 09/09** (commit `de7afdc`). `docs/ART-BIBLE.md`. O material já existia aqui no bloco A, mas espalhado dentro de um arquivo de 128 KB que é fila de tarefas, não documento de consulta. Consolidado com o que faltava: a lista do que nunca aparece **com o motivo de cada item** (é o critério que mais escapa — modelo de imagem puxa fantasia sozinho quando o prompt fala em “mundo”), a distinção entre fruta como resíduo orgânico (legítima) e fruta como tema (barrada), dominante de cor por mundo para os acentos CONAMA continuarem sendo a coisa mais saturada do quadro, e onde cada arquivo entra no código — hoje **8 dos 10 mundos não têm arte própria**, dividem 4 PNGs. Ressalva no Mundo 6: a cena é trabalho real de catador e tem que ler como oficina digna, nunca como lixão.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -455,8 +455,8 @@ mk open --title 'A-01 · Escrever o art bible' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,modelo-opus' --milestone 'Arte'
-mk open --title 'A-02 · Criar `assets/map/worlds/` e a convenção de nome' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'A-02 · Criar `assets/map/worlds/` e a convenção de nome' \
+  --body '**Feito 09/09** (commit `de7afdc`). `wNN_<slug>_<map|game>.png`, com os 20 nomes esperados no `README.md` da pasta. Os slugs são os mesmos das `AmbientKey` do L-01/S-11, de propósito: um mundo tem um nome só no código inteiro. O zero à esquerda existe para o `w10` não vir antes do `w02` na ordenação da pasta. O mundo bônus 21 fica fora dos 20 — continua com `map_bonus_bg.png`, dívida registrada no art bible. Exigiu o CI-27.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -1571,6 +1571,16 @@ mk done --title 'CI-26 · Janela de trabalho: parar nos cortes de 16h e 22h' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+mk done --title 'CI-27 · Ignorar `README.md` na checagem de órfão de asset' \
+  --body '**Feito 09/09** (commit `de7afdc`, junto do A-02 — sem isso o A-02 era impossível). Pasta vazia não existe no git, então `assets/map/worlds/` precisa de arquivo; e como nada em `src/` referencia texto, o próprio README que documenta a convenção reprovava a validação com `asset órfão novo`. `valida-assets.js` passou a tratar `README.md` como documentação da pasta, não asset. Só `README.md`, de propósito — liberar `.md` inteiro abriria a porta para despejar qualquer coisa em `assets/` chamando de documentação. Efeito colateral: `assets/sfx/README.md` saiu do livro-razão, que baixou de 44 para 43 órfãos.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2060,4 +2070,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 202 issues (105 já criadas fechadas) =="
+echo "== pronto: 203 issues (108 já criadas fechadas) =="
