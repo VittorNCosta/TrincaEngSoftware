@@ -206,7 +206,7 @@ h1 { font-size: clamp(34px, 5.4vw, 54px); font-weight: 700; letter-spacing: -.02
 .td { font-size: 13.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
 .td code { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-2); }
 .task.done .tt { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
-.tmeta { display: flex; gap: 6px; align-items: center; padding-top: 2px; flex: none; }
+.tmeta { display: flex; flex-wrap: wrap; max-width: 230px; gap: 6px; align-items: center; padding-top: 2px; flex: none; }
 .tag {
   font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 500;
   letter-spacing: .06em; text-transform: uppercase;
@@ -333,6 +333,18 @@ footer code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
   </div>
 </div>
 
+<div class="callout">
+  <b>Modelo Codex por tarefa · 15/09/2026.</b> Luna: mudanças mecânicas; Terra: implementação cotidiana, conteúdo e integração; Sol: persistência, regras, refactors amplos, segurança e publicação. Prioridade não é complexidade. A classificação é uma recomendação para execução futura, inclusive nas tarefas já feitas, não um registro do modelo que as executou. Arte e áudio exigem ferramentas próprias e validação humana. <a href="https://developers.openai.com/api/docs/models">Referência oficial</a>.
+</div>
+
+<div class="ctlrow" style="margin-top:14px">
+  <span class="ctlkey">Codex</span>
+  <button class="chip" data-f="model" data-v="luna" aria-pressed="false">Luna</button>
+  <button class="chip" data-f="model" data-v="terra" aria-pressed="false">Terra</button>
+  <button class="chip" data-f="model" data-v="sol" aria-pressed="false">Sol</button>
+  <button class="chip" data-f="model" data-v="manual" aria-pressed="false">Manual</button>
+</div>
+
 <main id="blocks"></main>
 
 <section class="sechead">
@@ -399,6 +411,7 @@ no magic, no candy, no treasure chests, no angels), no fruit, no photorealism.</
 
 </div>
 
+<script src="../../scripts/lib/codex-models.js"></script>
 <script>
 const S = {
   f0:  {n:"Fundação",         c:"var(--s-f0)",  code:"F0"},
@@ -552,6 +565,8 @@ const BLOCKS = [
  ["G-16","Decidir sobre Git LFS para os PNGs","voce",2,"Reavaliar depois de A-33 — com tudo ≤ 400 KB pode não valer."],
  ["G-17","✅ <code>.gitignore</code>: build do EAS, <code>*.aab</code>, <code>coverage/</code>","cc",2,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <b>Divergencia do texto original:</b> pedia ignorar <code>.eas/</code> inteiro, mas CI-23 quer <code>.eas/workflows/</code> versionado — ignora <code>.eas/build-cache/</code> no lugar."],
  ["G-18","✅ Liberar <code>git push</code> sem prompt no modo <code>auto</code>","cc",1,"<b>Feito 08/09</b> (commit <code>cf38a0f</code>). O <code>defaultMode: \"auto\"</code> mandava todo push para o classificador de permissão, que barrava — e isso esvaziava o CI-26 justamente no ponto dele: o commit de ponto de parada ficava preso na máquina de onde ele estava saindo. <code>permissions.allow</code> com <code>Bash(git push)</code> e <code>Bash(git push:*)</code> em <code>.claude/settings.json</code> (versionado, então a regra viaja para a outra máquina). Force-push fica de fora, no <code>deny</code>; a regra casa por prefixo, então <code>git push origin main --force</code> escapa — é rede contra descuido, não contra intenção."],
+ ["G-19","✅ Classificar todas as tarefas por modelo Codex","cc",1,"<b>Feito 15/09.</b> Luna, Terra ou Sol por escopo/risco em todas as tarefas; execução humana identificada e recomendação Claude preservada. <code>scripts/lib/codex-models.js</code> compartilhado pelo painel, markdown e issues; filtros Codex e coluna gerada com checagem de sincronismo. Lint, typecheck e 188/188 testes passam. Base: <code>4bdac92</code>, conferida no GitHub em 15/09/2026. Alterações locais ainda sem commit; sincronização das issues por delta."],
+ ["G-20","✅ Configurar YOLO como padrão para novas sessões Codex","cc",1,"<b>Feito 15/09.</b> Autorizado explicitamente pelo usuário nesta conversa. <code>approval_policy = 'never'</code> no nível global de <code>~/.codex/config.toml</code>, com <code>sandbox_mode = 'danger-full-access'</code> já existente. Não muda limites administrados da sessão aberta; continuidade por objetivo é iniciada com <code>/goal</code>. Configuração pessoal, fora do Git deste projeto."],
 ]},
 {k:"ci", h:"CI/CD", note:"O <code>ci.yml</code> atual roda lint, typecheck, test, test:ui e test:playthrough em <b>um job sequencial</b>. Se o lint falha, você não descobre se os testes passariam.", t:[
  ["CI-01","✅ Quebrar o CI em jobs paralelos","cc",1,"<b>Feito 03/09.</b> Sete jobs no lugar de um sequencial: <code>lint</code>, <code>typecheck</code>, <code>guardas</code>, <code>test</code>, <code>test-ui</code>, <code>playthrough</code> e <code>expo-doctor</code>. Antes, lint quebrado escondia se os testes passariam e cada ida ao CI devolvia um problema de cada vez; agora o PR volta com a lista inteira. O preço é um <code>npm ci</code> por job, barato porque o cache do <code>setup-node</code> e compartilhado e o gargalo real (playthrough, ~1 min) passa a rodar ao lado do resto."],
@@ -699,8 +714,9 @@ let done = {};
 try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { done = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
 
-const WHO = { cc: "Claude", voce: "Você", both: "CC + Você" };
-const filters = { stream: null, who: null, prio: null, open: false };
+const WHO = { cc: "Agente", voce: "Você", both: "Agente + Você" };
+const { CODEX_MODEL_INFO, recomendarModeloCodex } = CodexModels;
+const filters = { stream: null, who: null, prio: null, model: null, open: false };
 
 const esc = (s) => s;
 const blocksEl = document.getElementById("blocks");
@@ -719,17 +735,22 @@ BLOCKS.forEach((b) => {
     '<div class="tasks"></div>';
   const list = sec.querySelector(".tasks");
   b.t.forEach(([id, title, who, prio, det]) => {
+    const codex = recomendarModeloCodex({ id, bloco: b.k, quem: who, prioridade: prio });
+    const model = codex.modelo ? CODEX_MODEL_INFO[codex.modelo] : null;
     const row = document.createElement("div");
     row.className = "task";
     row.dataset.stream = b.k; row.dataset.who = who; row.dataset.prio = prio; row.dataset.id = id;
+    row.dataset.model = codex.modelo || "manual";
     row.innerHTML =
       '<input type="checkbox" aria-label="Concluir ' + id + '">' +
       '<span class="tid">' + id + '</span>' +
       '<div class="tbody"><div class="tt">' + esc(title) + '</div>' +
       (det ? '<div class="td">' + det + '</div>' : '') + '</div>' +
       '<div class="tmeta"><span class="tag who-' + who + '">' + WHO[who] + '</span>' +
+      '<span class="tag" title="' + codex.motivo + (model ? ' Modelo: ' + model.id : '') + '">Codex: ' + (model ? codex.modelo : 'manual') + '</span>' +
       '<span class="tag p' + prio + '">P' + prio + '</span></div>';
     const cb = row.querySelector("input");
+    if (title.startsWith('✅') && done[id] === undefined) done[id] = 1;
     cb.checked = !!done[id];
     if (cb.checked) row.classList.add("done");
     cb.addEventListener("change", () => {
@@ -786,7 +807,7 @@ document.querySelectorAll(".chip").forEach((c) => {
   });
 });
 document.getElementById("clearBtn").addEventListener("click", () => {
-  filters.stream = filters.who = filters.prio = null; filters.open = false;
+  filters.stream = filters.who = filters.prio = filters.model = null; filters.open = false;
   document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "false"));
   refresh();
 });
@@ -801,6 +822,7 @@ function refresh() {
         (!filters.stream || row.dataset.stream === filters.stream) &&
         (!filters.who || row.dataset.who === filters.who) &&
         (!filters.prio || row.dataset.prio === filters.prio) &&
+        (!filters.model || row.dataset.model === filters.model) &&
         (!filters.open || !isDone);
       row.classList.toggle("hidden", !ok);
       if (ok) shown++;

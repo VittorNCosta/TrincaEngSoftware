@@ -28,6 +28,9 @@ gh label create 'modelo-opus' --repo "$REPO" --color 5A32A3 --force >/dev/null
 gh label create 'modelo-sonnet' --repo "$REPO" --color 1B7FBD --force >/dev/null
 gh label create 'modelo-fable' --repo "$REPO" --color C2410C --force >/dev/null
 gh label create 'modelo-haiku' --repo "$REPO" --color 6B7280 --force >/dev/null
+gh label create 'modelo-codex-luna' --repo "$REPO" --color 6B7280 --force >/dev/null
+gh label create 'modelo-codex-terra' --repo "$REPO" --color 1B7FBD --force >/dev/null
+gh label create 'modelo-codex-sol' --repo "$REPO" --color 5A32A3 --force >/dev/null
 
 echo "== milestones =="
 ms() { gh api -X POST "repos/$REPO/milestones" -f title="$1" -f description="$2" >/dev/null 2>&1 || true; }
@@ -61,6 +64,8 @@ mk done --title 'F0-01 · Instalar o `gh` CLI' \
   --body '**Feito 03/09:** binário v2.99.0 baixado do release oficial para `~/.local/bin/gh`, sem sudo — o diretório já está no PATH via `.zshrc:105`. Autenticado em 04/09 (`gh auth login` por device code, conta `VittorNCosta`) — o backlog do GitHub passou a ser sincronizável daqui.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Fundação
 
@@ -70,6 +75,8 @@ mk open --title 'F0-02 · Expor `node` no PATH não-interativo' \
   --body 'Hoje só existe via nvm. Em shell não-interativo o comando não resolve — isso quebra hook de git e script de CI local.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Fundação
 
@@ -80,47 +87,57 @@ mk done --title 'F0-03 · Fixar a versão de Node do projeto' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Fundação
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'fundacao,P1,claude-code,modelo-sonnet' --milestone 'Fundação'
+  --label 'fundacao,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Fundação'
 mk done --title 'F0-04 · Resolver o `package.json` pendente' \
   --body '**Feito 03/09** (commit `c1e3b65`). Não era decisão em aberto e sim bug: o `package-lock.json` commitado já trazia ~54.0.37 / ~54.0.18 / ^29.5.14, então HEAD tinha manifest e lock discordando — `npm ci`, que é o que o CI roda, falharia.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Fundação
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'fundacao,P0,claude-code,modelo-opus' --milestone 'Fundação'
+  --label 'fundacao,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Fundação'
 mk done --title 'F0-05 · Rodar `npx expo-doctor` e registrar o baseline' \
   --body '**Feito 03/09:** 17/17 checks passaram depois de restaurar um `package-lock.json` não commitado que tinha regredido (`@types/jest` voltou a `^30.0.0`, `expo` a `~54.0.34`, `jest-expo` a `~54.0.17` — mesma classe de bug do F0-04) e rodar `npm ci` limpo. `typecheck` e os 121 testes de `tests/` continuam verdes.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Fundação
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'fundacao,P1,claude-code,modelo-sonnet' --milestone 'Fundação'
+  --label 'fundacao,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Fundação'
 mk done --title 'F0-06 · Criar a branch `feat/campanha-10x10`' \
   --body '**Feito 03/09.** Toda a reescrita de conteúdo saiu nela. Em 04/09 a linha paralela de CI/build foi incorporada por merge (`ed35d11`) e a branch `feat/renomeia-capitulos-9-10` foi apagada — sobrou uma linha só.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P0
 **Fluxo:** Fundação
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'fundacao,P0,claude-code,modelo-opus' --milestone 'Fundação'
+  --label 'fundacao,P0,claude-code,modelo-opus,modelo-codex-luna' --milestone 'Fundação'
 
 # --- Conteúdo 10×10 ---
 mk done --title 'C-01 · Confirmar os nomes dos Mundos 9 e 10' \
   --body '**Decidido 03/09, revisto 04/09.** A campanha fica com **Distrito da Reindustrialização** (Mundo 9) e **Cúpula da Reciclagem Global** (Mundo 10) — os nomes que o código recebeu em `2295575`. A primeira decisão tinha sido Oficina do Reparo e Cidade Circular, e foi por ela que os capítulos 9 e 10 viraram **Ferro-Velho Renascido** e **Metrópole do Ciclo Fechado** (`9bd1059`); os capítulos ficam com os nomes novos, que já estão no jogo e não colidem com nada. Ver C-01a.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
@@ -131,75 +148,91 @@ mk done --title 'C-01a · Reconciliar os nomes dos Mundos 9 e 10 com a decisão 
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,humano,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,humano,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-02 · Redesenhar a curva de dificuldade para 100 fases' \
   --body '**Feito 03/09.** `WORLD_LEVELS_PER_MAP` 25→10 e `WORLD_DIFFICULTY_BLOCK_SIZE` 5→2. A rampa de 9 a 60 peças agora cabe em 10 fases por mundo, com `tileCount` múltiplo de 3 travado em teste.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-03 · Redefinir os marcos de descanso, loja e guardião' \
   --body '**Feito 03/09.** Descanso na fase 5 e guardião na 10 nos dez mundos; `REST_CHECKPOINT_COIN_REWARDS` reajustado para o novo ritmo.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-04 · Escrever os 100 títulos de fase' \
   --body '**Feito 03/09.** 103 títulos únicos (100 canônicas + 3 bônus), no vocabulário de `CONTEXT.md`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-05 · Escrever os 100 textos de objetivo' \
   --body '**Feito 03/09.** 103/103 com `objectiveText` preenchido.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-06 · Derivar os `starTimeLimits` das 100 fases' \
   --body '**Feito 03/09.** Derivados da curva por `WORLD_STAR_TIME_BASE_OFFSET` e `WORLD_STAR_TIME_SPAN`, não à mão.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-07 · Definir `recommendedPower` e `mysteryTileCount` por fase' \
   --body '**Feito 03/09.** Os 103 níveis têm `recommendedPower`; o mistério respeita o teto de 1/6 do tabuleiro.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-08 · Decidir o destino do mundo bônus (id 21)' \
   --body '**Decidido 03/09:** fica como 11º mapa secreto — que já é o comportamento atual (`subtitle: '\''Mundo secreto'\''`). Não muda código hoje, mas cria C-08a e C-08b na reescrita.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
@@ -210,241 +243,289 @@ mk done --title 'C-08a · Reposicionar o bônus de `25.1–25.3` para `10.1–10
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-08b · Trocar o `theme: '\''sweet'\''` do bônus' \
   --body '**Feito 08/09,** junto com L-02: bônus agora é `theme: '\''rosado'\''`. **Em aberto:** a reavaliação de `unlockRule: '\''three-stars-world-1'\''` (fica mais fácil com o Mundo 1 em 10 fases) é decisão de balanceamento, não renomeação — não mexida aqui.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,modelo-fable,modelo-codex-luna' --milestone 'Conteúdo 10×10'
 mk done --title 'C-09 · Estender `CampaignWorldId` para 9 e 10' \
   --body '**Feito 03/09.** `src/types/game.ts`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-10 · Reescrever `WORLDS` com 10 mundos' \
   --body '**Feito 03/09.** Dez mundos, `levelStart`/`levelEnd` de 1-10, 11-20 … 91-100. **Ressalva:** os nomes dos Mundos 9 e 10 saíram diferentes do que C-01 decidiu — ver C-01a.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-11 · Reescrever `LEVEL_SEEDS`' \
   --body '**Feito 03/09.** Os 10 mundos passaram a ser gerados pelo mesmo mecanismo — manter 3 mundos autorais à mão para 10 fases cada não pagava a manutenção. É a opção “mais sustentável” do enunciado.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-12 · Ajustar `GENERATED_WORLD_CONFIGS` de 25 para 10 títulos' \
   --body '**Feito 03/09.** Dez entradas, uma por mundo.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-13 · Registrar os mundos 9 e 10 em `WORLD_MAP_CONFIGS`' \
   --body '**Feito 03/09.** O `Record` total voltou a fechar no `tsc`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-14 · Reduzir o mapa do Mundo 1 de 25 para 10 âncoras' \
   --body '**Feito 03/09.** `src/data/worldMapConfigs.ts`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-15 · Renomear `BOSQUE_*` para vocabulário ODS12' \
   --body '**Feito 04/09.** Eram 107 ocorrências, não 15: `BOSQUE_*` virou `PARQUE_*` e os ids de layout `bosque-*` viraram `parque-*`, seguindo o nome atual do Mundo 1 (**Parque da Coleta Seletiva**). `assetKey`/`visualKey` `forest-*` ficaram de fora de propósito — apontam para PNG real, isso é L-09.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-16 · Atualizar o comentário das 203 em `boardPositions.ts`' \
   --body '**Feito 03/09.** Linhas 16 e 39 passaram a falar em 100 fases canônicas. As sobras em `src/types/game.ts` e `src/data/chapters.ts` caíram em 04/09.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,modelo-fable,modelo-codex-luna' --milestone 'Conteúdo 10×10'
 mk done --title 'C-17 · Mapear `AMBIENT_BY_WORLD_ID` para os 10 mundos' \
   --body '**Feito 03/09.** Mundo 9 reaproveita `volcano` e o 10, `celestial` — nenhum mundo toca em silêncio. Travado por `tests/worldAmbientAndBackgroundCoverage.test.cjs`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-18 · Cobrir os mundos 9 e 10 em `getGameBackground`' \
   --body '**Feito 03/09.** Mundo 9 cai no fundo do 2 e o 10 no do 3, em vez de cair no default do Mundo 1.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-19 · Recalcular o hash sha256 das fases' \
   --body '**Feito 03/09.** Asserção mantida e literal recalculado sobre as 103 fases novas — a trava de integridade continua de pé.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-20 · Atualizar `tests/chapterProgress.test.cjs:80`' \
   --body '**Feito 03/09.**
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-21 · Atualizar `tests/worldMapConfig.test.cjs:57-73`' \
   --body '**Feito 03/09.** As três asserções sobre 203 passaram a valer sobre 103.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-22 · Atualizar `tests/chapters.test.cjs:434-436`' \
   --body '**Feito 03/09.**
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-23 · Atualizar `tests/simulateFullPlaythrough.cjs:44,210`' \
   --body '**Feito 03/09.** A simulação roda as 103 fases e sai 0 — toda fase continua vencível.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-24 · Revisar `boardLayout` e `campaignMapLayout`' \
   --body '**Feito 03/09.**
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-25 · Escrever a migração de save 203→100' \
   --body '**Feito 03/09.** Não precisou mapear nem resetar: como os ids `wN-001`…`wN-010` são idênticos nos dois esquemas, o save antigo continua valendo e só somem as posições 11–25. `detectDroppedCampaignProgress` + `CampaignResizeNoticeModal` avisam o jogador uma única vez. Moedas, chaves e itens nunca são filtrados.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-26 · Testar a migração de save' \
   --body '**Feito 03/09.** `tests/progressMigration.test.cjs`, 6 casos — incluindo o save de quem zerou os 8 mundos antigos.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
 mk done --title 'C-27 · Travar em teste a cobertura de fundo e ambiente por mundo' \
   --body '**Feito 03/09.** `tests/worldAmbientAndBackgroundCoverage.test.cjs`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-28 · Atualizar o texto do Modo Dev' \
   --body '**Feito 03/09.** `SettingsModal` cita 103 fases.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P2,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P2,claude-code,modelo-fable,modelo-codex-luna' --milestone 'Conteúdo 10×10'
 mk done --title 'C-29 · Reescrever o invariante #4 do `CLAUDE.md`' \
   --body '**Feito 03/09.** O invariante passou a citar 103 e a dizer explicitamente que o número muda se a campanha for reestruturada de novo — o mecanismo de trava, não.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P0
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P0,claude-code,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-luna' --milestone 'Conteúdo 10×10'
 mk open --title 'C-30 · Decidir e implementar o destino dos Capítulos' \
   --body 'Esconder do menu, manter como modo infinito pós-jogo, ou remover. Hoje `ChaptersScreen` é acessível.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Fable 5.1
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Conteúdo 10×10
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'conteudo,P1,claude-code,humano,modelo-fable' --milestone 'Conteúdo 10×10'
+  --label 'conteudo,P1,claude-code,humano,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 
 # --- Arte ---
 mk done --title 'A-01 · Escrever o art bible' \
@@ -452,25 +533,31 @@ mk done --title 'A-01 · Escrever o art bible' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk done --title 'A-02 · Criar `assets/map/worlds/` e a convenção de nome' \
   --body '**Feito 09/09** (commit `de7afdc`). `wNN_<slug>_<map|game>.png`, com os 22 nomes esperados no `README.md` da pasta. Os slugs são os mesmos das `AmbientKey` do L-01/S-11, de propósito: um mundo tem um nome só no código inteiro. O zero à esquerda existe para o `w10` não vir antes do `w02` na ordenação da pasta. O mundo bônus 21 entra como `w21_jardim_*` (A-24a/A-24b), fora do lote crítico. Exigiu o CI-27.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,modelo-opus,modelo-codex-luna' --milestone 'Arte'
 mk open --title 'A-03 · Escolher a ferramenta de geração e travar seed/estilo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Arte
 
@@ -480,6 +567,8 @@ mk open --title 'A-04 · Gerar e validar a imagem-piloto no aparelho' \
   --body 'Mundo 1, fundo de jogo. **Portão** — nada em lote antes disso.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Arte
 
@@ -490,305 +579,367 @@ mk open --title 'A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa'
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-09 · Mundo 3 · Central de Materiais — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-10 · Mundo 3 · Central de Materiais — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-19 · Mundo 8 · Fórum da Economia Circular — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-21 · Mundo 9 · Distrito da Reindustrialização — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-22 · Mundo 9 · Distrito da Reindustrialização — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa' \
   --body 'Fora do lote crítico A-05…A-24: o mundo bônus é conteúdo opcional (destrava com 3 estrelas no Mundo 1). P1 por isso, não P0. Hoje cai no `map_bonus_bg.png`, que **não** é exclusivo dele — o capítulo 10 usa o mesmo arquivo, então este par não libera peso nenhum; é arte própria, não faxina.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-25 · Ícone do app 1024×1024' \
   --body 'Hoje 1254×1254, fora do padrão Expo. Símbolo de reciclagem + trinca, sem texto.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-26 · Adaptive icon Android 1024×1024' \
   --body 'Elemento dentro do círculo de 66%. O `backgroundColor` hoje é `#4B148C` — roxo, fora da paleta CONAMA.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-27 · Splash screen' \
   --body '`SplashIntroScreen.tsx` tem 537 linhas — conferir o que já é desenhado em código.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-28 · Selo de marco “Descanso” 320×320' \
   --body 'Substitui `forest_rest_cart.png`, que é carrinho de floresta do tema antigo. Proposta: carrinho de catador.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-29 · Selo de marco “Loja” 320×320' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-30 · Selo de marco “Guardião” 320×320' \
   --body 'Não existe hoje.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-31 · Marcador de portal entre mundos 320×320' \
   --body 'Hoje é `forest-portal-rune` — runa é fantasia. Proposta: seta de ciclo.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-32 · Nós de fase: bloqueado, atual, completo' \
   --body 'Avaliar se vira SVG em código, como as peças já são.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P2
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P2,claude-code,humano,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P2,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-33 · Comprimir todos os PNGs para ≤ 400 KB' \
   --body '`assets/` tem ~50 MB hoje. pngquant, oxipng ou TinyPNG.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Arte
 
@@ -799,31 +950,37 @@ mk done --title 'A-34 · Remover `Identidade visual de TrincaMania.png` da raiz'
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Arte'
 mk done --title 'A-35 · Remover os 6 arquivos `.png.png`' \
   --body '**Feito 09/09** (commit `cd5b008`). `map_bonus_bg.png.png`, `map_shop.png.png`, `map_world2_bg.png.png` e os três `map_path_pieces_*.png.png` — extensão dupla, órfãos, zero referência em `src/`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P1,claude-code,modelo-sonnet' --milestone 'Arte'
+  --label 'arte,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Arte'
 mk open --title 'A-36 · Integrar cada asset entregue no código' \
   --body '`campaignMapAssets.ts` e `getGameBackground`.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar briefing e integrar arte; geração por ferramenta de imagem e validação humana.
 **Prioridade:** P0
 **Fluxo:** Arte
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'arte,P0,claude-code,humano,modelo-opus' --milestone 'Arte'
+  --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 
 # --- Som ---
 mk open --title 'S-01 · `ambient_parque.mp3` — Mundo 1' \
@@ -831,135 +988,163 @@ mk open --title 'S-01 · `ambient_parque.mp3` — Mundo 1' \
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-02 · `ambient_vale.mp3` — Mundo 2' \
   --body 'Esteira ao longe, vento de vale, maquinário abafado.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-03 · `ambient_central.mp3` — Mundo 3' \
   --body 'Galpão amplo com eco, prensa distante, ventilação.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-04 · `ambient_viveiro.mp3` — Mundo 4' \
   --body 'Regador, insetos, lona ao vento.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-05 · `ambient_usina.mp3` — Mundo 5' \
   --body 'Zumbido grave de biodigestor, vapor, pá revolvendo.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-06 · `ambient_cooperativa.mp3` — Mundo 6' \
   --body 'Carrinho de metal, fardos, vozes distantes indistintas.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-07 · `ambient_rota.mp3` — Mundo 7' \
   --body 'Rodovia distante, caminhão manobrando, engradado.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-08 · `ambient_forum.mp3` — Mundo 8' \
   --body 'Praça aberta, murmúrio cívico, bandeira ao vento.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-09 · `ambient_distrito.mp3` — Mundo 9' \
   --body 'Prensa hidráulica ao longe, esteira rolante, zumbido grave de forno.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-10 · `ambient_cupula.mp3` — Mundo 10' \
   --body 'Murmúrio de plenário, papel manuseado, passos em saguão amplo.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
   --body '**Feito 09/09** (commit `f771981`, junto de L-01 — mesmo alvo). `beach | celestial | crystal | forest | mountain | snow | stars | volcano` → identidade dos mundos (`central | cooperativa | forum | parque | rota | usina | vale | viveiro`); os `ambient_*.mp3` ficam com o nome antigo até S-13.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P1,claude-code,modelo-sonnet' --milestone 'Som'
+  --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-12 · Remover os 8 `ambient_*.mp3` antigos' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P1,claude-code,modelo-sonnet' --milestone 'Som'
+  --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-13 · Integrar os 10 ambientes em `sounds.ts`' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
 **Prioridade:** P0
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus' --milestone 'Som'
+  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-14 · Revisar os SFX de voz' \
   --body '`voice_amazing`, `voice_excellent` e afins — conferir se o tom bate com o tema.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P2
 **Fluxo:** Som
 
@@ -970,11 +1155,13 @@ mk done --title 'S-15 · Travar em teste que todo mundo tem ambiente' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Som
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P1,claude-code,modelo-sonnet' --milestone 'Som'
+  --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
 
 # --- Limpeza ODS12 ---
 mk done --title 'L-01 · Renomear a union `AmbientKey`' \
@@ -982,105 +1169,127 @@ mk done --title 'L-01 · Renomear a union `AmbientKey`' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk done --title 'L-02 · Renomear `WorldTheme`' \
   --body '**Feito 08/09.** `'\''forest'\''|'\''mountain'\''|'\''crystal'\''|'\''sweet'\''` → `'\''padrao'\''|'\''azulado'\''|'\''violeta'\''|'\''rosado'\''`: nome pelo acento de cor do quadro do mapa, sem ligação com material/CONAMA nem vocabulário de fantasia. Só decorativo (não persiste em save), 3 arquivos (`types/game.ts`, `data/worlds.ts`, `screens/LevelSelectScreen.tsx`).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk done --title 'L-03 · Trocar os `identityKey` dos mundos 2–8 e bônus' \
   --body '**Feito 04/09 (via L-04).** Duplicata de escopo: o commit 51e02f8 que fechou o L-04 já trocou os oito `identityKey` daqui (`vales-montanhosos`, `ruinas-de-cristal`, `praia-dos-tesouros`, `vulcao-doce`, `cidade-das-estrelas`, `neve-cristalina`, `reino-celestial`, `reino-acucarado`) pelos nomes ODS12 (`vale-da-reciclagem`, `central-de-materiais`, `viveiro-comunitario`, `usina-de-compostagem`, `cooperativa-dos-catadores`, `rota-da-logistica-reversa`, `forum-da-economia-circular`, `jardim-renascido`). Conferido em `worldMapConfigs.ts`, nada pendente.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk done --title 'L-04 · Renomear os `BOSQUE_*` e os `identityKey` legados' \
   --body '**Feito 04/09.** Mesmo escopo do C-15, mais os oito `identityKey` que ainda carregavam o nome de fantasia (`vulcao-doce`, `reino-celestial`, `praia-dos-tesouros`, `reino-acucarado`…): agora derivam do nome ODS12 do mundo. Nenhum é persistido em save — só identificam o mapa. O livro-razão da guarda caiu de 19 para 14 pendências.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk done --title 'L-05 · Renomear as chaves `forest-*` de asset' \
   --body '**Feito 09/09** (commit `f771981`). `forest-*` → `parque-*` em `campaignMapAssets.ts`, `chapterVisualIdentity.ts`, `worldMapConfigs.ts` e `tests/worldMapConfig.test.cjs`. `forest-portal-rune` fica como está — é território da A-31 (`humano`). Os `.png` ficam com o nome antigo até L-07.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk done --title 'L-06 · Renomear `ForestRestMapMarker.tsx`' \
   --body '**Feito 09/09** (commit `f771981`). Arquivo, tipo e função → `RestStopMapMarker`; o único importador (`CampaignMapLandmarkMarker.tsx`) e a `visualKey` `forest-rest-cart` → `parque-rest-cart` acompanham. `forest_rest_cart.png` fica até A-28.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-07 · Renomear os 8 `assets/map/world1/forest_*.png`' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P2,claude-code,modelo-haiku' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
 mk done --title 'L-08 · Renomear `map_path_pieces_bonus_reino_acucarado.png`' \
   --body '**Feito 09/09** (commit `cd5b008`). **Divergência do enunciado:** a issue pedia renomear, mas o arquivo é órfão (zero referências) e carrega nome banido — renomear só preservaria 2,5 MB de peso morto. **Removido**, como o livro-razão da guarda ODS12 já previa (“Apagar no bloco L”).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-09 · Renomear os path pieces de bosque e vales montanhosos' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P2,claude-code,modelo-haiku' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
 mk open --title 'L-10 · Revisar `assets/map/README_MUNDO_3.txt`' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P2,claude-code,modelo-haiku' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
 mk open --title 'L-11 · Remover os 4 `PATCH-*.md` da raiz' \
   --body '96 KB de docs de patch antigos.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P2
 **Fluxo:** Limpeza ODS12
 
@@ -1090,6 +1299,8 @@ mk open --title 'L-12 · Remover `TrincaMania Redesign/patch/` aninhado' \
   --body 'Diretório com o mesmo nome do pai, dentro do projeto.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P2
 **Fluxo:** Limpeza ODS12
 
@@ -1100,15 +1311,19 @@ mk done --title 'L-13 · Escrever o `README.md` de verdade' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-14 · Decidir o nome do app' \
   --body '**Nota corrigida 09/09:** a versão anterior dizia que o `app.json` trazia `TileAdventure-ODS` — não traz, e não trazia; `grep TileAdventure` não acha nada no repositório. O estado real hoje: nome `TrincaMania`, slug `tileclear-ods12` (herdado do projeto EAS no CI-28, e o EAS não deixa divergir do `projectId`), pacote Android `br.com.mhvtech.trincamania`, pacote npm `trincamania`. Continua sendo três nomes, mas outros três.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Limpeza ODS12
 
@@ -1119,21 +1334,25 @@ mk open --title 'L-15 · Consolidar os dois manuais de APK' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P2,claude-code,modelo-haiku' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
 mk done --title 'L-16 · Rodar `/code-review` na limpeza' \
   --body '**Feito 09/09** (commit `2c6e4a1`). Revisão dos 4 commits da leva (`cd5b008..HEAD`) — sem bug de correção: renames rastreados em todo o código, conjuntos de chaves em sincronia, livros-razão só encolheram, typecheck + 188 testes + guardas verdes. Dois achados de baixa severidade (texto que envelheceu com o `f771981`: o docstring da guarda e um `motivo` do livro-razão) corrigidos no mesmo commit.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Limpeza ODS12
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet' --milestone 'Limpeza ODS12'
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -1141,85 +1360,103 @@ mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Git e versionamento'
 mk done --title 'G-02 · `commitlint` + config convencional' \
   --body '**Feito 03/09** (commit `c8311ab`). `commitlint.config.js` estendendo `config-conventional`, com `scope-enum` nas fatias reais do projeto (campanha, capitulos, dominio, ui, storage, audio, mapa, ci, deps, roadmap, testes) em vez de uma lista generica. Escopo segue **opcional**: obrigar em todo commit gera escopo inventado, que e pior que nenhum.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
 mk done --title 'G-03 · Hook `commit-msg` rodando o commitlint' \
   --body '**Feito 03/09** (commit `c8311ab`). **Sem husky, de proposito:** o husky espera o `.git` no diretorio de onde roda, e aqui nao esta — o repositorio e `TrincaEngSoftware/` e o projeto vive dois niveis abaixo. O que o husky faria de util e um `git config core.hooksPath`, entao `scripts/instalar-hooks.js` faz essa linha com o calculo de caminho certo, no `prepare`. Hooks versionados em `.githooks/`. O que travava era F0-02: hook roda em shell nao-interativo, que nao le o `.zshrc` onde o nvm vive — o `common.sh` procura no nvm a versao do `.nvmrc` antes de desistir. Testado com `env -i PATH=/usr/bin:/bin`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
 mk done --title 'G-04 · `lint-staged` no `pre-commit`' \
   --body '**Feito 03/09** (commit `c8311ab`). `eslint --fix` e `prettier --write` so nos arquivos staged.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
 mk done --title 'G-05 · Hook `pre-push` com typecheck' \
   --body '**Feito 03/09** (commit `c8311ab`). Barato e evita CI vermelho por erro de tipo.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+  --label 'git,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Git e versionamento'
 mk done --title 'G-06 · `release-please` para versão e CHANGELOG' \
   --body '**Feito 04/09.** Config em `release-please-config.json` + `.release-please-manifest.json`, workflow em `.github/workflows/release.yml`. Le os Conventional Commits, mantem um PR de release com o CHANGELOG acumulado e, no merge, cria a tag — que e o gatilho que o `build.yml` ja esperava. `include-component-in-tag: false` e obrigatorio: o padrao taggearia `trincamania-v1.0.0` e o `on: push: tags: ["v*"]` do build nao casaria. `target-branch: develop` porque `main` nao existe (ver G-09).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
 mk done --title 'G-07 · Criar o `CHANGELOG.md`' \
   --body '**Feito 09/09** (commit `38bde35`). O G-06 já apontava `changelog-path: CHANGELOG.md`, mas o arquivo nunca existiu — sem ele o primeiro PR de release não teria onde prepender. Semente mínima no formato do `release-type: node`: cabeçalho `Changelog` + seção `1.0.0` casando com o `.release-please-manifest.json`, sem preâmbulo entre o cabeçalho e a primeira versão. Seções nos rótulos PT-BR de `changelog-sections`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Git e versionamento'
 mk done --title 'G-08 · Versão num lugar só' \
   --body '**Feito 03/09** (commit `c8311ab`). `app.config.js` deriva `version` do `package.json`, e o campo saiu do `app.json`. Sem isso o release-please bumparia o `package.json` e o APK sairia com a versao anterior — **sem quebrar nada**, que e o pior tipo de erro. `versionCode`/`buildNumber` ficam com o EAS. **Correcao 09/09:** esta nota afirmava que o `app.json` ainda publicava `TileAdventure-ODS`. Nao publicava — `grep TileAdventure` nao acha nada no repositorio. O nome sempre foi `TrincaMania`; a divergencia real esta no slug e no pacote, e e o L-14 que decide.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
 mk open --title 'G-09 · Definir a estratégia de branch' \
   --body 'Hoje só existe `develop`. O CI já espera `main` também.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
@@ -1229,6 +1466,8 @@ mk open --title 'G-10 · Branch protection em `main` e `develop`' \
   --body 'Exigir PR, checks verdes, sem force-push.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Git e versionamento
 
@@ -1239,55 +1478,67 @@ mk done --title 'G-11 · Template de PR' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+  --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk done --title 'G-12 · Templates de issue: bug, arte, conteúdo' \
   --body '**Feito 08/09.** `.github/ISSUE_TEMPLATE/{bug,arte,conteudo}.yml`, formulario estruturado, cada um com a label correspondente ja aplicada.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+  --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk done --title 'G-13 · `CODEOWNERS`' \
   --body '**Feito 08/09.** `.github/CODEOWNERS`: `* @VittorNCosta` — projeto de uma pessoa so por enquanto (ver SECURITY.md).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+  --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk open --title 'G-14 · Padronizar as labels' \
   --body '`arte`, `som`, `conteudo`, `automacao`, `devsecops`, `p0/p1/p2`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+  --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk done --title 'G-15 · Revisar o `.gitattributes`' \
   --body '**Feito 03/09** (commit `c8311ab`). `*.ttf`, `*.otf`, `*.aab` e `*.keystore` marcados como binario.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+  --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk open --title 'G-16 · Decidir sobre Git LFS para os PNGs' \
   --body 'Reavaliar depois de A-33 — com tudo ≤ 400 KB pode não valer.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
@@ -1298,21 +1549,49 @@ mk done --title 'G-17 · `.gitignore`: build do EAS, `*.aab`, `coverage/`' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P2,claude-code,modelo-haiku' --milestone 'Git e versionamento'
+  --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk done --title 'G-18 · Liberar `git push` sem prompt no modo `auto`' \
   --body '**Feito 08/09** (commit `cf38a0f`). O `defaultMode: "auto"` mandava todo push para o classificador de permissão, que barrava — e isso esvaziava o CI-26 justamente no ponto dele: o commit de ponto de parada ficava preso na máquina de onde ele estava saindo. `permissions.allow` com `Bash(git push)` e `Bash(git push:*)` em `.claude/settings.json` (versionado, então a regra viaja para a outra máquina). Force-push fica de fora, no `deny`; a regra casa por prefixo, então `git push origin main --force` escapa — é rede contra descuido, não contra intenção.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Git e versionamento
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'git,P1,claude-code,modelo-sonnet' --milestone 'Git e versionamento'
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
+mk done --title 'G-19 · Classificar todas as tarefas por modelo Codex' \
+  --body '**Feito 15/09.** Luna, Terra ou Sol por escopo/risco em todas as tarefas; execução humana identificada e recomendação Claude preservada. `scripts/lib/codex-models.js` compartilhado pelo painel, markdown e issues; filtros Codex e coluna gerada com checagem de sincronismo. Lint, typecheck e 188/188 testes passam. Base: `4bdac92`, conferida no GitHub em 15/09/2026. Alterações locais ainda sem commit; sincronização das issues por delta.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
+**Prioridade:** P1
+**Fluxo:** Git e versionamento
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
+mk done --title 'G-20 · Configurar YOLO como padrão para novas sessões Codex' \
+  --body '**Feito 15/09.** Autorizado explicitamente pelo usuário nesta conversa. `approval_policy = '\''never'\''` no nível global de `~/.codex/config.toml`, com `sandbox_mode = '\''danger-full-access'\''` já existente. Não muda limites administrados da sessão aberta; continuidade por objetivo é iniciada com `/goal`. Configuração pessoal, fora do Git deste projeto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
+**Prioridade:** P1
+**Fluxo:** Git e versionamento
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
 
 # --- CI/CD ---
 mk done --title 'CI-01 · Quebrar o CI em jobs paralelos' \
@@ -1320,155 +1599,187 @@ mk done --title 'CI-01 · Quebrar o CI em jobs paralelos' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-02 · `concurrency` com cancelamento de runs antigos' \
   --body '**Feito 03/09.** Push novo no mesmo PR cancela o run anterior. Em push para `main`/`develop` nao cancela — `cancel-in-progress` so liga quando `github.event_name == '\''pull_request'\''`, porque ali cada commit e um estado que vale ter verificado por si.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'CI/CD'
 mk done --title 'CI-03 · `timeout-minutes` em todo job' \
   --body '**Feito 03/09.** 10 min nos jobs curtos, 15 nos de teste, 20 no playthrough. Sem isso um job travado queima as 6 h de teto padrao do runner.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'CI/CD'
 mk done --title 'CI-04 · `permissions: contents: read` no topo' \
   --body '**Feito 03/09.** Declarado no nivel do workflow. Sem a chave o `GITHUB_TOKEN` herda o escopo padrao do repositorio, que inclui escrita — e nenhum dos sete jobs precisa de mais que leitura.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P0,claude-code,modelo-opus' --milestone 'CI/CD'
+  --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'CI/CD'
 mk done --title 'CI-05 · Fixar as actions por SHA, não por tag' \
   --body '**Feito 03/09, pins atualizados 04/09.** `actions/checkout` em `3d3c42e` (v7.0.1) e `actions/setup-node` em `8207627` (v7.0.0), com a versao no comentario ao lado — e o comentario nao e decoracao: e por ele que o Dependabot (SEC-04) sabe qual versao esta fixada e consegue abrir o bump. Tag e ponteiro mutavel: quem controla o repositorio da action pode reapontar `v4` para outro commit sem que nada aqui mude.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-06 · Matrix de Node 20 e 22' \
   --body '**Feito 03/09**, com `fail-fast: false` — se o 20 quebra e o 22 e cancelado, a matrix perde a graca, porque a pergunta e em qual das duas falha. **Achou um bug de verdade:** `npm test` era `node --test tests`, e passar diretorio so funciona ate o Node 21 — do 22 em diante o runner trata o argumento como arquivo e morre com `MODULE_NOT_FOUND`. Como `engines` declara `>=20.19.0`, o comando estava quebrado em metade das versoes suportadas. Ver CI-06a.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-06a · Corrigir `npm test` para qualquer Node >= 20' \
   --body '**Feito 03/09.** Saiu de CI-06. Agora `npm test` chama `scripts/rodar-testes.js`, que le `tests/` e passa a lista de `*.test.cjs` explicita ao `--test`. A alternativa obvia, `node --test tests/*.test.cjs`, trocaria um problema por outro: depende do shell expandir o glob, o que o cmd e o PowerShell nao fazem — armadilha que o `CLAUDE.md` ja avisava. Assim quem lista os arquivos e o Node. 128/128 no Node 20 e no 24.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-07 · Rodar `npm run format:check` no CI' \
   --body '**Feito 03/09.** Segundo passo do job `lint`, junto da checagem que ja existia — as duas sao analise estatica barata e falham pelo mesmo motivo: alguem commitou sem passar o prettier.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-08 · Rodar `npx expo-doctor` no CI' \
   --body '**Feito 03/09.** Job proprio. Verificado antes de ligar: 18/18 checks passam hoje, entao entra verde em vez de repetir a armadilha de deixar o CI vermelho de saida.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-09 · Cobertura de teste com threshold' \
   --body '**Feito 03/09.** `npm run cobertura` (`scripts/cobertura.js`), job proprio no CI. **Nao e `jest --coverage`, de proposito:** o Jest aqui roda 4 smoke tests de componente, e as 128 assercoes de regra de jogo, storage e dominio sao `node:test` em `tests/*.test.cjs`, que ele nao coleta — um threshold sobre o Jest mediria 4 arquivos de UI e chamaria isso de cobertura do projeto. O piso usa a cobertura nativa do `node:test` e segue o idioma dos outros guardas: e o que a suite cobre hoje (85,70% linha / 87,42% ramo / 87,03% funcao), gravado em `scripts/cobertura-minima.json`, e cair reprova. Baixar exige `--atualizar --permitir-queda`, para afrouxar a regua aparecer no diff. A conta e nossa porque o Node 20 nao tem `--test-coverage-lines` — so o 22+ tem — e a matrix roda os dois.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-09a · Fixar o job de cobertura numa versao de Node' \
   --body '**Feito 03/09.** Saiu de CI-09. O mesmo codigo e os mesmos 128 testes medem 85,70% de linha no Node 20 e 79,57% no Node 24: seis pontos que nao tem nada a ver com teste, e sim com o que cada V8 instrumenta. Entao o job de cobertura fica fora da matrix, no Node 20 do `engines`, e o piso grava o `nodeMajor` em que foi medido — rodar noutra versao devolve a explicacao em vez de um vermelho falso.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-10 · Publicar o relatório de cobertura' \
   --body '**Feito 03/09.** Vai para o **resumo do job** (`$GITHUB_STEP_SUMMARY`), que o GitHub renderiza na pagina do run, e nao para um comentario no PR. Comentar exigiria `pull-requests: write`, reabrindo justamente o privilegio que CI-04 acabou de fechar, e por um relatorio que ninguem le duas vezes. O resumo nao pede permissao nenhuma. Traz as tres metricas contra o piso e, num `<details>`, os 10 arquivos de `src/` menos cobertos — que e a parte acionavel: hoje aponta `MatchRule.ts` e `ShuffleService.ts` em 24,56%. Sem a variavel de ambiente o script nao escreve nada, entao rodar local continua limpo.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'CI/CD'
 mk done --title 'CI-11 · Path filters' \
   --body '**Feito 03/09.** Job `mudancas` compara com a base e exporta `codigo=true|false`; os sete jobs de codigo ganham `if: needs.mudancas.outputs.codigo == '\''true'\''`. **Nao** foi usado `paths:` no nivel do workflow, que e a forma obvia e a errada: com ela o workflow nao roda, o check obrigatorio nunca reporta e o PR de documentacao trava sem poder mergear. Job pulado por `if:`, ao contrario, conta como sucesso. `lint` fica de fora do gate porque o `format:check` tambem cobre `.md`. Na duvida — branch nova, force-push, base fora de alcance — roda tudo. O checkout usa `filter: blob:none` para pegar o historico sem os 85 MB de PNG.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-12 · Job de validação de peso de asset' \
   --body '**Feito 03/09.** `scripts/valida-assets.js` roda no CI e cobre três coisas: teto de 400 KB por arquivo, asset órfão que nada em `src/` referencia, e extensão duplicada (`.png.png`, sempre erro de exportação). Reprovar no saldo atual era inviável — 42 arquivos já estouram o teto e 51 são órfãos —, então compara com o livro-razão `scripts/assets-baseline.json`: falha em arquivo novo acima do limite, em arquivo conhecido que engordou e em entrada que saiu da lista sem o saldo ser atualizado. Assim a dívida só pode encolher. Hoje: 100 arquivos, 84,9 MB.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-13 · Job de guarda ODS12' \
   --body '**Feito 03/09.** `scripts/guarda-ods12.js` roda no CI varrendo `src/` e também o **nome** dos assets — `ambient_celestial.mp3` é conteúdo tanto quanto uma string. Grep puro reprovaria o repositório hoje (`theme: '\''sweet'\''`, `identityKey` legado, trilha do Mundo 8) e reprovaria ocorrência legítima ("restos de fruta" é o que é resíduo orgânico), então compara com o livro-razão `scripts/ods12-baseline.json`: falha em ocorrência nova e em entrada morta, com a chave em `arquivo::termo` e não na linha. Restam 19 pendências classificadas, todas com tarefa nos blocos L, S e C-08b.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-14 · Criar o secret `EXPO_TOKEN`' \
   --body 'expo.dev → Access Tokens.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** CI/CD
 
@@ -1479,55 +1790,67 @@ mk done --title 'CI-15 · Migrar `eas.json` para `appVersionSource: "remote"`' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-16 · `autoIncrement: true` no perfil de produção' \
   --body '**Feito 03/09** (commit `c8311ab`).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
   --body '**Feito 03/09** (commit `c8311ab`). Com `developmentClient: true` e APK de distribuicao interna. O `preview` tambem ganhou `distribution: internal`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-18 · Workflow de build de preview em PR' \
   --body '**Feito 03/09.** `.github/workflows/build.yml`, separado do `ci.yml`: o CI verifica todo push e tem de ser rapido e gratuito, isto gasta minuto de build de terceiro. **Divergencia:** o texto pedia APK por PR, e saiu APK por PR **rotulado** com `build:preview` — buildar todo push de todo PR queimaria a cota do EAS em troca de APKs que ninguem instala. Com o rotulo o build sai quando alguem de fato quer testar no aparelho, e `synchronize` faz o PR rotulado rebuildar a cada push. Enquanto CI-14 nao existir, o job `checagem` devolve um aviso e os builds sao pulados: o workflow fica **verde e inerte** em vez de vermelho.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
 mk done --title 'CI-19 · Workflow de build de produção em tag' \
   --body '**Feito 03/09.** Dispara em `push` de tag `v*` — a que o release-please cria — e tambem por `workflow_dispatch` com escolha de perfil. Usa `--no-wait`: esperar o build custa 15 a 30 min de runner do GitHub olhando uma fila que nao e nossa, e o link no resumo do job resolve. Nao usa `expo/expo-github-action` — o que ela faz de essencial e exportar o `EXPO_TOKEN`, que o `env:` ja faz, e uma action a menos e um terceiro a menos com acesso ao token (CI-05).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
 mk open --title 'CI-20 · Configurar EAS Submit para a Play Store' \
   --body 'Exige o service account JSON do Google Play.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
@@ -1538,81 +1861,97 @@ mk open --title 'CI-21 · `--auto-submit` no build de produção' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
 mk open --title 'CI-22 · Configurar EAS Update (OTA)' \
   --body 'Correção de JS sem passar pela revisão da loja.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
 mk done --title 'CI-23 · Avaliar EAS Workflows em `.eas/workflows/`' \
   --body '**Feito 08/09.** `docs/adr/0005-eas-workflows-nao-substitui-o-github-actions.md`: decisao de nao adotar por ora. O material oficial da Expo descreve EAS Workflows como complemento ao GitHub Actions, nao substituto — nenhum dos guardas hoje (ODS12, assets, cobertura, orcamento de bundle, gitleaks, CodeQL, dependency-review, SBOM, Scorecard) e job pre-empacotado do EAS, e o unico uso real de EAS hoje (`eas build`, via `disparar-build.js`) ja roda direto pelo `eas-cli` dentro do Actions — migrar trocaria um orquestrador gratuito por outro com quota paga sem ganhar capacidade nova. Reavaliar se surgir dor concreta que o Actions nao resolva bem.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-24 · Canal de update por branch' \
   --body '`preview` e `production`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-25 · Registrar o estado da sessão a cada turno' \
   --body '**Feito 08/09** (commit `047bc74`). Sessão do Claude Code não tem memória entre execuções, e a que estoura o limite de 5h morre no meio da tarefa — sobra só o que estiver em disco. `scripts/estado.js` escreve `.claude/estado.md` (branch, divergência com o origin, arquivos não commitados, últimos commits, placar do backlog lido daqui e a fila por prioridade); os hooks `Stop` e `SessionStart` de `.claude/settings.json` regeneram a cada turno e injetam no contexto da sessão seguinte. O que o script não deriva — a intenção — entra por `--nota`, escrita ao **começar** a tarefa, não ao terminar. De quebra, o registro dos hooks saiu do `settings.local.json` (gitignored, então um clone novo ficava sem hook nenhum) para o `settings.json` versionado.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-26 · Janela de trabalho: parar nos cortes de 16h e 22h' \
   --body '**Feito 08/09** (commit `00d416e`). Vittor troca de máquina às 16h e sai da faculdade às 22h; sessão que segue sozinha depois disso produz commit que a outra máquina não vê. `scripts/janela.js` + hook em `PreToolUse`/`UserPromptSubmit`: aviso 20 min antes, corte devolvendo `continue: false` (interrompe de verdade), 90 min de bloqueio cobrindo o deslocamento, e reabertura automática. No corte faz `git add -A`, commit de checkpoint e push, os dois com `--no-verify` — o `pre-push` roda `tsc --noEmit` e trabalho pela metade não compila. Saída de emergência é o próprio usuário: um prompt dele renova licença de 45 min, nunca além do próximo corte. Decisão de fase é função pura sobre o relógio de Brasília, com 12 testes em `tests/janela.test.cjs`. Depende do G-18.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
 mk done --title 'CI-27 · Ignorar `README.md` na checagem de órfão de asset' \
   --body '**Feito 09/09** (commit `de7afdc`, junto do A-02 — sem isso o A-02 era impossível). Pasta vazia não existe no git, então `assets/map/worlds/` precisa de arquivo; e como nada em `src/` referencia texto, o próprio README que documenta a convenção reprovava a validação com `asset órfão novo`. `valida-assets.js` passou a tratar `README.md` como documentação da pasta, não asset. Só `README.md`, de propósito — liberar `.md` inteiro abriria a porta para despejar qualquer coisa em `assets/` chamando de documentação. Efeito colateral: `assets/sfx/README.md` saiu do livro-razão, que baixou de 44 para 43 órfãos.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'CI/CD'
 mk done --title 'CI-28 · Apontar o `app.json` para o projeto EAS certo' \
   --body '**Feito 09/09** (commit `f241b78`). O `extra.eas.projectId` apontava para `083f0c73-59f4-49b8-badc-a219daf61640`, um projeto que não é o que existe hoje no expo.dev. Isso sozinho já anularia o CI-14: `eas build --non-interactive` resolve o projeto **só por esse id** — nunca pelo `slug` nem pelo `name` — então com o token certo e o id errado a falha vem como `project not found`, que se lê como problema de permissão e manda depurar o lugar errado. Três campos passaram a descrever o mesmo projeto: `projectId` `42d46466-3a11-41c1-9f2e-bd17829c7356`, `owner` `vittorbestys-team` e `slug` `tileclear-ods12`. O `slug` teve que mudar porque o EAS recusa build quando o `slug` do `app.json` não bate com o do projeto apontado pelo `projectId` — não é campo cosmético. Isso deixa o app com **três nomes diferentes** (nome `TrincaMania`, slug `tileclear-ods12`, package `br.com.mhvtech.trincamania`); é dívida do R-02, registrada lá. Quem pegou isso foi o `tests/appConfig.test.cjs`, que travava `slug === '\''trinca-mania'\''` sob o título “a identidade publicada é a do jogo atual” — a trava funcionou como devia. Ela não foi apagada: passou a exigir `tileclear-ods12` e `owner`, com o porquê no comentário, para a divergência ficar registrada como decisão em vez de virar descuido silencioso.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P0,claude-code,modelo-opus' --milestone 'CI/CD'
+  --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'CI/CD'
 mk open --title 'CI-29 · Atualizar as instruções dos agentes conforme o projeto atual' \
   --body '**Problema e benefício**
 O agente de QA ainda afirma que não há Jest, renderer ou Testing Library, embora essas ferramentas e testes de componentes já existam. Instruções antigas podem impedir a validação correta.
@@ -1635,11 +1974,13 @@ https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-30 · Compartilhar as regras do projeto entre Claude e Codex' \
   --body '**Problema e benefício**
 O conhecimento de domínio e o roteamento estão concentrados em CLAUDE.md. Uma sessão Codex iniciada na raiz não dispõe de uma entrada compartilhada equivalente.
@@ -1663,11 +2004,13 @@ https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-31 · Adicionar três agentes Codex especializados no TrincaMania' \
   --body '**Problema e benefício**
 Já existem agentes específicos de Claude, mas não equivalentes locais para Codex. O catálogo VoltAgent oferece referências úteis, sem conhecer as invariantes do TrincaMania.
@@ -1692,11 +2035,13 @@ https://learn.chatgpt.com/docs/agent-configuration/subagents
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-32 · Adicionar duas skills de investigação e verificação' \
   --body '**Problema e benefício**
 O fluxo pode ganhar consistência na investigação de bugs e na comprovação de conclusão, sem adotar toda a metodologia e os pontos de aprovação do Superpowers.
@@ -1721,11 +2066,13 @@ https://learn.chatgpt.com/docs/build-skills
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-33 · Validar o fluxo Codex em um piloto controlado' \
   --body '**Problema e benefício**
 Arquivos de agentes e skills válidos não comprovam ganho de qualidade ou adequação ao ambiente. É necessário exercitar o fluxo antes de expandi-lo.
@@ -1750,11 +2097,13 @@ https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a779
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** CI/CD
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet' --milestone 'CI/CD'
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -1762,15 +2111,19 @@ mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P0,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-02 · Habilitar Secret Scanning e Push Protection' \
   --body 'Bloqueia o commit de segredo antes de sair da máquina.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** DevSecOps
 
@@ -1780,6 +2133,8 @@ mk open --title 'SEC-03 · Habilitar Dependabot alerts e security updates' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** DevSecOps
 
@@ -1790,15 +2145,19 @@ mk done --title 'SEC-04 · `dependabot.yml` para npm e github-actions' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P1,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-05 · Avaliar Renovate no lugar do Dependabot' \
   --body 'Agrupa PRs e respeita melhor os ranges do Expo.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P2
 **Fluxo:** DevSecOps
 
@@ -1809,105 +2168,127 @@ mk done --title 'SEC-06 · `npm audit --audit-level=high` no CI' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P1,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-07 · `gitleaks` no CI' \
   --body '**Feito 04/09.** Job `segredos`, com `fetch-depth: 0` para varrer o historico e nao so o diff. Baixa o binario do gitleaks 8.30.1 da release em vez de usar a action de terceiro — mesma razao ja registrada no CI-05: nao dar acesso a token para action de terceiro.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P1,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-08 · `dependency-review` em PR' \
   --body '**Feito 04/09.** Job `dependencias`, so em PR (a action exige o par base/head). Barra severidade >= high e licenca GPL-2.0/GPL-3.0/AGPL-3.0.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P1,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-09 · Gerar SBOM CycloneDX por release' \
   --body '**Feito 08/09.** Job `sbom` novo em `.github/workflows/release.yml`, depois do `release-please` e so quando ele de fato cria release (`release_created == '\''true'\''`). Gera com `npx @cyclonedx/cyclonedx-npm@6.0.1` a partir do `package-lock.json` e publica o arquivo no release via `gh release upload`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P2
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P2,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-10 · OpenSSF Scorecard' \
   --body '**Feito 08/09.** Job `scorecard` novo em `.github/workflows/seguranca.yml`, fora de PR. `ossf/scorecard-action@v2.4.4` gera o SARIF e publica no registro publico do OpenSSF; `github/codeql-action/upload-sarif@v4` sobe o mesmo resultado para a aba Security.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P2
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P2,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-11 · Auditar `android.permissions`' \
   --body '**Feito 03/09** (commit `c8311ab`). Continua `[]`, e agora `tests/appConfig.test.cjs` reprova se deixar de ser — que era a parte que faltava, porque o risco nao e o valor de hoje, e a lib nova de amanha.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P1,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-12 · Travar a config do `expo-audio` em teste' \
   --body '**Feito 03/09** (commit `c8311ab`). `microphonePermission: false` e `recordAudioAndroid: false` travados em teste.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P1,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-13 · Confirmar que não há segredo em `app.json`/`eas.json`' \
   --body '**Feito 03/09** (commit `c8311ab`). Conferido e travado em teste. O `projectId` e publico por definicao; o resto esta limpo.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P0,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-14 · Escrever o `SECURITY.md`' \
   --body '**Feito 04/09.** `.github/SECURITY.md`. Aponta para o **private vulnerability reporting** do GitHub em vez de um e-mail — o repositorio e publico e o endereco seria pessoal. Traz a tabela das verificacoes automaticas e o que cada uma cobre.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P2
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P2,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-15 · Rodar `/security-review` antes do release' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** DevSecOps
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P0,claude-code,modelo-opus' --milestone 'DevSecOps'
+  --label 'devsecops,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-16 · Proteger o keystore Android' \
   --body 'O `.gitignore` já barra `*.jks`/`*.p12`/`*.key`. Guardar no EAS credentials, nunca no repo.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** DevSecOps
 
@@ -1917,6 +2298,8 @@ mk open --title 'SEC-17 · Revisar os dados coletados (LGPD)' \
   --body 'Hoje é tudo AsyncStorage local. Se entrar analytics, a política muda.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** DevSecOps
 
@@ -1929,105 +2312,127 @@ mk done --title 'Q-01 · Montar E2E com Maestro' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-02 · Fluxo E2E: abrir, escolher fase, jogar e vencer' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-03 · Fluxo E2E: comprar na loja' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-04 · Fluxo E2E: perder vida e esperar a recarga' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk done --title 'Q-05 · Rodar o Maestro no CI' \
   --body '**Feito 08/09.** `.github/workflows/e2e.yml`: prebuild + `assembleRelease` + emulador Android (`reactivecircus/android-emulator-runner`) em push na branch, `workflow_dispatch` e cron semanal. Maestro baixado com sha256 fixado, sem action de terceiro. Recolhe diagnóstico (captura/hierarquia) em falha.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk done --title 'Q-06 · Teste de acessibilidade' \
   --body '**Feito 08/09.** `tests/touchTargets.test.cjs` novo: trava `TILE_SIZE` (peça do tabuleiro) e `levelNodeSize`/`minimumTouchSize` de todo mundo `segmented` em ≥44px, e recalcula o alvo de toque de todo nó/marco do Mundo 1 nas três larguras alvo. Achado no caminho: `frames.touch` (a caixa expandida que `getCampaignMapEntityFrames` calcula) não é consumida por nenhum renderer hoje — o alvo real em tela é `levelNodeSize`, porque `transform: scale` não encolhe área de toque no React Native. Rótulo de acessibilidade já tinha cobertura em `BoardTile.test.tsx`/`mapLevelNode.test.tsx`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-07 · Quebrar `GameScreen.tsx`' \
   --body '3166 linhas. O `CLAUDE.md` já avisa para não deixar crescer.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Qualidade'
 mk open --title 'Q-08 · Quebrar `LevelSelectScreen.tsx`' \
   --body '1879 linhas.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P2
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Qualidade'
 mk open --title 'Q-09 · Quebrar `App.tsx`' \
   --body '1169 linhas.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P2
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Qualidade'
 mk done --title 'Q-10 · Orçamento de tamanho de bundle no CI' \
   --body '**Feito 08/09.** Novo job `orcamento-bundle` em `ci.yml`: roda `npx expo export --platform android` (o mesmo artefato que o build de produção embarca, so local, sem consumir cota do EAS nem exigir `EXPO_TOKEN`) e mede o `.hbc` resultante contra um teto em `scripts/bundle-orcamento.json`, mesmo idioma de `cobertura`/assets/ODS12: só sobe de propósito (`--atualizar --permitir-alta`). Achado no caminho: o bundle não é 100% reprodutível byte a byte — cinco execuções seguidas sobre o mesmo código variaram 2 bytes, porque o Metro não garante ordem estável de módulo — então o teto tem 1% de folga sobre o medido para não reprovar PR ao acaso. Hoje: ~2,50 MB.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P2
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-11 · Perfilar performance em aparelho de entrada' \
   --body 'Depois da arte nova — 20 PNGs mudam o consumo de memória.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
@@ -2038,41 +2443,49 @@ mk done --title 'Q-12 · Escrever o ADR da mudança 203 → 100' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-13 · Resolver o gap do Modo Dev' \
   --body 'Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P2
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P2,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Qualidade'
 mk done --title 'Q-14 · Atualizar o `CONTEXT.md` com o vocabulário dos 10 mundos' \
   --body '**Feito 08/09.** Seção `## Mundos` nova: os 10 nomes ODS12 + bônus, o que cada um representa na cadeia da reciclagem e o nome de fantasia a evitar (mundos 1–8 e bônus só, 9 e 10 nasceram já no tema).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk done --title 'Q-15 · Corrigir a faixa de dificuldade do primeiro mapa dos capítulos 4 e 7' \
   --body '**Feito 03/09.** Defeito real em produção, achado ao prototipar a curva do bloco C. `Math.floor(score * 5)` em `src/data/chapters.ts` rotulava `ch04-001` como easy (devia ser normal) e `ch07-001` como normal (devia ser hard). Não era regra de negócio: `(n-1)/9*0,6` cai abaixo da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o `floor` derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma `BORDA_DE_FAIXA = 1e-9` documentada e teste de regressão fixando as 10 faixas de abertura.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Qualidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'qualidade,P1,claude-code,modelo-sonnet' --milestone 'Qualidade'
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 
 # --- Observabilidade ---
 mk open --title 'O-01 · Logger estruturado em `src/utils/log.ts`' \
@@ -2080,65 +2493,79 @@ mk open --title 'O-01 · Logger estruturado em `src/utils/log.ts`' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+  --label 'observabilidade,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Observabilidade'
 mk open --title 'O-02 · Error boundary global com tela de erro' \
   --body '`App.tsx` envolvido num boundary: stack visível em `__DEV__`, e em release uma tela sóbria com botão de copiar o relatório. Regra dura — a tela de erro **não escreve no storage**. O invariante 1 diz que progresso só passa por `commitProgress`, e um boundary que tenta “salvar antes de morrer” é exatamente o caminho por onde save de jogador já foi apagado. Hoje um erro de render dá tela branca, sem nada escrito.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+  --label 'observabilidade,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-03 · Capturar erro não tratado e promise rejeitada' \
   --body '`ErrorUtils.setGlobalHandler` mais o handler de `unhandledrejection`. O boundary do O-02 só pega o que acontece dentro do ciclo de render; um `throw` dentro de `setTimeout`, de listener de áudio ou de promise de storage passa por fora e some — o app fecha e não fica rastro. Depende do O-01.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+  --label 'observabilidade,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-04 · Tela de Diagnóstico com os últimos logs' \
   --body 'Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste interno do R-13, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P1
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P1,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+  --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Observabilidade'
 mk open --title 'O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime' \
   --body 'Os sete invariantes que já quebraram (`commitProgress`, `mutateLives`, id de capítulo no storage da campanha, `tileCount` múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e **loga**, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P0,claude-code,modelo-opus' --milestone 'Observabilidade'
+  --label 'observabilidade,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-06 · Proibir `console.*` fora do logger' \
   --body 'Regra `no-console` do ESLint com exceção só em `src/utils/log.ts`. Sem isso o O-01 vira mais um caminho em vez do único caminho, e em seis meses metade do código volta para o `console.log` — que não aparece em release e não entra no buffer do O-04. Entra no job de lint que o CI-07 já roda, então não custa workflow novo. Depende do O-01.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Luna (gpt-5.6-luna)
+**Critério Codex:** Mudança mecânica e delimitada, com critério de aceite direto.
 **Prioridade:** P2
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P2,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+  --label 'observabilidade,P2,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Observabilidade'
 mk open --title 'O-07 · Criar a conta no Sentry e gerar o DSN' \
   --body 'O free tier cobre com folga o volume deste projeto. Precisa de você porque envolve criar conta e aceitar termos. O DSN não é segredo forte — ele vai embutido no app, qualquer um que abra o APK acha — mas entra como secret do mesmo jeito, para não ficar chumbado no repositório e para trocar sem recompilar. Bloqueia o O-08.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Observabilidade
 
@@ -2149,25 +2576,31 @@ mk open --title 'O-08 · Integrar o Sentry com upload de sourcemap' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P1,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+  --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
   --body 'Erro sem contexto é `TypeError: undefined` numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P1
 **Fluxo:** Observabilidade
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P1,claude-code,modelo-sonnet' --milestone 'Observabilidade'
+  --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-10 · Revisar o que sai para o Sentry à luz da LGPD' \
   --body 'Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do Data safety form do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Observabilidade
 
@@ -2179,6 +2612,8 @@ mk open --title 'R-01 · Criar ou confirmar a conta Google Play Console' \
   --body 'US$ 25, uma vez.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2188,6 +2623,8 @@ mk open --title 'R-02 · Definir o nome final do app' \
   --body 'Ver L-14 — hoje há três nomes divergentes.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2197,6 +2634,8 @@ mk open --title 'R-03 · Gerar e guardar o keystore de produção' \
   --body 'Via EAS credentials.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2207,15 +2646,19 @@ mk open --title 'R-04 · Escrever a ficha da loja' \
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,humano,modelo-opus' --milestone 'Release'
+  --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Release'
 mk open --title 'R-05 · Capturar 8 screenshots de telefone' \
   --body 'Mínimo 2, ideal 8.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2226,25 +2669,31 @@ mk open --title 'R-06 · Feature graphic 1024×500' \
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,humano,modelo-opus' --milestone 'Release'
+  --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Release'
 mk open --title 'R-07 · Ícone da loja 512×512' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,humano,modelo-opus' --milestone 'Release'
+  --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Release'
 mk open --title 'R-08 · Vídeo de preview' \
   --body 'Opcional.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P2
 **Fluxo:** Release
 
@@ -2255,15 +2704,19 @@ mk open --title 'R-09 · Hospedar a política de privacidade' \
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,humano,modelo-opus' --milestone 'Release'
+  --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-sol' --milestone 'Release'
 mk open --title 'R-10 · Responder o questionário de classificação etária' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2273,6 +2726,8 @@ mk open --title 'R-11 · Preencher o Data safety form' \
   --body 'Declarar que não coleta dados.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2282,6 +2737,8 @@ mk open --title 'R-12 · Declarar o público-alvo' \
   --body 'Jogo educativo atrai criança — abaixo de 13 anos entram as regras de Famílias.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2291,6 +2748,8 @@ mk open --title 'R-13 · Rodar teste interno' \
   --body 'Até 100 testadores.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Release
 
@@ -2300,6 +2759,8 @@ mk open --title 'R-14 · Rodar teste fechado e coletar feedback' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P1
 **Fluxo:** Release
 
@@ -2309,6 +2770,8 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
   --body 'O `test:playthrough` simula, mas não substitui jogar.
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
@@ -2319,29 +2782,35 @@ mk open --title 'R-16 · Rodar `/security-review`' \
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,modelo-opus' --milestone 'Release'
+  --label 'release,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Release'
 mk open --title 'R-17 · Marcar a tag `v1.0.0` e publicar o release' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,modelo-opus' --milestone 'Release'
+  --label 'release,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Release'
 mk open --title 'R-18 · Publicar em produção' \
   --body '_Sem detalhe adicional no roadmap._
 
 **Responsável:** Você
+**Modelo Codex recomendado:** Manual — sem modelo executor
+**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
 **Prioridade:** P0
 **Fluxo:** Release
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 221 issues (109 já criadas fechadas) =="
+echo "== pronto: 223 issues (111 já criadas fechadas) =="
