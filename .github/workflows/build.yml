@@ -49,6 +49,8 @@ jobs:
       # `secrets` nao existe no `if:` de job — a checagem tem de ser um passo
       # que exporta output. O valor nunca e impresso, so o seu comprimento.
       - id: token
+        # Este passo não precisa de checkout; a pasta do app ainda não existe.
+        working-directory: ${{ github.workspace }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |

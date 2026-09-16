@@ -43,6 +43,11 @@ continuam obrigatórias. Resultado verde significa aprovação dos checks
 configurados, não ausência de toda dívida de segurança: os advisories previamente
 aceitos continuam registrados em `scripts/auditoria-baseline.json`.
 
+A revisão de dependências requer o Dependency Graph habilitado em Settings >
+Advanced Security. Ele e os alertas do Dependabot estão habilitados neste
+repositório. O build EAS permanece sob demanda: a checagem do token roda na raiz
+do workspace, antes do checkout, e informa quando `EXPO_TOKEN` está ausente.
+
 `npm test` usa `scripts/rodar-testes.js` para enumerar `tests/*.test.cjs` sem
 depender da expansão de glob pelo shell. Os testes de composição e progressão
 protegem o conteúdo canônico atual. Se uma mudança intencional de conteúdo
