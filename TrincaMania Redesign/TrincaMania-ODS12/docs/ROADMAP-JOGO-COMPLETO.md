@@ -894,3 +894,152 @@ globais, todos dependentes de A-04 (a imagem-piloto validada in-game).
 | Colisão de nome Mundo 9/10 ↔ Capítulo 9/10           | Médio   | C-01 resolve antes de escrever conteúdo                                                                                                                                                                               |
 | Peso do app (assets hoje ~50 MB)                     | Médio   | A-33 (compressão) + CI-12 (guarda automatizada)                                                                                                                                                                       |
 | Hooks de git quebrarem por `node` fora do PATH       | Baixo   | F0-02 antes de G-03                                                                                                                                                                                                   |
+
+## Auditoria de automações — 15/09/2026
+
+Tarefas adicionais, sem duplicar proteção de branches (#115), Dependabot (#149), credencial EAS (#136), jornadas E2E (#165–#167) e observabilidade (#208–#217). A implementação permanece pendente.
+
+| ID     | Tarefa                                                              | Quem | Prioridade | Escopo                                                                                                                                                                                      | Codex         |
+| ------ | ------------------------------------------------------------------- | ---- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| CI-35  | Consolidar e ativar as automações na branch padrão                  | [CC] | P0         | A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão.           | GPT-5.6 Terra |
+| CI-36  | Migrar ferramentas e CI do Node 20 para LTS suportado               | [CC] | P1         | O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines.                                                                 | GPT-5.6 Terra |
+| CI-37  | Garantir release até build EAS concluído e artefatos verificáveis   | [CC] | P1         | Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento. | GPT-5.6 Terra |
+| CI-38  | Ajustar gatilhos e relatórios do E2E Android                        | [CC] | P1         | O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10x10. O diagnóstico e JUnit só são publicados em caso de falha.                                                | GPT-5.6 Terra |
+| G-21   | Criar ou vincular automaticamente uma issue por PR                  | [CC] | P1         | Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade.                                                             | GPT-5.6 Terra |
+| G-22   | Reconciliar roadmap e issues sem reabertura indevida                | [CC] | P1         | O sincronizador atual considera roadmap.html a fonte de verdade e reabre uma issue fechada se a tarefa local continuar pendente. Isso conflita com fechamento automático por PR.            | GPT-5.6 Terra |
+| SEC-20 | Adicionar análise de segurança do APK com MobSF                     | [CC] | P1         | CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Android gerado.                                                                                                     | GPT-5.6 Sol   |
+| SEC-21 | Montar validação dinâmica de segurança mobile baseada no MASVS      | [CC] | P2         | Não foi identificado backend próprio; o alvo atual é Android com armazenamento local. DAST web com ZAP não cobre sozinho essa superfície.                                                   | GPT-5.6 Sol   |
+| Q-16   | Medir cobertura de produção separada por domínio e interface        | [CC] | P1         | O piso atual usa o total do node:test, que inclui arquivos de testes e não representa cobertura completa de src/. A suíte Jest de componentes é separada.                                   | GPT-5.6 Terra |
+| Q-17   | Testar recuperação e migração de progresso no Android instalado     | [CC] | P1         | Existem testes unitários de migração, mas os dois fluxos Maestro atuais não comprovam recuperação do save em cenário real de atualização/interrupção.                                       | GPT-5.6 Terra |
+| Q-18   | Adicionar regressão visual e acessibilidade das jornadas principais | [CC] | P2         | O teste de acessibilidade existente não substitui verificação de foco/leitor de tela nem comparação das telas renderizadas.                                                                 | GPT-5.6 Terra |
+
+### CI-35 — Consolidar e ativar as automações na branch padrão
+
+A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão.
+
+- [ ] Integrar por PR as automações e seus scripts/configurações dependentes, sem incluir mudanças de campanha inadvertidamente; registrar dependências que impeçam separação.
+- [ ] Confirmar na develop os workflows e o dependabot.yml, e comprovar execução manual e a primeira execução agendada.
+- [ ] Ajustar os filtros de PR às branches realmente usadas, inclusive PRs para feat/campanha-10x10 enquanto ela for base de integração.
+- [ ] Reutilizar G-09 (#114), G-10 (#115) e SEC-03 (#149) para estratégia de branches, proteção e ativação do Dependabot.
+
+**Dependências e referências:** Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule .
+
+### CI-36 — Migrar ferramentas e CI do Node 20 para LTS suportado
+
+O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines.
+
+- [ ] Adotar Node 22 LTS como alvo inicial e validar compatibilidade com Expo SDK 54, npm, Jest e EAS.
+- [ ] Alinhar engines, arquivo de versão, workflows e documentação; atualizar lock somente quando necessário.
+- [ ] Recalibrar a medição de cobertura por mudança de runtime com comparação documentada, sem ocultar redução real de testes.
+- [ ] Passar instalação limpa, expo-doctor, typecheck, testes, export e build Android no runtime escolhido.
+
+**Dependências e referências:** Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16.
+
+### CI-37 — Garantir release até build EAS concluído e artefatos verificáveis
+
+Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento.
+
+- [ ] Encadear explicitamente o build a partir do resultado do release, preferindo workflow reutilizável e o SHA/tag exato; impedir builds duplicados.
+- [ ] Corrigir a checagem de token que herda working-directory do app antes de checkout e validar o caminho sem EXPO_TOKEN.
+- [ ] Acompanhar resultado final do EAS com timeout e registrar URL/ID do build; falha ou cancelamento não pode ser reportado como sucesso.
+- [ ] Vincular release, versão, commit, SBOM e artefato correspondente; testar falha de build e release sem credencial.
+- [ ] Não publicar automaticamente na Play Store nesta tarefa; manter isso em CI-20/CI-21.
+
+**Dependências e referências:** Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: https://github.com/googleapis/release-please-action .
+
+### CI-38 — Ajustar gatilhos e relatórios do E2E Android
+
+O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10x10. O diagnóstico e JUnit só são publicados em caso de falha.
+
+- [ ] Executar smoke E2E em PR com mudança relevante ao app e suíte completa semanal/manual após integração na develop.
+- [ ] Remover o gatilho temporário, aplicar cancelamento por PR e registrar duração para controlar custo.
+- [ ] Publicar JUnit em sucesso e falha, e screenshots/logs em falha com retenção definida.
+- [ ] Validar PR de documentação sem build desnecessário e PR de código com execução real, sem esconder falhas com retries ilimitados.
+
+**Dependências e referências:** Depende de CI-35; reutiliza Maestro existente e Q-02/Q-03/Q-04 (#165–#167).
+
+### G-21 — Criar ou vincular automaticamente uma issue por PR
+
+Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade.
+
+- [ ] Ao abrir PR, reutilizar a issue válida já vinculada; se não houver, criar uma tarefa com título, contexto e link do PR.
+- [ ] Usar chave persistente por número do PR para que edição, synchronize e reexecução não criem duplicatas.
+- [ ] Adicionar vínculo e labels; exigir rastreabilidade no check de integração, inclusive para PRs automatizados.
+- [ ] Fechar a issue automática apenas após merge na branch de entrega definida; PR fechado sem merge não representa tarefa concluída.
+- [ ] Testar PR com issue existente, sem issue, de fork, edição/reabertura e execuções concorrentes.
+- [ ] Executar automação privilegiada somente com metadados e código confiável da base; nunca executar código do PR com token de escrita.
+
+**Dependências e referências:** Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue .
+
+### G-22 — Reconciliar roadmap e issues sem reabertura indevida
+
+O sincronizador atual considera roadmap.html a fonte de verdade e reabre uma issue fechada se a tarefa local continuar pendente. Isso conflita com fechamento automático por PR.
+
+- [ ] Definir e documentar a autoridade: roadmap para escopo/prioridade de tarefas planejadas; merge validado para conclusão; issues automáticas sem ID de roadmap ficam fora do sincronizador legado.
+- [ ] Propagar conclusão comprovada para os espelhos HTML/Markdown por alteração revisável antes de permitir nova reconciliação de estado.
+- [ ] Rodar validação de consistência no CI e sincronização de escrita apenas após integração de alteração confiável.
+- [ ] Preservar labels/corpo mantidos por pessoas fora das seções gerenciadas e não excluir issues órfãs ou duplicadas automaticamente.
+- [ ] Cobrir idempotência, paginação, falha parcial da API, tarefa nova, merge, PR abandonado e conflito entre roadmap e GitHub.
+- [ ] Registrar as tarefas novas desta auditoria e manter o script de criação inicial gerado, sem executá-lo sobre backlog existente.
+
+**Dependências e referências:** Complementa G-21. Não migrar todo o histórico nem substituir GitHub Issues por outra ferramenta.
+
+### SEC-20 — Adicionar análise de segurança do APK com MobSF
+
+CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Android gerado.
+
+- [ ] Executar MobSF em ambiente controlado sobre APK de preview/release por tag ou execução manual, com versão/imagem fixada.
+- [ ] Publicar relatório associado ao hash do APK e verificar permissões, componentes exportados, debug, backup e configuração de rede.
+- [ ] Classificar achados com base no contexto; estabelecer política explícita para bloquear novos achados altos/críticos confirmados e exceções com prazo.
+- [ ] Não enviar APKs, credenciais ou relatórios sensíveis para um serviço público de análise.
+- [ ] Validar relatório normal, achado conhecido em fixture segura e indisponibilidade do scanner sem falso verde.
+
+**Dependências e referências:** Depende de build verificável (CI-37); complementa SEC-11 (#157). Fonte: https://github.com/MobSF/Mobile-Security-Framework-MobSF .
+
+### SEC-21 — Montar validação dinâmica de segurança mobile baseada no MASVS
+
+Não foi identificado backend próprio; o alvo atual é Android com armazenamento local. DAST web com ZAP não cobre sozinho essa superfície.
+
+- [ ] Preparar emulador/aparelho de teste isolado e roteiro reproduzível segundo OWASP MASVS/MASTG para storage, logs, backup e tráfego.
+- [ ] Verificar o comportamento real de permissões, ausência de dados sensíveis em logs e conexões inesperadas, com evidências sanitizadas.
+- [ ] Automatizar os casos viáveis em job manual/semanal e documentar os casos que ainda exigem inspeção humana.
+- [ ] Não classificar Maestro funcional como DAST de segurança nem MobSF estático como análise dinâmica.
+- [ ] Registrar DAST HTTP/API como condicional a uma futura URL de homologação e backend; não criar servidor apenas para executar scanner.
+
+**Dependências e referências:** Após SEC-20; alinhar com SEC-17 (#163) e O-10 (#217). Fonte: https://mas.owasp.org/MASTG/tests/ .
+
+### Q-16 — Medir cobertura de produção separada por domínio e interface
+
+O piso atual usa o total do node:test, que inclui arquivos de testes e não representa cobertura completa de src/. A suíte Jest de componentes é separada.
+
+- [ ] Excluir testes, fixtures e gerados das métricas de produção; incluir arquivos relevantes não exercitados na medição.
+- [ ] Publicar relatórios separados de domínio/storage e componentes, com linhas, branches e funções e artefato legível.
+- [ ] Estabelecer baseline documentado para a medição correta e exigir que novo código crítico tenha testes, sem comparar diretamente percentuais de metodologias distintas.
+- [ ] Provar que um ramo de produção não testado reduz a métrica e que adicionar apenas código de teste não a infla.
+- [ ] Cobrir especificamente concorrência, idempotência e recuperação de persistência conforme invariantes do projeto.
+
+**Dependências e referências:** Coordenar com CI-34 (#226) e CI-36; complementa #131 e #132.
+
+### Q-17 — Testar recuperação e migração de progresso no Android instalado
+
+Existem testes unitários de migração, mas os dois fluxos Maestro atuais não comprovam recuperação do save em cenário real de atualização/interrupção.
+
+- [ ] Adicionar fluxo determinístico que obtenha progresso, encerre/reabra o app e valide fases, moedas e vidas persistidas.
+- [ ] Instalar versão nova sobre fixture de save antigo e confirmar preservação dos dados e aviso de migração sem repetição indevida.
+- [ ] Cobrir interrupção durante gravação e reinício sem recompensas duplicadas ou perda de progresso já confirmado.
+- [ ] Usar dados e build de teste isolados, sem contaminar saves reais nem liberar Modo Dev no aplicativo de produção.
+- [ ] Publicar evidência e diagnóstico em CI; reutilizar os fluxos de vitória/loja/vidas quando forem implementados.
+
+**Dependências e referências:** Complementa C-26 (#34) e Q-02/Q-03/Q-04 (#165–#167); coordenar com Q-13 (#176).
+
+### Q-18 — Adicionar regressão visual e acessibilidade das jornadas principais
+
+O teste de acessibilidade existente não substitui verificação de foco/leitor de tela nem comparação das telas renderizadas.
+
+- [ ] Cobrir mapa, partida, resultado e loja com estado determinístico, animações controladas e dimensões de aparelho fixas.
+- [ ] Criar snapshots visuais com tolerância documentada, diff anexado e atualização de baseline somente após revisão.
+- [ ] Verificar labels, ordem de foco, fontes ampliadas e alvos de toque; incluir roteiro TalkBack para os casos não automatizáveis.
+- [ ] Comprovar detecção de regressão visual proposital e ausência de instabilidade por conteúdo aleatório.
+- [ ] Manter as verificações existentes de acessibilidade; não depender apenas de snapshots para validar comportamento.
+
+**Dependências e referências:** Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.

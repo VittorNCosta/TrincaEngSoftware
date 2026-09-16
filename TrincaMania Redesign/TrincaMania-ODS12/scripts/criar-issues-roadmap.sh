@@ -1592,6 +1592,54 @@ mk done --title 'G-20 · Configurar YOLO como padrão para novas sessões Codex'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
+mk open --title 'G-21 · Criar ou vincular automaticamente uma issue por PR' \
+  --body '**Contexto**
+Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade.
+
+**Critérios de aceite**
+- [ ] Ao abrir PR, reutilizar a issue válida já vinculada; se não houver, criar uma tarefa com título, contexto e link do PR.
+- [ ] Usar chave persistente por número do PR para que edição, synchronize e reexecução não criem duplicatas.
+- [ ] Adicionar vínculo e labels; exigir rastreabilidade no check de integração, inclusive para PRs automatizados.
+- [ ] Fechar a issue automática apenas após merge na branch de entrega definida; PR fechado sem merge não representa tarefa concluída.
+- [ ] Testar PR com issue existente, sem issue, de fork, edição/reabertura e execuções concorrentes.
+- [ ] Executar automação privilegiada somente com metadados e código confiável da base; nunca executar código do PR com token de escrita.
+
+**Dependências e referências**
+Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue .
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Git e versionamento
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
+mk open --title 'G-22 · Reconciliar roadmap e issues sem reabertura indevida' \
+  --body '**Contexto**
+O sincronizador atual considera roadmap.html a fonte de verdade e reabre uma issue fechada se a tarefa local continuar pendente. Isso conflita com fechamento automático por PR.
+
+**Critérios de aceite**
+- [ ] Definir e documentar a autoridade: roadmap para escopo/prioridade de tarefas planejadas; merge validado para conclusão; issues automáticas sem ID de roadmap ficam fora do sincronizador legado.
+- [ ] Propagar conclusão comprovada para os espelhos HTML/Markdown por alteração revisável antes de permitir nova reconciliação de estado.
+- [ ] Rodar validação de consistência no CI e sincronização de escrita apenas após integração de alteração confiável.
+- [ ] Preservar labels/corpo mantidos por pessoas fora das seções gerenciadas e não excluir issues órfãs ou duplicadas automaticamente.
+- [ ] Cobrir idempotência, paginação, falha parcial da API, tarefa nova, merge, PR abandonado e conflito entre roadmap e GitHub.
+- [ ] Registrar as tarefas novas desta auditoria e manter o script de criação inicial gerado, sem executá-lo sobre backlog existente.
+
+**Dependências e referências**
+Complementa G-21. Não migrar todo o histórico nem substituir GitHub Issues por outra ferramenta.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Git e versionamento
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
 
 # --- CI/CD ---
 mk done --title 'CI-01 · Quebrar o CI em jobs paralelos' \
@@ -2132,6 +2180,95 @@ https://github.com/advisories/GHSA-93r5-fhx6-vmg9
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-35 · Consolidar e ativar as automações na branch padrão' \
+  --body '**Contexto**
+A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão.
+
+**Critérios de aceite**
+- [ ] Integrar por PR as automações e seus scripts/configurações dependentes, sem incluir mudanças de campanha inadvertidamente; registrar dependências que impeçam separação.
+- [ ] Confirmar na develop os workflows e o dependabot.yml, e comprovar execução manual e a primeira execução agendada.
+- [ ] Ajustar os filtros de PR às branches realmente usadas, inclusive PRs para feat/campanha-10x10 enquanto ela for base de integração.
+- [ ] Reutilizar G-09 (#114), G-10 (#115) e SEC-03 (#149) para estratégia de branches, proteção e ativação do Dependabot.
+
+**Dependências e referências**
+Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule .
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P0
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-36 · Migrar ferramentas e CI do Node 20 para LTS suportado' \
+  --body '**Contexto**
+O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines.
+
+**Critérios de aceite**
+- [ ] Adotar Node 22 LTS como alvo inicial e validar compatibilidade com Expo SDK 54, npm, Jest e EAS.
+- [ ] Alinhar engines, arquivo de versão, workflows e documentação; atualizar lock somente quando necessário.
+- [ ] Recalibrar a medição de cobertura por mudança de runtime com comparação documentada, sem ocultar redução real de testes.
+- [ ] Passar instalação limpa, expo-doctor, typecheck, testes, export e build Android no runtime escolhido.
+
+**Dependências e referências**
+Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-37 · Garantir release até build EAS concluído e artefatos verificáveis' \
+  --body '**Contexto**
+Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento.
+
+**Critérios de aceite**
+- [ ] Encadear explicitamente o build a partir do resultado do release, preferindo workflow reutilizável e o SHA/tag exato; impedir builds duplicados.
+- [ ] Corrigir a checagem de token que herda working-directory do app antes de checkout e validar o caminho sem EXPO_TOKEN.
+- [ ] Acompanhar resultado final do EAS com timeout e registrar URL/ID do build; falha ou cancelamento não pode ser reportado como sucesso.
+- [ ] Vincular release, versão, commit, SBOM e artefato correspondente; testar falha de build e release sem credencial.
+- [ ] Não publicar automaticamente na Play Store nesta tarefa; manter isso em CI-20/CI-21.
+
+**Dependências e referências**
+Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: https://github.com/googleapis/release-please-action .
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-38 · Ajustar gatilhos e relatórios do E2E Android' \
+  --body '**Contexto**
+O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10x10. O diagnóstico e JUnit só são publicados em caso de falha.
+
+**Critérios de aceite**
+- [ ] Executar smoke E2E em PR com mudança relevante ao app e suíte completa semanal/manual após integração na develop.
+- [ ] Remover o gatilho temporário, aplicar cancelamento por PR e registrar duração para controlar custo.
+- [ ] Publicar JUnit em sucesso e falha, e screenshots/logs em falha com retenção definida.
+- [ ] Validar PR de documentação sem build desnecessário e PR de código com execução real, sem esconder falhas com retries ilimitados.
+
+**Dependências e referências**
+Depende de CI-35; reutiliza Maestro existente e Q-02/Q-03/Q-04 (#165–#167).
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2333,6 +2470,52 @@ mk open --title 'SEC-17 · Revisar os dados coletados (LGPD)' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,humano' --milestone 'DevSecOps'
+mk open --title 'SEC-20 · Adicionar análise de segurança do APK com MobSF' \
+  --body '**Contexto**
+CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Android gerado.
+
+**Critérios de aceite**
+- [ ] Executar MobSF em ambiente controlado sobre APK de preview/release por tag ou execução manual, com versão/imagem fixada.
+- [ ] Publicar relatório associado ao hash do APK e verificar permissões, componentes exportados, debug, backup e configuração de rede.
+- [ ] Classificar achados com base no contexto; estabelecer política explícita para bloquear novos achados altos/críticos confirmados e exceções com prazo.
+- [ ] Não enviar APKs, credenciais ou relatórios sensíveis para um serviço público de análise.
+- [ ] Validar relatório normal, achado conhecido em fixture segura e indisponibilidade do scanner sem falso verde.
+
+**Dependências e referências**
+Depende de build verificável (CI-37); complementa SEC-11 (#157). Fonte: https://github.com/MobSF/Mobile-Security-Framework-MobSF .
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
+**Prioridade:** P1
+**Fluxo:** DevSecOps
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
+mk open --title 'SEC-21 · Montar validação dinâmica de segurança mobile baseada no MASVS' \
+  --body '**Contexto**
+Não foi identificado backend próprio; o alvo atual é Android com armazenamento local. DAST web com ZAP não cobre sozinho essa superfície.
+
+**Critérios de aceite**
+- [ ] Preparar emulador/aparelho de teste isolado e roteiro reproduzível segundo OWASP MASVS/MASTG para storage, logs, backup e tráfego.
+- [ ] Verificar o comportamento real de permissões, ausência de dados sensíveis em logs e conexões inesperadas, com evidências sanitizadas.
+- [ ] Automatizar os casos viáveis em job manual/semanal e documentar os casos que ainda exigem inspeção humana.
+- [ ] Não classificar Maestro funcional como DAST de segurança nem MobSF estático como análise dinâmica.
+- [ ] Registrar DAST HTTP/API como condicional a uma futura URL de homologação e backend; não criar servidor apenas para executar scanner.
+
+**Dependências e referências**
+Após SEC-20; alinhar com SEC-17 (#163) e O-10 (#217). Fonte: https://mas.owasp.org/MASTG/tests/ .
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
+**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
+**Prioridade:** P2
+**Fluxo:** DevSecOps
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 
 # --- Qualidade ---
 mk done --title 'Q-01 · Montar E2E com Maestro' \
@@ -2514,6 +2697,75 @@ mk done --title 'Q-15 · Corrigir a faixa de dificuldade do primeiro mapa dos ca
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
+mk open --title 'Q-16 · Medir cobertura de produção separada por domínio e interface' \
+  --body '**Contexto**
+O piso atual usa o total do node:test, que inclui arquivos de testes e não representa cobertura completa de src/. A suíte Jest de componentes é separada.
+
+**Critérios de aceite**
+- [ ] Excluir testes, fixtures e gerados das métricas de produção; incluir arquivos relevantes não exercitados na medição.
+- [ ] Publicar relatórios separados de domínio/storage e componentes, com linhas, branches e funções e artefato legível.
+- [ ] Estabelecer baseline documentado para a medição correta e exigir que novo código crítico tenha testes, sem comparar diretamente percentuais de metodologias distintas.
+- [ ] Provar que um ramo de produção não testado reduz a métrica e que adicionar apenas código de teste não a infla.
+- [ ] Cobrir especificamente concorrência, idempotência e recuperação de persistência conforme invariantes do projeto.
+
+**Dependências e referências**
+Coordenar com CI-34 (#226) e CI-36; complementa #131 e #132.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Qualidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
+mk open --title 'Q-17 · Testar recuperação e migração de progresso no Android instalado' \
+  --body '**Contexto**
+Existem testes unitários de migração, mas os dois fluxos Maestro atuais não comprovam recuperação do save em cenário real de atualização/interrupção.
+
+**Critérios de aceite**
+- [ ] Adicionar fluxo determinístico que obtenha progresso, encerre/reabra o app e valide fases, moedas e vidas persistidas.
+- [ ] Instalar versão nova sobre fixture de save antigo e confirmar preservação dos dados e aviso de migração sem repetição indevida.
+- [ ] Cobrir interrupção durante gravação e reinício sem recompensas duplicadas ou perda de progresso já confirmado.
+- [ ] Usar dados e build de teste isolados, sem contaminar saves reais nem liberar Modo Dev no aplicativo de produção.
+- [ ] Publicar evidência e diagnóstico em CI; reutilizar os fluxos de vitória/loja/vidas quando forem implementados.
+
+**Dependências e referências**
+Complementa C-26 (#34) e Q-02/Q-03/Q-04 (#165–#167); coordenar com Q-13 (#176).
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Qualidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
+mk open --title 'Q-18 · Adicionar regressão visual e acessibilidade das jornadas principais' \
+  --body '**Contexto**
+O teste de acessibilidade existente não substitui verificação de foco/leitor de tela nem comparação das telas renderizadas.
+
+**Critérios de aceite**
+- [ ] Cobrir mapa, partida, resultado e loja com estado determinístico, animações controladas e dimensões de aparelho fixas.
+- [ ] Criar snapshots visuais com tolerância documentada, diff anexado e atualização de baseline somente após revisão.
+- [ ] Verificar labels, ordem de foco, fontes ampliadas e alvos de toque; incluir roteiro TalkBack para os casos não automatizáveis.
+- [ ] Comprovar detecção de regressão visual proposital e ausência de instabilidade por conteúdo aleatório.
+- [ ] Manter as verificações existentes de acessibilidade; não depender apenas de snapshots para validar comportamento.
+
+**Dependências e referências**
+Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Qualidade
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 
 # --- Observabilidade ---
 mk open --title 'O-01 · Logger estruturado em `src/utils/log.ts`' \
@@ -2841,4 +3093,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 224 issues (111 já criadas fechadas) =="
+echo "== pronto: 235 issues (111 já criadas fechadas) =="
