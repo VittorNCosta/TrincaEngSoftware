@@ -87,9 +87,19 @@ const dormir = (ms) => {
  * um relatório com `vulnerabilities` ou o JSON de erro do npm.
  */
 const tentarAudit = () => {
+  // .cmd não é um executável para spawnSync no Windows. Invocar o CLI do
+  // npm pelo Node evita shell e também preserva a versão que iniciou o script.
+  const npmCli =
+    process.env.npm_execpath ||
+    (process.platform === 'win32'
+      ? path.join(
+          path.dirname(process.execPath),
+          'node_modules/npm/bin/npm-cli.js',
+        )
+      : null);
   const resultado = spawnSync(
-    process.platform === 'win32' ? 'npm.cmd' : 'npm',
-    ['audit', '--json'],
+    npmCli ? process.execPath : 'npm',
+    npmCli ? [npmCli, 'audit', '--json'] : ['audit', '--json'],
     {
       cwd: projectRoot,
       encoding: 'utf8',
@@ -141,17 +151,11 @@ const tentarAudit = () => {
  *
  * ## Registry fora do ar não é vulnerabilidade
  *
- * `npm audit` depende de um POST ao registry, e o registry cai — este script
- * nasceu vendo um `503 Service Unavailable` na primeira execução. Se um 503
- * deixasse o job vermelho, o efeito prático seria treinar todo mundo a ignorar
- * a cor deste job, e aí a vulnerabilidade de verdade passaria despercebida
- * junto com o ruído.
- *
- * Então: tenta três vezes com espera crescente e, se o registry continuar
- * inacessível, avisa alto e sai com 0. O agendamento semanal do
- * `.github/workflows/seguranca.yml` garante que a verificação volta a
- * acontecer sozinha. Falha de análise — JSON quebrado, npm ausente — continua
- * reprovando, porque aí o problema é local e reproduzível.
+ * `npm audit` depende de um POST ao registry, sujeito a indisponibilidade.
+ * Tenta três vezes com espera crescente. Sem relatório válido ao final,
+ * reprova: indisponibilidade não é evidência de ausência de vulnerabilidades.
+ * O agente pode repetir a validação quando o serviço voltar, mas não entregar
+ * um PR como verificado com base numa auditoria que não aconteceu.
  */
 const rodarAudit = () => {
   let ultimo;
@@ -175,9 +179,9 @@ const rodarAudit = () => {
   if (ultimo.indisponivel) {
     console.error(`⚠ registry npm indisponível: ${ultimo.erro}`);
     console.error(
-      '  Auditoria não verificada nesta execução. Não é reprovação — o job\n  agendado de segunda-feira verifica de novo.',
+      '  Auditoria não verificada. Repita quando o registry voltar; este resultado não autoriza a entrega.',
     );
-    process.exit(0);
+    process.exit(1);
   }
 
   console.error(`✖ ${ultimo.erro}`);

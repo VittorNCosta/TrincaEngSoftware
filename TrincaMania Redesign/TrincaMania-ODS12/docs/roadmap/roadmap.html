@@ -206,7 +206,7 @@ h1 { font-size: clamp(34px, 5.4vw, 54px); font-weight: 700; letter-spacing: -.02
 .td { font-size: 13.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
 .td code { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-2); }
 .task.done .tt { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
-.tmeta { display: flex; gap: 6px; align-items: center; padding-top: 2px; flex: none; }
+.tmeta { display: flex; flex-wrap: wrap; max-width: 230px; gap: 6px; align-items: center; padding-top: 2px; flex: none; }
 .tag {
   font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 500;
   letter-spacing: .06em; text-transform: uppercase;
@@ -333,6 +333,18 @@ footer code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
   </div>
 </div>
 
+<div class="callout">
+  <b>Modelo Codex por tarefa · 15/09/2026.</b> Luna: mudanças mecânicas; Terra: implementação cotidiana, conteúdo e integração; Sol: persistência, regras, refactors amplos, segurança e publicação. Prioridade não é complexidade. A classificação é uma recomendação para execução futura, inclusive nas tarefas já feitas, não um registro do modelo que as executou. Arte e áudio exigem ferramentas próprias e validação humana. <a href="https://developers.openai.com/api/docs/models">Referência oficial</a>.
+</div>
+
+<div class="ctlrow" style="margin-top:14px">
+  <span class="ctlkey">Codex</span>
+  <button class="chip" data-f="model" data-v="luna" aria-pressed="false">Luna</button>
+  <button class="chip" data-f="model" data-v="terra" aria-pressed="false">Terra</button>
+  <button class="chip" data-f="model" data-v="sol" aria-pressed="false">Sol</button>
+  <button class="chip" data-f="model" data-v="manual" aria-pressed="false">Manual</button>
+</div>
+
 <main id="blocks"></main>
 
 <section class="sechead">
@@ -399,6 +411,7 @@ no magic, no candy, no treasure chests, no angels), no fruit, no photorealism.</
 
 </div>
 
+<script src="../../scripts/lib/codex-models.js"></script>
 <script>
 const S = {
   f0:  {n:"Fundação",         c:"var(--s-f0)",  code:"F0"},
@@ -552,6 +565,8 @@ const BLOCKS = [
  ["G-16","Decidir sobre Git LFS para os PNGs","voce",2,"Reavaliar depois de A-33 — com tudo ≤ 400 KB pode não valer."],
  ["G-17","✅ <code>.gitignore</code>: build do EAS, <code>*.aab</code>, <code>coverage/</code>","cc",2,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <b>Divergencia do texto original:</b> pedia ignorar <code>.eas/</code> inteiro, mas CI-23 quer <code>.eas/workflows/</code> versionado — ignora <code>.eas/build-cache/</code> no lugar."],
  ["G-18","✅ Liberar <code>git push</code> sem prompt no modo <code>auto</code>","cc",1,"<b>Feito 08/09</b> (commit <code>cf38a0f</code>). O <code>defaultMode: \"auto\"</code> mandava todo push para o classificador de permissão, que barrava — e isso esvaziava o CI-26 justamente no ponto dele: o commit de ponto de parada ficava preso na máquina de onde ele estava saindo. <code>permissions.allow</code> com <code>Bash(git push)</code> e <code>Bash(git push:*)</code> em <code>.claude/settings.json</code> (versionado, então a regra viaja para a outra máquina). Force-push fica de fora, no <code>deny</code>; a regra casa por prefixo, então <code>git push origin main --force</code> escapa — é rede contra descuido, não contra intenção."],
+ ["G-19","✅ Classificar todas as tarefas por modelo Codex","cc",1,"<b>Feito 15/09.</b> Luna, Terra ou Sol por escopo/risco em todas as tarefas; execução humana identificada e recomendação Claude preservada. <code>scripts/lib/codex-models.js</code> compartilhado pelo painel, markdown e issues; filtros Codex e coluna gerada com checagem de sincronismo. Lint, typecheck e 188/188 testes passam. Base: <code>4bdac92</code>, conferida no GitHub em 15/09/2026. Alterações locais ainda sem commit; sincronização das issues por delta."],
+ ["G-20","✅ Configurar YOLO como padrão para novas sessões Codex","cc",1,"<b>Feito 15/09.</b> Autorizado explicitamente pelo usuário nesta conversa. <code>approval_policy = 'never'</code> no nível global de <code>~/.codex/config.toml</code>, com <code>sandbox_mode = 'danger-full-access'</code> já existente. Não muda limites administrados da sessão aberta; continuidade por objetivo é iniciada com <code>/goal</code>. Configuração pessoal, fora do Git deste projeto."],
  ["G-21","Criar ou vincular automaticamente uma issue por PR","cc",1,"<b>Contexto</b><br>Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade.<br><br><b>Critérios de aceite</b><br>- [ ] Ao abrir PR, reutilizar a issue válida já vinculada; se não houver, criar uma tarefa com título, contexto e link do PR.<br>- [ ] Usar chave persistente por número do PR para que edição, synchronize e reexecução não criem duplicatas.<br>- [ ] Adicionar vínculo e labels; exigir rastreabilidade no check de integração, inclusive para PRs automatizados.<br>- [ ] Fechar a issue automática apenas após merge na branch de entrega definida; PR fechado sem merge não representa tarefa concluída.<br>- [ ] Testar PR com issue existente, sem issue, de fork, edição/reabertura e execuções concorrentes.<br>- [ ] Executar automação privilegiada somente com metadados e código confiável da base; nunca executar código do PR com token de escrita.<br><br><b>Dependências e referências</b><br>Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue ."],
  ["G-22","Reconciliar roadmap e issues sem reabertura indevida","cc",1,"<b>Contexto</b><br>O sincronizador atual considera roadmap.html a fonte de verdade e reabre uma issue fechada se a tarefa local continuar pendente. Isso conflita com fechamento automático por PR.<br><br><b>Critérios de aceite</b><br>- [ ] Definir e documentar a autoridade: roadmap para escopo/prioridade de tarefas planejadas; merge validado para conclusão; issues automáticas sem ID de roadmap ficam fora do sincronizador legado.<br>- [ ] Propagar conclusão comprovada para os espelhos HTML/Markdown por alteração revisável antes de permitir nova reconciliação de estado.<br>- [ ] Rodar validação de consistência no CI e sincronização de escrita apenas após integração de alteração confiável.<br>- [ ] Preservar labels/corpo mantidos por pessoas fora das seções gerenciadas e não excluir issues órfãs ou duplicadas automaticamente.<br>- [ ] Cobrir idempotência, paginação, falha parcial da API, tarefa nova, merge, PR abandonado e conflito entre roadmap e GitHub.<br>- [ ] Registrar as tarefas novas desta auditoria e manter o script de criação inicial gerado, sem executá-lo sobre backlog existente.<br><br><b>Dependências e referências</b><br>Complementa G-21. Não migrar todo o histórico nem substituir GitHub Issues por outra ferramenta."],
 ]},
@@ -591,6 +606,7 @@ const BLOCKS = [
  ["CI-31","Adicionar três agentes Codex especializados no TrincaMania","cc",2,"<b>Problema e benefício</b><br>Já existem agentes específicos de Claude, mas não equivalentes locais para Codex. O catálogo VoltAgent oferece referências úteis, sem conhecer as invariantes do TrincaMania.<br><br><b>Escopo</b><br>Adaptar react-native-engineer, qa-engineer e code-reviewer para .codex/agents/*.toml na raiz. Aproveitar apenas instruções complementares dos perfis reviewer, typescript-pro e mobile-developer do VoltAgent; preservar o conhecimento do projeto.<br><br><b>Critérios de aceite</b><br>- [ ] Validar sintaxe TOML e os campos name, description e developer_instructions; confirmar descoberta e invocação no Codex instalado.<br>- [ ] Definir implementação, QA e revisão com escopos distintos; configurar code-reviewer como read-only e registrar a precedência das permissões da sessão.<br>- [ ] Omitir model e model_reasoning_effort para herdar a configuração da sessão por padrão; não fixar modelos do catálogo sem necessidade.<br>- [ ] Documentar exemplos de invocação, responsabilidades e prevenção de edições concorrentes no mesmo arquivo.<br>- [ ] Registrar upstream, commit de origem e avisos da licença MIT para conteúdo reutilizado.<br>- [ ] Não importar o catálogo inteiro, instalar ferramentas globalmente ou alterar dependências de runtime.<br><br><b>Dependências</b><br>CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).<br><br><b>Fontes</b><br>https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857<br>https://learn.chatgpt.com/docs/agent-configuration/subagents"],
  ["CI-32","Adicionar duas skills de investigação e verificação","cc",2,"<b>Problema e benefício</b><br>O fluxo pode ganhar consistência na investigação de bugs e na comprovação de conclusão, sem adotar toda a metodologia e os pontos de aprovação do Superpowers.<br><br><b>Escopo</b><br>Criar duas skills locais em .agents/skills na raiz, adaptadas de systematic-debugging e verification-before-completion. Usar nomes trinca-systematic-debugging e trinca-verification-before-completion para evitar colisão com instalações pessoais.<br><br><b>Critérios de aceite</b><br>- [ ] Limitar os gatilhos a investigação de bugs reproduzíveis e verificação de mudanças relevantes; não ativar um fluxo completo para qualquer pergunta.<br>- [ ] Exigir reprodução, hipótese fundamentada, investigação da causa e teste de regressão quando pertinente.<br>- [ ] Selecionar comandos de validação conforme a mudança e o CI atual; distinguir verificação automatizada de validação manual em aparelho.<br>- [ ] Exigir evidências no relatório final, incluindo falhas e verificações não executadas.<br>- [ ] Não adicionar aprovação obrigatória a cada ajuste pequeno já autorizado, TDD para mudanças puramente documentais ou execução automática de outras skills.<br>- [ ] Registrar origem, commit e licença MIT; manter a instalação no escopo do repositório e sem hooks globais.<br><br><b>Dependências</b><br>CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).<br><br><b>Fontes</b><br>https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797<br>https://learn.chatgpt.com/docs/build-skills"],
  ["CI-33","Validar o fluxo Codex em um piloto controlado","cc",2,"<b>Problema e benefício</b><br>Arquivos de agentes e skills válidos não comprovam ganho de qualidade ou adequação ao ambiente. É necessário exercitar o fluxo antes de expandi-lo.<br><br><b>Escopo</b><br>Executar um piloto em branch/worktree isolado: revisão de um diff concluído, reprodução de uma regressão histórica e uma alteração pequena com critério verificável. Documentar resultados e limitações sem modificar configurações globais.<br><br><b>Critérios de aceite</b><br>- [ ] Registrar os três cenários, commits de referência, resultado esperado, agente/skill usado e evidência observada.<br>- [ ] Confirmar que a revisão não altera arquivos e que agentes não editam simultaneamente os mesmos arquivos.<br>- [ ] Confirmar que a regressão é detectada antes da correção e que a alteração pequena passa nas verificações aplicáveis.<br>- [ ] Registrar tempo, intervenções humanas e consumo quando disponível, marcando métricas indisponíveis sem estimá-las.<br>- [ ] Documentar limitações do cliente/ambiente e como desativar ou remover as configurações locais.<br>- [ ] Concluir com recomendação fundamentada de manter, ajustar ou desativar cada componente; não instalar OMX nem ampliar o catálogo nesta tarefa.<br><br><b>Dependências</b><br>CI-31 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/222) e CI-32 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/223).<br><br><b>Fontes</b><br>https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857<br>https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797"],
+ ["CI-34","Automatizar validação de PR e corrigir checks de entrega","cc",1,"<b>Problema:</b> o PR #225 foi entregue antes de conferir os checks remotos e apresentou falhas de formato, cobertura, auditoria e Scorecard, além de conflito posterior com a base.<br><br><b>Escopo:</b> integrar a base preservando a classificação Codex, corrigir formato e dependências transitivas vulneráveis, cobrir compra/expiração/persistência dos espaços da bandeja, limitar Scorecard à branch padrão e validar PRs destinados a qualquer branch. Adicionar <code>npm run validar:local</code>, <code>npm run pr:validar -- &lt;numero&gt; --watch</code> e instruções do ciclo de correção no AGENTS.md.<br><br><b>Critérios de aceite:</b><br>- [ ] CI e Segurança aprovados no SHA atual do PR, sem conflitos.<br>- [ ] Nenhum piso reduzido, advisory novo aceito ou check relevante desativado.<br>- [ ] Monitor rejeita SHA divergente, conflitos, falha, cancelamento e ausência de workflows; aguarda execução pendente.<br>- [ ] Testes de regressão cobrem decisões do monitor e persistência/expiração dos boosts.<br>- [ ] Roadmap, documentação e issue sincronizados; cinco tarefas CI-29 a CI-33 preservadas.<br><br><b>Entrega:</b> implementação e evidências no PR https://github.com/VittorNCosta/TrincaEngSoftware/pull/225 ; tarefa aberta enquanto aguarda validação e integração. O monitor consulta e aguarda; as correções são executadas pelo agente conforme AGENTS.md, sem merge automático.<br><br><b>Referências:</b><br>https://github.com/ossf/scorecard-action<br>https://github.com/advisories/GHSA-2883-xcg3-v3hh<br>https://github.com/advisories/GHSA-93r5-fhx6-vmg9"],
  ["CI-35","Consolidar e ativar as automações na branch padrão","cc",0,"<b>Contexto</b><br>A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão.<br><br><b>Critérios de aceite</b><br>- [ ] Integrar por PR as automações e seus scripts/configurações dependentes, sem incluir mudanças de campanha inadvertidamente; registrar dependências que impeçam separação.<br>- [ ] Confirmar na develop os workflows e o dependabot.yml, e comprovar execução manual e a primeira execução agendada.<br>- [ ] Ajustar os filtros de PR às branches realmente usadas, inclusive PRs para feat/campanha-10x10 enquanto ela for base de integração.<br>- [ ] Reutilizar G-09 (#114), G-10 (#115) e SEC-03 (#149) para estratégia de branches, proteção e ativação do Dependabot.<br><br><b>Dependências e referências</b><br>Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule ."],
  ["CI-36","Migrar ferramentas e CI do Node 20 para LTS suportado","cc",1,"<b>Contexto</b><br>O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines.<br><br><b>Critérios de aceite</b><br>- [ ] Adotar Node 22 LTS como alvo inicial e validar compatibilidade com Expo SDK 54, npm, Jest e EAS.<br>- [ ] Alinhar engines, arquivo de versão, workflows e documentação; atualizar lock somente quando necessário.<br>- [ ] Recalibrar a medição de cobertura por mudança de runtime com comparação documentada, sem ocultar redução real de testes.<br>- [ ] Passar instalação limpa, expo-doctor, typecheck, testes, export e build Android no runtime escolhido.<br><br><b>Dependências e referências</b><br>Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16."],
  ["CI-37","Garantir release até build EAS concluído e artefatos verificáveis","cc",1,"<b>Contexto</b><br>Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento.<br><br><b>Critérios de aceite</b><br>- [ ] Encadear explicitamente o build a partir do resultado do release, preferindo workflow reutilizável e o SHA/tag exato; impedir builds duplicados.<br>- [ ] Corrigir a checagem de token que herda working-directory do app antes de checkout e validar o caminho sem EXPO_TOKEN.<br>- [ ] Acompanhar resultado final do EAS com timeout e registrar URL/ID do build; falha ou cancelamento não pode ser reportado como sucesso.<br>- [ ] Vincular release, versão, commit, SBOM e artefato correspondente; testar falha de build e release sem credencial.<br>- [ ] Não publicar automaticamente na Play Store nesta tarefa; manter isso em CI-20/CI-21.<br><br><b>Dependências e referências</b><br>Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: https://github.com/googleapis/release-please-action ."],
@@ -710,8 +726,9 @@ let done = {};
 try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { done = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
 
-const WHO = { cc: "Claude", voce: "Você", both: "CC + Você" };
-const filters = { stream: null, who: null, prio: null, open: false };
+const WHO = { cc: "Agente", voce: "Você", both: "Agente + Você" };
+const { CODEX_MODEL_INFO, recomendarModeloCodex } = CodexModels;
+const filters = { stream: null, who: null, prio: null, model: null, open: false };
 
 const esc = (s) => s;
 const blocksEl = document.getElementById("blocks");
@@ -730,17 +747,22 @@ BLOCKS.forEach((b) => {
     '<div class="tasks"></div>';
   const list = sec.querySelector(".tasks");
   b.t.forEach(([id, title, who, prio, det]) => {
+    const codex = recomendarModeloCodex({ id, bloco: b.k, quem: who, prioridade: prio });
+    const model = codex.modelo ? CODEX_MODEL_INFO[codex.modelo] : null;
     const row = document.createElement("div");
     row.className = "task";
     row.dataset.stream = b.k; row.dataset.who = who; row.dataset.prio = prio; row.dataset.id = id;
+    row.dataset.model = codex.modelo || "manual";
     row.innerHTML =
       '<input type="checkbox" aria-label="Concluir ' + id + '">' +
       '<span class="tid">' + id + '</span>' +
       '<div class="tbody"><div class="tt">' + esc(title) + '</div>' +
       (det ? '<div class="td">' + det + '</div>' : '') + '</div>' +
       '<div class="tmeta"><span class="tag who-' + who + '">' + WHO[who] + '</span>' +
+      '<span class="tag" title="' + codex.motivo + (model ? ' Modelo: ' + model.id : '') + '">Codex: ' + (model ? codex.modelo : 'manual') + '</span>' +
       '<span class="tag p' + prio + '">P' + prio + '</span></div>';
     const cb = row.querySelector("input");
+    if (title.startsWith('✅') && done[id] === undefined) done[id] = 1;
     cb.checked = !!done[id];
     if (cb.checked) row.classList.add("done");
     cb.addEventListener("change", () => {
@@ -797,7 +819,7 @@ document.querySelectorAll(".chip").forEach((c) => {
   });
 });
 document.getElementById("clearBtn").addEventListener("click", () => {
-  filters.stream = filters.who = filters.prio = null; filters.open = false;
+  filters.stream = filters.who = filters.prio = filters.model = null; filters.open = false;
   document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "false"));
   refresh();
 });
@@ -812,6 +834,7 @@ function refresh() {
         (!filters.stream || row.dataset.stream === filters.stream) &&
         (!filters.who || row.dataset.who === filters.who) &&
         (!filters.prio || row.dataset.prio === filters.prio) &&
+        (!filters.model || row.dataset.model === filters.model) &&
         (!filters.open || !isDone);
       row.classList.toggle("hidden", !ok);
       if (ok) shown++;

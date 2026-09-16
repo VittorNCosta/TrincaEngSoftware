@@ -38,8 +38,16 @@
  * sobre o que já foi feito.
  */
 const { spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 
-const { LABELS, idDoTitulo, lerTarefas } = require('./lib/roadmap');
+const {
+  LABELS,
+  CODEX_MODEL_INFO,
+  idDoTitulo,
+  lerTarefas,
+} = require('./lib/roadmap');
 
 const REPO_PADRAO = 'VittorNCosta/TrincaEngSoftware';
 
@@ -54,10 +62,27 @@ const repo = (() => {
 const LABELS_GERENCIADAS = new Set(LABELS.map(([nome]) => nome));
 
 const gh = (args, { silencioso = false } = {}) => {
-  const r = spawnSync('gh', args, {
-    encoding: 'utf8',
-    maxBuffer: 64 * 1024 * 1024,
-  });
+  let dirCorpo;
+  const iCorpo = args.indexOf('--body');
+  if (iCorpo >= 0) {
+    dirCorpo = fs.mkdtempSync(path.join(os.tmpdir(), 'trinca-issue-'));
+    const arquivo = path.join(dirCorpo, 'body.md');
+    fs.writeFileSync(arquivo, args[iCorpo + 1], 'utf8');
+    args = [...args];
+    args.splice(iCorpo, 2, '--body-file', arquivo);
+  }
+  let r;
+  try {
+    r = spawnSync('gh', args, {
+      encoding: 'utf8',
+      maxBuffer: 64 * 1024 * 1024,
+    });
+  } finally {
+    if (dirCorpo) {
+      fs.unlinkSync(path.join(dirCorpo, 'body.md'));
+      fs.rmdirSync(dirCorpo);
+    }
+  }
 
   if (r.error) {
     throw new Error(`não foi possível executar o gh: ${r.error.message}`);
@@ -242,6 +267,26 @@ const main = () => {
   console.log('\n== aplicando ==');
   let falhas = 0;
 
+  for (const { label, color } of Object.values(CODEX_MODEL_INFO)) {
+    const r = gh([
+      'label',
+      'create',
+      label,
+      '--repo',
+      repo,
+      '--color',
+      color,
+      '--force',
+    ]);
+    if (!r.ok) falhas += 1;
+  }
+  if (falhas) {
+    console.error(
+      'Não foi possível preparar as labels Codex; nenhuma issue alterada.',
+    );
+    process.exit(1);
+  }
+
   for (const tarefa of criar) {
     const r = gh([
       'issue',
@@ -275,8 +320,6 @@ const main = () => {
         repo,
         '--reason',
         'completed',
-        '--comment',
-        'Concluída — ver o corpo da issue, sincronizado a partir do roadmap.',
       ]);
       if (!f.ok) {
         falhas += 1;
@@ -293,8 +336,6 @@ const main = () => {
       repo,
       '--reason',
       'completed',
-      '--comment',
-      'Concluída — ver o corpo da issue, sincronizado a partir do roadmap.',
     ]);
     if (r.ok) {
       console.log(`  fechada #${issue.number} ${tarefa.id}`);

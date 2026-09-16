@@ -84,10 +84,8 @@ const ambientSources: Record<AmbientKey, AudioSource | undefined> = {
     require('../../assets/sfx/ambient/ambient_celestial.mp3') as AudioSource,
   parque: require('../../assets/sfx/ambient/ambient_forest.mp3') as AudioSource,
   rota: require('../../assets/sfx/ambient/ambient_snow.mp3') as AudioSource,
-  usina:
-    require('../../assets/sfx/ambient/ambient_volcano.mp3') as AudioSource,
-  vale:
-    require('../../assets/sfx/ambient/ambient_mountain.mp3') as AudioSource,
+  usina: require('../../assets/sfx/ambient/ambient_volcano.mp3') as AudioSource,
+  vale: require('../../assets/sfx/ambient/ambient_mountain.mp3') as AudioSource,
   viveiro: require('../../assets/sfx/ambient/ambient_beach.mp3') as AudioSource,
 };
 

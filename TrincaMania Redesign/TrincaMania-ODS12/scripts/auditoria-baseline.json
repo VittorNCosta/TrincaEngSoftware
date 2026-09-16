@@ -2,16 +2,6 @@
   "_leia": "Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= high e em entrada que nao existe mais. A chave e pacote::id-do-advisory.",
   "piso": "high",
   "entradas": {
-    "@xmldom/xmldom::1158517": {
-      "severidade": "moderate",
-      "titulo": "xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization",
-      "url": "https://github.com/advisories/GHSA-6gmq-8vp8-gcm6"
-    },
-    "@xmldom/xmldom::1158518": {
-      "severidade": "moderate",
-      "titulo": "xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization",
-      "url": "https://github.com/advisories/GHSA-6gmq-8vp8-gcm6"
-    },
     "browserslist::1153171": {
       "severidade": "high",
       "titulo": "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",

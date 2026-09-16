@@ -24,7 +24,9 @@
     "cobertura": "node scripts/cobertura.js",
     "orcamento:bundle": "node scripts/orcamento-bundle.js",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "validar:local": "npm run lint && npm run format:check && npm run typecheck && npm run guarda:ods12 && npm run valida:assets && npm run cobertura && npm run test:ui && npm run test:playthrough && npm run auditoria && node scripts/gerar-modelos-codex.js --check",
+    "pr:validar": "node scripts/validar-pr.js"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",

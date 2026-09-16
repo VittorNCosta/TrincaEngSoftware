@@ -7,23 +7,52 @@ npm install
 npm start
 ```
 
-## Antes de commitar
+## Validar antes de publicar e acompanhar o PR
 
 ```
-npm run typecheck
-npm test
+npm run validar:local
 ```
 
-O CI (`.github/workflows/ci.yml`, na raiz do repositório) roda os dois em todo push/PR
-para `develop`/`main` — rodar local primeiro evita surpresa lá.
+Use a versão de Node indicada pelo projeto (Node 20, no mínimo 20.19.4).
+O comando executa lint, formato, tipagem, guardas, testes de domínio com cobertura,
+testes de componentes, playthrough, auditoria e sincronismo da coluna Codex.
+Qualquer falha interrompe a sequência com código diferente de zero.
 
-`npm test` roda `node --test tests` (a suíte inteira, 117+ casos). Um teste específico,
-`tests/levelComposition.test.cjs` → "as 203 fases canonicas continuam byte-identicas",
-trava um hash sha256 do conteúdo de `src/data/levels.ts` de propósito: se você mudar
-título, dificuldade ou peça de qualquer uma das 203 fases canônicas, esse teste
-**deve** quebrar. Confirme que a mudança foi intencional e depois recalcule o hash
-(`sha256(JSON.stringify(LEVELS))`) e atualize o literal esperado nesse arquivo — não
-ignore nem apague a asserção.
+Depois de commit e push, acompanhe o PR:
+
+```sh
+npm run pr:validar -- 225 --watch
+```
+
+Troque `225` pelo número do PR. Requer `gh` autenticado. O monitor é somente
+leitura e valida CI e Segurança no **SHA do HEAD local**, sem aproveitar sucesso
+de outro commit. Verifica também conflitos e outros checks do PR. Sem `--watch`,
+faz uma consulta; com essa opção, aguarda por até 30 minutos. Códigos de saída:
+`0` aprovado, `1` falha ou erro de consulta, `2` pendente ou prazo esgotado.
+
+Se houver falha, consulte `gh run view <id> --log-failed`, corrija sua causa,
+execute a validação local, faça commit/push e rode o monitor novamente. Esse é o
+ciclo de correção seguido pelo agente conforme o `AGENTS.md` da raiz. O script
+não altera código nem faz merge automaticamente. Reduzir o piso de cobertura,
+aceitar vulnerabilidade nova ou remover um check não é corrigir sua causa.
+
+CI e Segurança rodam em pushes e PRs para qualquer branch. O Scorecard publica
+somente na branch padrão, conforme a restrição da própria action; nas branches
+de trabalho esse job aparece como ignorado, enquanto as outras verificações
+continuam obrigatórias. Resultado verde significa aprovação dos checks
+configurados, não ausência de toda dívida de segurança: os advisories previamente
+aceitos continuam registrados em `scripts/auditoria-baseline.json`.
+
+A revisão de dependências requer o Dependency Graph habilitado em Settings >
+Advanced Security. Ele e os alertas do Dependabot estão habilitados neste
+repositório. O build EAS permanece sob demanda: a checagem do token roda na raiz
+do workspace, antes do checkout, e informa quando `EXPO_TOKEN` está ausente.
+
+`npm test` usa `scripts/rodar-testes.js` para enumerar `tests/*.test.cjs` sem
+depender da expansão de glob pelo shell. Os testes de composição e progressão
+protegem o conteúdo canônico atual. Se uma mudança intencional de conteúdo
+invalidar um contrato, revise o cenário e a asserção correspondente; não apague
+uma proteção só para obter verde.
 
 ## Onde entender o domínio antes de mexer
 
