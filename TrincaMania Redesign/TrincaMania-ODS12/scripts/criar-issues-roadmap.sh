@@ -1952,6 +1952,186 @@ mk done --title 'CI-28 · Apontar o `app.json` para o projeto EAS certo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'CI/CD'
+mk open --title 'CI-29 · Atualizar as instruções dos agentes conforme o projeto atual' \
+  --body '**Problema e benefício**
+O agente de QA ainda afirma que não há Jest, renderer ou Testing Library, embora essas ferramentas e testes de componentes já existam. Instruções antigas podem impedir a validação correta.
+
+**Escopo**
+Revisar as instruções dos seis agentes existentes, os comandos de verificação e as invariantes contra a branch feat/campanha-10x10. Corrigir a documentação sem alterar gameplay ou introduzir outro runner.
+
+**Critérios de aceite**
+- [ ] Distinguir testes de domínio com node:test, testes de componentes com Jest/Testing Library e simulação de playthrough.
+- [ ] Conferir comandos e caminhos com package.json e workflows atuais, incluindo a versão de Node exigida pelo projeto.
+- [ ] Conferir as regras de campanha, capítulos, progresso e vidas contra o código atual; não copiar a antiga contagem de fases como verdade.
+- [ ] Substituir instruções de reversão potencialmente destrutivas por comparação em checkout/worktree isolado para validar regressões.
+- [ ] Remover contradições entre agentes e documentação compartilhada, registrando os arquivos revisados.
+
+**Dependências**
+Nenhuma. O problema de manifest/lockfile já foi tratado na issue #4; não reabri-lo nesta tarefa.
+
+**Fontes**
+https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/.claude/agents/qa-engineer.md
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-30 · Compartilhar as regras do projeto entre Claude e Codex' \
+  --body '**Problema e benefício**
+O conhecimento de domínio e o roteamento estão concentrados em CLAUDE.md. Uma sessão Codex iniciada na raiz não dispõe de uma entrada compartilhada equivalente.
+
+**Escopo**
+Criar AGENTS.md na raiz do repositório, apontando para o aplicativo em TrincaMania Redesign/TrincaMania-ODS12. Centralizar as regras comuns e manter em CLAUDE.md as instruções específicas de Claude, com referência explícita ao conteúdo compartilhado.
+
+**Critérios de aceite**
+- [ ] Documentar arquitetura, vocabulário, referências de domínio e comandos atuais a executar a partir da pasta correta.
+- [ ] Preservar as invariantes verificadas em CI-29, sem duplicar regras mutáveis em vários arquivos.
+- [ ] Documentar quando delegar e exigir escopos de arquivo disjuntos nas edições paralelas.
+- [ ] Conferir a descoberta das instruções e a resolução dos links tanto da raiz quanto da pasta do aplicativo.
+- [ ] Preservar os hooks e o registro de estado existentes; não introduzir dependências do aplicativo.
+
+**Dependências**
+CI-29 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/220).
+
+**Fontes**
+https://learn.chatgpt.com/docs/agent-configuration/subagents
+https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/CLAUDE.md
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-31 · Adicionar três agentes Codex especializados no TrincaMania' \
+  --body '**Problema e benefício**
+Já existem agentes específicos de Claude, mas não equivalentes locais para Codex. O catálogo VoltAgent oferece referências úteis, sem conhecer as invariantes do TrincaMania.
+
+**Escopo**
+Adaptar react-native-engineer, qa-engineer e code-reviewer para .codex/agents/*.toml na raiz. Aproveitar apenas instruções complementares dos perfis reviewer, typescript-pro e mobile-developer do VoltAgent; preservar o conhecimento do projeto.
+
+**Critérios de aceite**
+- [ ] Validar sintaxe TOML e os campos name, description e developer_instructions; confirmar descoberta e invocação no Codex instalado.
+- [ ] Definir implementação, QA e revisão com escopos distintos; configurar code-reviewer como read-only e registrar a precedência das permissões da sessão.
+- [ ] Omitir model e model_reasoning_effort para herdar a configuração da sessão por padrão; não fixar modelos do catálogo sem necessidade.
+- [ ] Documentar exemplos de invocação, responsabilidades e prevenção de edições concorrentes no mesmo arquivo.
+- [ ] Registrar upstream, commit de origem e avisos da licença MIT para conteúdo reutilizado.
+- [ ] Não importar o catálogo inteiro, instalar ferramentas globalmente ou alterar dependências de runtime.
+
+**Dependências**
+CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).
+
+**Fontes**
+https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857
+https://learn.chatgpt.com/docs/agent-configuration/subagents
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-32 · Adicionar duas skills de investigação e verificação' \
+  --body '**Problema e benefício**
+O fluxo pode ganhar consistência na investigação de bugs e na comprovação de conclusão, sem adotar toda a metodologia e os pontos de aprovação do Superpowers.
+
+**Escopo**
+Criar duas skills locais em .agents/skills na raiz, adaptadas de systematic-debugging e verification-before-completion. Usar nomes trinca-systematic-debugging e trinca-verification-before-completion para evitar colisão com instalações pessoais.
+
+**Critérios de aceite**
+- [ ] Limitar os gatilhos a investigação de bugs reproduzíveis e verificação de mudanças relevantes; não ativar um fluxo completo para qualquer pergunta.
+- [ ] Exigir reprodução, hipótese fundamentada, investigação da causa e teste de regressão quando pertinente.
+- [ ] Selecionar comandos de validação conforme a mudança e o CI atual; distinguir verificação automatizada de validação manual em aparelho.
+- [ ] Exigir evidências no relatório final, incluindo falhas e verificações não executadas.
+- [ ] Não adicionar aprovação obrigatória a cada ajuste pequeno já autorizado, TDD para mudanças puramente documentais ou execução automática de outras skills.
+- [ ] Registrar origem, commit e licença MIT; manter a instalação no escopo do repositório e sem hooks globais.
+
+**Dependências**
+CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).
+
+**Fontes**
+https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797
+https://learn.chatgpt.com/docs/build-skills
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-33 · Validar o fluxo Codex em um piloto controlado' \
+  --body '**Problema e benefício**
+Arquivos de agentes e skills válidos não comprovam ganho de qualidade ou adequação ao ambiente. É necessário exercitar o fluxo antes de expandi-lo.
+
+**Escopo**
+Executar um piloto em branch/worktree isolado: revisão de um diff concluído, reprodução de uma regressão histórica e uma alteração pequena com critério verificável. Documentar resultados e limitações sem modificar configurações globais.
+
+**Critérios de aceite**
+- [ ] Registrar os três cenários, commits de referência, resultado esperado, agente/skill usado e evidência observada.
+- [ ] Confirmar que a revisão não altera arquivos e que agentes não editam simultaneamente os mesmos arquivos.
+- [ ] Confirmar que a regressão é detectada antes da correção e que a alteração pequena passa nas verificações aplicáveis.
+- [ ] Registrar tempo, intervenções humanas e consumo quando disponível, marcando métricas indisponíveis sem estimá-las.
+- [ ] Documentar limitações do cliente/ambiente e como desativar ou remover as configurações locais.
+- [ ] Concluir com recomendação fundamentada de manter, ajustar ou desativar cada componente; não instalar OMX nem ampliar o catálogo nesta tarefa.
+
+**Dependências**
+CI-31 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/222) e CI-32 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/223).
+
+**Fontes**
+https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857
+https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-34 · Automatizar validação de PR e corrigir checks de entrega' \
+  --body '**Problema:** o PR #225 foi entregue antes de conferir os checks remotos e apresentou falhas de formato, cobertura, auditoria e Scorecard, além de conflito posterior com a base.
+
+**Escopo:** integrar a base preservando a classificação Codex, corrigir formato e dependências transitivas vulneráveis, cobrir compra/expiração/persistência dos espaços da bandeja, limitar Scorecard à branch padrão e validar PRs destinados a qualquer branch. Adicionar `npm run validar:local`, `npm run pr:validar -- <numero> --watch` e instruções do ciclo de correção no AGENTS.md.
+
+**Critérios de aceite:**
+- [ ] CI e Segurança aprovados no SHA atual do PR, sem conflitos.
+- [ ] Nenhum piso reduzido, advisory novo aceito ou check relevante desativado.
+- [ ] Monitor rejeita SHA divergente, conflitos, falha, cancelamento e ausência de workflows; aguarda execução pendente.
+- [ ] Testes de regressão cobrem decisões do monitor e persistência/expiração dos boosts.
+- [ ] Roadmap, documentação e issue sincronizados; cinco tarefas CI-29 a CI-33 preservadas.
+
+**Entrega:** implementação e evidências no PR https://github.com/VittorNCosta/TrincaEngSoftware/pull/225 ; tarefa aberta enquanto aguarda validação e integração. O monitor consulta e aguarda; as correções são executadas pelo agente conforme AGENTS.md, sem merge automático.
+
+**Referências:**
+https://github.com/ossf/scorecard-action
+https://github.com/advisories/GHSA-2883-xcg3-v3hh
+https://github.com/advisories/GHSA-93r5-fhx6-vmg9
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2661,4 +2841,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 218 issues (111 já criadas fechadas) =="
+echo "== pronto: 224 issues (111 já criadas fechadas) =="
