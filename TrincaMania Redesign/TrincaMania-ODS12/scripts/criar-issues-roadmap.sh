@@ -2104,6 +2104,34 @@ https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a779
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-34 · Automatizar validação de PR e corrigir checks de entrega' \
+  --body '**Problema:** o PR #225 foi entregue antes de conferir os checks remotos e apresentou falhas de formato, cobertura, auditoria e Scorecard, além de conflito posterior com a base.
+
+**Escopo:** integrar a base preservando a classificação Codex, corrigir formato e dependências transitivas vulneráveis, cobrir compra/expiração/persistência dos espaços da bandeja, limitar Scorecard à branch padrão e validar PRs destinados a qualquer branch. Adicionar `npm run validar:local`, `npm run pr:validar -- <numero> --watch` e instruções do ciclo de correção no AGENTS.md.
+
+**Critérios de aceite:**
+- [ ] CI e Segurança aprovados no SHA atual do PR, sem conflitos.
+- [ ] Nenhum piso reduzido, advisory novo aceito ou check relevante desativado.
+- [ ] Monitor rejeita SHA divergente, conflitos, falha, cancelamento e ausência de workflows; aguarda execução pendente.
+- [ ] Testes de regressão cobrem decisões do monitor e persistência/expiração dos boosts.
+- [ ] Roadmap, documentação e issue sincronizados; cinco tarefas CI-29 a CI-33 preservadas.
+
+**Entrega:** implementação e evidências no PR https://github.com/VittorNCosta/TrincaEngSoftware/pull/225 ; tarefa aberta enquanto aguarda validação e integração. O monitor consulta e aguarda; as correções são executadas pelo agente conforme AGENTS.md, sem merge automático.
+
+**Referências:**
+https://github.com/ossf/scorecard-action
+https://github.com/advisories/GHSA-2883-xcg3-v3hh
+https://github.com/advisories/GHSA-93r5-fhx6-vmg9
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2813,4 +2841,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 223 issues (111 já criadas fechadas) =="
+echo "== pronto: 224 issues (111 já criadas fechadas) =="

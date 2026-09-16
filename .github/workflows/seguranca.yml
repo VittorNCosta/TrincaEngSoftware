@@ -12,7 +12,7 @@ on:
   push:
     branches: ["**"]
   pull_request:
-    branches: [main, develop]
+    branches: ["**"]
   # Segunda-feira, 06:00 UTC (03:00 em Sao Paulo). Pega o advisory que foi
   # publicado enquanto ninguem mexia no codigo.
   schedule:
@@ -135,7 +135,9 @@ jobs:
     # dependencia pinada etc.), nao o diff de uma mudanca — nao ha "antes" e
     # "depois" para comparar dentro de um PR, e a maioria dos checks olha para
     # configuracao do GitHub que um PR nem consegue alterar.
-    if: github.event_name != 'pull_request'
+    # A action só aceita a branch padrão ao publicar resultados. Branches de
+    # trabalho continuam cobertas por audit, gitleaks e CodeQL.
+    if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     permissions:
       # `security-events: write` publica o SARIF na aba Security. `id-token:
       # write` assina o resultado (Sigstore) para publicacao no registro
