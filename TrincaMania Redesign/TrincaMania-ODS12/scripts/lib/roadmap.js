@@ -12,6 +12,7 @@
  */
 const fs = require('node:fs');
 const path = require('node:path');
+const { CODEX_MODEL_INFO, recomendarModeloCodex } = require('./codex-models');
 
 const repoRoot = path.join(__dirname, '..', '..');
 
@@ -38,6 +39,7 @@ const LABELS = [
   ['modelo-sonnet', '1B7FBD'],
   ['modelo-fable', 'C2410C'],
   ['modelo-haiku', '6B7280'],
+  ...Object.values(CODEX_MODEL_INFO).map(({ label, color }) => [label, color]),
 ];
 
 const STREAM_LABEL = {
@@ -178,6 +180,12 @@ const lerTarefas = (caminho = CAMINHO_PADRAO) => {
       const titulo = toMarkdown(String(tituloBruto).replace(/^✅\s*/, ''));
       const milestone = MILESTONE[bloco.k];
       const modelo = recomendarModelo({ bloco: bloco.k, prioridade, quem });
+      const codex = recomendarModeloCodex({
+        id,
+        bloco: bloco.k,
+        prioridade,
+        quem,
+      });
 
       tarefas.push({
         id,
@@ -187,6 +195,8 @@ const lerTarefas = (caminho = CAMINHO_PADRAO) => {
         prioridade,
         quem,
         modelo,
+        modeloCodex: codex.modelo,
+        motivoCodex: codex.motivo,
         titulo,
         tituloIssue: `${id} · ${titulo}`,
         corpo: [
@@ -196,6 +206,8 @@ const lerTarefas = (caminho = CAMINHO_PADRAO) => {
           ...(modelo
             ? [`**Modelo recomendado:** ${MODEL_INFO[modelo].display}`]
             : []),
+          `**Modelo Codex recomendado:** ${codex.modelo ? CODEX_MODEL_INFO[codex.modelo].display + ' (' + CODEX_MODEL_INFO[codex.modelo].id + ')' : 'Manual — sem modelo executor'}`,
+          `**Critério Codex:** ${codex.motivo}`,
           `**Prioridade:** P${prioridade}`,
           `**Fluxo:** ${milestone}`,
           '',
@@ -206,6 +218,7 @@ const lerTarefas = (caminho = CAMINHO_PADRAO) => {
           `P${prioridade}`,
           WHO_LABEL[quem],
           modelo ? MODEL_INFO[modelo].label : null,
+          codex.modelo ? CODEX_MODEL_INFO[codex.modelo].label : null,
         ]
           .filter(Boolean)
           .join(','),
@@ -227,6 +240,7 @@ module.exports = {
   LABELS,
   MILESTONE,
   MODEL_INFO,
+  CODEX_MODEL_INFO,
   STREAM_LABEL,
   WHO_LABEL,
   WHO_TEXT,
@@ -234,6 +248,7 @@ module.exports = {
   lerBlocos,
   lerTarefas,
   recomendarModelo,
+  recomendarModeloCodex,
   repoRoot,
   toMarkdown,
 };
