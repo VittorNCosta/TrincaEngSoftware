@@ -13,6 +13,25 @@ function referencias(body, repo) {
     numeros.add(Number(match[1]));
   return [...numeros];
 }
+
+function fechamentos(body, repo) {
+  const numeros = new Set();
+  const referencia = String.raw`(?:#\d+|https:\/\/github\.com\/[^/\s]+\/[^/\s]+\/issues\/\d+)`;
+  const clausula = new RegExp(
+    String.raw`\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+(${referencia}(?:(?:\s*,\s*|\s+and\s+)${referencia})*)`,
+    "gi",
+  );
+  const numero =
+    /#(\d+)|https:\/\/github\.com\/([^/\s]+\/[^/\s]+)\/issues\/(\d+)/gi;
+  for (const match of (body || "").matchAll(clausula)) {
+    for (const alvo of match[1].matchAll(numero)) {
+      if (alvo[1]) numeros.add(Number(alvo[1]));
+      else if (alvo[2].toLowerCase() === repo.toLowerCase())
+        numeros.add(Number(alvo[3]));
+    }
+  }
+  return [...numeros];
+}
 async function rastrear({
   pr,
   repo,
@@ -47,6 +66,16 @@ async function rastrear({
   }
   issue ||= automatica;
   if (pr.state === "closed") {
+    if (!somenteLeitura && pr.merged) {
+      for (const number of fechamentos(pr.body, repo)) {
+        const vinculada = await api("GET", `/issues/${number}`);
+        if (vinculada.pull_request || vinculada.state === "closed") continue;
+        await api("PATCH", `/issues/${number}`, {
+          state: "closed",
+          state_reason: "completed",
+        });
+      }
+    }
     if (!somenteLeitura && pr.merged && pr.base.ref === entrega && automatica)
       await api("PATCH", `/issues/${automatica.number}`, {
         state: "closed",
@@ -131,7 +160,7 @@ async function main() {
       : "PR fechado sem tarefa automática",
   );
 }
-module.exports = { referencias, rastrear };
+module.exports = { referencias, fechamentos, rastrear };
 if (require.main === module)
   main().catch((error) => {
     console.error(error.message);
