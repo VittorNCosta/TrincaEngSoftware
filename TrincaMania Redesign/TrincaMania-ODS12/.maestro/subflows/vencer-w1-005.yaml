@@ -55,6 +55,8 @@ appId: br.com.mhvtech.trincamania.e2e
 - tapOn:
     id: 'board-tile-w1-005-6'
 - waitForAnimationToEnd
+- assertVisible: 'Baú desbloqueado!'
+- tapOn: 'Coletar'
 - extendedWaitUntil:
     visible: 'Vitória'
     timeout: 15000
