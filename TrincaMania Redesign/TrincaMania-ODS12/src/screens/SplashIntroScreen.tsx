@@ -30,12 +30,12 @@ type IntroParticle = {
 };
 
 const INTRO_PARTICLES: IntroParticle[] = [
-  { color: '#FFD35A', delay: 0, rotate: '18deg', size: 10, x: -138, y: -194 },
-  { color: '#42E5A7', delay: 0.1, rotate: '-18deg', size: 8, x: 128, y: -166 },
-  { color: '#FF6D9E', delay: 0.18, rotate: '45deg', size: 9, x: -152, y: 86 },
-  { color: '#8FD8FF', delay: 0.26, rotate: '-45deg', size: 7, x: 148, y: 116 },
+  { color: '#FFD500', delay: 0, rotate: '18deg', size: 10, x: -138, y: -194 },
+  { color: '#009640', delay: 0.1, rotate: '-18deg', size: 8, x: 128, y: -166 },
+  { color: '#E30613', delay: 0.18, rotate: '45deg', size: 9, x: -152, y: 86 },
+  { color: '#0055A4', delay: 0.26, rotate: '-45deg', size: 7, x: 148, y: 116 },
   { color: '#FFF4B8', delay: 0.32, rotate: '10deg', size: 6, x: -72, y: 184 },
-  { color: '#C8B8FF', delay: 0.22, rotate: '-10deg', size: 8, x: 76, y: -218 },
+  { color: '#7B3F00', delay: 0.22, rotate: '-10deg', size: 8, x: 76, y: -218 },
 ];
 
 export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
@@ -352,6 +352,16 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
             </Animated.Text>
 
             <View style={[styles.titleStage, { width: titleWidth }]}>
+              <Animated.Image
+                accessible={false}
+                source={require('../../assets/adaptive-icon.png')}
+                resizeMode="contain"
+                style={{
+                  width: 110,
+                  height: Math.min(height * 0.13, 110),
+                  opacity: titleOpacity,
+                }}
+              />
               <Animated.View
                 pointerEvents="none"
                 style={[

@@ -12,12 +12,21 @@
 name: E2E Android
 
 on:
-  # TEMPORARIO — sai assim que o job passar verde uma vez. `workflow_dispatch`
-  # so existe depois que o arquivo chega na branch padrao, entao nao ha como
-  # disparar este workflow a partir da branch onde ele esta nascendo.
-  push:
-    branches: [feat/campanha-10x10]
+  pull_request:
+    paths:
+      - "TrincaMania Redesign/TrincaMania-ODS12/**"
+      - "!TrincaMania Redesign/TrincaMania-ODS12/**/*.md"
+      - "!TrincaMania Redesign/TrincaMania-ODS12/docs/**"
+      - ".github/workflows/e2e.yml"
   workflow_dispatch:
+    inputs:
+      suite:
+        description: "Jornadas comuns ou perda/recarga real de vida (30 minutos)"
+        type: choice
+        default: full
+        options:
+          - full
+          - lives
   schedule:
     # Segunda de manha, antes de alguem comecar a semana em cima de um app que
     # parou de abrir na sexta.
@@ -27,8 +36,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.suite || 'full' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 defaults:
   run:
@@ -41,13 +50,20 @@ jobs:
     # Build nativo do zero (~15min) + emulador (~5min) + fluxos. O teto e
     # generoso de proposito: cair por timeout num runner lento seria falha
     # falsa, e a frequencia baixa nao deixa isso virar custo.
+    env:
+      EXPO_PUBLIC_E2E: "true"
+      APP_ID: br.com.mhvtech.trincamania.e2e
+      SENTRY_DISABLE_AUTO_UPLOAD: "true"
     timeout-minutes: 60
     steps:
+      - name: Registrar início
+        working-directory: .
+        run: echo "E2E_STARTED=$(date +%s)" >> "$GITHUB_ENV"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
 
@@ -70,7 +86,13 @@ jobs:
       # precisa.
       - name: Montar o APK
         working-directory: "TrincaMania Redesign/TrincaMania-ODS12/android"
-        run: ./gradlew assembleRelease --no-daemon
+        # O limite Expo de 512 MiB de Metaspace esgotou no build com Updates/Sentry.
+        # O APK de teste precisa apenas da arquitetura do emulador abaixo.
+        run: |
+          ./gradlew assembleRelease --no-daemon --max-workers=2 \
+            '-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError' \
+            '-Pkotlin.daemon.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=1g' \
+            -PreactNativeArchitectures=x86_64
 
       # Sem action de terceiro para o Maestro: baixa o release fixado e confere
       # o sha256 antes de executar qualquer coisa dele. Mesmo padrao do gitleaks
@@ -103,6 +125,7 @@ jobs:
           # O CLI pergunta sobre telemetria na primeira execucao; num runner sem
           # terminal isso pendura o passo ate o teto de tempo.
           MAESTRO_CLI_NO_ANALYTICS: "true"
+          MAESTRO_FLOW: ${{ github.event_name == 'pull_request' && '.maestro/01-entrar-numa-fase.yaml' || inputs.suite == 'lives' && '.maestro/manual/05-perder-vida-recarregar.yaml' || '.maestro' }}
         with:
           api-level: 34
           target: google_apis
@@ -122,15 +145,14 @@ jobs:
           # raiz do checkout, que e onde o upload-artifact procura.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
-            maestro test --format junit --output ../../maestro-resultado.xml .maestro
+            maestro test -e APP_ID="$APP_ID" --test-output-dir ../../maestro-artifacts --format junit --output ../../maestro-resultado.xml "$MAESTRO_FLOW"
 
       # Falhou: o Maestro grava captura de tela e hierarquia de views de cada
       # passo. Sem isso, "nao achou o botao" num runner sem tela e indepuravel.
       #
-      # Sem `--debug-output`: passar esse flag fez o Maestro parar de escrever
-      # em `~/.maestro/tests` sem escrever no lugar pedido, e o diagnostico
-      # saiu vazio duas vezes. No caminho padrao as capturas existem — so
-      # precisam entrar no checkout, que e onde o upload-artifact procura.
+      # Maestro 2.10 usa --test-output-dir para fixar a raiz dos artefatos no
+      # checkout. Nao usar o antigo --debug-output, que ja produziu diagnostico
+      # vazio. Capturas explicitas tambem sao preservadas em caso de sucesso.
       #
       # O `ls` nao e enfeite: se o upload falhar de novo, a arvore fica no log
       # do proprio job e a proxima investigacao nao custa outra execucao.
@@ -138,7 +160,7 @@ jobs:
         if: failure()
         run: |
           mkdir -p ../../maestro-diagnostico
-          cp -r "${HOME}/.maestro/tests/." ../../maestro-diagnostico/ || true
+          cp -r ../../maestro-artifacts/. ../../maestro-diagnostico/ || true
           ls -R ../../maestro-diagnostico || true
 
       - name: Guardar o diagnostico
@@ -148,6 +170,25 @@ jobs:
           name: maestro-diagnostico
           path: |
             maestro-diagnostico/**
-            maestro-resultado.xml
           retention-days: 7
           if-no-files-found: warn
+
+      - name: Guardar JUnit
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: maestro-junit
+          path: maestro-resultado.xml
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Guardar capturas para revisão visual
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: maestro-capturas
+          path: maestro-artifacts/**/takeScreenshot/**/*.png
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Registrar duração
+        if: always()
+        run: echo "E2E Android levou $(( $(date +%s) - E2E_STARTED )) segundos ($GITHUB_EVENT_NAME)." >> "$GITHUB_STEP_SUMMARY"

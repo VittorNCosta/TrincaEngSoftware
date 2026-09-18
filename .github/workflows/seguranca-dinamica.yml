@@ -1,0 +1,51 @@
+name: Segurança Android (verificações dinâmicas parciais)
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: ID de Build manual preview concluído
+        required: true
+        type: string
+      serial:
+        description: Serial do emulador descartável dedicado
+        required: true
+        default: emulator-5554
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: mobile-security-device
+  cancel-in-progress: false
+jobs:
+  runtime:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: [self-hosted, linux, mobile-security-isolated]
+    environment: mobile-security
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Obter build verificável
+        id: build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+        run: python3 .github/security/download_build.py
+      - name: Verificações parciais no emulador isolado
+        env:
+          DEVICE_SERIAL: ${{ inputs.serial }}
+          BUILD_COMMIT: ${{ steps.build.outputs.commit }}
+        run: >-
+          python3 .github/security/check_device.py
+          --serial "$DEVICE_SERIAL" --apk security-input/app.apk
+          --manifest security-input/build-manifest.json --commit "$BUILD_COMMIT"
+          --output security-output/dynamic-summary.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: dinamico-parcial-${{ inputs.build_run_id }}
+          path: security-output/dynamic-summary.json
+          retention-days: 7
+          if-no-files-found: warn

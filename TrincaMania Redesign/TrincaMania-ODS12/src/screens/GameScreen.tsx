@@ -1,3 +1,22 @@
+import { IS_E2E_BUILD, E2E_BOARD_SEED } from '../testing/e2eProfile';
+import { updateDiagnosticContext } from '../utils/log';
+import {
+  createSeededRandom,
+  mixSeed,
+  stableHash,
+} from '../utils/deterministicRandom';
+import { getChapterVisualIdentity } from '../data/chapterVisualIdentity';
+import { createBoardVariation } from './game/createBoardVariation';
+import {
+  PRACTICAL_TUTORIAL_LEVEL_ID,
+  PRACTICAL_TUTORIAL_POPUPS,
+  isPracticalTutorialPopupStep,
+  isPracticalTutorialTapStep,
+  getTutorialAvailableTiles,
+  findOpeningTutorialTile,
+  type PracticalTutorialStep,
+} from './game/practicalTutorial';
+import { styles } from './game/styles';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
@@ -33,11 +52,7 @@ import {
   type TripleConsumeEvent,
   type TripleConsumeTile,
 } from '../components/TripleConsumeEffect';
-import {
-  buildChapterLevel,
-  getChapter,
-  getChapterLevelSummary,
-} from '../data/chapters';
+import { getChapter, getChapterLevelSummary } from '../data/chapters';
 import { POWER_UP_UI } from '../data/powerUps';
 import { getWorldById } from '../data/worlds';
 import { LivesState, formatLifeTimer } from '../storage/livesStorage';
@@ -55,12 +70,10 @@ import {
   isAdTraySlotActive as isAdTrayBoostActive,
   isCoinTraySlotActive as isCoinTrayBoostActive,
 } from '../storage/trayBoostStorage';
-import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 import {
   ChestProgressSummary,
   ChestRewardSummary,
   GameStatus,
-  GeneratedLevelOptions,
   Level,
   MoveHistoryItem,
   MoveResult,
@@ -88,7 +101,6 @@ import {
   findMagicTripleMove,
   formatQuantity,
   formatSeconds,
-  getAvailableTiles,
   getUndoableMove,
   insertTileGroupedInTray,
   isMysteryTileHidden,
@@ -107,7 +119,6 @@ import {
   successImpact,
   warningImpact,
 } from '../utils/haptics';
-import { generatePlayableLevel } from '../utils/levelGenerator';
 import {
   duckAmbient,
   playAmbientForWorld,
@@ -142,6 +153,22 @@ import {
   settleActiveTileMove,
 } from '../utils/tileMoveQueue';
 
+// Keep the actual board seed in diagnostics so a failure can be reproduced.
+const createRoundBoard = (levelId: string, retry = false) => {
+  const chapter = getChapterLevelSummary(levelId);
+  const seed =
+    chapter && !retry
+      ? mixSeed(
+          stableHash(levelId),
+          getChapterVisualIdentity(levelId).cardVariantSeed,
+        )
+      : IS_E2E_BUILD
+        ? E2E_BOARD_SEED
+        : Math.floor(Math.random() * 0x100000000);
+  updateDiagnosticContext({ levelId, seed, retry });
+  return createBoardVariation(levelId, { random: createSeededRandom(seed) });
+};
+
 const TOAST_VISIBLE_MS = 1700;
 const BONUS_FEEDBACK_VISIBLE_MS = 1050;
 const TILE_INSERT_POP_MS = 110;
@@ -149,7 +176,7 @@ const TILE_INSERT_POP_MS = 110;
 const gameWorld1Bg =
   require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
 const gameWorld1SceneBg =
-  require('../../assets/map/map_world1_scene_bg.png') as ImageSourcePropType;
+  require('../../assets/map/worlds/w01_parque_game.png') as ImageSourcePropType;
 const gameWorld2Bg =
   require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
 const gameWorld3Bg =
@@ -176,21 +203,6 @@ type ToastState = {
 
 type PowerEffectResult = 'applied' | 'cancelled' | 'failed';
 
-type PracticalTutorialStep =
-  | 'done'
-  | 'intro'
-  | 'tap-first'
-  | 'tray'
-  | 'tap-second'
-  | 'tap-third'
-  | 'triple'
-  | 'warning';
-
-type PracticalTutorialPopupStep = Extract<
-  PracticalTutorialStep,
-  'intro' | 'tray' | 'triple' | 'warning'
->;
-
 type PendingTileMove = {
   arrivalTray: Tile[];
   event: FlyingTileEvent;
@@ -198,83 +210,6 @@ type PendingTileMove = {
   result: MoveResult;
   terminalElapsedSeconds?: number;
   tutorialStep?: PracticalTutorialStep;
-};
-
-const PRACTICAL_TUTORIAL_LEVEL_ID = 'w1-001';
-const PRACTICAL_TUTORIAL_POPUPS: Record<
-  PracticalTutorialPopupStep,
-  { button: string; text: string; title: string }
-> = {
-  intro: {
-    button: 'Começar',
-    text: 'Toque em uma peça livre para enviá-la para a bandeja.',
-    title: 'Forme trincas',
-  },
-  tray: {
-    button: 'Entendi',
-    text: 'As peças escolhidas ficam aqui. Junte 3 iguais para formar uma trinca.',
-    title: 'Bandeja',
-  },
-  triple: {
-    button: 'Continuar',
-    text: 'Quando 3 peças iguais entram na bandeja, elas somem e liberam espaço.',
-    title: 'Muito bem!',
-  },
-  warning: {
-    button: 'Jogar',
-    text: 'Se todos os espaços ativos encherem antes de formar uma trinca, você perde.',
-    title: 'Cuidado com a bandeja',
-  },
-};
-
-const isPracticalTutorialPopupStep = (
-  step: PracticalTutorialStep,
-): step is PracticalTutorialPopupStep =>
-  step === 'intro' ||
-  step === 'tray' ||
-  step === 'triple' ||
-  step === 'warning';
-
-const isPracticalTutorialTapStep = (step: PracticalTutorialStep) =>
-  step === 'tap-first' || step === 'tap-second' || step === 'tap-third';
-
-const sortTilesForTutorial = (tiles: Tile[]) =>
-  [...tiles].sort((firstTile, secondTile) => {
-    if (firstTile.z !== secondTile.z) {
-      return firstTile.z - secondTile.z;
-    }
-
-    if (firstTile.y !== secondTile.y) {
-      return firstTile.y - secondTile.y;
-    }
-
-    return firstTile.x - secondTile.x;
-  });
-
-const getTutorialAvailableTiles = (board: Tile[], preferredKind?: TileKind) => {
-  const availableTiles = sortTilesForTutorial(
-    getAvailableTiles(board).filter((tile) => !isMysteryTileHidden(tile)),
-  );
-
-  return preferredKind
-    ? availableTiles.filter((tile) => tile.kind === preferredKind)
-    : availableTiles;
-};
-
-const findOpeningTutorialTile = (board: Tile[]) => {
-  const availableTiles = getTutorialAvailableTiles(board);
-  const countsByKind = availableTiles.reduce<Map<TileKind, Tile[]>>(
-    (counts, tile) => {
-      counts.set(tile.kind, [...(counts.get(tile.kind) ?? []), tile]);
-      return counts;
-    },
-    new Map<TileKind, Tile[]>(),
-  );
-
-  return (
-    Array.from(countsByKind.values()).find((tiles) => tiles.length >= 3)?.[0] ??
-    availableTiles[0]
-  );
 };
 
 type GameScreenProps = {
@@ -321,24 +256,6 @@ type GameScreenProps = {
     useImmediately: boolean,
   ) => Promise<boolean>;
   onUseItem: (powerType: PowerUpType) => boolean;
-};
-
-// Mapa de capítulo não mora em `LEVELS`, e `generatePlayableLevel` cai em
-// `LEVELS[0]` quando não acha o id — sem este desvio a fase de capítulo abriria
-// com o tabuleiro de w1-001.
-// Sem `options`, o mapa de capítulo nasce da semente estável do id: o jogador
-// reencontra o tabuleiro que largou pela metade. O "tentar novamente" precisa
-// passar um `random` próprio, senão devolve o layout idêntico enquanto a UI
-// anuncia "Nova variação pronta." — a campanha re-sorteia e ele não.
-const createBoardVariation = (
-  levelId: string,
-  options: GeneratedLevelOptions = {},
-) => {
-  const chapterLevel = buildChapterLevel(levelId, options);
-
-  return revealAvailableMysteryTiles(
-    (chapterLevel ?? generatePlayableLevel(levelId, options)).tiles,
-  );
 };
 
 const getGameBackground = (worldId: WorldId) => {
@@ -416,9 +333,7 @@ export function GameScreen({
   );
   const [roundCoinTraySlotActive, setRoundCoinTraySlotActive] =
     useState(isCoinTraySlotActive);
-  const [board, setBoard] = useState<Tile[]>(() =>
-    createBoardVariation(level.id),
-  );
+  const [board, setBoard] = useState<Tile[]>(() => createRoundBoard(level.id));
   const [boardBounds, setBoardBounds] = useState(() => getBoardBounds(board));
   const [boardViewport, setBoardViewport] = useState<BoardViewport>({
     height: 0,
@@ -966,7 +881,7 @@ export function GameScreen({
   // `false` no meio da partida, e reagir a isso regeneraria o tabuleiro em cima
   // das jogadas que o jogador acabou de fazer. Só a troca de fase reinicia.
   useEffect(() => {
-    resetRoundState(createBoardVariation(level.id));
+    resetRoundState(createRoundBoard(level.id));
     setPracticalTutorialStep(
       shouldRunPracticalTutorialRef.current &&
         level.id === PRACTICAL_TUTORIAL_LEVEL_ID
@@ -1384,7 +1299,7 @@ export function GameScreen({
   ) => {
     lightImpact();
     resetRoundState(
-      createBoardVariation(level.id, { random: Math.random }),
+      createRoundBoard(level.id, true),
       nextTrayCapacity,
       nextTrayBoosts,
     );
@@ -2871,552 +2786,3 @@ export function GameScreen({
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  // Sem moldura: o tabuleiro flutua sobre o cenário, como no 2a.
-  boardArea: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    minHeight: 0,
-  },
-  boardScaler: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  boardStage: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: {
-    backgroundColor: colors.backgroundDeep,
-    flex: 1,
-    marginBottom: -spacing.md,
-    marginHorizontal: -spacing.md,
-    marginTop: -spacing.md,
-    overflow: 'hidden',
-    paddingBottom: spacing.md,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    position: 'relative',
-  },
-  containerBonus: {
-    backgroundColor: '#43204F',
-  },
-  containerCrystal: {
-    backgroundColor: '#21174A',
-  },
-  containerMountain: {
-    backgroundColor: '#12304F',
-  },
-  gameContent: {
-    flex: 1,
-    gap: 6,
-    position: 'relative',
-    zIndex: 2,
-  },
-  // O HUD deixou de ser painel: as peças flutuam direto sobre o cenário.
-  hud: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    minHeight: 58,
-    paddingHorizontal: 2,
-    paddingVertical: 2,
-  },
-  hudNav: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 5,
-  },
-  navButton: {
-    alignItems: 'center',
-    backgroundColor: '#FFC93F',
-    borderBottomColor: '#A9711A',
-    borderBottomWidth: 5,
-    borderColor: '#FFF6D8',
-    borderRadius: 14,
-    borderWidth: 3,
-    height: 48,
-    justifyContent: 'center',
-    width: 48,
-    ...shadows.button,
-  },
-  navButtonPressed: {
-    opacity: 0.9,
-    transform: [{ translateY: 1 }, { scale: 0.96 }],
-  },
-  resetButton: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(7, 24, 32, 0.8)',
-    borderColor: 'rgba(255, 255, 255, 0.22)',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 48,
-    justifyContent: 'center',
-    width: 48,
-  },
-  settingsNavButton: {
-    alignItems: 'center',
-    backgroundColor: '#4FBCFF',
-    borderColor: '#C8ECFF',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 48,
-    justifyContent: 'center',
-    width: 48,
-  },
-  meterRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: 4,
-  },
-  meterCount: {
-    color: colors.inkOnDark,
-    fontSize: 14,
-    fontWeight: '900',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 3,
-  },
-  meterCountUnit: {
-    fontSize: 10,
-    fontWeight: '700',
-    opacity: 0.75,
-  },
-  meterFill: {
-    backgroundColor: '#22C88C',
-    borderRadius: radii.pill,
-    height: '100%',
-  },
-  meterMark: {
-    alignItems: 'center',
-    backgroundColor: '#FFD35A',
-    borderColor: '#FFFFFF',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 18,
-    justifyContent: 'center',
-    marginLeft: -9,
-    position: 'absolute',
-    top: -3,
-    width: 18,
-  },
-  meterMarkText: {
-    color: '#8A5200',
-    fontSize: 9,
-    fontWeight: '900',
-    lineHeight: 11,
-  },
-  // A barra enche até o limite de 2 estrelas, então esse marcador fica no fim.
-  meterMarkTwo: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    borderColor: 'rgba(255, 255, 255, 0.7)',
-    height: 16,
-    left: '100%',
-    marginLeft: -14,
-    top: -2,
-    width: 16,
-  },
-  meterMarkTextTwo: {
-    color: '#3A2A00',
-    fontSize: 9,
-    fontWeight: '900',
-    lineHeight: 11,
-  },
-  meterTime: {
-    color: colors.inkOnDark,
-    fontSize: 15,
-    fontWeight: '900',
-    minWidth: 46,
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 3,
-  },
-  meterTrack: {
-    backgroundColor: 'rgba(7, 24, 32, 0.6)',
-    borderRadius: radii.pill,
-    flex: 1,
-    height: 12,
-    position: 'relative',
-  },
-  hudRight: {
-    alignItems: 'flex-end',
-    gap: 7,
-  },
-  coinRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 6,
-  },
-  shopCartButton: {
-    alignItems: 'center',
-    height: 42,
-    justifyContent: 'center',
-    // O alvo de toque é maior que o ícone; a margem negativa devolve a folga
-    // para a pílula de moedas continuar alinhada com a de vidas.
-    marginRight: -6,
-    width: 42,
-  },
-  hudTextBlock: {
-    alignItems: 'center',
-    flex: 1,
-    minWidth: 0,
-    paddingTop: 1,
-  },
-  modalOverlay: {
-    alignItems: 'center',
-    backgroundColor: colors.overlay,
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  practicalModalCard: {
-    alignItems: 'center',
-    backgroundColor: '#FFF5D8',
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 5,
-    borderColor: colors.primary,
-    borderRadius: 18,
-    borderWidth: 3,
-    gap: spacing.sm,
-    maxWidth: 340,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    width: '88%',
-    ...shadows.card,
-  },
-  practicalModalText: {
-    color: colors.muted,
-    fontSize: fontSizes.sm,
-    fontWeight: '800',
-    lineHeight: 20,
-    textAlign: 'center',
-  },
-  practicalModalTitle: {
-    color: colors.ink,
-    fontSize: fontSizes.lg,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  practicalTargetCallout: {
-    alignSelf: 'center',
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    bottom: 8,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    position: 'absolute',
-    zIndex: 6,
-    ...shadows.card,
-  },
-  practicalTargetText: {
-    color: colors.ink,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  purchaseModalActions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    justifyContent: 'center',
-  },
-  bonusBenefitPill: {
-    backgroundColor: '#DFFFF2',
-    borderColor: '#42E5A7',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 5,
-  },
-  bonusBenefitText: {
-    color: '#087A54',
-    fontSize: fontSizes.sm,
-    fontWeight: '900',
-    letterSpacing: 0.4,
-  },
-  bonusModalIcon: {
-    alignItems: 'center',
-    backgroundColor: '#E9FFF6',
-    borderColor: '#7AE7B9',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 58,
-    justifyContent: 'center',
-    width: 58,
-  },
-  bonusPurchaseModalCard: {
-    alignItems: 'center',
-    backgroundColor: '#F4FFF8',
-    borderBottomColor: '#087A54',
-    borderBottomWidth: 5,
-    borderColor: '#7AE7B9',
-    borderRadius: 20,
-    borderWidth: 3,
-    gap: spacing.sm,
-    maxWidth: 350,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    width: '90%',
-    ...shadows.card,
-  },
-  purchaseModalCard: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 5,
-    borderColor: colors.primary,
-    borderRadius: 18,
-    borderWidth: 3,
-    gap: spacing.sm,
-    maxWidth: 350,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    width: '90%',
-    ...shadows.card,
-  },
-  purchaseModalText: {
-    color: colors.muted,
-    fontSize: fontSizes.md,
-    fontWeight: '800',
-    lineHeight: 22,
-    textAlign: 'center',
-  },
-  purchaseModalTitle: {
-    color: colors.ink,
-    fontSize: fontSizes.xl,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  powerBalanceText: {
-    color: '#6B4B13',
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    marginLeft: spacing.xs,
-  },
-  powerPriceRow: {
-    alignItems: 'center',
-    backgroundColor: '#FFF4C9',
-    borderColor: '#E8B64B',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    flexDirection: 'row',
-    gap: 4,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-  },
-  powerPriceText: {
-    color: '#6B3F00',
-    fontSize: fontSizes.md,
-    fontWeight: '900',
-  },
-  powerPurchaseCondition: {
-    color: '#6A4B74',
-    fontSize: fontSizes.xs,
-    fontWeight: '800',
-    lineHeight: 17,
-    textAlign: 'center',
-  },
-  powerPurchaseConditionReady: {
-    color: '#087A54',
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    lineHeight: 17,
-    textAlign: 'center',
-  },
-  powerPurchaseIcon: {
-    alignItems: 'center',
-    backgroundColor: '#EEE9FF',
-    borderColor: '#BFA8FF',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 62,
-    justifyContent: 'center',
-    width: 62,
-  },
-  powerPurchaseInsufficient: {
-    color: colors.dangerDark,
-    fontSize: fontSizes.sm,
-    fontWeight: '900',
-  },
-  powerPurchaseModalCard: {
-    alignItems: 'center',
-    backgroundColor: '#FFF8E8',
-    borderBottomColor: '#4C359E',
-    borderBottomWidth: 5,
-    borderColor: '#BFA8FF',
-    borderRadius: 20,
-    borderWidth: 3,
-    gap: spacing.sm,
-    maxWidth: 350,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    width: '90%',
-    ...shadows.card,
-  },
-  bonusSlotFeedback: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: '#163D31',
-    borderColor: '#7AE7B9',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    bottom: 76,
-    flexDirection: 'row',
-    gap: 5,
-    maxWidth: '82%',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 5,
-    position: 'absolute',
-    zIndex: 30,
-    ...shadows.card,
-  },
-  bonusSlotFeedbackText: {
-    color: '#E9FFF6',
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-  },
-  bonusSlotIndicator: {
-    color: '#BDFBE4',
-    fontSize: 9,
-    fontWeight: '900',
-    marginTop: 2,
-  },
-  rescueModalCard: {
-    alignItems: 'center',
-    backgroundColor: '#FFF8E8',
-    borderBottomColor: '#7A48D6',
-    borderBottomWidth: 5,
-    borderColor: '#BFA8FF',
-    borderRadius: 18,
-    borderWidth: 3,
-    gap: spacing.sm,
-    maxWidth: 360,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
-    width: '90%',
-    ...shadows.card,
-  },
-  rescueModalHint: {
-    color: '#6D3FD1',
-    fontSize: fontSizes.sm,
-    fontWeight: '900',
-    lineHeight: 20,
-    textAlign: 'center',
-  },
-  sceneGlow: {
-    borderRadius: radii.pill,
-    position: 'absolute',
-  },
-  sceneGlowBottom: {
-    backgroundColor: 'rgba(255, 109, 158, 0.24)',
-    bottom: -72,
-    height: 210,
-    right: -72,
-    width: 260,
-  },
-  sceneGlowTop: {
-    backgroundColor: 'rgba(66, 229, 167, 0.22)',
-    height: 180,
-    left: -70,
-    top: -60,
-    width: 260,
-  },
-  sceneImage: {
-    opacity: 0.96,
-  },
-  sceneOverlay: {
-    bottom: 0,
-    left: 0,
-    overflow: 'hidden',
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 1,
-  },
-  sceneWash: {
-    backgroundColor: 'rgba(5, 20, 26, 0.16)',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  sceneWashBottom: {
-    backgroundColor: 'rgba(7, 24, 32, 0.24)',
-    bottom: 0,
-    height: 190,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-  },
-  sceneWashBottomBonus: {
-    backgroundColor: 'rgba(85, 12, 82, 0.22)',
-  },
-  sceneWashBottomCrystal: {
-    backgroundColor: 'rgba(30, 14, 82, 0.22)',
-  },
-  sceneWashCrystal: {
-    backgroundColor: 'rgba(18, 14, 54, 0.18)',
-  },
-  sceneWashMountain: {
-    backgroundColor: 'rgba(4, 18, 36, 0.18)',
-  },
-  toast: {
-    alignSelf: 'center',
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.card,
-    borderWidth: 2,
-    left: spacing.md,
-    maxWidth: '92%',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    position: 'absolute',
-    right: spacing.md,
-    top: 116,
-    zIndex: 30,
-    ...shadows.card,
-  },
-  toastText: {
-    color: colors.ink,
-    fontSize: fontSizes.sm,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  // A bandeja de madeira já é a moldura — o dock escuro em volta virou ruído.
-  trayDock: {
-    paddingHorizontal: 2,
-  },
-  trayControlRow: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: 8,
-    paddingHorizontal: 4,
-  },
-  trayLabel: {
-    color: '#FFE9A8',
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1,
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 3,
-    textTransform: 'uppercase',
-  },
-  trayLabelDanger: {
-    color: '#FF8BA9',
-  },
-  trayStatus: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-    minHeight: 30,
-  },
-});

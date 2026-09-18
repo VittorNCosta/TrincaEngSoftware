@@ -1,17 +1,12 @@
+import { reportRemoteError } from '../observability/errorReporter';
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, fontSizes, spacing } from '../styles/theme';
+import { DiagnosticReport } from './DiagnosticReport';
+import { diagnosticReport, log } from '../utils/log';
 
-/**
- * Ponto único de relato de erro não tratado. Hoje só loga; quando o projeto
- * tiver um DSN do Sentry, troque o corpo por `Sentry.captureException(error)`
- * (pacote `@sentry/react-native`) sem mexer em mais nada.
- */
-const reportUnhandledError = (error: Error, info: ErrorInfo) => {
-  console.error('[ErrorBoundary]', error, info.componentStack);
-};
+import { colors, fontSizes, spacing } from '../styles/theme';
 
 type ErrorBoundaryProps = {
   children: ReactNode;
@@ -19,6 +14,7 @@ type ErrorBoundaryProps = {
 
 type ErrorBoundaryState = {
   error: Error | null;
+  report?: string;
 };
 
 export class ErrorBoundary extends Component<
@@ -32,7 +28,10 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    reportUnhandledError(error, info);
+    log('error', 'render', 'render-failed', error);
+    reportRemoteError(error);
+    if (__DEV__) log('error', 'render', 'component-stack', info.componentStack);
+    this.setState({ report: diagnosticReport() });
   }
 
   render() {
@@ -46,9 +45,17 @@ export class ErrorBoundary extends Component<
             <Text style={styles.title}>Algo deu errado</Text>
             <Text style={styles.message}>
               Feche e abra o TrincaMania de novo. Se continuar acontecendo, seu
-              progresso está salvo — pode contar pra gente o que estava fazendo
-              quando travou.
+              progresso já confirmado será mantido. Conte pra gente o que estava
+              fazendo quando travou.
             </Text>
+            {__DEV__ ? (
+              <Text selectable style={styles.message}>
+                {this.state.error.stack}
+              </Text>
+            ) : null}
+            <DiagnosticReport
+              key={this.state.report ? 'captured' : 'pending'}
+            />
           </SafeAreaView>
         </SafeAreaProvider>
       );

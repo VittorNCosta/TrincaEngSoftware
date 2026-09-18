@@ -1,4 +1,4 @@
-appId: br.com.mhvtech.trincamania
+appId: ${APP_ID}
 name: Abrir o app do zero e entrar na primeira fase
 ---
 # O caminho mais curto entre "instalei" e "estou jogando". Nenhuma das outras
@@ -7,15 +7,20 @@ name: Abrir o app do zero e entrar na primeira fase
 - launchApp:
     clearState: true
 
-# A abertura é animada e a duração dela não é contrato de nada. Esperar pelo
-# botão de pular, e não por um tempo fixo, é o que impede o fluxo de virar
-# refém do ritmo da animação.
+# A abertura termina sozinha: pode sair entre encontrar e tocar em Pular.
+# Aceitar splash ou próxima tela e esperar o mapa/guia evita essa corrida,
+# sem depender da duração da animação nem tornar a chegada ao mapa opcional.
 - extendedWaitUntil:
     visible:
-      id: 'splash-skip'
+      id: 'splash-skip|tutorial-pular|nav-map'
     timeout: 40000
 - tapOn:
     id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
 
 # Save em branco abre o guia da campanha por cima do mapa
 # (`setIsTutorialVisible(!tutorialSeen)` no App.tsx) — nada atrás dele é
@@ -37,6 +42,8 @@ name: Abrir o app do zero e entrar na primeira fase
       id: 'map-level-w1-001'
     direction: DOWN
     timeout: 30000
+
+- takeScreenshot: artifacts/mapa
 
 - tapOn:
     id: 'map-level-w1-001'
@@ -62,3 +69,5 @@ name: Abrir o app do zero e entrar na primeira fase
     visible:
       id: 'game-board'
     timeout: 30000
+
+- takeScreenshot: artifacts/partida

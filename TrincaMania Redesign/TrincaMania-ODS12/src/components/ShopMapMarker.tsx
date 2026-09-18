@@ -1,19 +1,9 @@
+import { RecyclingMarkerArt } from './RecyclingMarkerArt';
 import { useEffect, useRef } from 'react';
-import {
-  Animated,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  type ImageSourcePropType,
-  View,
-} from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
 import { colors, radii, shadows } from '../styles/theme';
-
-const shopImage =
-  require('../../assets/map/map_shop.png') as ImageSourcePropType;
 
 type ShopMapMarkerProps = {
   afterLevelLabel: string;
@@ -122,9 +112,9 @@ export function ShopMapMarker({
               <Text style={styles.shopText}>{locked ? 'Bloq.' : 'Novo'}</Text>
             </View>
           ) : (
-            <Image
-              resizeMode="contain"
-              source={shopImage}
+            <RecyclingMarkerArt
+              kind="shop"
+
               style={[styles.shopImage, locked ? styles.shopImageLocked : null]}
             />
           )}

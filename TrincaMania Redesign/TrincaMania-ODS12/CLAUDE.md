@@ -1,71 +1,10 @@
-# TrincaMania — ODS 12
+# Instruções específicas de Claude
 
-Jogo estilo mahjong (React Native/Expo) sobre coleta seletiva. O jogador fecha
-"trincas" (resíduo → lixeira → símbolo de reciclagem) do mesmo material
-(plástico, papel, vidro, metal, orgânico — cores CONAMA 275/2001). Leia
-`CONTEXT.md` antes de nomear qualquer coisa nova: é o glossário do domínio
-(Material, Papel, Carta, Peça, Variante, Resíduo, Lixeira, Símbolo, Ciclo,
-Trinca, Tabuleiro, Bandeja) com uma lista explícita de termos a evitar por
-conceito. Trate esse arquivo como a fonte de verdade de vocabulário.
-
-## Regra permanente: este projeto é ODS 12, sem exceção
-
-Todo conteúdo novo ou editado — nome de fase, de mundo, de capítulo, texto de
-objetivo, item de loja, conquista, tutorial — precisa nascer dentro do universo
-de reciclagem/consumo responsável. Nunca reintroduza vocabulário de fantasia
-genérica (reino, castelo, dragão, cristal mágico, doce/açúcar, pirata/tesouro,
-anjo/celestial) nem o tema de frutas do jogo original pré-redesign. Se
-encontrar sobra desse tipo em qualquer arquivo (string, nome de asset, nome de
-variável), trate como bug de conteúdo e sinalize ou corrija.
-
-**Contexto histórico**: em 2026-08-13 foi feita uma auditoria completa do
-projeto e corrigidos os nomes dos 8 mundos canônicos + mundo bônus (antes:
-Bosque das Trincas, Vales Montanhosos, Ruínas de Cristal, Praia dos Tesouros,
-Vulcão Doce, Cidade das Estrelas, Neve Cristalina, Reino Celestial, Reino
-Açucarado — 100% fantasia) e os ~203 títulos individuais de fase em
-`src/data/levels.ts`. Antes de assumir que uma tela/asset/texto ainda está no
-tema antigo, verifique o estado atual do arquivo — não confie em memória de
-uma auditoria antiga.
-
-**Gap conhecido e ainda aberto**: os PNGs de fundo de mapa
-(`assets/map/*.png`, mapeados em `src/data/campaignMapAssets.ts` e
-`src/data/worldMapConfigs.ts`) continuam sendo os mesmos de floresta/
-montanha/cristal/doce do jogo original — não há arte nova gerada, e isso
-inclui os 10 capítulos novos de `src/data/chapters.ts` (que reaproveitam os
-mesmos PNGs como placeholder). Reformar essa arte exige ilustração nova
-(fora do alcance de edição de código/texto); não tente gerar PNG de jogo via
-código. Marcadores pontuais ainda com arte antiga:
-`src/components/RestStopMapMarker.tsx` (`forest_rest_cart.png`) e o layout
-`PARQUE_MAP_CONFIG` do Mundo 1 em `src/data/worldMapConfigs.ts`.
-
-**Contexto histórico — resize da campanha (2026-09-03)**: a campanha foi
-reestruturada de 203 fases (8 mundos × 25 + bônus 21 × 3) para 103 fases (10
-mundos × 10 + bônus 21 × 3), na branch `feat/campanha-10x10`. Isso quebrou de
-propósito o invariante #4 antigo (as 203 fases congeladas) — o hash de
-`tests/levelComposition.test.cjs` foi recalculado sobre o novo conjunto de 103. Save de jogador com progresso no esquema antigo não quebra: como os ids
-`wN-001`…`wN-010` são idênticos entre os dois esquemas,
-`detectDroppedCampaignProgress`/`CampaignResizeNoticeModal`
-(`src/storage/progressStorage.ts`, `src/components/CampaignResizeNoticeModal.tsx`)
-avisam o jogador uma única vez quando o `normalizeProgress` descarta silenciosamente
-fase que não existe mais (posição 11–25 de um mundo antigo) — moedas, chaves e
-itens nunca são afetados por essa filtragem. Ver `tests/progressMigration.test.cjs`.
-
-**Gap conhecido — "Modo Dev" (2026-08-15)**: `unlockAllLevelsForDevMode`
-(`src/storage/progressStorage.ts`) e `unlockAllChapterMapsForDevMode`
-(`src/storage/chapterProgressStorage.ts`), acionados pelo botão em
-Configurações (só visível com `__DEV__`), **escrevem direto no save real**
-(`levelStars`, `unlockedLevelIds`, `mapStars`) em vez de um override efêmero
-não persistido. Funciona para destravar fases e testar, mas não é
-reversível automaticamente — sair do modo dev não restaura o progresso real
-anterior; só "Resetar progresso" limpa. Se algum dia importar ter um
-`effectiveUnlocked = devMode ? true : normalUnlockRule` que não contamina o
-save, isso exige reescrever a leitura de desbloqueio em
-`LevelSelectScreen`/`ChaptersScreen`, não só a escrita — avaliar custo antes
-de assumir que é troca simples.
+Leia primeiro [AGENTS.md](../../AGENTS.md), fonte compartilhada de arquitetura, invariantes, verificação, ciclo de PR sem auto-merge e backlog, e [CONTEXT.md](CONTEXT.md). Preserve `.claude` hooks e o registro existente via `npm run estado`/`npm run janela`.
 
 ## Roteamento — qual agente usar
 
-Delegue por padrão quando a tarefa cair numa destas faixas. Use `Agent` com o
+Quando houver delegação autorizada e útil, use estas especialidades. Use `Agent` com o
 `subagent_type` correspondente.
 
 | Se a tarefa é…                                                           | Agente                  |
@@ -85,74 +24,3 @@ agentes editando o mesmo arquivo conflitam.
 Skills: `/code-review` para revisão de correção antes de declarar qualquer
 tarefa não trivial concluída; `/security-review` antes de release;
 `/simplify` para limpeza de qualidade (não caça bugs).
-
-## Invariantes que já quebraram — nunca reintroduza
-
-1. **Progresso** só é gravado por `commitProgress` / `commitChapterProgress` (fila serializada em `App.tsx`, com guarda de geração). Chamar `saveProgress` direto já apagou progresso de jogador.
-2. **Vidas** só mudam por `mutateLives` (`src/storage/livesStorage.ts`). Chamada direta a `saveLivesState` já perdeu vida premiada.
-3. **Campanha e capítulos têm storages separados.** `normalizeProgress` descarta ids `chNN-NNN` **em silêncio** — nunca passe id de capítulo ao storage da campanha.
-4. **As 103 fases canônicas de `src/data/levels.ts` são congeladas.** Existe teste travando o hash de `JSON.stringify(LEVELS)`. Se mexer no arquivo, prove que a saída não mudou. (Eram 203 antes do resize de 2026-09-03 — o número muda se a campanha for reestruturada de novo, o mecanismo de trava não.)
-5. **Guarda de idempotência vai depois do `await`**, lendo o ref atual — antes do `await` abre janela de duplo toque.
-6. **`tileCount` sempre múltiplo de 3.** Senão sobra ciclo pela metade e a fase fica invencível.
-7. Parâmetro declarado no tipo mas **não desestruturado** já virou bug real (`activeTrayCapacity`). Se declarou, use.
-
-## Arquitetura
-
-- **Regra de jogo**: `src/domain/recycling/` — `services/`, `policies/`, `value-objects/`. É aqui que lógica nova entra.
-- **`src/utils/gameLogic.ts` é fachada anticorrupção** ([ADR 0002](docs/adr/0002-dominio-atras-de-uma-fachada.md)), não a casa da lógica. Código novo importa do domínio direto.
-- **Persistência**: `src/storage/*.ts`, um arquivo por domínio.
-- **Apresentação**: `src/screens/`, `src/components/`. `GameScreen.tsx` já tem ~3000 linhas — não deixe crescer com lógica que pertence ao domínio.
-
-Duas trilhas de conteúdo, não confunda:
-
-- **Campanha** — 103 fases em `src/data/levels.ts` (mundos 1–10 × 10 + bônus 21 × 3). Tabuleiro varia a cada tentativa.
-- **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o _retry_ re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
-
-## Verificação (sempre antes de reportar terminado)
-
-```
-npm run typecheck
-npm test   # scripts/rodar-testes.js resolve a lista de tests/*.test.cjs no Node
-```
-
-Quem lista os arquivos é o Node, não o shell nem o runner: `node --test tests`
-só funciona até o Node 21 (do 22 em diante o diretório vira `MODULE_NOT_FOUND`)
-e `node --test tests/*.test.cjs` depende do shell expandir o glob, o que o cmd
-e o PowerShell não fazem. Teste novo em `tests/` só precisa terminar em
-`.test.cjs` para entrar na rodada.
-
-`tests/levelComposition.test.cjs` trava um hash sha256 do JSON das 103 fases
-canônicas (`as 103 fases canonicas continuam byte-identicas`). Qualquer edição
-de conteúdo em `src/data/levels.ts` quebra esse hash **de propósito** — é uma
-trava de integridade, não um bug. Depois de confirmar que a mudança é
-intencional, recalcule `sha256(JSON.stringify(LEVELS))` e atualize o literal
-esperado nesse teste; não ignore nem delete a asserção.
-
-Outros arquivos de referência úteis: `docs/adr/` (decisões arquiteturais),
-`src/domain/recycling/` (regras de material/ciclo/trinca, o núcleo que já é
-100% ODS12 e não deveria precisar mudar por causa de tema).
-
-## Regra permanente: trabalho sem task não existe
-
-**Todo trabalho vira task no roadmap — inclusive o que não foi planejado.** Se
-uma sessão construiu algo que não estava no roadmap (ferramenta, hook, script,
-correção de processo), o trabalho não está terminado enquanto não houver
-tarefa registrada para ele. Sem isso o que sobra é um commit solto: some do
-placar, some da fila do GitHub, e a sessão seguinte não tem como saber que
-existiu.
-
-O fluxo é o mesmo de fechar tarefa (o array `BLOCKS` de
-`docs/roadmap/roadmap.html` é a fonte de dados):
-
-1. Acrescentar a tarefa em `roadmap.html` — já com `✅` e
-   `<b>Feito DD/MM.</b>` se ela nasce concluída, com o hash do commit.
-2. Espelhar a linha em `docs/ROADMAP-JOGO-COMPLETO.md`.
-3. `node scripts/gerar-issues-roadmap.js` (regenera o `.sh`, que **nunca** é
-   editado à mão) e `npx prettier --write` nos arquivos tocados.
-4. `node scripts/sincronizar-issues.js` para conferir o delta e
-   `--aplicar` para executá-lo. **Este passo é parte de terminar**, não um
-   extra: marcar ✅ no roadmap sem sincronizar deixa a issue aberta no GitHub
-   dizendo o contrário — já aconteceu com o CI-23.
-
-Sem `--aplicar` o script sai com código 1 quando há divergência, então ele
-também serve para responder "o backlog está mentindo?" a qualquer momento.

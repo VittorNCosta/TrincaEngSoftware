@@ -32,6 +32,7 @@ const PROFILE_TAB_INDEX = MAIN_TAB_ITEMS.findIndex(
 );
 
 type MainTabsProps = {
+  devMode?: boolean;
   activeTrayCapacity: number;
   bonusTraySlotRemainingMs: number;
   coinTraySlotRemainingMs: number;
@@ -60,6 +61,7 @@ type MainTabsProps = {
  * ScrollView externo com pagingEnabled arbitra o gesto com a rolagem do mapa.
  */
 export function MainTabs({
+  devMode = false,
   activeTrayCapacity,
   bonusTraySlotRemainingMs,
   coinTraySlotRemainingMs,
@@ -155,6 +157,7 @@ export function MainTabs({
       >
         <View style={pageSize}>
           <LevelSelectScreen
+            devMode={devMode}
             activeTrayCapacity={activeTrayCapacity}
             initialWorldId={initialWorldId}
             isActive={activeIndex === MAP_TAB_INDEX}

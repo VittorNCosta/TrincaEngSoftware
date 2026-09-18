@@ -1,7 +1,9 @@
 # `assets/map/worlds/` — arte nova dos 10 mundos
 
-Pasta de destino das imagens de fundo geradas no bloco A do roadmap. Está vazia
-de propósito: nada aqui foi gerado ainda.
+Pasta de destino das imagens de fundo geradas no bloco A do roadmap. O piloto
+`w01_parque_game.png` já está integrado ao Mundo 1; veja `docs/arte/piloto-parque.md`.
+Os demais fundos aguardam a validação in-game de A-04, incluindo contraste e
+recorte em diferentes proporções de tela.
 
 **Antes de gerar qualquer coisa, leia `docs/ART-BIBLE.md`** — paleta, bloco de
 estilo, prompt de cada mundo e critério de aceite. Este arquivo trata só do

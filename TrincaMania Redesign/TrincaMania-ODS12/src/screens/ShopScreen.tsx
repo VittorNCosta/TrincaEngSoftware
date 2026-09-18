@@ -131,7 +131,9 @@ export function ShopScreen({
         </View>
         <View style={styles.coinBadge}>
           <GameIcon name="coin" size={24} tone="gold" />
-          <Text style={styles.coinText}>{progress.coins}</Text>
+          <Text testID="shop-coins" style={styles.coinText}>
+            {progress.coins}
+          </Text>
         </View>
       </View>
 
@@ -184,7 +186,12 @@ export function ShopScreen({
                     >
                       Estoque
                     </Text>
-                    <Text style={styles.stockText}>{count}</Text>
+                    <Text
+                      testID={`shop-stock-${powerType}`}
+                      style={styles.stockText}
+                    >
+                      {count}
+                    </Text>
                   </View>
                   <View style={[styles.metaPill, styles.pricePill]}>
                     <Text
@@ -209,6 +216,7 @@ export function ShopScreen({
 
                 <View style={styles.buyButton}>
                   <PrimaryButton
+                    testID={`shop-buy-${powerType}`}
                     disabled={!canBuy}
                     size="small"
                     title={canBuy ? 'Comprar' : 'Sem moedas'}

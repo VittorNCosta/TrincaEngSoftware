@@ -1,0 +1,38 @@
+# Manual long-running journey: respects the real 30-minute regeneration rule.
+appId: br.com.mhvtech.trincamania.e2e
+name: Perder uma vida e aguardar recarga real
+---
+- runFlow:
+    file: ../01-entrar-numa-fase.yaml
+    env:
+      APP_ID: br.com.mhvtech.trincamania.e2e
+- runFlow: ../subflows/vencer-w1-001.yaml
+- tapOn: 'Próxima fase'
+- runFlow: ../subflows/perder-w1-002.yaml
+- tapOn: 'Mapa'
+- assertVisible:
+    id: map-lives-count
+    text: '4'
+- takeScreenshot: artifacts/vida-perdida
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'splash-skip|tutorial-pular|nav-map'
+    timeout: 40000
+- tapOn:
+    id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
+- assertVisible:
+    id: map-lives-count
+    text: '4'
+- extendedWaitUntil:
+    visible:
+      id: map-lives-count
+      text: '5'
+    timeout: 1900000
+- takeScreenshot: artifacts/vida-recarregada

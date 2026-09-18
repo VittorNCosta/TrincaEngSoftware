@@ -1,19 +1,8 @@
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  type ImageSourcePropType,
-  View,
-} from 'react-native';
+import { RecyclingMarkerArt } from './RecyclingMarkerArt';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
 import { colors, radii } from '../styles/theme';
-
-// O arquivo `forest_rest_cart.png` mantém o nome antigo até A-28 substituir a
-// arte pelo selo de "Descanso" no tema ODS12.
-const restCartImage =
-  require('../../assets/map/world1/forest_rest_cart.png') as ImageSourcePropType;
 
 export type RestStopMapMarkerProps = {
   afterLevelLabel: string;
@@ -60,9 +49,8 @@ export function RestStopMapMarker({
         <View style={styles.groundShadow} />
         {selected ? <View style={styles.selectedGround} /> : null}
 
-        <Image
-          resizeMode="contain"
-          source={restCartImage}
+        <RecyclingMarkerArt
+          kind="rest"
           style={[
             styles.restCartImage,
             locked ? styles.restCartImageLocked : null,

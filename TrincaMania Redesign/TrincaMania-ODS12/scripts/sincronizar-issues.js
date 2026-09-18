@@ -20,7 +20,7 @@
  * | ------------------------------------------ | ------------------ |
  * | Tarefa no roadmap sem issue                | cria               |
  * | Tarefa ✅ com issue aberta                  | fecha              |
- * | Tarefa não-✅ com issue fechada             | reabre             |
+ * | Tarefa não-✅ com issue fechada             | bloqueia e avisa    |
  * | Título, corpo ou labels divergentes        | edita              |
  * | Issue cujo id não existe mais no roadmap   | **só avisa**       |
  * | Duas issues com o mesmo id                 | **só avisa**       |
@@ -106,34 +106,42 @@ const normalizar = (texto) =>
     .replace(/\r\n/g, '\n')
     .trim();
 
-const lerIssues = () => {
-  const r = gh([
-    'issue',
-    'list',
-    '--repo',
-    repo,
-    '--state',
-    'all',
-    '--limit',
-    '1000',
-    '--json',
-    'number,title,state,body,labels',
-  ]);
-
-  if (!r.ok) {
-    console.error(
-      '\nNão foi possível ler as issues. `gh auth status` para conferir o login.',
-    );
-    process.exit(1);
+const INICIO = '<!-- trinca-roadmap:start -->';
+const FIM = '<!-- trinca-roadmap:end -->';
+const corpoGerenciado = (corpo) => `${INICIO}\n${corpo}\n${FIM}`;
+const atualizarCorpo = (atual, esperado) => {
+  const texto = String(atual ?? '');
+  const inicio = texto.indexOf(INICIO);
+  const fim = texto.indexOf(FIM);
+  if (inicio < 0 || fim < inicio) {
+    // Legado sem delimitadores: preserva integralmente a contribuição humana.
+    return `${texto}${texto ? '\n\n' : ''}${corpoGerenciado(esperado)}`;
   }
-
-  return JSON.parse(r.saida);
+  return (
+    texto.slice(0, inicio) +
+    corpoGerenciado(esperado) +
+    texto.slice(fim + FIM.length)
+  );
 };
 
-const main = () => {
-  const tarefas = lerTarefas();
-  const issues = lerIssues();
+const lerIssues = (executar = gh) => {
+  // gh pagina até o fim; erro em qualquer página invalida o snapshot inteiro.
+  const r = executar([
+    'api',
+    '--paginate',
+    '--slurp',
+    `repos/${repo}/issues?state=all&per_page=100`,
+  ]);
+  if (!r.ok)
+    throw new Error(
+      'Não foi possível ler todas as páginas de issues. Nenhuma escrita iniciada.',
+    );
+  return JSON.parse(r.saida)
+    .flat()
+    .filter((issue) => !issue.pull_request);
+};
 
+const planejar = (tarefas, issues) => {
   const porId = new Map();
   const duplicadas = [];
   const orfas = [];
@@ -163,7 +171,7 @@ const main = () => {
 
   const criar = [];
   const fechar = [];
-  const reabrir = [];
+  const conflitos = [];
   const editar = [];
 
   for (const tarefa of tarefas) {
@@ -174,12 +182,13 @@ const main = () => {
       continue;
     }
 
+    if (duplicadas.some((item) => item.id === tarefa.id)) continue;
     const aberta = issue.state.toUpperCase() === 'OPEN';
 
     if (tarefa.feita && aberta) {
       fechar.push({ tarefa, issue });
     } else if (!tarefa.feita && !aberta) {
-      reabrir.push({ tarefa, issue });
+      conflitos.push({ tarefa, issue });
     }
 
     const mudancas = [];
@@ -188,7 +197,8 @@ const main = () => {
       mudancas.push('título');
     }
 
-    if (normalizar(issue.body) !== normalizar(tarefa.corpo)) {
+    const corpo = atualizarCorpo(issue.body, tarefa.corpo);
+    if (normalizar(issue.body) !== normalizar(corpo)) {
       mudancas.push('corpo');
     }
 
@@ -206,13 +216,49 @@ const main = () => {
     }
 
     if (mudancas.length > 0) {
-      editar.push({ tarefa, issue, mudancas, faltando, sobrando });
+      editar.push({ tarefa, issue, mudancas, faltando, sobrando, corpo });
     }
   }
 
-  const total = criar.length + fechar.length + reabrir.length + editar.length;
+  return {
+    criar,
+    fechar,
+    conflitos,
+    editar,
+    orfas,
+    duplicadas,
+    quantidade: porId.size,
+  };
+};
 
-  console.log(`roadmap ${tarefas.length} | github ${porId.size}\n`);
+const main = () => {
+  const tarefas = lerTarefas();
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const { validar } = require('./validar-roadmap');
+  const erros = validar(
+    tarefas,
+    fs.readFileSync(
+      path.join(__dirname, '../docs/ROADMAP-JOGO-COMPLETO.md'),
+      'utf8',
+    ),
+  );
+  if (erros.length)
+    throw new Error(
+      `Espelhos divergentes; nenhuma escrita iniciada:\n${erros.join('\n')}`,
+    );
+  const issues = lerIssues();
+  const { criar, fechar, conflitos, editar, orfas, duplicadas, quantidade } =
+    planejar(tarefas, issues);
+  const total =
+    criar.length +
+    fechar.length +
+    conflitos.length +
+    editar.length +
+    duplicadas.length +
+    orfas.length;
+
+  console.log(`roadmap ${tarefas.length} | github ${quantidade}\n`);
 
   const listar = (rotulo, itens, formatar) => {
     if (itens.length === 0) {
@@ -233,8 +279,8 @@ const main = () => {
     ({ tarefa, issue }) => `#${issue.number} ${tarefa.id}`,
   );
   listar(
-    'reabrir',
-    reabrir,
+    'conflito',
+    conflitos,
     ({ tarefa, issue }) => `#${issue.number} ${tarefa.id}`,
   );
   listar(
@@ -257,6 +303,12 @@ const main = () => {
         : `\n${total} mudança(s) pendente(s). Para aplicar:\n  node scripts/sincronizar-issues.js --aplicar`,
     );
     process.exit(total === 0 ? 0 : 1);
+  }
+
+  if (conflitos.length || duplicadas.length) {
+    throw new Error(
+      'Reconciliação bloqueada: revise fechamento/merge e atualize os dois espelhos; resolva duplicadas antes de escrever.',
+    );
   }
 
   if (total === 0) {
@@ -296,7 +348,7 @@ const main = () => {
       '--title',
       tarefa.tituloIssue,
       '--body',
-      tarefa.corpo,
+      corpoGerenciado(tarefa.corpo),
       '--label',
       tarefa.labels,
       '--milestone',
@@ -344,16 +396,7 @@ const main = () => {
     }
   }
 
-  for (const { tarefa, issue } of reabrir) {
-    const r = gh(['issue', 'reopen', String(issue.number), '--repo', repo]);
-    if (r.ok) {
-      console.log(`  reaberta #${issue.number} ${tarefa.id}`);
-    } else {
-      falhas += 1;
-    }
-  }
-
-  for (const { tarefa, issue, mudancas, faltando, sobrando } of editar) {
+  for (const { tarefa, issue, mudancas, faltando, sobrando, corpo } of editar) {
     const args = ['issue', 'edit', String(issue.number), '--repo', repo];
 
     if (mudancas.includes('título')) {
@@ -361,7 +404,7 @@ const main = () => {
     }
 
     if (mudancas.includes('corpo')) {
-      args.push('--body', tarefa.corpo);
+      args.push('--body', corpo);
     }
 
     for (const label of faltando) {
@@ -396,4 +439,12 @@ const main = () => {
   console.log('\n✔ backlog sincronizado.');
 };
 
-main();
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
+}
+module.exports = { planejar, atualizarCorpo, corpoGerenciado, lerIssues };

@@ -517,6 +517,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'C-30 · Decidir e implementar o destino dos Capítulos' \
   --body 'Esconder do menu, manter como modo infinito pós-jogo, ou remover. Hoje `ChaptersScreen` é acessível.
 
+**Entrega Astra low 18/09/2026:** Capítulos após as 100 fases principais; bônus não obrigatório; save preservado. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Fable 5.1
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -575,7 +577,9 @@ mk open --title 'A-04 · Gerar e validar a imagem-piloto no aparelho' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,humano' --milestone 'Arte'
 mk open --title 'A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -587,7 +591,9 @@ mk open --title 'A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Piloto 1080×1920, 364.398 bytes, integrado no Mundo 1. A-04 exige validação no aparelho antes do restante do lote. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -599,7 +605,9 @@ mk open --title 'A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -611,7 +619,9 @@ mk open --title 'A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -623,7 +633,9 @@ mk open --title 'A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-09 · Mundo 3 · Central de Materiais — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -635,7 +647,9 @@ mk open --title 'A-09 · Mundo 3 · Central de Materiais — fundo de mapa' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-10 · Mundo 3 · Central de Materiais — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -647,7 +661,9 @@ mk open --title 'A-10 · Mundo 3 · Central de Materiais — fundo de jogo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -659,7 +675,9 @@ mk open --title 'A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -671,7 +689,9 @@ mk open --title 'A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -683,7 +703,9 @@ mk open --title 'A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -695,7 +717,9 @@ mk open --title 'A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -707,7 +731,9 @@ mk open --title 'A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -719,7 +745,9 @@ mk open --title 'A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -731,7 +759,9 @@ mk open --title 'A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -743,7 +773,9 @@ mk open --title 'A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-19 · Mundo 8 · Fórum da Economia Circular — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -755,7 +787,9 @@ mk open --title 'A-19 · Mundo 8 · Fórum da Economia Circular — fundo de map
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -767,7 +801,9 @@ mk open --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jog
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-21 · Mundo 9 · Distrito da Reindustrialização — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -779,7 +815,9 @@ mk open --title 'A-21 · Mundo 9 · Distrito da Reindustrialização — fundo d
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-22 · Mundo 9 · Distrito da Reindustrialização — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -791,7 +829,9 @@ mk open --title 'A-22 · Mundo 9 · Distrito da Reindustrialização — fundo d
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -803,7 +843,9 @@ mk open --title 'A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de m
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -817,6 +859,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa' \
   --body 'Fora do lote crítico A-05…A-24: o mundo bônus é conteúdo opcional (destrava com 3 estrelas no Mundo 1). P1 por isso, não P0. Hoje cai no `map_bonus_bg.png`, que **não** é exclusivo dele — o capítulo 10 usa o mesmo arquivo, então este par não libera peso nenhum; é arte própria, não faxina.
 
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -827,7 +871,9 @@ mk open --title 'A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -841,6 +887,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-25 · Ícone do app 1024×1024' \
   --body 'Hoje 1254×1254, fora do padrão Expo. Símbolo de reciclagem + trinca, sem texto.
 
+**Entrega Astra low 18/09/2026:** Ícone 1024×1024 substituído com ciclo de reciclagem. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -852,6 +900,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-26 · Adaptive icon Android 1024×1024' \
   --body 'Elemento dentro do círculo de 66%. O `backgroundColor` hoje é `#4B148C` — roxo, fora da paleta CONAMA.
+
+**Entrega Astra low 18/09/2026:** Foreground transparente 1024×1024 dentro da área central; fundo verde CONAMA. Recorte Android ainda a conferir. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -865,6 +915,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-27 · Splash screen' \
   --body '`SplashIntroScreen.tsx` tem 537 linhas — conferir o que já é desenhado em código.
 
+**Entrega Astra low 18/09/2026:** Intro reutiliza nova marca e cores da coleta; mantém botão de pular e logo do responsável. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -877,6 +929,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-28 · Selo de marco “Descanso” 320×320' \
   --body 'Substitui `forest_rest_cart.png`, que é carrinho de floresta do tema antigo. Proposta: carrinho de catador.
 
+**Entrega Astra low 18/09/2026:** Carrinho de coleta SVG substitui PNG antigo em RestStopMapMarker. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -887,7 +941,9 @@ mk open --title 'A-28 · Selo de marco “Descanso” 320×320' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-29 · Selo de marco “Loja” 320×320' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Loja usa carrinho SVG; mesma base no marco de capítulo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -901,6 +957,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-30 · Selo de marco “Guardião” 320×320' \
   --body 'Não existe hoje.
 
+**Entrega Astra low 18/09/2026:** Selo Guardião SVG integrado ao marco final dos capítulos. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -913,6 +971,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-31 · Marcador de portal entre mundos 320×320' \
   --body 'Hoje é `forest-portal-rune` — runa é fantasia. Proposta: seta de ciclo.
 
+**Entrega Astra low 18/09/2026:** Setas de reciclagem substituem runa; chaves de layout atualizadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -924,6 +984,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-32 · Nós de fase: bloqueado, atual, completo' \
   --body 'Avaliar se vira SVG em código, como as peças já são.
+
+**Entrega Astra low 18/09/2026:** Nós já desenhados em código com estados e labels acessíveis; testes dos estados preservados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -972,6 +1034,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'A-36 · Integrar cada asset entregue no código' \
   --body '`campaignMapAssets.ts` e `getGameBackground`.
 
+**Entrega Astra low 18/09/2026:** Piloto, ícones e marcadores integrados; fundos restantes aguardam A-04. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -986,6 +1050,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'S-01 · `ambient_parque.mp3` — Mundo 1' \
   --body 'Pássaros distantes, folhas, passos ocasionais.
 
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -997,6 +1063,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-02 · `ambient_vale.mp3` — Mundo 2' \
   --body 'Esteira ao longe, vento de vale, maquinário abafado.
+
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1010,6 +1078,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'S-03 · `ambient_central.mp3` — Mundo 3' \
   --body 'Galpão amplo com eco, prensa distante, ventilação.
 
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -1021,6 +1091,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-04 · `ambient_viveiro.mp3` — Mundo 4' \
   --body 'Regador, insetos, lona ao vento.
+
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1034,6 +1106,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'S-05 · `ambient_usina.mp3` — Mundo 5' \
   --body 'Zumbido grave de biodigestor, vapor, pá revolvendo.
 
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -1045,6 +1119,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-06 · `ambient_cooperativa.mp3` — Mundo 6' \
   --body 'Carrinho de metal, fardos, vozes distantes indistintas.
+
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1058,6 +1134,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'S-07 · `ambient_rota.mp3` — Mundo 7' \
   --body 'Rodovia distante, caminhão manobrando, engradado.
 
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -1069,6 +1147,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-08 · `ambient_forum.mp3` — Mundo 8' \
   --body 'Praça aberta, murmúrio cívico, bandeira ao vento.
+
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1082,6 +1162,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'S-09 · `ambient_distrito.mp3` — Mundo 9' \
   --body 'Prensa hidráulica ao longe, esteira rolante, zumbido grave de forno.
 
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -1093,6 +1175,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-10 · `ambient_cupula.mp3` — Mundo 10' \
   --body 'Murmúrio de plenário, papel manuseado, passos em saguão amplo.
+
+**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1116,7 +1200,9 @@ mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-12 · Remover os 8 `ambient_*.mp3` antigos' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Remover somente após receber substitutos; as oito trilhas continuam referenciadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1128,7 +1214,9 @@ mk open --title 'S-12 · Remover os 8 `ambient_*.mp3` antigos' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-13 · Integrar os 10 ambientes em `sounds.ts`' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Integração depende de dez novos MP3 aprovados; não mapear nomes novos a áudio antigo fingindo entrega. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1607,6 +1695,8 @@ Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execuç
 **Dependências e referências**
 Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue .
 
+**Entrega Astra low 18/09/2026:** Workflow de rastreabilidade idempotente em base confiável; confirmar eventos reais após integração. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -1630,6 +1720,8 @@ O sincronizador atual considera roadmap.html a fonte de verdade e reabre uma iss
 
 **Dependências e referências**
 Complementa G-21. Não migrar todo o histórico nem substituir GitHub Issues por outra ferramenta.
+
+**Entrega Astra low 18/09/2026:** Sync não reabre issue fechada, preserva corpo humano, pagina tudo e bloqueia conflitos; fixtures aprovadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1905,7 +1997,9 @@ mk open --title 'CI-20 · Configurar EAS Submit para a Play Store' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,humano' --milestone 'CI/CD'
 mk open --title 'CI-21 · `--auto-submit` no build de produção' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Auto-submit de produção manual e opt-in; depende de credenciais EAS/Play e publicação aprovada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1918,6 +2012,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
 mk open --title 'CI-22 · Configurar EAS Update (OTA)' \
   --body 'Correção de JS sem passar pela revisão da loja.
+
+**Entrega Astra low 18/09/2026:** expo-updates, runtime fingerprint e workflow OTA preparados; falta execução EAS com credenciais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1942,6 +2038,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-24 · Canal de update por branch' \
   --body '`preview` e `production`.
+
+**Entrega Astra low 18/09/2026:** Canais preview/production definidos; falta validar atualização instalada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2020,6 +2118,8 @@ Nenhuma. O problema de manifest/lockfile já foi tratado na issue #4; não reabr
 **Fontes**
 https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/.claude/agents/qa-engineer.md
 
+**Entrega Astra low 18/09/2026:** Seis instruções de agentes revisadas contra ferramentas atuais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2049,6 +2149,8 @@ CI-29 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/220).
 **Fontes**
 https://learn.chatgpt.com/docs/agent-configuration/subagents
 https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/CLAUDE.md
+
+**Entrega Astra low 18/09/2026:** AGENTS.md raiz compartilhado; CLAUDE.md referencia regras comuns e mantém especificidades. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2081,6 +2183,8 @@ CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).
 https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857
 https://learn.chatgpt.com/docs/agent-configuration/subagents
 
+**Entrega Astra low 18/09/2026:** Três perfis especializados, sem troca de modelo; reviewer read-only. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2111,6 +2215,8 @@ CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).
 **Fontes**
 https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797
 https://learn.chatgpt.com/docs/build-skills
+
+**Entrega Astra low 18/09/2026:** Duas skills locais e origem/licenças documentadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2143,6 +2249,8 @@ CI-31 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/222) e CI-32 (ht
 https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857
 https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797
 
+**Entrega Astra low 18/09/2026:** Piloto local isolado realizado; descoberta/invocação dos perfis no cliente requer nova sessão. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2171,6 +2279,8 @@ https://github.com/ossf/scorecard-action
 https://github.com/advisories/GHSA-2883-xcg3-v3hh
 https://github.com/advisories/GHSA-93r5-fhx6-vmg9
 
+**Entrega Astra low 18/09/2026:** Validação local/PR por SHA, checks aplicáveis e testes de scripts; confirmar CI remoto no PR. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2193,6 +2303,8 @@ A develop contém somente o CI básico; segurança, E2E, Dependabot e release es
 **Dependências e referências**
 Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule .
 
+**Entrega Astra low 18/09/2026:** Fatia independente preparada em chore/ci35-automacoes-isoladas, sem mudanças da campanha; faltam merge e primeira execução agendada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2214,6 +2326,8 @@ O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também 
 
 **Dependências e referências**
 Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16.
+
+**Entrega Astra low 18/09/2026:** Node22.23.2 alinhado; instalação limpa/doctor verificados, cobertura com nova metodologia explícita. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2238,6 +2352,8 @@ Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticame
 **Dependências e referências**
 Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: https://github.com/googleapis/release-please-action .
 
+**Entrega Astra low 18/09/2026:** Release chama build reutilizável, espera EAS e confere artefato; falta build real EXPO_TOKEN. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2259,6 +2375,8 @@ O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10
 
 **Dependências e referências**
 Depende de CI-35; reutiliza Maestro existente e Q-02/Q-03/Q-04 (#165–#167).
+
+**Entrega Astra low 18/09/2026:** Smoke por PR relevante e suíte completa manual/semanal; falta execução remota e caso documentação. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2437,7 +2555,9 @@ mk done --title 'SEC-14 · Escrever o `SECURITY.md`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-15 · Rodar `/security-review` antes do release' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Revisão manual registrada; skill /security-review indisponível. Não declarar execução da skill. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2484,6 +2604,8 @@ CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Andro
 **Dependências e referências**
 Depende de build verificável (CI-37); complementa SEC-11 (#157). Fonte: https://github.com/MobSF/Mobile-Security-Framework-MobSF .
 
+**Entrega Astra low 18/09/2026:** MobSF isolado e fixado por digest, gate+fixtures; falta APK verificável/execução real. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2506,6 +2628,8 @@ Não foi identificado backend próprio; o alvo atual é Android com armazenament
 
 **Dependências e referências**
 Após SEC-20; alinhar com SEC-17 (#163) e O-10 (#217). Fonte: https://mas.owasp.org/MASTG/tests/ .
+
+**Entrega Astra low 18/09/2026:** Roteiro MASVS e job parcial; falta runner Android isolado, tráfego/logs/backup reais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2531,7 +2655,9 @@ mk done --title 'Q-01 · Montar E2E com Maestro' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-02 · Fluxo E2E: abrir, escolher fase, jogar e vencer' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Vitória por toques reais e desbloqueio após reinício validados no Android; consultar JUnit do SHA do PR. Merge pendente. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2543,7 +2669,9 @@ mk open --title 'Q-02 · Fluxo E2E: abrir, escolher fase, jogar e vencer' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-03 · Fluxo E2E: comprar na loja' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Compra e persistência após reinício executáveis na suíte full do GitHub Actions; consultar JUnit do SHA do PR para o aceite. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2555,7 +2683,9 @@ mk open --title 'Q-03 · Fluxo E2E: comprar na loja' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-04 · Fluxo E2E: perder vida e esperar a recarga' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Perda/reinício/recarga real de 30 minutos executáveis com suite=lives no GitHub Actions; aceite exige JUnit e capturas da execução. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2593,6 +2723,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'Q-07 · Quebrar `GameScreen.tsx`' \
   --body '3166 linhas. O `CLAUDE.md` já avisa para não deixar crescer.
 
+**Entrega Astra low 18/09/2026:** Estilos, tutorial e montagem do tabuleiro extraídos em módulos; seeds reais registrados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2605,6 +2737,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'Q-08 · Quebrar `LevelSelectScreen.tsx`' \
   --body '1879 linhas.
 
+**Entrega Astra low 18/09/2026:** Estilos e geometria/apresentação do mapa separados; acesso Dev e pós-campanha testados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2616,6 +2750,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Qualidade'
 mk open --title 'Q-09 · Quebrar `App.tsx`' \
   --body '1169 linhas.
+
+**Entrega Astra low 18/09/2026:** Fila de persistência extraída para hook, preservando geração e serialização. Outros handlers continuam em App. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2664,6 +2800,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'Q-13 · Resolver o gap do Modo Dev' \
   --body 'Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa.
 
+**Entrega Astra low 18/09/2026:** Override efêmero reversível, sem fabricar progresso; teste prova ausência de escrita no toggle. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2711,6 +2849,8 @@ O piso atual usa o total do node:test, que inclui arquivos de testes e não repr
 **Dependências e referências**
 Coordenar com CI-34 (#226) e CI-36; complementa #131 e #132.
 
+**Entrega Astra low 18/09/2026:** c8 com sourcemaps mede todas fontes .ts; Jest mede .tsx/App, inclusive não exercitados; baseline antiga preservada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2733,6 +2873,8 @@ Existem testes unitários de migração, mas os dois fluxos Maestro atuais não 
 
 **Dependências e referências**
 Complementa C-26 (#34) e Q-02/Q-03/Q-04 (#165–#167); coordenar com Q-13 (#176).
+
+**Entrega Astra low 18/09/2026:** Persistência pós-reinício preparada; falta instalar APK legado, upgrade e interrupção de gravação no aparelho. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2757,6 +2899,8 @@ O teste de acessibilidade existente não substitui verificação de foco/leitor 
 **Dependências e referências**
 Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.
 
+**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2771,6 +2915,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'O-01 · Logger estruturado em `src/utils/log.ts`' \
   --body 'Nível (`debug`/`info`/`warn`/`error`) e namespace por módulo, silencioso em release menos `warn` e `error`. Sem dependência nova: é uma função e um `switch`. Toda a graça está em existir **um** ponto por onde o erro passa — sem isso o O-03, o O-04 e o O-09 não têm onde se plugar. Substitui os `console.log` espalhados hoje. É a base do bloco: nada aqui anda antes dela.
 
+**Entrega Astra low 18/09/2026:** Logger com buffer limitado, níveis, contexto e redação de dados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2782,6 +2928,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Observabilidade'
 mk open --title 'O-02 · Error boundary global com tela de erro' \
   --body '`App.tsx` envolvido num boundary: stack visível em `__DEV__`, e em release uma tela sóbria com botão de copiar o relatório. Regra dura — a tela de erro **não escreve no storage**. O invariante 1 diz que progresso só passa por `commitProgress`, e um boundary que tenta “salvar antes de morrer” é exatamente o caminho por onde save de jogador já foi apagado. Hoje um erro de render dá tela branca, sem nada escrito.
+
+**Entrega Astra low 18/09/2026:** ErrorBoundary com diagnóstico/copiar/compartilhar, sem escrita no save. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2795,6 +2943,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'O-03 · Capturar erro não tratado e promise rejeitada' \
   --body '`ErrorUtils.setGlobalHandler` mais o handler de `unhandledrejection`. O boundary do O-02 só pega o que acontece dentro do ciclo de render; um `throw` dentro de `setTimeout`, de listener de áudio ou de promise de storage passa por fora e some — o app fecha e não fica rastro. Depende do O-01.
 
+**Entrega Astra low 18/09/2026:** Captura ErrorUtils/browser/Hermes e encaminhamento remoto opcional deduplicado. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2807,6 +2957,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'O-04 · Tela de Diagnóstico com os últimos logs' \
   --body 'Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste interno do R-13, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01.
 
+**Entrega Astra low 18/09/2026:** Diagnóstico acessível nas Configurações; exportação somente por ação do usuário. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2818,6 +2970,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Observabilidade'
 mk open --title 'O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime' \
   --body 'Os sete invariantes que já quebraram (`commitProgress`, `mutateLives`, id de capítulo no storage da campanha, `tileCount` múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e **loga**, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01.
+
+**Entrega Astra low 18/09/2026:** Logs para quantidade de peças, contagem canônica e ids de capítulo no save da campanha antes da normalização, na leitura e escrita. Invariantes arquiteturais/concorrência seguem em testes; conversão completa não alegada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2854,6 +3008,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'O-08 · Integrar o Sentry com upload de sourcemap' \
   --body '`@sentry/react-native`, DSN por variável de ambiente, e o upload de sourcemap no build do EAS. O sourcemap é a parte que costuma ser esquecida e é a que decide se serve para alguma coisa: sem ele o stack que chega é bundle minificado, ou seja, ilegível. Depende do O-07 e do CI-14.
 
+**Entrega Astra low 18/09/2026:** SDK opcional, filtragem de eventos e upload sourcemaps preparados; falta validar evento simbolicado com DSN/credenciais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2865,6 +3021,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
   --body 'Erro sem contexto é `TypeError: undefined` numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01.
+
+**Entrega Astra low 18/09/2026:** Tela, mundo, fase, retry e seed real no diagnóstico; sem contexto livre enviado ao Sentry. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2924,6 +3082,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'R-04 · Escrever a ficha da loja' \
   --body 'Título, descrição curta e longa, com o enquadramento ODS 12.
 
+**Entrega Astra low 18/09/2026:** Ficha pt-BR em docs/release/ficha-google-play.md. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
 **Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
@@ -2945,7 +3105,9 @@ mk open --title 'R-05 · Capturar 8 screenshots de telefone' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 mk open --title 'R-06 · Feature graphic 1024×500' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Feature graphic PNG 1024×500 em docs/release/assets. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -2957,7 +3119,9 @@ mk open --title 'R-06 · Feature graphic 1024×500' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Release'
 mk open --title 'R-07 · Ícone da loja 512×512' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Ícone da loja PNG RGB 512×512 em docs/release/assets. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -2979,8 +3143,8 @@ mk open --title 'R-08 · Vídeo de preview' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P2,humano' --milestone 'Release'
-mk open --title 'R-09 · Hospedar a política de privacidade' \
-  --body 'Obrigatória. Como o jogo é offline, é curta.
+mk done --title 'R-09 · Hospedar a política de privacidade' \
+  --body '**Feito 18/09/2026.** https://vittorncosta.github.io/TrincaEngSoftware/ — HTTP 200 e contato conferidos; branch gh-pages em 792ed88.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -3003,7 +3167,7 @@ mk open --title 'R-10 · Responder o questionário de classificação etária' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 mk open --title 'R-11 · Preencher o Data safety form' \
-  --body 'Declarar que não coleta dados.
+  --body 'Conferir dados locais, Expo Update e eventual Sentry conforme build real e revisão O-10; não declarar ausência de coleta sem verificação.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -3058,7 +3222,9 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 mk open --title 'R-16 · Rodar `/security-review`' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Revisão manual registrada; skill /security-review indisponível e build release ainda não validado. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -3070,7 +3236,9 @@ mk open --title 'R-16 · Rodar `/security-review`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Release'
 mk open --title 'R-17 · Marcar a tag `v1.0.0` e publicar o release' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body '
+
+**Entrega Astra low 18/09/2026:** Não publicar v1.0.0 antes dos aceites de arte/áudio, testes Android, segurança, credenciais e aprovação de release. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -3093,4 +3261,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 235 issues (111 já criadas fechadas) =="
+echo "== pronto: 235 issues (112 já criadas fechadas) =="

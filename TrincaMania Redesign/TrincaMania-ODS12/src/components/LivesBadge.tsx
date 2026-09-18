@@ -29,6 +29,7 @@ export function LivesBadge({
       ]}
     >
       <Text
+        testID="lives-count"
         style={[
           styles.value,
           dark ? styles.valueDark : null,
