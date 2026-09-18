@@ -137,15 +137,14 @@ jobs:
           # raiz do checkout, que e onde o upload-artifact procura.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
-            maestro test -e APP_ID="$APP_ID" --format junit --output ../../maestro-resultado.xml "$MAESTRO_FLOW"
+            maestro test -e APP_ID="$APP_ID" --test-output-dir ../../maestro-artifacts --format junit --output ../../maestro-resultado.xml "$MAESTRO_FLOW"
 
       # Falhou: o Maestro grava captura de tela e hierarquia de views de cada
       # passo. Sem isso, "nao achou o botao" num runner sem tela e indepuravel.
       #
-      # Sem `--debug-output`: passar esse flag fez o Maestro parar de escrever
-      # em `~/.maestro/tests` sem escrever no lugar pedido, e o diagnostico
-      # saiu vazio duas vezes. No caminho padrao as capturas existem — so
-      # precisam entrar no checkout, que e onde o upload-artifact procura.
+      # Maestro 2.10 usa --test-output-dir para fixar a raiz dos artefatos no
+      # checkout. Nao usar o antigo --debug-output, que ja produziu diagnostico
+      # vazio. Capturas explicitas tambem sao preservadas em caso de sucesso.
       #
       # O `ls` nao e enfeite: se o upload falhar de novo, a arvore fica no log
       # do proprio job e a proxima investigacao nao custa outra execucao.
@@ -153,7 +152,7 @@ jobs:
         if: failure()
         run: |
           mkdir -p ../../maestro-diagnostico
-          cp -r "${HOME}/.maestro/tests/." ../../maestro-diagnostico/ || true
+          cp -r ../../maestro-artifacts/. ../../maestro-diagnostico/ || true
           ls -R ../../maestro-diagnostico || true
 
       - name: Guardar o diagnostico
@@ -173,6 +172,14 @@ jobs:
           name: maestro-junit
           path: maestro-resultado.xml
           retention-days: 14
+          if-no-files-found: warn
+      - name: Guardar capturas para revisão visual
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: maestro-capturas
+          path: maestro-artifacts/**/takeScreenshot/**/*.png
+          retention-days: 7
           if-no-files-found: warn
       - name: Registrar duração
         if: always()

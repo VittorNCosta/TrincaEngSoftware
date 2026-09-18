@@ -34,7 +34,7 @@ O piso antigo
 Node 20 (87,77% linhas, 88,73% ramos, 88,11% funções) permanece intacto em
 `scripts/cobertura-legado-node20.json`. Ele incluía testes, portanto não é
 comparável ao novo denominador. Na rodada final de 18/09/2026, passaram 233
-asserções de domínio e 22 de UI (11 suítes). O denominador contém 58 fontes TS
+asserções de domínio e 26 de UI (11 suítes). O denominador contém 58 fontes TS
 e 58 fontes TSX. Após acrescentar o diagnóstico do save, o domínio atingiu
 74,28% de linhas, 84,54% de ramos e 76,26% de funções, sem reduzir o piso
 inicial abaixo:
@@ -116,8 +116,10 @@ com credenciais e um erro controlado no ambiente de teste.
 PR com mudança relevante roda smoke; documentação Markdown/docs não monta APK.
 Manual/semanal roda toda a suíte. O pacote isolado `.e2e` usa seed determinística;
 ativar a flag em perfil preview/production falha. E2E desativa OTA e Sentry.
-JUnit sobe em sucesso/falha (14 dias), diagnóstico só em falha (7 dias). A duração
-aparece no resumo; não há retries de teste que escondam falhas.
+JUnit sobe em sucesso/falha (14 dias), diagnóstico completo só em falha (7 dias).
+Capturas explícitas sobem também em sucesso (7 dias), em `maestro-capturas`,
+para revisão visual; não se tornam baseline automaticamente. A duração aparece
+no resumo; não há retries de teste que escondam falhas.
 
 ## Evidências externas ainda necessárias
 

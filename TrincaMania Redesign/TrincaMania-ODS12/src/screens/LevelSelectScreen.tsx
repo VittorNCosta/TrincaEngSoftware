@@ -245,7 +245,11 @@ export function LevelSelectScreen({
 
   const onMapContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      setMapContentLayout({ height, worldId: selectedWorldId });
+      setMapContentLayout((previous) =>
+        previous?.height === height && previous.worldId === selectedWorldId
+          ? previous
+          : { height, worldId: selectedWorldId },
+      );
     },
     [selectedWorldId],
   );
@@ -377,22 +381,29 @@ export function LevelSelectScreen({
     appliedOpeningKeyRef.current = undefined;
   }, [isActive]);
 
+  // Layout notifications may recreate the target object without changing the
+  // opening position. Only a different position should cancel a pending reveal.
+  const openingScrollKey = openingScrollTarget
+    ? `${openingScrollTarget.key}:${openingScrollTarget.y}`
+    : undefined;
+  const openingScrollY = openingScrollTarget?.y;
   useEffect(() => {
     if (
       !isActive ||
-      !openingScrollTarget ||
-      appliedOpeningKeyRef.current === openingScrollTarget.key
+      !openingScrollKey ||
+      openingScrollY === undefined ||
+      appliedOpeningKeyRef.current === openingScrollKey
     ) {
       return undefined;
     }
 
-    appliedOpeningKeyRef.current = openingScrollTarget.key;
+    appliedOpeningKeyRef.current = openingScrollKey;
     mapFade.stopAnimation();
     mapFade.setValue(0);
-    mapScrollY.setValue(openingScrollTarget.y);
+    mapScrollY.setValue(openingScrollY);
     mapScrollRef.current?.scrollTo({
       animated: false,
-      y: openingScrollTarget.y,
+      y: openingScrollY,
     });
 
     let fadeAnimation: Animated.CompositeAnimation | undefined;
@@ -409,7 +420,7 @@ export function LevelSelectScreen({
       cancelAnimationFrame(frame);
       fadeAnimation?.stop();
     };
-  }, [isActive, mapFade, mapScrollY, openingScrollTarget]);
+  }, [isActive, mapFade, mapScrollY, openingScrollKey, openingScrollY]);
 
   useEffect(() => {
     if (!selectedTarget) {
