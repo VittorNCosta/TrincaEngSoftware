@@ -13,10 +13,15 @@ name: A configuração sobrevive a fechar e reabrir o app
     clearState: true
 - extendedWaitUntil:
     visible:
-      id: 'splash-skip'
+      id: 'splash-skip|tutorial-pular|nav-map'
     timeout: 40000
 - tapOn:
     id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
 - tapOn:
     id: 'tutorial-pular'
     optional: true
@@ -34,10 +39,15 @@ name: A configuração sobrevive a fechar e reabrir o app
 - launchApp
 - extendedWaitUntil:
     visible:
-      id: 'splash-skip'
+      id: 'splash-skip|tutorial-pular|nav-map'
     timeout: 40000
 - tapOn:
     id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
 # Aqui o guia não deve mais aparecer — quem o dispensou foi a primeira metade
 # deste mesmo fluxo, e isso já é uma gravação que sobreviveu ao reinício.
 - tapOn:

@@ -12,10 +12,15 @@ name: Vencer por toques reais e preservar desbloqueio após reinício
 - launchApp
 - extendedWaitUntil:
     visible:
-      id: 'splash-skip'
+      id: 'splash-skip|tutorial-pular|nav-map'
     timeout: 40000
 - tapOn:
     id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
 - scrollUntilVisible:
     element:
       id: 'map-level-w1-002'

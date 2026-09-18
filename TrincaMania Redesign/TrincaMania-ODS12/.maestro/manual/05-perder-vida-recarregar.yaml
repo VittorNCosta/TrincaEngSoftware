@@ -18,10 +18,15 @@ name: Perder uma vida e aguardar recarga real
 - launchApp
 - extendedWaitUntil:
     visible:
-      id: splash-skip
+      id: 'splash-skip|tutorial-pular|nav-map'
     timeout: 40000
 - tapOn:
-    id: splash-skip
+    id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
 - assertVisible:
     id: map-lives-count
     text: '4'
