@@ -13,6 +13,10 @@ name: Ganhar moedas em partidas reais, comprar e preservar inventário
 - tapOn: 'Próxima fase'
 - runFlow: subflows/vencer-w1-004.yaml
 - tapOn: 'Próxima fase'
+# Primeira aparição de peças misteriosas: o jogador lê e fecha a explicação.
+- assertVisible: 'Pilha Misteriosa'
+- tapOn: 'Entendi'
+- assertNotVisible: 'Pilha Misteriosa'
 - runFlow: subflows/vencer-w1-005.yaml
 - tapOn: 'Mapa'
 - tapOn: 'Ganhar moedas'
