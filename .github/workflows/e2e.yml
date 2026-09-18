@@ -78,7 +78,13 @@ jobs:
       # precisa.
       - name: Montar o APK
         working-directory: "TrincaMania Redesign/TrincaMania-ODS12/android"
-        run: ./gradlew assembleRelease --no-daemon
+        # O limite Expo de 512 MiB de Metaspace esgotou no build com Updates/Sentry.
+        # O APK de teste precisa apenas da arquitetura do emulador abaixo.
+        run: |
+          ./gradlew assembleRelease --no-daemon --max-workers=2 \
+            '-Dorg.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError' \
+            '-Pkotlin.daemon.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=1g' \
+            -PreactNativeArchitectures=x86_64
 
       # Sem action de terceiro para o Maestro: baixa o release fixado e confere
       # o sha256 antes de executar qualquer coisa dele. Mesmo padrao do gitleaks

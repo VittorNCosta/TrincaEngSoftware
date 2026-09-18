@@ -55,7 +55,13 @@ function avaliar(pr, runs, sha, required = WORKFLOWS) {
     pr.mergeable_state === "unknown";
   for (const run of latest.values()) {
     if (run.status !== "completed") pending = true;
-    else if (run.conclusion !== "success")
+    else if (
+      run.conclusion !== "success" &&
+      !(
+        !required.includes(run.path) &&
+        ["skipped", "neutral"].includes(run.conclusion)
+      )
+    )
       return { estado: "falha", motivo: `${run.path}: ${run.conclusion}` };
   }
   for (const path of required)

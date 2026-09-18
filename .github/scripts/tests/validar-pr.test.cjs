@@ -58,3 +58,22 @@ test("E2E aplicável ausente/pendente aguarda e falha impede aprovação", () =>
     "falha",
   );
 });
+
+test("Build não aplicável pode ser skipped, mas falha real ou skip obrigatório bloqueiam", () => {
+  const path = ".github/workflows/build.yml";
+  const build = { ...runs[0], path, id: 3, conclusion: "skipped" };
+  assert.equal(avaliar(pr, [...runs, build], "abc").estado, "sucesso");
+  assert.equal(
+    avaliar(pr, [...runs, build], "abc", [...runs.map((r) => r.path), path])
+      .estado,
+    "falha",
+  );
+  assert.equal(
+    avaliar(pr, [...runs, { ...build, conclusion: "failure" }], "abc").estado,
+    "falha",
+  );
+  assert.equal(
+    avaliar(pr, [...runs, { ...build, status: "queued" }], "abc").estado,
+    "pendente",
+  );
+});
