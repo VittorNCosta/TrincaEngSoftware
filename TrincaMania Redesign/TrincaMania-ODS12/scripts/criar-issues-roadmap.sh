@@ -1704,8 +1704,8 @@ Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/e
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
-mk open --title 'G-22 · Reconciliar roadmap e issues sem reabertura indevida' \
-  --body '**Implementação proposta neste PR; conclusão após merge.** O sincronizador conserva corpo/labels humanos, pagina o backlog e bloqueia conflitos. O workflow fecha issues existentes apenas quando o PR integrado usa `Closes`, `Fixes` ou `Resolves`; `Refs` nunca fecha. Testes cobrem merge, base não padrão, PR fechado sem merge, idempotência, PRs e referências externas.
+mk done --title 'G-22 · Reconciliar roadmap e issues sem reabertura indevida' \
+  --body '**Critérios cobertos pelo PR #259; validação e fechamento após integração.** O sincronizador conserva corpo/labels humanos, pagina o backlog e bloqueia conflitos. O workflow fecha issues existentes apenas quando o PR integrado usa `Closes`, `Fixes` ou `Resolves`; `Refs` nunca fecha. Testes cobrem merge, base não padrão, PR fechado sem merge, idempotência, PRs e referências externas.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -3239,4 +3239,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 235 issues (116 já criadas fechadas) =="
+echo "== pronto: 235 issues (117 já criadas fechadas) =="
