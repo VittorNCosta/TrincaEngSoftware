@@ -19,6 +19,14 @@ on:
       - "!TrincaMania Redesign/TrincaMania-ODS12/docs/**"
       - ".github/workflows/e2e.yml"
   workflow_dispatch:
+    inputs:
+      suite:
+        description: "Jornadas comuns ou perda/recarga real de vida (30 minutos)"
+        type: choice
+        default: full
+        options:
+          - full
+          - lives
   schedule:
     # Segunda de manha, antes de alguem comecar a semana em cima de um app que
     # parou de abrir na sexta.
@@ -28,7 +36,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.suite || 'full' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 defaults:
@@ -117,7 +125,7 @@ jobs:
           # O CLI pergunta sobre telemetria na primeira execucao; num runner sem
           # terminal isso pendura o passo ate o teto de tempo.
           MAESTRO_CLI_NO_ANALYTICS: "true"
-          MAESTRO_FLOW: ${{ github.event_name == 'pull_request' && '.maestro/01-entrar-numa-fase.yaml' || '.maestro' }}
+          MAESTRO_FLOW: ${{ github.event_name == 'pull_request' && '.maestro/01-entrar-numa-fase.yaml' || inputs.suite == 'lives' && '.maestro/manual/05-perder-vida-recarregar.yaml' || '.maestro' }}
         with:
           api-level: 34
           target: google_apis

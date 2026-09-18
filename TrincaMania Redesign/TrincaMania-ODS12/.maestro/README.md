@@ -26,7 +26,13 @@ O fluxo 05 é manual, fora da suíte normal para não gastar 30 minutos em cada 
 
 ```sh
 maestro test .maestro/manual/05-perder-vida-recarregar.yaml
+# Ou no GitHub Actions, na branch que contém esta versão do workflow:
+gh workflow run e2e.yml --ref feat/issues-terra-sol-astra -f suite=lives
 ```
+
+O input `suite=full` executa as quatro jornadas comuns. `suite=lives` executa
+apenas perda, reinício e recarga real; os grupos de concorrência são separados.
+PRs continuam usando somente smoke.
 
 Os subfluxos de vitória/derrota são gerados com o solver existente, que verifica
 cada jogada pela regra de domínio. O gerador também exige que as três primeiras
@@ -43,10 +49,11 @@ A descoberta de subfluxos fica restrita em `config.yaml`, conforme a
 
 ## Evidência e limites atuais
 
-Os caminhos do solver e o TypeScript são verificáveis localmente. Esta sessão
-não tinha Android/adb/Maestro: **os novos YAMLs ainda precisam executar num
-emulador**. Não tratar screenshots previstos como evidência já produzida.
-O CI deve publicar JUnit e, nas falhas, screenshots/hierarquia/logs.
+Os caminhos do solver e o TypeScript são verificáveis localmente; a execução
+Android acontece no GitHub Actions. Conferir o JUnit da execução correspondente
+ao SHA do PR #240 para cada jornada. O workflow publica capturas explícitas
+em sucesso/falha e diagnóstico completo quando falha. Capturas são evidências
+de execução, não aprovação automática de arte ou baseline visual.
 
 Q-17 (#236) tem persistência de desbloqueio, moedas, inventário e vidas coberta
 pelos roteiros acima. Ainda faltam execução sobre APK antigo com save legado,

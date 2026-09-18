@@ -2657,7 +2657,7 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'Q-02 · Fluxo E2E: abrir, escolher fase, jogar e vencer' \
   --body '
 
-**Entrega Astra low 18/09/2026:** Fluxo de vitória por toques reais gerado com seed isolada; precisa execução Android. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Vitória por toques reais e desbloqueio após reinício validados no Android; consultar JUnit do SHA do PR. Merge pendente. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2671,7 +2671,7 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'Q-03 · Fluxo E2E: comprar na loja' \
   --body '
 
-**Entrega Astra low 18/09/2026:** Fluxo compra e persistência após reinício preparado; precisa execução Android. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Compra e persistência após reinício executáveis na suíte full do GitHub Actions; consultar JUnit do SHA do PR para o aceite. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2685,7 +2685,7 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'Q-04 · Fluxo E2E: perder vida e esperar a recarga' \
   --body '
 
-**Entrega Astra low 18/09/2026:** Fluxo manual perda/recarga real de 30 minutos preparado; precisa execução Android. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Perda/reinício/recarga real de 30 minutos executáveis com suite=lives no GitHub Actions; aceite exige JUnit e capturas da execução. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5

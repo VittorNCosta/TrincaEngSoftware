@@ -114,7 +114,9 @@ com credenciais e um erro controlado no ambiente de teste.
 ## E2E Android
 
 PR com mudança relevante roda smoke; documentação Markdown/docs não monta APK.
-Manual/semanal roda toda a suíte. O pacote isolado `.e2e` usa seed determinística;
+Manual/semanal roda as quatro jornadas comuns; o input manual `suite=lives`
+executa perda/reinício/recarga real de 30 minutos em grupo separado.
+O pacote isolado `.e2e` usa seed determinística;
 ativar a flag em perfil preview/production falha. E2E desativa OTA e Sentry.
 JUnit sobe em sucesso/falha (14 dias), diagnóstico completo só em falha (7 dias).
 Capturas explícitas sobem também em sucesso (7 dias), em `maestro-capturas`,
