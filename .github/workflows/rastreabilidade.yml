@@ -1,0 +1,35 @@
+name: Rastreabilidade
+on:
+  workflow_call:
+    inputs:
+      pr_number:
+        type: number
+        required: true
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize, closed, ready_for_review]
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+concurrency:
+  group: rastreabilidade-${{ inputs.pr_number || github.event.pull_request.number }}
+  cancel-in-progress: false
+jobs:
+  issue:
+    name: Issue vinculada
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Somente código confiável da base; nunca instalar/executar código do PR.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+      - run: node .github/scripts/rastrear-pr.js
+        env:
+          PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
+          GH_TOKEN: ${{ github.token }}
