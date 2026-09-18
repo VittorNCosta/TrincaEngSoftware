@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { LEVEL_BY_ID, LEVELS } from '../data/levels';
+import { checkCampaignIds } from '../observability/runtimeInvariants';
 import { WORLDS, getWorldById } from '../data/worlds';
 import {
   ChestProgressSummary,
@@ -729,6 +730,32 @@ export const purchasePowerUpTransaction = (
     : purchasedProgress;
 };
 
+/** Diagnose raw storage at the I/O boundary; normalization remains pure. */
+const diagnoseCampaignStorageIds = (raw: unknown): void => {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return;
+  const progress = raw as Record<string, unknown>;
+  const levelIdLists = [
+    progress.completedLevelIds,
+    progress.unlockedLevelIds,
+    progress.chestProgressLevelIds,
+    progress.collectedRestCheckpointIds,
+  ];
+  const ids = levelIdLists.flatMap((value) =>
+    Array.isArray(value)
+      ? value.filter((id): id is string => typeof id === 'string')
+      : [],
+  );
+  if (
+    progress.levelStars &&
+    typeof progress.levelStars === 'object' &&
+    !Array.isArray(progress.levelStars)
+  ) {
+    ids.push(...Object.keys(progress.levelStars));
+  }
+  // Only the invariant name is logged, never the raw save or its contents.
+  checkCampaignIds(ids);
+};
+
 export const loadProgress = async (): Promise<ProgressState> => {
   const rawProgress = await AsyncStorage.getItem(STORAGE_KEY);
 
@@ -737,13 +764,16 @@ export const loadProgress = async (): Promise<ProgressState> => {
   }
 
   try {
-    return normalizeProgress(JSON.parse(rawProgress) as Partial<ProgressState>);
+    const parsedProgress: unknown = JSON.parse(rawProgress);
+    diagnoseCampaignStorageIds(parsedProgress);
+    return normalizeProgress(parsedProgress as Partial<ProgressState>);
   } catch {
     return createInitialProgress();
   }
 };
 
 export const saveProgress = async (progress: ProgressState) => {
+  diagnoseCampaignStorageIds(progress);
   await AsyncStorage.setItem(
     STORAGE_KEY,
     JSON.stringify(normalizeProgress(progress)),

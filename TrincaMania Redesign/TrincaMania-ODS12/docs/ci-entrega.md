@@ -33,9 +33,11 @@ silenciosamente.
 O piso antigo
 Node 20 (87,77% linhas, 88,73% ramos, 88,11% funções) permanece intacto em
 `scripts/cobertura-legado-node20.json`. Ele incluía testes, portanto não é
-comparável ao novo denominador. Na rodada final de 18/09/2026, passaram 222
+comparável ao novo denominador. Na rodada final de 18/09/2026, passaram 233
 asserções de domínio e 22 de UI (11 suítes). O denominador contém 58 fontes TS
-e 58 fontes TSX; o piso inicial medido foi:
+e 58 fontes TSX. Após acrescentar o diagnóstico do save, o domínio atingiu
+74,28% de linhas, 84,54% de ramos e 76,26% de funções, sem reduzir o piso
+inicial abaixo:
 
 | Escopo     | Linhas | Ramos  | Funções | Statements |
 | ---------- | ------ | ------ | ------- | ---------- |

@@ -2899,7 +2899,7 @@ O teste de acessibilidade existente não substitui verificação de foco/leitor 
 **Dependências e referências**
 Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.
 
-**Entrega Astra low 18/09/2026:** Capturas/roteiro TalkBack preparados; falta baseline visual real, diff de regressão e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2971,7 +2971,7 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 mk open --title 'O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime' \
   --body 'Os sete invariantes que já quebraram (`commitProgress`, `mutateLives`, id de capítulo no storage da campanha, `tileCount` múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e **loga**, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01.
 
-**Entrega Astra low 18/09/2026:** Logs para quantidade de peças, ids campanha/capítulo e contagem canônica. Invariantes arquiteturais/concorrência seguem em testes; conversão completa não alegada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Logs para quantidade de peças, contagem canônica e ids de capítulo no save da campanha antes da normalização, na leitura e escrita. Invariantes arquiteturais/concorrência seguem em testes; conversão completa não alegada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5

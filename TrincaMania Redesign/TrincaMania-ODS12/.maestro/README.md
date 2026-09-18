@@ -62,6 +62,34 @@ de definir tolerância, mascarando apenas relógios/partículas justificadas.
 Uma mudança proposital de cor/posição deve produzir diff e falhar o job antes
 de habilitar o bloqueio. Não aprovar baseline automaticamente por CI verde.
 
+## Comparador visual local
+
+Após obter e revisar uma baseline Android real, execute na pasta do aplicativo:
+
+```sh
+node scripts/comparar-visual.js baseline/mapa.png artifacts/mapa.png artifacts/diff-mapa 0 0
+```
+
+Os dois últimos argumentos são obrigatórios: diferença máxima por canal RGBA
+(inteiro 0–254) e fração máxima de pixels alterados (0 inclusive até 1 exclusive).
+`0 0` exige identidade; por exemplo, `3 0.001` tolera diferenças de até 3 unidades
+por canal e até 0,1% de pixels acima desse limite. Esse exemplo não é um piso
+aprovado para Android: calibrar após as cinco repetições e revisão descritas acima.
+A comparação é por bytes RGBA, sem correção gamma, redimensionamento, máscara ou
+supressão automática de antialiasing. Use o mesmo aparelho/configuração de captura.
+
+A saída contém `diff.png` (mudanças em vermelho, contexto cinza) e `report.json`
+com dimensões, tolerância, contagem e SHA256 das duas imagens. Use diretório novo
+por execução e anexe ambos os arquivos ao diagnóstico/artefato do job. Código de
+saída 0 indica aprovação, 1 regressão e 2 erro de entrada/configuração; baseline
+ausente, PNG inválido e dimensões distintas nunca aprovam. O comando não cria nem
+atualiza baseline. Uma mudança em baseline deve ser revisada em PR.
+
+`.github/scripts/tests/visual.test.cjs` usa imagens sintéticas temporárias para
+provar detecção de mudança, limite de tolerância, emissão de diff e falhas de
+entrada. Entra em `npm run test:ci`; não constitui baseline ou aceite do Android.
+O codec `pngjs` é dependência apenas de desenvolvimento, sem import no aplicativo.
+
 ## Roteiro TalkBack e fontes ampliadas
 
 1. Ativar TalkBack no emulador isolado; percorrer mapa, partida, resultado e loja
