@@ -514,10 +514,8 @@ mk done --title 'C-29 · Reescrever o invariante #4 do `CLAUDE.md`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-luna' --milestone 'Conteúdo 10×10'
-mk open --title 'C-30 · Decidir e implementar o destino dos Capítulos' \
-  --body 'Esconder do menu, manter como modo infinito pós-jogo, ou remover. Hoje `ChaptersScreen` é acessível.
-
-**Entrega Astra low 18/09/2026:** Capítulos após as 100 fases principais; bônus não obrigatório; save preservado. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'C-30 · Decidir e implementar o destino dos Capítulos' \
+  --body '**Feito 18/09/2026.** Decisão do responsável: Capítulos como modo extra após as 100 fases principais; bônus não obrigatório e save preservado. Acesso normal validado por testes de campanha/capítulos no PR #240.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Fable 5.1
@@ -1707,21 +1705,7 @@ Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/e
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
 mk open --title 'G-22 · Reconciliar roadmap e issues sem reabertura indevida' \
-  --body '**Contexto**
-O sincronizador atual considera roadmap.html a fonte de verdade e reabre uma issue fechada se a tarefa local continuar pendente. Isso conflita com fechamento automático por PR.
-
-**Critérios de aceite**
-- [ ] Definir e documentar a autoridade: roadmap para escopo/prioridade de tarefas planejadas; merge validado para conclusão; issues automáticas sem ID de roadmap ficam fora do sincronizador legado.
-- [ ] Propagar conclusão comprovada para os espelhos HTML/Markdown por alteração revisável antes de permitir nova reconciliação de estado.
-- [ ] Rodar validação de consistência no CI e sincronização de escrita apenas após integração de alteração confiável.
-- [ ] Preservar labels/corpo mantidos por pessoas fora das seções gerenciadas e não excluir issues órfãs ou duplicadas automaticamente.
-- [ ] Cobrir idempotência, paginação, falha parcial da API, tarefa nova, merge, PR abandonado e conflito entre roadmap e GitHub.
-- [ ] Registrar as tarefas novas desta auditoria e manter o script de criação inicial gerado, sem executá-lo sobre backlog existente.
-
-**Dependências e referências**
-Complementa G-21. Não migrar todo o histórico nem substituir GitHub Issues por outra ferramenta.
-
-**Entrega Astra low 18/09/2026:** Sync não reabre issue fechada, preserva corpo humano, pagina tudo e bloqueia conflitos; fixtures aprovadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body '**Implementação proposta neste PR; conclusão após merge.** O sincronizador conserva corpo/labels humanos, pagina o backlog e bloqueia conflitos. O workflow fecha issues existentes apenas quando o PR integrado usa `Closes`, `Fixes` ou `Resolves`; `Refs` nunca fecha. Testes cobrem merge, base não padrão, PR fechado sem merge, idempotência, PRs e referências externas.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2654,10 +2638,8 @@ mk done --title 'Q-01 · Montar E2E com Maestro' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
-mk open --title 'Q-02 · Fluxo E2E: abrir, escolher fase, jogar e vencer' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Vitória por toques reais e desbloqueio após reinício validados no Android; consultar JUnit do SHA do PR. Merge pendente. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'Q-02 · Fluxo E2E: abrir, escolher fase, jogar e vencer' \
+  --body '**Feito 18/09/2026.** PR #240 integrado; vitória e desbloqueio da fase seguinte persistem após reinício. JUnit 4/4 aprovado: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35354539043.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2668,10 +2650,8 @@ mk open --title 'Q-02 · Fluxo E2E: abrir, escolher fase, jogar e vencer' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
-mk open --title 'Q-03 · Fluxo E2E: comprar na loja' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Compra e persistência após reinício executáveis na suíte full do GitHub Actions; consultar JUnit do SHA do PR para o aceite. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'Q-03 · Fluxo E2E: comprar na loja' \
+  --body '**Feito 18/09/2026.** PR #240 integrado; compra reduz 45 moedas, acrescenta uma unidade ao inventário e ambos persistem após reinício. JUnit aprovado: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35354539043.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2682,10 +2662,8 @@ mk open --title 'Q-03 · Fluxo E2E: comprar na loja' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
-mk open --title 'Q-04 · Fluxo E2E: perder vida e esperar a recarga' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Perda/reinício/recarga real de 30 minutos executáveis com suite=lives no GitHub Actions; aceite exige JUnit e capturas da execução. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'Q-04 · Fluxo E2E: perder vida e esperar a recarga' \
+  --body '**Feito 18/09/2026.** Perde vida, reinicia mantendo quatro vidas e recarrega para cinco após o intervalo real. JUnit e capturas: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35352904452 (34min32s).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2786,7 +2764,7 @@ mk open --title 'Q-11 · Perfilar performance em aparelho de entrada' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,humano' --milestone 'Qualidade'
 mk done --title 'Q-12 · Escrever o ADR da mudança 203 → 100' \
-  --body '**Feito 08/09.** `docs/adr/0004-campanha-vira-10-mundos-de-10-fases.md`: por que 10×10 em vez de 8×25, opções consideradas (manter 203 fixas) e consequências (hash quebrado de propósito, migração de save foi não-evento, gap de arte/som dos mundos 9/10, destino dos Capítulos ainda em aberto no C-30).
+  --body '**Feito 08/09.** `docs/adr/0004-campanha-vira-10-mundos-de-10-fases.md`: por que 10×10 em vez de 8×25, opções consideradas (manter 203 fixas) e consequências (hash quebrado de propósito, migração de save foi não-evento, gap de arte/som dos mundos 9/10, destino dos Capítulos foi resolvido no C-30 em 18/09/2026).
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -3261,4 +3239,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 235 issues (112 já criadas fechadas) =="
+echo "== pronto: 235 issues (116 já criadas fechadas) =="

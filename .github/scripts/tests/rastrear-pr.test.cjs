@@ -1,6 +1,6 @@
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
-const { rastrear, referencias } = require("../rastrear-pr");
+const { rastrear, referencias, fechamentos } = require("../rastrear-pr");
 function fixture(extra = {}) {
   const pr = {
     number: 3,
@@ -73,10 +73,109 @@ test("fecha automática apenas no merge na entrega; reabre com PR", async () => 
   await rastrear(f);
   assert.equal(f.issues[0].state, "open");
 });
+
+test("fecha apenas issues explicitamente declaradas após merge em qualquer base", async () => {
+  const f = fixture({
+    base: { ref: "feat/campanha-10x10" },
+    body: "Closes #38, #165 and https://github.com/a/b/issues/166\nRefs #226",
+  });
+  f.issues.push(
+    { number: 38, state: "open" },
+    { number: 165, state: "open" },
+    { number: 166, state: "open" },
+    { number: 226, state: "open" },
+  );
+
+  await rastrear(f);
+  assert.deepEqual(
+    f.issues.map(({ number, state }) => [number, state]),
+    [
+      [38, "open"],
+      [165, "open"],
+      [166, "open"],
+      [226, "open"],
+    ],
+  );
+
+  f.pr.state = "closed";
+  await rastrear(f);
+  assert.deepEqual(
+    f.issues.map(({ number, state }) => [number, state]),
+    [
+      [38, "open"],
+      [165, "open"],
+      [166, "open"],
+      [226, "open"],
+    ],
+  );
+
+  f.pr.merged = true;
+  await rastrear(f);
+  assert.deepEqual(
+    f.issues.map(({ number, state }) => [number, state]),
+    [
+      [38, "closed"],
+      [165, "closed"],
+      [166, "closed"],
+      [226, "open"],
+    ],
+  );
+});
+
+test("ignora PRs, issues de outro repositório e repetição do fechamento", async () => {
+  const f = fixture({
+    base: { ref: "feature" },
+    body: "Fixes #38 and https://github.com/other/repo/issues/165",
+  });
+  f.issues.push(
+    {
+      number: 38,
+      state: "open",
+      pull_request: { url: "https://api/pulls/38" },
+    },
+    { number: 165, state: "open" },
+  );
+  assert.deepEqual(fechamentos(f.pr.body, f.repo), [38]);
+  f.pr.state = "closed";
+  f.pr.merged = true;
+  await rastrear(f);
+  assert.deepEqual(
+    f.issues.map(({ number, state }) => [number, state]),
+    [
+      [38, "open"],
+      [165, "open"],
+    ],
+  );
+
+  const repetido = fixture({
+    body: "Fixes #77",
+    state: "closed",
+    merged: true,
+  });
+  repetido.issues.push({ number: 77, state: "open" });
+  await rastrear(repetido);
+  await rastrear(repetido);
+  assert.equal(repetido.issues[0].state, "closed");
+  assert.equal(
+    repetido.calls.filter(
+      ({ method, path }) => method === "PATCH" && path === "/issues/77",
+    ).length,
+    1,
+  );
+});
 test("check não cria issue e rejeita PR sem vínculo", async () => {
   const f = fixture();
   await assert.rejects(rastrear({ ...f, somenteLeitura: true }));
   assert.equal(f.issues.length, 0);
+
+  const fechamento = fixture({
+    body: "Closes #77",
+    state: "closed",
+    merged: true,
+  });
+  fechamento.issues.push({ number: 77, state: "open" });
+  await rastrear({ ...fechamento, somenteLeitura: true });
+  assert.equal(fechamento.issues[0].state, "open");
 });
 
 test("Refs reutiliza issue sem prometer fechamento automático", () => {
