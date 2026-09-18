@@ -2,16 +2,6 @@
   "_leia": "Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= high e em entrada que nao existe mais. A chave e pacote::id-do-advisory.",
   "piso": "high",
   "entradas": {
-    "browserslist::1153171": {
-      "severidade": "high",
-      "titulo": "Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM",
-      "url": "https://github.com/advisories/GHSA-c83g-rgw3-j3cx"
-    },
-    "browserslist::1153172": {
-      "severidade": "high",
-      "titulo": "Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)",
-      "url": "https://github.com/advisories/GHSA-73wf-gq98-2v4g"
-    },
     "image-size::1138808": {
       "severidade": "high",
       "titulo": "image-size: ICNS parser allows denial of service through an infinite loop",

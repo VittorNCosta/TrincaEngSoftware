@@ -1,3 +1,19 @@
+import { isChapterModeUnlocked } from '../utils/chapterAvailability';
+import {
+  MAP_VIEWPORT_ESTIMATE,
+  MAP_PARALLAX_TRAVEL,
+  LEGACY_MAP_OPENING_BOTTOM_INSET,
+  LEGACY_MAP_OPENING_FOCUS_RATIO,
+  LEGACY_MAP_OPENING_TOP_INSET,
+  getWorldMapHeight,
+  getLevelNodePosition,
+  getShopMarkerPosition,
+  getPortalMarkerPosition,
+  getBonusChestMarkerPosition,
+  getShortObjective,
+  getWorldSelectorSubtitle,
+} from './levelSelect/mapPresentation';
+import { styles } from './levelSelect/styles';
 import {
   Fragment,
   useCallback,
@@ -13,7 +29,6 @@ import {
   Modal,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -38,9 +53,7 @@ import { getWorldMapConfig } from '../data/worldMapConfigs';
 import { WORLDS, getWorldById } from '../data/worlds';
 import { LivesState, formatLifeTimer } from '../storage/livesStorage';
 import { getBonusWorldChestProgress } from '../storage/progressStorage';
-import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 import {
-  Level,
   ProgressState,
   RestCheckpointRewardResult,
   WorldId,
@@ -57,7 +70,7 @@ import {
   getCurrentLevelForWorld,
   getCurrentWorldId,
   getWorldProgress,
-  isWorldUnlocked,
+  isWorldUnlocked as isWorldNormallyUnlocked,
 } from '../utils/worldProgress';
 import { getLevelDisplayLabel } from '../utils/levelDisplay';
 import {
@@ -69,64 +82,8 @@ import {
   getCampaignMapOpeningScrollOffset,
 } from '../utils/campaignMapLayout';
 
-const MAP_HEIGHT = 1320;
-const MAP_WIDTH = 320;
-const MAP_MIN_HEIGHT = 960;
-const MAP_NODE_BOTTOM = 116;
-const MAP_NODE_STEP = 110;
-// Folga no topo para a bolha mais alta não ficar sob o HUD flutuante.
-const MAP_NODE_TOP_PADDING = 170;
-const NODE_PATH_LEFTS = [112, 42, 202, 72, 184, 46, 206, 82, 190, 118];
-// Altura aproximada da área visível do mapa; só alimenta o parallax.
-const MAP_VIEWPORT_ESTIMATE = 720;
-// Quanto o cenário anda no total: 0,25x o percurso das bolhas.
-const MAP_PARALLAX_TRAVEL = 260;
-const LEGACY_MAP_OPENING_BOTTOM_INSET = 48;
-const LEGACY_MAP_OPENING_FOCUS_RATIO = 0.45;
-const LEGACY_MAP_OPENING_TOP_INSET = 170;
-
-const getWorldMapHeight = (levelCount: number) =>
-  Math.max(
-    MAP_MIN_HEIGHT,
-    MAP_NODE_TOP_PADDING +
-      MAP_NODE_BOTTOM +
-      Math.max(0, levelCount - 1) * MAP_NODE_STEP,
-  );
-
-const getLevelNodePosition = (localIndex: number, mapHeight: number) => ({
-  left: NODE_PATH_LEFTS[localIndex % NODE_PATH_LEFTS.length],
-  top: mapHeight - MAP_NODE_BOTTOM - localIndex * MAP_NODE_STEP,
-});
-
-const getShopMarkerPosition = (
-  localIndex: number,
-  mapHeight: number,
-  hasPortal: boolean,
-) => {
-  const levelPosition = getLevelNodePosition(localIndex, mapHeight);
-  const sideLeft = levelPosition.left > MAP_WIDTH / 2 ? 18 : 186;
-
-  return {
-    left: hasPortal ? 18 : sideLeft,
-    top: Math.max(28, levelPosition.top - 48),
-  };
-};
-
-const getPortalMarkerPosition = (localIndex: number, mapHeight: number) => {
-  const levelPosition = getLevelNodePosition(localIndex, mapHeight);
-
-  return {
-    left: 186,
-    top: Math.max(20, levelPosition.top - 82),
-  };
-};
-
-const getBonusChestMarkerPosition = (mapHeight: number) => ({
-  left: 88,
-  top: Math.max(170, mapHeight - MAP_NODE_BOTTOM - MAP_NODE_STEP * 2 - 56),
-});
-
 type LevelSelectScreenProps = {
+  devMode?: boolean;
   activeTrayCapacity: number;
   initialWorldId?: WorldId;
   isActive?: boolean;
@@ -170,46 +127,8 @@ type MapToastState = {
   text: string;
 };
 
-const MAP_OBJECTIVE_SNIPPETS = [
-  'Forme trincas e limpe a mesa.',
-  'Libere peças e avance.',
-  'Observe as camadas.',
-  'Complete para continuar.',
-];
-
-const getShortObjective = (level: Level) =>
-  level.worldId === 1
-    ? MAP_OBJECTIVE_SNIPPETS[
-        (level.worldLevelNumber - 1) % MAP_OBJECTIVE_SNIPPETS.length
-      ]
-    : level.objectiveText.replace(/^Objetivo:\s*/, '');
-
-const getWorldSelectorSubtitle = (worldId: WorldId) => {
-  switch (worldId) {
-    case 1:
-      return 'Parque';
-    case 2:
-      return 'Vale';
-    case 3:
-      return 'Central';
-    case 4:
-      return 'Viveiro';
-    case 5:
-      return 'Usina';
-    case 6:
-      return 'Cooperativa';
-    case 7:
-      return 'Rota';
-    case 8:
-      return 'Fórum';
-    case 21:
-      return 'Jardim Renascido';
-    default:
-      return '';
-  }
-};
-
 export function LevelSelectScreen({
+  devMode = false,
   activeTrayCapacity,
   initialWorldId,
   isActive = true,
@@ -225,6 +144,11 @@ export function LevelSelectScreen({
   onOpenRestCheckpoint,
   onSelectLevel,
 }: LevelSelectScreenProps) {
+  const isWorldUnlocked = useCallback(
+    (worldId: WorldId, state: ProgressState) =>
+      devMode || isWorldNormallyUnlocked(worldId, state),
+    [devMode],
+  );
   const mapScrollRef = useRef<ScrollView>(null);
   const appliedOpeningKeyRef = useRef<string | undefined>(undefined);
   const lastInitialWorldIdRef = useRef(initialWorldId);
@@ -243,7 +167,6 @@ export function LevelSelectScreen({
     levels: worldLevels,
     progressPercent,
     totalCount,
-    worldComplete,
   } = useMemo(
     () => getWorldProgress(selectedWorldId, progress),
     [progress, selectedWorldId],
@@ -426,7 +349,7 @@ export function LevelSelectScreen({
 
     setSelectedTarget(undefined);
     setSelectedWorldId(initialWorldId);
-  }, [initialWorldId, progress]);
+  }, [initialWorldId, progress, isWorldUnlocked]);
 
   useEffect(() => {
     if (isWorldUnlocked(selectedWorldId, progress)) {
@@ -435,7 +358,7 @@ export function LevelSelectScreen({
 
     setSelectedTarget(undefined);
     setSelectedWorldId(getCurrentWorldId(progress));
-  }, [progress, selectedWorldId]);
+  }, [progress, selectedWorldId, isWorldUnlocked]);
 
   useEffect(() => {
     appliedOpeningKeyRef.current = undefined;
@@ -667,7 +590,7 @@ export function LevelSelectScreen({
       ? getWorldById(selectedTarget.targetWorldId)
       : undefined;
   const selectedLevelLocked = selectedLevel
-    ? !progress.unlockedLevelIds.includes(selectedLevel.id)
+    ? !devMode && !progress.unlockedLevelIds.includes(selectedLevel.id)
     : false;
   const selectedLevelStars = selectedLevel
     ? (progress.levelStars[selectedLevel.id] ?? 0)
@@ -816,11 +739,15 @@ export function LevelSelectScreen({
                       return null;
                     }
 
-                    const state = deriveCampaignMapLevelState(
+                    const normalState = deriveCampaignMapLevelState(
                       level.id,
                       currentLevel?.id,
                       progress,
                     );
+                    const state =
+                      devMode && normalState === 'locked'
+                        ? 'available'
+                        : normalState;
                     const frames = getCampaignMapEntityFrames(
                       anchor.point,
                       segmentedMapConfig.levelNodeSize,
@@ -996,7 +923,7 @@ export function LevelSelectScreen({
                 {worldLevels.map((level) => {
                   const localIndex = level.worldLevelNumber - 1;
                   const completed = completedLevelIdSet.has(level.id);
-                  const locked = !unlockedLevelIdSet.has(level.id);
+                  const locked = !devMode && !unlockedLevelIdSet.has(level.id);
                   const current =
                     currentLevel?.id === level.id && !completed && !locked;
                   const selected =
@@ -1150,18 +1077,20 @@ export function LevelSelectScreen({
           <View pointerEvents="none" style={styles.mapBottomScrim} />
         </Animated.View>
 
-        <Pressable
-          accessibilityLabel="Capítulos"
-          accessibilityRole="button"
-          onPress={onOpenChapters}
-          style={({ pressed }) => [
-            styles.chaptersButton,
-            pressed ? styles.chaptersButtonPressed : null,
-          ]}
-        >
-          <GameIcon name="world" size={22} tone="blue" />
-          <Text style={styles.chaptersButtonText}>Capítulos</Text>
-        </Pressable>
+        {devMode || isChapterModeUnlocked(progress) ? (
+          <Pressable
+            accessibilityLabel="Capítulos"
+            accessibilityRole="button"
+            onPress={onOpenChapters}
+            style={({ pressed }) => [
+              styles.chaptersButton,
+              pressed ? styles.chaptersButtonPressed : null,
+            ]}
+          >
+            <GameIcon name="world" size={22} tone="blue" />
+            <Text style={styles.chaptersButtonText}>Capítulos</Text>
+          </Pressable>
+        ) : null}
 
         <MapHud
           coins={progress.coins}
@@ -1515,481 +1444,3 @@ export function LevelSelectScreen({
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  bonusMapBadge: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 139, 193, 0.94)',
-    borderColor: '#FFE1F0',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    left: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 3,
-    position: 'absolute',
-    top: 74,
-    zIndex: 6,
-    ...shadows.card,
-  },
-  bonusMapBadgeName: {
-    color: colors.inkOnDark,
-    fontSize: 10,
-    fontWeight: '900',
-    lineHeight: 12,
-  },
-  bonusMapBadgeText: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    lineHeight: 13,
-    textTransform: 'uppercase',
-  },
-  bonusChestPosition: {
-    alignItems: 'center',
-    position: 'absolute',
-    zIndex: 6,
-  },
-  // Fica acima do painel de seleção (bottom + minHeight dele), para nunca ficar
-  // coberto quando o jogador toca numa fase.
-  chaptersButton: {
-    alignItems: 'center',
-    backgroundColor: '#FFF8E8',
-    borderColor: '#E8B64B',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    bottom: BOTTOM_NAV_HEIGHT + 100,
-    flexDirection: 'row',
-    gap: 4,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 5,
-    position: 'absolute',
-    right: spacing.md,
-    zIndex: 8,
-    ...shadows.button,
-  },
-  chaptersButtonPressed: {
-    opacity: 0.9,
-    transform: [{ translateY: 1 }, { scale: 0.97 }],
-  },
-  chaptersButtonText: {
-    color: colors.ink,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  closeButton: {
-    alignItems: 'center',
-    backgroundColor: '#F05278',
-    borderBottomColor: '#A9274A',
-    borderBottomWidth: 3,
-    borderColor: '#FFC0CE',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 30,
-    justifyContent: 'center',
-    position: 'absolute',
-    right: 8,
-    top: 8,
-    width: 30,
-    zIndex: 2,
-  },
-  closeButtonPressed: {
-    opacity: 0.9,
-    transform: [{ translateY: 1 }, { scale: 0.96 }],
-  },
-  container: {
-    flex: 1,
-    marginBottom: -spacing.md,
-    marginHorizontal: -spacing.md,
-    marginTop: -spacing.md,
-  },
-  difficultyBadge: {
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  difficultyText: {
-    color: colors.ink,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  lockedBadge: {
-    backgroundColor: '#CAD4CE',
-    borderColor: '#E7EFE9',
-  },
-  lockedPanelBody: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  caveGlow: {
-    backgroundColor: 'rgba(163, 232, 255, 0.42)',
-    borderRadius: radii.pill,
-    height: 28,
-    position: 'absolute',
-    width: 72,
-  },
-  caveGlowOne: {
-    right: 22,
-    top: 446,
-    transform: [{ rotate: '-14deg' }],
-  },
-  caveGlowTwo: {
-    left: 18,
-    top: 820,
-    transform: [{ rotate: '12deg' }],
-  },
-  mapFrame: {
-    backgroundColor: '#86DCC3',
-    flex: 1,
-    overflow: 'hidden',
-  },
-  mapFrameAzulado: {
-    backgroundColor: '#89B7CF',
-  },
-  mapFrameVioleta: {
-    backgroundColor: '#988BEA',
-  },
-  mapFrameRosado: {
-    backgroundColor: '#FFE4F0',
-  },
-  mapBottomScrim: {
-    backgroundColor: 'rgba(7, 24, 32, 0.34)',
-    bottom: 0,
-    height: 46,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-  },
-  mapBackgroundHitArea: {
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 2,
-  },
-  mapImageAsset: {
-    borderRadius: 0,
-  },
-  // Camada do cenário ancorada na tela. A folga extra fica embaixo porque o parallax
-  // desloca a arte para cima (translateY negativo) conforme o mapa rola.
-  mapParallax: {
-    bottom: -MAP_PARALLAX_TRAVEL,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  mapParallaxImage: {
-    flex: 1,
-  },
-  mapLayer: {
-    alignSelf: 'center',
-    height: MAP_HEIGHT,
-    position: 'relative',
-    width: MAP_WIDTH,
-    zIndex: 3,
-  },
-  mapScrollContent: {
-    minHeight: MAP_HEIGHT,
-    // Folga da barra de abas full-bleed, para o fim do mapa não ficar sob ela.
-    paddingBottom: BOTTOM_NAV_HEIGHT,
-    position: 'relative',
-  },
-  mountainMist: {
-    backgroundColor: 'rgba(243, 251, 255, 0.24)',
-    borderRadius: radii.pill,
-    height: 48,
-    left: -20,
-    position: 'absolute',
-    right: -20,
-  },
-  mountainMistBottom: {
-    top: 1030,
-    transform: [{ rotate: '-5deg' }],
-  },
-  mountainMistTop: {
-    top: 250,
-    transform: [{ rotate: '6deg' }],
-  },
-  mountainShape: {
-    borderLeftColor: 'transparent',
-    borderLeftWidth: 150,
-    borderRightColor: 'transparent',
-    borderRightWidth: 150,
-    height: 0,
-    left: 10,
-    position: 'absolute',
-    width: 0,
-  },
-  mountainShapeBack: {
-    borderBottomColor: 'rgba(78, 106, 134, 0.34)',
-    borderBottomWidth: 250,
-    top: 70,
-  },
-  mountainShapeFront: {
-    borderBottomColor: 'rgba(109, 137, 151, 0.45)',
-    borderBottomWidth: 300,
-    left: -44,
-    top: 330,
-  },
-  mountainThemeLayer: {
-    backgroundColor: 'rgba(35, 70, 100, 0.28)',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 1,
-  },
-  nodePosition: {
-    alignItems: 'center',
-    position: 'absolute',
-  },
-  panelBottomRow: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    justifyContent: 'space-between',
-  },
-  panelButton: {
-    minWidth: 108,
-  },
-  panelCopy: {
-    flex: 1,
-  },
-  panelBanner: {
-    alignSelf: 'center',
-    backgroundColor: '#F7B91E',
-    borderColor: '#FFF2A7',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    marginTop: -18,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 3,
-    ...shadows.button,
-  },
-  panelBannerLocked: {
-    backgroundColor: '#8D9BA0',
-    borderColor: '#D5E0E0',
-  },
-  panelBannerPortal: {
-    backgroundColor: '#5E82DE',
-    borderColor: '#E7F0FF',
-  },
-  panelBannerSoon: {
-    backgroundColor: '#6F82D8',
-    borderColor: '#DDE6FF',
-  },
-  panelBannerText: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-    textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 1,
-  },
-  panelDescription: {
-    color: colors.ink,
-    fontSize: fontSizes.xs,
-    fontWeight: '800',
-    lineHeight: 15,
-  },
-  panelHeader: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
-  },
-  panelDifficultyRow: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    marginTop: spacing.xs,
-  },
-  panelStarIcon: {
-    alignItems: 'center',
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
-  },
-  panelStarsRow: {
-    flexDirection: 'row',
-    gap: 2,
-  },
-  panelTitle: {
-    color: colors.ink,
-    fontSize: fontSizes.md,
-    fontWeight: '900',
-  },
-  panelTitleBlock: {
-    flex: 1,
-  },
-  portalGlow: {
-    backgroundColor: 'rgba(255, 211, 90, 0.28)',
-    borderRadius: radii.pill,
-    height: 78,
-    position: 'absolute',
-    width: 90,
-  },
-  portalLabel: {
-    color: colors.inkOnDark,
-    fontSize: 10,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  portalMarker: {
-    alignItems: 'center',
-    backgroundColor: '#5E82DE',
-    borderBottomColor: '#2E438B',
-    borderBottomWidth: 4,
-    borderColor: '#E7F0FF',
-    borderRadius: 16,
-    borderWidth: 3,
-    gap: 2,
-    height: 74,
-    justifyContent: 'center',
-    overflow: 'hidden',
-    width: 90,
-    ...shadows.button,
-  },
-  portalMarkerLocked: {
-    backgroundColor: '#7B8B93',
-    borderBottomColor: '#46565F',
-    borderColor: '#D5E0E0',
-  },
-  portalMarkerPressed: {
-    opacity: 0.9,
-    transform: [{ translateY: 2 }, { scale: 0.98 }],
-  },
-  portalMarkerSelected: {
-    borderColor: '#FFF7C8',
-  },
-  portalPosition: {
-    alignItems: 'center',
-    position: 'absolute',
-  },
-  rewardCard: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 5,
-    borderColor: colors.primary,
-    borderRadius: radii.card,
-    borderWidth: 3,
-    gap: spacing.md,
-    maxWidth: 360,
-    padding: spacing.xl,
-    width: '88%',
-    ...shadows.card,
-  },
-  rewardKicker: {
-    color: colors.primaryDark,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  rewardOverlay: {
-    alignItems: 'center',
-    backgroundColor: colors.overlay,
-    flex: 1,
-    justifyContent: 'center',
-    padding: spacing.lg,
-  },
-  rewardText: {
-    color: colors.muted,
-    fontSize: fontSizes.md,
-    fontWeight: '800',
-    lineHeight: 22,
-    textAlign: 'center',
-  },
-  rewardTitle: {
-    color: colors.ink,
-    fontSize: fontSizes.xl,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  selectionPanel: {
-    backgroundColor: '#FFF8E8',
-    borderColor: '#E8B64B',
-    borderRadius: 16,
-    borderWidth: 3,
-    // Sobe acima da barra de abas, senão o botão Jogar fica embaixo dela.
-    bottom: BOTTOM_NAV_HEIGHT,
-    gap: 5,
-    left: 0,
-    minHeight: 92,
-    paddingBottom: 7,
-    paddingHorizontal: spacing.sm,
-    paddingRight: 42,
-    paddingTop: 30,
-    position: 'absolute',
-    right: 0,
-    zIndex: 9,
-    ...shadows.card,
-  },
-  segmentedEntityPosition: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    zIndex: 4,
-  },
-  segmentedEntityScale: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  segmentedMapLayer: {
-    alignSelf: 'center',
-    position: 'relative',
-    zIndex: 3,
-  },
-  shopPanelEmoji: {
-    fontSize: 22,
-  },
-  shopPanelIcon: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-  },
-  shopPosition: {
-    alignItems: 'center',
-    position: 'absolute',
-  },
-  toast: {
-    alignSelf: 'center',
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.card,
-    borderWidth: 2,
-    maxWidth: '96%',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    ...shadows.card,
-  },
-  toastSlot: {
-    bottom: BOTTOM_NAV_HEIGHT + 132,
-    left: 0,
-    minHeight: 38,
-    pointerEvents: 'none',
-    position: 'absolute',
-    right: 0,
-    zIndex: 10,
-  },
-  toastText: {
-    color: colors.ink,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-});

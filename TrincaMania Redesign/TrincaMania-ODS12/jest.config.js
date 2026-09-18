@@ -9,7 +9,12 @@
 /** @type {import('jest').Config} */
 module.exports = {
   preset: 'jest-expo',
-  roots: ['<rootDir>/src/components/__tests__'],
+  collectCoverageFrom: [
+    '<rootDir>/App.tsx',
+    '<rootDir>/src/**/*.tsx',
+    '!<rootDir>/src/**/__tests__/**',
+  ],
+  roots: ['<rootDir>'],
   testMatch: ['<rootDir>/src/components/__tests__/**/*.test.tsx'],
   testPathIgnorePatterns: ['/node_modules/', '<rootDir>/tests/'],
   setupFiles: ['<rootDir>/jest.setup.js'],

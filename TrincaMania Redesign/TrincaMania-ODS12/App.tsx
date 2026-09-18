@@ -1,3 +1,8 @@
+import { useProgressPersistence } from './src/hooks/useProgressPersistence';
+import { checkBoardSize } from './src/observability/runtimeInvariants';
+import { isChapterModeUnlocked } from './src/utils/chapterAvailability';
+import { installNativeErrorHandlers } from './src/observability/nativeErrors';
+import { runtimeAssert, updateDiagnosticContext } from './src/utils/log';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
@@ -40,10 +45,8 @@ import {
   saveCampaignResizeNoticeSeen,
   saveMysteryTutorialSeen,
   savePracticalTutorialSeen,
-  saveProgress,
   saveTutorialSeen,
   spendCoins,
-  unlockAllLevelsForDevMode,
 } from './src/storage/progressStorage';
 import {
   ChapterProgressState,
@@ -53,8 +56,6 @@ import {
   getNextChapterMapId,
   isChapterMapUnlocked,
   loadChapterProgress,
-  saveChapterProgress,
-  unlockAllChapterMapsForDevMode,
 } from './src/storage/chapterProgressStorage';
 import {
   MagicTripleRescueState,
@@ -120,6 +121,7 @@ type AppScreen = 'splash' | 'levels' | 'game' | 'shop' | 'chapters';
 type ShopReturnScreen = 'levels' | 'game';
 
 export default function App() {
+  useEffect(() => installNativeErrorHandlers(), []);
   const [screen, setScreen] = useState<AppScreen>('splash');
   const [progress, setProgress] = useState<ProgressState>(
     createInitialProgress(),
@@ -153,6 +155,7 @@ export default function App() {
   const [settings, setSettings] = useState<AppSettings>(
     createDefaultSettings(),
   );
+  const [devMode, setDevMode] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
   const [activeWorldChestId, setActiveWorldChestId] = useState<
     string | undefined
@@ -266,37 +269,15 @@ export default function App() {
     return nextTrayBoostState;
   }, []);
 
-  const commitProgress = useCallback((nextProgress: ProgressState) => {
-    const generation = progressGenerationRef.current;
-    progressRef.current = nextProgress;
-    setProgress(nextProgress);
-    const saveOperation = progressSaveQueueRef.current
-      .catch(() => undefined)
-      .then(() =>
-        progressGenerationRef.current === generation
-          ? saveProgress(nextProgress)
-          : undefined,
-      );
-    progressSaveQueueRef.current = saveOperation.catch(() => undefined);
-    return saveOperation;
-  }, []);
-
-  // Mesma fila de serialização do `commitProgress`, na chave dos capítulos: duas
-  // conclusões seguidas não podem gravar fora de ordem.
-  const commitChapterProgress = useCallback(
-    (nextProgress: ChapterProgressState) => {
-      chapterProgressRef.current = nextProgress;
-      setChapterProgress(nextProgress);
-      const saveOperation = chapterProgressSaveQueueRef.current
-        .catch(() => undefined)
-        .then(() => saveChapterProgress(nextProgress));
-      chapterProgressSaveQueueRef.current = saveOperation.catch(
-        () => undefined,
-      );
-      return saveOperation;
-    },
-    [],
-  );
+  const { commitProgress, commitChapterProgress } = useProgressPersistence({
+    progressRef,
+    progressGenerationRef,
+    progressSaveQueueRef,
+    chapterProgressRef,
+    chapterProgressSaveQueueRef,
+    setProgress,
+    setChapterProgress,
+  });
 
   const livesStateRef = useRef(livesState);
   const trayBoostStateRef = useRef(trayBoostState);
@@ -353,6 +334,23 @@ export default function App() {
       LEVELS[0],
     [selectedLevelId],
   );
+  // Snapshot before rendering children: a render failure must not inherit the
+  // previous screen's domain context while waiting for effects to run.
+  updateDiagnosticContext({
+    screen,
+    levelId:
+      screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game')
+        ? selectedLevel?.id
+        : undefined,
+    worldId:
+      screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game')
+        ? selectedLevel?.worldId
+        : undefined,
+  });
+  useEffect(() => {
+    if (selectedLevel) checkBoardSize(selectedLevel.tiles.length);
+    runtimeAssert(LEVELS.length === 103, 'canonical-campaign-count');
+  }, [screen, selectedLevel]);
   const isChapterLevelSelected = isChapterMapId(selectedLevelId);
   const isMysteryTutorialVisible =
     screen === 'game' &&
@@ -653,12 +651,10 @@ export default function App() {
   // campanha e todos os mapas de capítulo, sem passar pelo fluxo normal de
   // conclusão — é o que deixa testar fases avançadas sem jogar as anteriores.
   const handleUnlockAllForDevMode = () => {
-    void commitProgress(unlockAllLevelsForDevMode(progressRef.current)).catch(
-      () => undefined,
-    );
-    void commitChapterProgress(
-      unlockAllChapterMapsForDevMode(chapterProgressRef.current),
-    ).catch(() => undefined);
+    if (__DEV__) {
+      setDevMode((current) => !current);
+      setScreen('levels');
+    }
   };
 
   const handleFinishTutorial = () => {
@@ -921,7 +917,7 @@ export default function App() {
   );
 
   const handleSelectLevel = async (levelId: string) => {
-    if (!progress.unlockedLevelIds.includes(levelId)) {
+    if (!devMode && !progress.unlockedLevelIds.includes(levelId)) {
       return;
     }
 
@@ -934,7 +930,11 @@ export default function App() {
   };
 
   const handleSelectChapterLevel = async (mapId: string) => {
-    if (!isChapterMapUnlocked(mapId, chapterProgressRef.current)) {
+    if (
+      !devMode &&
+      (!isChapterModeUnlocked(progressRef.current) ||
+        !isChapterMapUnlocked(mapId, chapterProgressRef.current))
+    ) {
       return;
     }
 
@@ -1120,6 +1120,7 @@ export default function App() {
       <StatusBar style="light" />
       {screen === 'levels' ? (
         <MainTabs
+          devMode={devMode}
           activeTrayCapacity={activeTrayCapacity}
           bonusTraySlotRemainingMs={bonusTraySlotRemainingMs}
           coinTraySlotRemainingMs={coinTraySlotRemainingMs}
@@ -1132,7 +1133,10 @@ export default function App() {
           onOpenRestCheckpoint={handleOpenRestCheckpoint}
           onOpenSettings={openSettings}
           onOpenShop={openShop}
-          onOpenChapters={() => setScreen('chapters')}
+          onOpenChapters={() => {
+            if (devMode || isChapterModeUnlocked(progressRef.current))
+              setScreen('chapters');
+          }}
           onOpenWorldChest={showWorldChest}
           onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
           onResetProgress={handleResetProgress}
@@ -1142,6 +1146,7 @@ export default function App() {
       ) : null}
       {screen === 'chapters' ? (
         <ChaptersScreen
+          devMode={devMode}
           chapterProgress={chapterProgress}
           onBack={() => setScreen('levels')}
           onSelectChapterLevel={handleSelectChapterLevel}
@@ -1240,6 +1245,7 @@ export default function App() {
         }}
       />
       <SettingsModal
+        devMode={devMode}
         settings={settings}
         visible={isSettingsVisible}
         onClose={() => setIsSettingsVisible(false)}

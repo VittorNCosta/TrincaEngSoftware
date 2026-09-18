@@ -1,3 +1,4 @@
+const { performance } = require('node:perf_hooks');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -302,9 +303,9 @@ const createAppHarness = () => {
   };
 
   const settle = async (durationMs) => {
-    const deadline = Date.now() + durationMs;
+    const deadline = performance.now() + durationMs;
 
-    while (Date.now() < deadline) {
+    while (performance.now() < deadline) {
       await wait(5);
       flush();
     }
@@ -315,6 +316,14 @@ const createAppHarness = () => {
   return {
     flush,
     settle,
+    waitFor: async (predicate, timeoutMs = 10000) => {
+      const deadline = performance.now() + timeoutMs;
+      while (!predicate()) {
+        if (performance.now() >= deadline)
+          throw new Error('App condition did not settle');
+        await settle(5);
+      }
+    },
     props: (type) => findProps(tree, type),
   };
 };
@@ -336,7 +345,7 @@ const bootApp = async () => {
   // Splash → mapa, e espera o carregamento inicial do disco.
   app.props('SplashIntroScreen').onFinish();
   app.flush();
-  await app.settle(200);
+  await app.waitFor(() => app.props('MainTabs') && app.props('SettingsModal'));
 
   return app;
 };
@@ -417,4 +426,34 @@ test('duplo toque no ponto de descanso premia uma vida só', async () => {
 
   const persisted = await loadProgress();
   assert.deepEqual(persisted.collectedRestCheckpointIds, ['w1-005']);
+});
+
+test('modo dev libera navegação apenas em memória e é reversível sem alterar save', async () => {
+  store.clear();
+  globalThis.__DEV__ = true;
+  try {
+    const app = await bootApp();
+    const before = new Map(store);
+    app.props('SettingsModal').onUnlockAllForDevMode();
+    app.flush();
+    assert.equal(app.props('MainTabs').devMode, true);
+    await app.settle(60);
+    assert.deepEqual(store, before);
+    app.props('SettingsModal').onUnlockAllForDevMode();
+    app.flush();
+    assert.equal(app.props('MainTabs').devMode, false);
+    assert.deepEqual(store, before);
+  } finally {
+    globalThis.__DEV__ = false;
+  }
+});
+
+test('capítulos bloqueados não abrem antes de concluir campanha e preservam save legado', async () => {
+  store.clear();
+  const app = await bootApp();
+  const before = new Map(store);
+  app.props('MainTabs').onOpenChapters();
+  app.flush();
+  assert.equal(app.props('ChaptersScreen'), undefined);
+  assert.deepEqual(store, before);
 });

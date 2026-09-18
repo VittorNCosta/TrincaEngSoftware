@@ -14,4 +14,10 @@ function Root() {
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,
 // the environment is set up appropriately
-registerRootComponent(Root);
+// Expo substitui esta variável na exportação; sem DSN o ramo inteiro é removido.
+const RootWithReporting = process.env.EXPO_PUBLIC_SENTRY_DSN
+  ? // Carregamento condicional permite eliminar o SDK quando não há DSN.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('./src/observability/sentry').withErrorReporting(Root)
+  : Root;
+registerRootComponent(RootWithReporting);

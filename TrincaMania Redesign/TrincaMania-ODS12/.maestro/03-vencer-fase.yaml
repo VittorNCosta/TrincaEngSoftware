@@ -1,0 +1,28 @@
+appId: br.com.mhvtech.trincamania.e2e
+name: Vencer por toques reais e preservar desbloqueio após reinício
+---
+- runFlow:
+    file: 01-entrar-numa-fase.yaml
+    env:
+      APP_ID: br.com.mhvtech.trincamania.e2e
+- runFlow: subflows/vencer-w1-001.yaml
+- takeScreenshot: artifacts/vitoria
+- tapOn: 'Mapa'
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'splash-skip'
+    timeout: 40000
+- tapOn:
+    id: 'splash-skip'
+- scrollUntilVisible:
+    element:
+      id: 'map-level-w1-002'
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: 'map-level-w1-002'
+- assertVisible:
+    id: 'jogar-fase'
+- takeScreenshot: artifacts/progresso-reaberto

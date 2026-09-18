@@ -1,3 +1,4 @@
+import { RecyclingMarkerArt } from '../components/RecyclingMarkerArt';
 import { useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -27,6 +28,7 @@ const MILESTONE_LABEL: Record<ChapterMilestone, string> = {
 };
 
 type ChaptersScreenProps = {
+  devMode?: boolean;
   chapterProgress: ChapterProgressState;
   onBack: () => void;
   onSelectChapterLevel: (mapId: string) => void;
@@ -42,14 +44,19 @@ type ChaptersScreenProps = {
  * inventada aqui.
  */
 export function ChaptersScreen({
+  devMode = false,
   chapterProgress,
   onBack,
   onSelectChapterLevel,
 }: ChaptersScreenProps) {
   const [openChapterId, setOpenChapterId] = useState<ChapterId | undefined>();
   const chapterSummaries = useMemo(
-    () => getChapterProgressSummaries(chapterProgress),
-    [chapterProgress],
+    () =>
+      getChapterProgressSummaries(chapterProgress).map((summary) => ({
+        ...summary,
+        unlocked: devMode || summary.unlocked,
+      })),
+    [chapterProgress, devMode],
   );
   const openChapter = openChapterId ? getChapter(openChapterId) : undefined;
   const openChapterMaps = useMemo(
@@ -84,6 +91,7 @@ export function ChaptersScreen({
         </View>
 
         <FlatList
+          key={`chapter-maps-${openChapter.id}`}
           columnWrapperStyle={styles.mapRow}
           contentContainerStyle={styles.mapList}
           data={openChapterMaps}
@@ -92,7 +100,8 @@ export function ChaptersScreen({
           numColumns={MAP_COLUMNS}
           renderItem={({ item }) => {
             const stars = getChapterMapStars(chapterProgress, item.id);
-            const locked = !isChapterMapUnlocked(item.id, chapterProgress);
+            const locked =
+              !devMode && !isChapterMapUnlocked(item.id, chapterProgress);
 
             return (
               <Pressable
@@ -127,9 +136,21 @@ export function ChaptersScreen({
                   ))}
                 </View>
                 {item.milestone ? (
-                  <Text numberOfLines={1} style={styles.mapMilestone}>
-                    {MILESTONE_LABEL[item.milestone]}
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 2,
+                    }}
+                  >
+                    <RecyclingMarkerArt
+                      kind={item.milestone}
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <Text numberOfLines={1} style={styles.mapMilestone}>
+                      {MILESTONE_LABEL[item.milestone]}
+                    </Text>
+                  </View>
                 ) : null}
               </Pressable>
             );
@@ -164,6 +185,7 @@ export function ChaptersScreen({
       </View>
 
       <FlatList
+        key="chapter-list"
         contentContainerStyle={styles.chapterList}
         data={chapterSummaries}
         keyExtractor={(summary) => `chapter-${summary.chapterId}`}

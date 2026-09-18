@@ -1,4 +1,4 @@
-appId: br.com.mhvtech.trincamania
+appId: ${APP_ID}
 name: A configuração sobrevive a fechar e reabrir o app
 ---
 # Este é o fluxo que **só** um aparelho responde. Toda a persistência do jogo

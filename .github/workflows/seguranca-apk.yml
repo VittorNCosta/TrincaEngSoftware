@@ -1,0 +1,48 @@
+name: Segurança APK (MobSF estático)
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: ID de Build manual preview concluído neste repositório
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: seguranca-apk-${{ inputs.build_run_id }}
+  cancel-in-progress: false
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    environment: mobile-security
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validar política com fixtures seguras
+        run: python3 -m unittest discover -s .github/security/tests -v
+      - name: Obter APK verificável
+        id: build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+        run: python3 .github/security/download_build.py
+      - name: Analisar sem acesso de rede do scanner
+        env:
+          BUILD_COMMIT: ${{ steps.build.outputs.commit }}
+        run: >-
+          python3 .github/security/scan_apk.py
+          --apk security-input/app.apk
+          --manifest security-input/build-manifest.json
+          --commit "$BUILD_COMMIT"
+          --exceptions .github/security/mobsf-exceptions.json
+          --output security-output
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: mobsf-sanitizado-${{ inputs.build_run_id }}
+          path: security-output/mobsf-summary.json
+          retention-days: 7
+          if-no-files-found: warn

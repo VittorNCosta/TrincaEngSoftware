@@ -1,4 +1,14 @@
-import { Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { DiagnosticReport } from './DiagnosticReport';
+import {
+  Alert,
+  Linking,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { GameIcon, GameIconName, GameIconTone } from './GameIcon';
@@ -6,6 +16,7 @@ import { AppSettings } from '../storage/settingsStorage';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 
 type SettingsModalProps = {
+  devMode?: boolean;
   settings: AppSettings;
   visible: boolean;
   onClose: () => void;
@@ -109,6 +120,7 @@ const confirmAction = (
 };
 
 export function SettingsModal({
+  devMode = false,
   settings,
   visible,
   onClose,
@@ -118,6 +130,7 @@ export function SettingsModal({
   onToggleSound,
   onUnlockAllForDevMode,
 }: SettingsModalProps) {
+  const [diagnosticsVisible, setDiagnosticsVisible] = useState(false);
   const silentModeActive = !settings.soundEnabled && !settings.hapticsEnabled;
   const handleResetProgress = () =>
     confirmAction(
@@ -131,9 +144,9 @@ export function SettingsModal({
 
   const handleUnlockAllForDevMode = () =>
     confirmAction(
-      'Liberar todas as fases?',
-      'Modo dev: desbloqueia as 103 fases da campanha (incluindo as bônus) e os 1000 mapas de capítulo para teste. Não afeta moedas, vidas nem estrelas já salvas.',
-      'Liberar tudo',
+      devMode ? 'Sair do modo dev?' : 'Liberar todas as fases?',
+      'Liberação temporária nesta sessão. Não altera estrelas nem desbloqueios salvos. Partidas e compras continuam seguindo as regras normais.',
+      devMode ? 'Desativar' : 'Liberar nesta sessão',
       onUnlockAllForDevMode,
       onClose,
     );
@@ -176,35 +189,63 @@ export function SettingsModal({
             </Pressable>
           </View>
 
-          <View style={styles.actionList}>
-            <SettingsAction
-              active={settings.soundEnabled}
-              iconName={settings.soundEnabled ? 'sound-on' : 'sound-off'}
-              label={`Som: ${settings.soundEnabled ? 'Ligado' : 'Desligado'}`}
-              status="Efeitos sonoros"
-              tone="gold"
-              onPress={onToggleSound}
-            />
-            <SettingsAction
-              active={settings.hapticsEnabled}
-              iconName={
-                settings.hapticsEnabled ? 'vibration-on' : 'vibration-off'
-              }
-              label={`Vibração: ${settings.hapticsEnabled ? 'Ligada' : 'Desligada'}`}
-              status="Resposta ao toque"
-              tone="green"
-              onPress={onToggleHaptics}
-            />
-            <SettingsAction
-              active={silentModeActive}
-              iconName="moon"
-              label="Modo silencioso"
-              status={silentModeActive ? 'Ativo' : 'Som e vibração off'}
-              tone="purple"
-              onPress={onEnableSilentMode}
-            />
-          </View>
-
+          {diagnosticsVisible ? <DiagnosticReport /> : null}
+          <Pressable
+            accessibilityRole="button"
+            style={styles.devButton}
+            onPress={() => setDiagnosticsVisible((value) => !value)}
+          >
+            <Text style={styles.devButtonText}>
+              {diagnosticsVisible ? 'Ocultar diagnóstico' : 'Diagnóstico'}
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel="Política de privacidade, abre no navegador"
+            style={styles.devButton}
+            onPress={() => {
+              Linking.openURL(
+                'https://vittorncosta.github.io/TrincaEngSoftware/',
+              ).catch(() =>
+                Alert.alert(
+                  'Não foi possível abrir',
+                  'Tente novamente quando houver conexão.',
+                ),
+              );
+            }}
+          >
+            <Text style={styles.devButtonText}>Política de privacidade</Text>
+          </Pressable>
+          {!diagnosticsVisible ? (
+            <View style={styles.actionList}>
+              <SettingsAction
+                active={settings.soundEnabled}
+                iconName={settings.soundEnabled ? 'sound-on' : 'sound-off'}
+                label={`Som: ${settings.soundEnabled ? 'Ligado' : 'Desligado'}`}
+                status="Efeitos sonoros"
+                tone="gold"
+                onPress={onToggleSound}
+              />
+              <SettingsAction
+                active={settings.hapticsEnabled}
+                iconName={
+                  settings.hapticsEnabled ? 'vibration-on' : 'vibration-off'
+                }
+                label={`Vibração: ${settings.hapticsEnabled ? 'Ligada' : 'Desligada'}`}
+                status="Resposta ao toque"
+                tone="green"
+                onPress={onToggleHaptics}
+              />
+              <SettingsAction
+                active={silentModeActive}
+                iconName="moon"
+                label="Modo silencioso"
+                status={silentModeActive ? 'Ativo' : 'Som e vibração off'}
+                tone="purple"
+                onPress={onEnableSilentMode}
+              />
+            </View>
+          ) : null}
           <View style={styles.advancedPanel}>
             <Text style={styles.advancedTitle}>Opções avançadas</Text>
             <Pressable
@@ -227,7 +268,9 @@ export function SettingsModal({
                 ]}
               >
                 <Text style={styles.devButtonText}>
-                  Modo dev: liberar todas as fases
+                  {devMode
+                    ? 'Modo dev: desativar'
+                    : 'Modo dev: liberar todas as fases'}
                 </Text>
               </Pressable>
             ) : null}

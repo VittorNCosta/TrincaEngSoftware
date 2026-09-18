@@ -19,7 +19,7 @@ const runs = ['CI', 'Seguranca'].map((workflowName, i) => ({
   workflowName,
   databaseId: i + 1,
   headSha: sha,
-  event: 'push',
+  event: 'pull_request',
   status: 'completed',
   conclusion: 'success',
   url: 'https://example.com/run/' + i,
@@ -173,7 +173,7 @@ test('push aprovado não esconde a falha da execução de PR e rerun mais novo s
   const failed = {
     ...runs[0],
     databaseId: 3,
-    event: 'pull_request',
+    event: 'push',
     conclusion: 'failure',
   };
   assert.equal(avaliar(pr, [...runs, failed], sha).estado, 'falha');
@@ -207,6 +207,17 @@ test('checks contextuais e jobs opcionais respeitam os estados do GitHub', () =>
     avaliar(
       { ...pr, statusCheckRollup: [{ ...context, state: 'PENDING' }] },
       runs,
+      sha,
+    ).estado,
+    'pendente',
+  );
+});
+
+test('push sozinho não satisfaz o workflow obrigatório de PR', () => {
+  assert.equal(
+    avaliar(
+      pr,
+      runs.map((run) => ({ ...run, event: 'push' })),
       sha,
     ).estado,
     'pendente',

@@ -1,4 +1,4 @@
-appId: br.com.mhvtech.trincamania
+appId: ${APP_ID}
 name: Abrir o app do zero e entrar na primeira fase
 ---
 # O caminho mais curto entre "instalei" e "estou jogando". Nenhuma das outras
@@ -38,6 +38,8 @@ name: Abrir o app do zero e entrar na primeira fase
     direction: DOWN
     timeout: 30000
 
+- takeScreenshot: artifacts/mapa
+
 - tapOn:
     id: 'map-level-w1-001'
 
@@ -62,3 +64,5 @@ name: Abrir o app do zero e entrar na primeira fase
     visible:
       id: 'game-board'
     timeout: 30000
+
+- takeScreenshot: artifacts/partida

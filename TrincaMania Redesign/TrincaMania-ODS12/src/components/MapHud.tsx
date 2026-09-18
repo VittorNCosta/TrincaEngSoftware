@@ -130,6 +130,7 @@ export function MapHud({
             <View pointerEvents="none" style={styles.pill}>
               <GameIcon name="heart" size={24} tone="pink" />
               <Text
+                testID="map-lives-count"
                 adjustsFontSizeToFit
                 minimumFontScale={0.72}
                 numberOfLines={1}

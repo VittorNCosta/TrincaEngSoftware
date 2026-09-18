@@ -19,8 +19,8 @@ export const PARQUE_MAP_ASSET_KEYS = [
 ] as const;
 
 export const PARQUE_MAP_LANDMARK_VISUAL_KEYS = [
-  'forest-portal-rune',
-  'parque-rest-cart',
+  'recycling-cycle',
+  'collection-cart',
 ] as const;
 
 const PARQUE_LEVEL_ANCHOR_DEFINITIONS: readonly Readonly<{
@@ -64,7 +64,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       origin: { x: 0.5, y: 1 },
       point: { x: 82, y: 1705 },
       site: 'clearing',
-      visualKey: 'parque-rest-cart',
+      visualKey: 'collection-cart',
       visualSize: { height: 96, width: 104 },
     },
     {
@@ -74,7 +74,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       origin: { x: 0.5, y: 1 },
       point: { x: 72, y: 420 },
       site: 'clearing',
-      visualKey: 'parque-rest-cart',
+      visualKey: 'collection-cart',
       visualSize: { height: 96, width: 104 },
     },
     {
@@ -85,7 +85,7 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
       point: { x: 286, y: 420 },
       site: 'platform',
       targetWorldId: 2,
-      visualKey: 'forest-portal-rune',
+      visualKey: 'recycling-cycle',
       visualSize: { height: 92, width: 104 },
     },
   ],

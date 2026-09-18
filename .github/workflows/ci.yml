@@ -21,8 +21,7 @@ on:
   # que serve de required check em branch protection (G-10).
   push:
     branches: ["**"]
-  pull_request:
-    branches: ["**"]
+  pull_request: {}
   workflow_dispatch:
 
 # Menor privilegio. Sem isto o workflow herda o escopo padrao do repositorio,
@@ -101,10 +100,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
+      - run: node scripts/validar-roadmap.js
+      - run: python3 -B -m unittest discover -s .github/security/tests -v
+        working-directory: .
+      - run: npm run test:ci
       - run: npm run lint
       - run: npm run format:check
 
@@ -118,7 +121,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
@@ -134,7 +137,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
@@ -151,11 +154,9 @@ jobs:
     if: needs.mudancas.outputs.codigo == 'true'
     timeout-minutes: 15
     strategy:
-      # Sem isto o Node 20 quebrado cancela o 22 e a matrix perde a graca:
-      # a pergunta e exatamente em qual das duas versoes falha.
       fail-fast: false
       matrix:
-        node: [20, 22]
+        node: [22.23.2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -176,14 +177,19 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          # Fixo de proposito, sem matrix: o V8 conta cobertura diferente entre
-          # versoes (85,70% no 20 contra 79,57% no 24, mesmo codigo e mesmos
-          # testes), entao o piso so tem sentido contra uma regua estavel.
-          node-version: 20
+          # Source maps de produção; domínio e UI têm pisos separados no Node 22.
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
       - run: npm run cobertura
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: cobertura-producao
+          path: "TrincaMania Redesign/TrincaMania-ODS12/coverage"
+          retention-days: 14
+          if-no-files-found: warn
 
   orcamento-bundle:
     name: Orçamento de bundle
@@ -195,7 +201,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
@@ -215,7 +221,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
@@ -231,7 +237,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
@@ -247,8 +253,37 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20
+          node-version: 22.23.2
           cache: npm
           cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
       - run: npm ci
       - run: npx expo-doctor
+
+  rastreabilidade:
+    name: Rastreabilidade da integração
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Verificador sem escrita pode usar o PR, inclusive na primeira integração.
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+      - name: Exigir issue válida
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for tentativa in 1 2 3 4 5 6; do
+            if node .github/scripts/rastrear-pr.js --check; then exit 0; fi
+            sleep 10
+          done
+          exit 1

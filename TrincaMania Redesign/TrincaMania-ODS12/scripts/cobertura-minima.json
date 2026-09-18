@@ -1,7 +1,16 @@
 {
-  "_leia": "Piso de cobertura da suite tests/*.test.cjs, gerado por scripts/cobertura.js --atualizar. So sobe: baixar exige --permitir-queda. Inclui os proprios arquivos de teste no total. So vale no nodeMajor em que foi medido — o V8 conta diferente entre versoes.",
-  "nodeMajor": 20,
-  "linhas": 87.77,
-  "ramos": 88.73,
-  "funcoes": 88.11
+  "methodology": "production-source-maps-v1",
+  "nodeMajor": 22,
+  "domain": {
+    "lines": 74.18,
+    "branches": 84.24,
+    "functions": 76.2,
+    "statements": 74.18
+  },
+  "ui": {
+    "lines": 23.03,
+    "branches": 26.62,
+    "functions": 24.36,
+    "statements": 22.97
+  }
 }

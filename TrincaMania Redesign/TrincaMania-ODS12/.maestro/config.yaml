@@ -1,0 +1,5 @@
+# Only top-level journeys are runnable; generated subflows need an active round.
+flows:
+  - '0*.yaml'
+env:
+  APP_ID: br.com.mhvtech.trincamania.e2e

@@ -1,8 +1,6 @@
 {
   "_leia": "Saldo de assets acima de 400 KB e de órfãos conhecidos. Gerado por scripts/valida-assets.js --atualizar. Só pode encolher.",
   "acimaDoLimite": {
-    "assets/adaptive-icon.png": 1747762,
-    "assets/icon.png": 1747762,
     "assets/igrion-logo.png": 1935580,
     "assets/map/map_bonus_bg.png": 2578850,
     "assets/map/map_level_complete.png": 1273371,

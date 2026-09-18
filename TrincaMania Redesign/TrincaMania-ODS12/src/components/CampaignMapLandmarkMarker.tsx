@@ -21,10 +21,7 @@ export function CampaignMapLandmarkMarker({
   worldLabel,
   onPress,
 }: CampaignMapLandmarkMarkerProps) {
-  if (
-    (kind === 'rest' || kind === 'shop') &&
-    visualKey === 'parque-rest-cart'
-  ) {
+  if ((kind === 'rest' || kind === 'shop') && visualKey === 'collection-cart') {
     if (!afterLevelLabel) {
       return null;
     }
@@ -39,7 +36,7 @@ export function CampaignMapLandmarkMarker({
     );
   }
 
-  if (kind === 'portal' && visualKey === 'forest-portal-rune') {
+  if (kind === 'portal' && visualKey === 'recycling-cycle') {
     if (!worldLabel) {
       return null;
     }
