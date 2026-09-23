@@ -1,13 +1,13 @@
 import type { ImageSourcePropType } from 'react-native';
 
 export const CAMPAIGN_MAP_SEGMENT_ASSETS = {
-  'forest-canopy': require('../../assets/map/world1/forest_00_canopy.png') as ImageSourcePropType,
-  'forest-entry': require('../../assets/map/world1/forest_01_entrance.png') as ImageSourcePropType,
-  'forest-grove': require('../../assets/map/world1/forest_02_grove.png') as ImageSourcePropType,
-  'forest-river': require('../../assets/map/world1/forest_03_river_ruins.png') as ImageSourcePropType,
-  'forest-sunlit': require('../../assets/map/world1/forest_04_sunlit_grove.png') as ImageSourcePropType,
-  'forest-gate': require('../../assets/map/world1/forest_05_ancient_gate.png') as ImageSourcePropType,
-  'forest-trailhead': require('../../assets/map/world1/forest_06_trailhead.png') as ImageSourcePropType,
+  'forest-canopy': require('../../assets/map/world1/park_00_canopy.png') as ImageSourcePropType,
+  'forest-entry': require('../../assets/map/world1/park_01_entrance.png') as ImageSourcePropType,
+  'forest-grove': require('../../assets/map/world1/park_02_grove.png') as ImageSourcePropType,
+  'forest-river': require('../../assets/map/world1/park_03_riverbank.png') as ImageSourcePropType,
+  'forest-sunlit': require('../../assets/map/world1/park_04_sunlit_grove.png') as ImageSourcePropType,
+  'forest-gate': require('../../assets/map/world1/park_05_gateway.png') as ImageSourcePropType,
+  'forest-trailhead': require('../../assets/map/world1/park_06_trailhead.png') as ImageSourcePropType,
 } as const;
 
 export const WORLD1_SCENE_BACKGROUND = require('../../assets/map/map_world1_scene_bg.png') as ImageSourcePropType;

@@ -45,13 +45,13 @@ const validationContext = {
 };
 
 const bosqueSegmentAssetFiles = {
-  'forest-canopy': 'forest_00_canopy.png',
-  'forest-entry': 'forest_01_entrance.png',
-  'forest-grove': 'forest_02_grove.png',
-  'forest-river': 'forest_03_river_ruins.png',
-  'forest-sunlit': 'forest_04_sunlit_grove.png',
-  'forest-gate': 'forest_05_ancient_gate.png',
-  'forest-trailhead': 'forest_06_trailhead.png',
+  'forest-canopy': 'park_00_canopy.png',
+  'forest-entry': 'park_01_entrance.png',
+  'forest-grove': 'park_02_grove.png',
+  'forest-river': 'park_03_riverbank.png',
+  'forest-sunlit': 'park_04_sunlit_grove.png',
+  'forest-gate': 'park_05_gateway.png',
+  'forest-trailhead': 'park_06_trailhead.png',
 };
 
 test('dados existentes continuam formando 203 fases canônicas sem lacunas', () => {

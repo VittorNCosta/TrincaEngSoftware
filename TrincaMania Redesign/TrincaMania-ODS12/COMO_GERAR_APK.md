@@ -59,7 +59,17 @@ echo $env:ANDROID_HOME
 
 ## Passo a passo completo
 
-### 1. Atualizar o código
+### 1. Verificar o projeto (opcional)
+
+Na raiz do projeto, você pode conferir a configuração do Expo e os tipos antes
+de iniciar a compilação:
+
+```powershell
+npx expo-doctor
+npm run typecheck
+```
+
+### 2. Atualizar o código
 
 ```powershell
 cd C:\Users\SEU_USUARIO\TrincaMania
@@ -67,7 +77,7 @@ git pull
 npm install        # só se o package.json / package-lock.json tiver mudado
 ```
 
-### 2. Compilar o APK
+### 3. Compilar o APK
 
 ```powershell
 cd C:\Users\SEU_USUARIO\TrincaMania\android
@@ -83,14 +93,14 @@ O comando `assembleRelease` faz o Gradle:
 A primeira build (ou após um `--clean`) leva ~10–15 min. As seguintes são mais
 rápidas porque o Gradle reaproveita o que não mudou.
 
-### 3. Copiar para a raiz com nome de versão (opcional, só organização)
+### 4. Copiar para a raiz com nome de versão (opcional, só organização)
 
 ```powershell
 cd C:\Users\SEU_USUARIO\TrincaMania
 copy android\app\build\outputs\apk\release\app-release.apk TrincaMania-v1.0.0.apk
 ```
 
-### 4. Instalar no celular
+### 5. Instalar no celular
 
 Transfira o `.apk` para o celular (cabo USB, WhatsApp, Google Drive...) e abra o
 arquivo. O Android vai pedir para permitir "instalar de fontes desconhecidas" —
