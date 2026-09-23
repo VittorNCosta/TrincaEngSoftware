@@ -3,7 +3,7 @@ import { Image, Pressable, StyleSheet, Text, type ImageSourcePropType, View } fr
 import { GameIcon } from './GameIcon';
 import { colors, radii } from '../styles/theme';
 
-const restCartImage = require('../../assets/map/world1/forest_rest_cart.png') as ImageSourcePropType;
+const restCartImage = require('../../assets/map/world1/park_rest_cart.png') as ImageSourcePropType;
 
 export type ForestRestMapMarkerProps = {
   afterLevelLabel: string;
