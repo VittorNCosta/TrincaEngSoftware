@@ -6,6 +6,8 @@ Após a integração das PRs [#225](https://github.com/VittorNCosta/TrincaEngSof
 
 A reconciliação em modo de leitura de `scripts/sincronizar-issues.js` ainda aponta 13 conflitos preexistentes entre roadmap e GitHub; por isso nenhuma escrita em lote foi aplicada às issues. Cada fechamento desta entrega depende do merge da PR de reconciliação.
 
+CI-38 (#232) também foi verificada em 24/09/2026: o [smoke da PR #278](https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/36027719768) passou, a [suíte completa manual em `develop`](https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/36028204534) passou com JUnit e capturas publicados, e a PR #291 de documentação não acionou o workflow E2E. O fechamento da issue depende do merge da atualização do roadmap.
+
 Escopo autorizado: 85 issues abertas marcadas Terra/Sol, executadas com Astra low. No máximo quatro agentes ativos nesta sessão; configuração futura limita cinco no total.
 
 Este registro distingue implementação revisável de aceite concluído. Código preparado não equivale a merge nem a validação no aparelho. Os critérios externos continuam pendentes; não há release de produção nesta entrega.
