@@ -12,10 +12,17 @@ type NoLivesModalProps = {
   onClose: () => void;
 };
 
-export function NoLivesModal({ timeUntilNextLifeMs, visible, onClose }: NoLivesModalProps) {
+export function NoLivesModal({
+  timeUntilNextLifeMs,
+  visible,
+  onClose,
+}: NoLivesModalProps) {
   return (
     <Modal animationType="fade" transparent visible={visible}>
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.overlay}>
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.overlay}
+      >
         <View style={styles.card}>
           <GameIcon name="heart" size={74} tone="pink" />
           <Text style={styles.title}>Sem vidas</Text>
@@ -24,7 +31,9 @@ export function NoLivesModal({ timeUntilNextLifeMs, visible, onClose }: NoLivesM
           </Text>
           <View style={styles.timerPill}>
             <Text style={styles.timerLabel}>Próxima vida em</Text>
-            <Text style={styles.timerValue}>{formatLifeTimer(timeUntilNextLifeMs)}</Text>
+            <Text style={styles.timerValue}>
+              {formatLifeTimer(timeUntilNextLifeMs)}
+            </Text>
           </View>
           <PrimaryButton title="Entendi" onPress={onClose} />
         </View>

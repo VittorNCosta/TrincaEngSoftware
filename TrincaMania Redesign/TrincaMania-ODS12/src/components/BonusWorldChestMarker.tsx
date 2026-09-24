@@ -92,7 +92,10 @@ function BonusWorldChestMarkerBase({
     <Pressable
       accessibilityLabel={`${getStateTitle(state)} ${completedCount}/${totalCount}`}
       accessibilityRole="button"
-      accessibilityState={{ disabled: !isPressable, selected: selected || isAvailable }}
+      accessibilityState={{
+        disabled: !isPressable,
+        selected: selected || isAvailable,
+      }}
       disabled={!isPressable}
       hitSlop={10}
       onPress={isPressable ? onPress : undefined}
@@ -142,7 +145,11 @@ function BonusWorldChestMarkerBase({
           },
         ]}
       >
-        <RewardAssetIcon name="chestWorld" size={86} style={styles.chestAsset} />
+        <RewardAssetIcon
+          name="chestWorld"
+          size={86}
+          style={styles.chestAsset}
+        />
       </Animated.View>
 
       {/* Bloqueado = cadeado sobre a tampa. Sem véu escuro e sem barras cruzadas: a arte
@@ -177,15 +184,23 @@ function BonusWorldChestMarkerBase({
             {Array.from({ length: totalCount }).map((_, index) => (
               <View
                 key={`chest-progress-${index}`}
-                style={[styles.segment, index < completedCount ? styles.segmentDone : null]}
+                style={[
+                  styles.segment,
+                  index < completedCount ? styles.segmentDone : null,
+                ]}
               />
             ))}
-            <Text style={[styles.progress, isLocked ? styles.progressLocked : null]}>
+            <Text
+              style={[styles.progress, isLocked ? styles.progressLocked : null]}
+            >
               {completedCount}/{totalCount}
             </Text>
           </View>
         ) : (
-          <Text numberOfLines={1} style={[styles.progress, isLocked ? styles.progressLocked : null]}>
+          <Text
+            numberOfLines={1}
+            style={[styles.progress, isLocked ? styles.progressLocked : null]}
+          >
             {completedCount}/{totalCount}
           </Text>
         )}

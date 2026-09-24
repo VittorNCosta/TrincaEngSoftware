@@ -64,7 +64,11 @@ export const isMysteryTileHidden = (tile: Tile) =>
 export const revealAvailableMysteryTiles = (board: Tile[]) => {
   let revealedAnyTile = false;
   const revealedBoard = board.map((tile) => {
-    if (isTileRemoved(tile) || !isMysteryTileHidden(tile) || isTileBlocked(tile, board)) {
+    if (
+      isTileRemoved(tile) ||
+      !isMysteryTileHidden(tile) ||
+      isTileBlocked(tile, board)
+    ) {
       return tile;
     }
 

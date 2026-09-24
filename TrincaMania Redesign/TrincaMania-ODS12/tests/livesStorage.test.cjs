@@ -40,7 +40,8 @@ const asyncStorageMock = {
   },
 };
 
-const asyncStorageId = require.resolve('@react-native-async-storage/async-storage');
+const asyncStorageId =
+  require.resolve('@react-native-async-storage/async-storage');
 require.cache[asyncStorageId] = {
   id: asyncStorageId,
   filename: asyncStorageId,
@@ -76,7 +77,10 @@ const storedLives = () => JSON.parse(store.get(LIVES_STORAGE_KEY)).currentLives;
 test('duas derrotas simultâneas cobram duas vidas, não uma', async () => {
   const lives = bootLives(3);
 
-  const [first, second] = await Promise.all([lives.consumeLife(), lives.consumeLife()]);
+  const [first, second] = await Promise.all([
+    lives.consumeLife(),
+    lives.consumeLife(),
+  ]);
 
   // Sem serialização as duas leituras enxergam 3 e as duas escrevem 2: a segunda
   // derrota sai de graça.

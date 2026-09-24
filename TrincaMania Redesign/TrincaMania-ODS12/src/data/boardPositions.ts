@@ -13,7 +13,7 @@
  * ## Como fica corrigido
  *
  * As 60 posições autorais continuam **exatamente** as mesmas, na mesma ordem —
- * elas definem o enquadramento das 203 fases canônicas e há teste travando os
+ * elas definem o enquadramento das 100 fases canônicas e há teste travando os
  * bounds da Fase 61. A partir do índice 60 as posições passam a ser geradas
  * sobre a mesma retícula 8x7 usada pelas autorais (x = 6 + 34c, y = 44 + 34r),
  * subindo de camada em camada e pulando qualquer célula já ocupada por uma
@@ -36,7 +36,7 @@ const GRID_ROWS = 7;
 const GENERATED_LAYERS = 12;
 
 /**
- * Layout autoral das 203 fases canônicas. **Não reordenar nem editar**: os
+ * Layout autoral das 100 fases canônicas. **Não reordenar nem editar**: os
  * bounds do tabuleiro de fases existentes derivam desta ordem exata.
  */
 export const AUTHORED_TILE_POSITIONS: readonly TilePosition[] = [
@@ -130,7 +130,9 @@ const buildLayerCells = (): { column: number; row: number }[] => {
       Math.abs(second.column - centerColumn) + Math.abs(second.row - centerRow);
 
     return (
-      firstDistance - secondDistance || first.row - second.row || first.column - second.column
+      firstDistance - secondDistance ||
+      first.row - second.row ||
+      first.column - second.column
     );
   });
 };
@@ -146,7 +148,11 @@ const buildTilePositions = (): TilePosition[] => {
     0,
   );
 
-  for (let layer = 0; layer <= maxAuthoredLayer + GENERATED_LAYERS; layer += 1) {
+  for (
+    let layer = 0;
+    layer <= maxAuthoredLayer + GENERATED_LAYERS;
+    layer += 1
+  ) {
     layerCells.forEach(({ column, row }) => {
       const position: TilePosition = [
         GRID_ORIGIN_X + column * GRID_STEP,
@@ -184,7 +190,8 @@ export const getTilePosition = (index: number): TilePosition => {
 export const takeTilePositions = (count: number): TilePosition[] => {
   const safeCount = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
 
-  return Array.from({ length: Math.min(safeCount, TILE_POSITIONS.length) }, (_, index) =>
-    getTilePosition(index),
+  return Array.from(
+    { length: Math.min(safeCount, TILE_POSITIONS.length) },
+    (_, index) => getTilePosition(index),
   );
 };

@@ -1,12 +1,12 @@
 /**
- * Capítulos: 10 x 100 mapas jogáveis, paralelos às 203 fases canônicas.
+ * Capítulos: 10 x 100 mapas jogáveis, paralelos às 103 fases canônicas.
  *
  * ## Por que um registro paralelo
  *
- * `LEVELS` e `WORLDS` descrevem a campanha canônica e há teste travando as 203
+ * `LEVELS` e `WORLDS` descrevem a campanha canônica e há teste travando as 103
  * fases. Os capítulos não entram lá: são um segundo registro, com ids próprios
  * (`chNN-NNN`) e mundos próprios (`ChapterWorldId`, faixa 101–110). O jogo
- * continua enxergando 203 fases canônicas; quem quiser capítulos importa daqui.
+ * continua enxergando 103 fases canônicas; quem quiser capítulos importa daqui.
  *
  * ## Memória
  *
@@ -63,7 +63,11 @@ import {
   mixSeed,
   stableHash,
 } from '../utils/deterministicRandom';
-import { curveProgress, DifficultyCurve } from '../utils/difficultyCurve';
+import {
+  bandIndex,
+  curveProgress,
+  DifficultyCurve,
+} from '../utils/difficultyCurve';
 import { generatePlayableLevelFrom } from '../utils/levelGenerator';
 import { MAX_TILE_POSITIONS, takeTilePositions } from './boardPositions';
 import {
@@ -386,21 +390,26 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   {
     id: 9,
     difficultyCurve: { gamma: 2.0, blockGrowth: 1.26 },
-    name: 'Oficina do Conserto',
-    subtitle: 'Consertar antes de descartar',
-    theme: 'oficina',
+    name: 'Ferro-Velho Renascido',
+    subtitle: 'Sucata que volta a ser matéria-prima',
+    theme: 'sucata',
     focusMaterial: 'metal',
     minTileCount: 66,
     maxTileCount: 96,
     lockedText:
-      'Conclua a Biblioteca de Papel para abrir a Oficina do Conserto.',
+      'Conclua a Biblioteca de Papel para abrir o Ferro-Velho Renascido.',
     titlePrefixes: [
       // "Peça" fica de fora de propósito: no vocabulário do domínio peça é uma
       // carta posicionada, e usar a palavra como topônimo confundiria a leitura.
-      'Oficina',
+      // "Oficina" e "Reparo" também ficam de fora, hoje por inércia: eram o
+      // nome reservado ao Mundo 9 da campanha, que acabou ficando com
+      // "Distrito da Reindustrialização" (C-01a). As palavras estão livres de
+      // novo, mas o conjunto de prefixos é determinístico por id — mexer nele
+      // renomearia mapa que jogador já viu, e não vale o troco.
+      'Carcaça',
       'Ferramenta',
       'Chassi',
-      'Reparo',
+      'Fiação',
       'Engrenagem',
       'Manual',
       'Garantia',
@@ -418,13 +427,14 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
   {
     id: 10,
     difficultyCurve: { gamma: 2.2, blockGrowth: 1.3 },
-    name: 'Cidade Circular',
-    subtitle: 'O ciclo fecha aqui',
+    name: 'Metrópole do Ciclo Fechado',
+    subtitle: 'Cem bairros, um ciclo só',
     theme: 'circular',
     focusMaterial: 'vidro',
     minTileCount: 72,
     maxTileCount: 102,
-    lockedText: 'Conclua a Oficina do Conserto para abrir a Cidade Circular.',
+    lockedText:
+      'Conclua o Ferro-Velho Renascido para abrir a Metrópole do Ciclo Fechado.',
     titlePrefixes: [
       'Avenida',
       'Ecoponto',
@@ -560,7 +570,7 @@ const createChapterLevelSummary = (
     chapterMapNumber: mapNumber,
     difficulty:
       CHAPTER_DIFFICULTY_ORDER[
-        Math.min(CHAPTER_DIFFICULTY_ORDER.length - 1, Math.floor(score * 5))
+        bandIndex(score, CHAPTER_DIFFICULTY_ORDER.length)
       ],
     displayLabel: String(mapNumber),
     id: buildChapterMapId(blueprint.id, mapNumber),
@@ -645,7 +655,7 @@ export const getChapterLevelProfile = (
     kindCount: summary.kindCount,
     maxZ: positions.reduce((highest, [, , z]) => Math.max(highest, z), 0),
     mysteryTileCount: summary.mysteryTileCount,
-    // Os capítulos não têm tutorial de trinca de abertura — isso é do Bosque.
+    // Os capítulos não têm tutorial de trinca de abertura — isso é do Parque.
     openingTriple: false,
     tileCount: summary.tileCount,
   };

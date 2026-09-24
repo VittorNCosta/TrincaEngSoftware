@@ -10,7 +10,10 @@ import {
   isTileRemoved,
   revealAvailableMysteryTiles,
 } from './BoardService';
-import { insertTileGroupedInTray, removeCompletedTripleFromTray } from './TrayService';
+import {
+  insertTileGroupedInTray,
+  removeCompletedTripleFromTray,
+} from './TrayService';
 
 export type MagicTripleMove = {
   boardTileIds: string[];
@@ -27,7 +30,7 @@ const groupByKindAndRole = (tiles: Tile[]) =>
     return groups;
   }, new Map<TileKind, Map<CardRole, Tile[]>>());
 
-const pickRandomItem = <T,>(items: T[], random: () => number = Math.random) =>
+const pickRandomItem = <T>(items: T[], random: () => number = Math.random) =>
   items.length > 0 ? items[Math.floor(random() * items.length)] : undefined;
 
 /**
@@ -51,7 +54,10 @@ export const findMagicTripleMove = ({
   const boardByKind = groupByKindAndRole(getPlayableTiles(board));
   const trayByKind = groupByKindAndRole(tray);
   const requiredRoles = rule.buildTripleRoles();
-  const kinds = new Set<TileKind>([...boardByKind.keys(), ...trayByKind.keys()]);
+  const kinds = new Set<TileKind>([
+    ...boardByKind.keys(),
+    ...trayByKind.keys(),
+  ]);
   const candidates: { move: MagicTripleMove; trayUsage: number }[] = [];
 
   kinds.forEach((kind) => {
@@ -128,7 +134,12 @@ export const playMagicTriple = (
   activeTrayCapacity: number,
   rule: MatchRule = activeMatchRule,
 ): MoveResult => {
-  const magicTripleMove = findMagicTripleMove({ activeTrayCapacity, board, rule, tray });
+  const magicTripleMove = findMagicTripleMove({
+    activeTrayCapacity,
+    board,
+    rule,
+    tray,
+  });
 
   if (!magicTripleMove) {
     return {

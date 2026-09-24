@@ -44,6 +44,13 @@ yarn-error.*
 
 # generated app artifacts
 *.apk
+*.aab
+
+# EAS
+.eas/build-cache/
+
+# cobertura de teste
+coverage/
 
 # duplicated audio exports; app bundles mp3 assets first
 assets/sfx/**/*.m4a

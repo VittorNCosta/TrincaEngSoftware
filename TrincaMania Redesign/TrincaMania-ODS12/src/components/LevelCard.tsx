@@ -12,11 +12,28 @@ type LevelCardProps = {
   onPress: (levelId: string) => void;
 };
 
-export function LevelCard({ completed, level, locked, onPress }: LevelCardProps) {
+export function LevelCard({
+  completed,
+  level,
+  locked,
+  onPress,
+}: LevelCardProps) {
   const displayLabel = getLevelDisplayLabel(level);
-  const statusLabel = completed ? 'Concluida' : locked ? 'Bloqueada' : 'Liberada';
-  const statusIconName: GameIconName = completed ? 'star' : locked ? 'lock' : 'play';
-  const statusIconTone: GameIconTone = completed ? 'gold' : locked ? 'neutral' : 'green';
+  const statusLabel = completed
+    ? 'Concluida'
+    : locked
+      ? 'Bloqueada'
+      : 'Liberada';
+  const statusIconName: GameIconName = completed
+    ? 'star'
+    : locked
+      ? 'lock'
+      : 'play';
+  const statusIconTone: GameIconTone = completed
+    ? 'gold'
+    : locked
+      ? 'neutral'
+      : 'green';
 
   return (
     <Pressable
@@ -38,12 +55,19 @@ export function LevelCard({ completed, level, locked, onPress }: LevelCardProps)
           locked ? styles.lockedBadge : null,
         ]}
       >
-        <Text style={[styles.levelBadgeText, locked ? styles.lockedBadgeText : null]}>
+        <Text
+          style={[
+            styles.levelBadgeText,
+            locked ? styles.lockedBadgeText : null,
+          ]}
+        >
           {displayLabel}
         </Text>
       </View>
       <View style={styles.copy}>
-        <Text style={[styles.title, locked ? styles.lockedTitle : null]}>{level.title}</Text>
+        <Text style={[styles.title, locked ? styles.lockedTitle : null]}>
+          {level.title}
+        </Text>
         <View style={styles.metaRow}>
           <Text style={styles.details}>{level.tiles.length} peças</Text>
           <Text
@@ -57,7 +81,9 @@ export function LevelCard({ completed, level, locked, onPress }: LevelCardProps)
           </Text>
         </View>
       </View>
-      <View style={[styles.statusIcon, locked ? styles.lockedStatusIcon : null]}>
+      <View
+        style={[styles.statusIcon, locked ? styles.lockedStatusIcon : null]}
+      >
         <GameIcon
           muted={locked}
           name={statusIconName}

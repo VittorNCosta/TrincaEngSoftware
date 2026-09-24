@@ -73,7 +73,9 @@ export const removeCompletedTripleOfKind = (
   kind: TileKind,
   rule: MatchRule = activeMatchRule,
 ): Tile[] => {
-  const triple = rule.selectTripleFrom(tray.filter((tile) => tile.kind === kind));
+  const triple = rule.selectTripleFrom(
+    tray.filter((tile) => tile.kind === kind),
+  );
 
   if (!triple) {
     return tray;

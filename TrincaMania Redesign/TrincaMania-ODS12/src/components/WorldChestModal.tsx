@@ -6,7 +6,11 @@ import { ChestOpeningModal, ChestRewardItem } from './ChestOpeningModal';
 import { GameIcon } from './GameIcon';
 import { PrimaryButton } from './PrimaryButton';
 import { RewardAssetIcon } from './RewardAssetIcon';
-import { KEY_COST, getBonusWorldChestId, getWorldChestLabel } from '../storage/progressStorage';
+import {
+  KEY_COST,
+  getBonusWorldChestId,
+  getWorldChestLabel,
+} from '../storage/progressStorage';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 import { WorldChestOpenResult } from '../types/game';
 import { WindowTarget } from '../types/ui';
@@ -40,18 +44,38 @@ const getStatusMessage = (result?: WorldChestOpenResult) => {
   }
 };
 
-const getWorldChestRewardItems = (result?: WorldChestOpenResult): ChestRewardItem[] => {
+const getWorldChestRewardItems = (
+  result?: WorldChestOpenResult,
+): ChestRewardItem[] => {
   if (!result?.reward) {
     return [];
   }
 
   return [
     ...(result.reward.lifeGranted
-      ? [{ iconName: 'heart' as const, label: '+1 vida', tone: 'pink' as const }]
+      ? [
+          {
+            iconName: 'heart' as const,
+            label: '+1 vida',
+            tone: 'pink' as const,
+          },
+        ]
       : []),
-    { iconName: 'coin' as const, label: `+${result.reward.coins} moedas`, tone: 'gold' as const },
-    { iconName: 'powers' as const, label: '+1 Trinca Mágica', tone: 'blue' as const },
-    { iconName: 'shuffle' as const, label: '+1 Misturar', tone: 'purple' as const },
+    {
+      iconName: 'coin' as const,
+      label: `+${result.reward.coins} moedas`,
+      tone: 'gold' as const,
+    },
+    {
+      iconName: 'powers' as const,
+      label: '+1 Trinca Mágica',
+      tone: 'blue' as const,
+    },
+    {
+      iconName: 'shuffle' as const,
+      label: '+1 Misturar',
+      tone: 'purple' as const,
+    },
     { iconName: 'undo' as const, label: '+1 Voltar', tone: 'green' as const },
   ];
 };
@@ -103,77 +127,95 @@ export function WorldChestModal({
       <Modal animationType="fade" transparent visible={visible}>
         <View style={styles.overlay}>
           <View style={styles.card}>
-          {opened ? <GameIcon name="win" size={62} tone="green" /> : <WorldChestArt size={104} />}
-          <Text style={styles.kicker}>
-            {worldChestId ? getWorldChestLabel(worldChestId) : 'Baú Especial'}
-          </Text>
-          <Text style={styles.title}>
-            {opened ? (isBonusChest ? 'Baú Especial aberto!' : 'Mundo concluído!') : 'Baú Especial disponível'}
-          </Text>
-          <Text style={styles.subtitle}>
-            {opened
-              ? 'Você abriu um Baú Especial!'
-              : isBonusChest
-                ? 'Recompensa do Jardim Renascido. Use uma chave para abrir agora.'
-                : 'Use uma chave para abrir agora ou volte depois.'}
-          </Text>
+            {opened ? (
+              <GameIcon name="win" size={62} tone="green" />
+            ) : (
+              <WorldChestArt size={104} />
+            )}
+            <Text style={styles.kicker}>
+              {worldChestId ? getWorldChestLabel(worldChestId) : 'Baú Especial'}
+            </Text>
+            <Text style={styles.title}>
+              {opened
+                ? isBonusChest
+                  ? 'Baú Especial aberto!'
+                  : 'Mundo concluído!'
+                : 'Baú Especial disponível'}
+            </Text>
+            <Text style={styles.subtitle}>
+              {opened
+                ? 'Você abriu um Baú Especial!'
+                : isBonusChest
+                  ? 'Recompensa do Jardim Renascido. Use uma chave para abrir agora.'
+                  : 'Use uma chave para abrir agora ou volte depois.'}
+            </Text>
 
-          <View style={styles.keyRow}>
-            <View style={styles.keyPill}>
-              <GameIcon name="key" size={22} tone="purple" />
-              <Text style={styles.keyText}>Chaves: {keys}</Text>
+            <View style={styles.keyRow}>
+              <View style={styles.keyPill}>
+                <GameIcon name="key" size={22} tone="purple" />
+                <Text style={styles.keyText}>Chaves: {keys}</Text>
+              </View>
+              <View style={styles.keyPill}>
+                <GameIcon name="coin" size={22} tone="gold" />
+                <Text style={styles.keyText}>Chave: {KEY_COST} moedas</Text>
+              </View>
             </View>
-            <View style={styles.keyPill}>
-              <GameIcon name="coin" size={22} tone="gold" />
-              <Text style={styles.keyText}>Chave: {KEY_COST} moedas</Text>
-            </View>
-          </View>
 
-          {opened && result.reward ? (
-            <View style={styles.rewardPanel}>
-              {rewardItems.map((item) => (
-                <View key={`${item.iconName}-${item.label}`} style={styles.rewardChip}>
-                  <GameIcon name={item.iconName} size={24} tone={item.tone} />
-                  <Text style={styles.rewardText}>{item.label}</Text>
-                </View>
-              ))}
-            </View>
-          ) : (
-            <View style={styles.pendingPanel}>
-              <RewardAssetIcon name="key" size={58} />
-              <Text style={styles.pendingText}>
-                {keys > 0
-                  ? 'Você tem chave para abrir este baú.'
-                  : coins >= KEY_COST
-                    ? 'Sem chaves. Compre uma por moedas e abra agora.'
-                    : 'Sem chaves no momento. O baú fica guardado para depois.'}
-              </Text>
-              {statusMessage ? <Text style={styles.statusText}>{statusMessage}</Text> : null}
-            </View>
-          )}
+            {opened && result.reward ? (
+              <View style={styles.rewardPanel}>
+                {rewardItems.map((item) => (
+                  <View
+                    key={`${item.iconName}-${item.label}`}
+                    style={styles.rewardChip}
+                  >
+                    <GameIcon name={item.iconName} size={24} tone={item.tone} />
+                    <Text style={styles.rewardText}>{item.label}</Text>
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <View style={styles.pendingPanel}>
+                <RewardAssetIcon name="key" size={58} />
+                <Text style={styles.pendingText}>
+                  {keys > 0
+                    ? 'Você tem chave para abrir este baú.'
+                    : coins >= KEY_COST
+                      ? 'Sem chaves. Compre uma por moedas e abra agora.'
+                      : 'Sem chaves no momento. O baú fica guardado para depois.'}
+                </Text>
+                {statusMessage ? (
+                  <Text style={styles.statusText}>{statusMessage}</Text>
+                ) : null}
+              </View>
+            )}
 
-          {opened ? (
-            <PrimaryButton title="Fechar" onPress={onClose} />
-          ) : isOpening ? (
-            <View style={styles.openingStatus}>
-              <Text style={styles.openingStatusText}>Abrindo baú...</Text>
-            </View>
-          ) : (
-            <View style={styles.actions}>
-              {keys > 0 ? (
+            {opened ? (
+              <PrimaryButton title="Fechar" onPress={onClose} />
+            ) : isOpening ? (
+              <View style={styles.openingStatus}>
+                <Text style={styles.openingStatusText}>Abrindo baú...</Text>
+              </View>
+            ) : (
+              <View style={styles.actions}>
+                {keys > 0 ? (
+                  <PrimaryButton
+                    title="Abrir com 1 chave"
+                    onPress={onOpenWithKey}
+                  />
+                ) : (
+                  <PrimaryButton
+                    title={`Comprar chave por ${KEY_COST}`}
+                    onPress={onBuyAndOpen}
+                  />
+                )}
                 <PrimaryButton
-                  title="Abrir com 1 chave"
-                  onPress={onOpenWithKey}
+                  size="compact"
+                  title="Depois"
+                  variant="secondary"
+                  onPress={onClose}
                 />
-              ) : (
-                <PrimaryButton
-                  title={`Comprar chave por ${KEY_COST}`}
-                  onPress={onBuyAndOpen}
-                />
-              )}
-              <PrimaryButton size="compact" title="Depois" variant="secondary" onPress={onClose} />
-            </View>
-          )}
+              </View>
+            )}
           </View>
         </View>
       </Modal>
@@ -181,7 +223,11 @@ export function WorldChestModal({
         animationKey={revealKey}
         kicker={isBonusChest ? 'Baú Especial' : 'Baú de Mundo'}
         rewardItems={rewardItems}
-        title={isBonusChest ? 'Recompensa do Jardim Renascido' : 'Recompensa Especial'}
+        title={
+          isBonusChest
+            ? 'Recompensa do Jardim Renascido'
+            : 'Recompensa Especial'
+        }
         variant="world"
         visible={isRevealVisible && rewardItems.length > 0}
         coinCollectTarget={coinCollectTarget}

@@ -2,7 +2,10 @@ import { memo } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { resolveCampaignMapSegmentAsset } from '../data/campaignMapAssets';
-import type { CampaignMapSegment, CampaignMapSegmentLayer } from '../types/campaignMap';
+import type {
+  CampaignMapSegment,
+  CampaignMapSegmentLayer,
+} from '../types/campaignMap';
 import type { CampaignMapTransform } from '../utils/campaignMapLayout';
 
 const LAYER_DEPTH: Record<CampaignMapSegmentLayer['role'], number> = {
@@ -59,7 +62,10 @@ export const CampaignMapSegments = memo(function CampaignMapSegments({
                 resizeMethod="resize"
                 resizeMode="stretch"
                 source={source}
-                style={[styles.segmentLayer, { zIndex: LAYER_DEPTH[layer.role] }]}
+                style={[
+                  styles.segmentLayer,
+                  { zIndex: LAYER_DEPTH[layer.role] },
+                ]}
               />
             );
           })}

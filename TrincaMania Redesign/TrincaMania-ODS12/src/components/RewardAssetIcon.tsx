@@ -1,6 +1,14 @@
-import { Image, ImageSourcePropType, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import {
+  Image,
+  ImageSourcePropType,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 
-export type RewardAssetName = 'chestCommon' | 'chestWorld' | 'coin' | 'key' | 'life';
+export type RewardAssetName =
+  'chestCommon' | 'chestWorld' | 'coin' | 'key' | 'life';
 
 type RewardAssetIconProps = {
   muted?: boolean;
@@ -10,16 +18,26 @@ type RewardAssetIconProps = {
 };
 
 const rewardAssets: Record<RewardAssetName, ImageSourcePropType> = {
-  chestCommon: require('../../assets/ui/rewards/chest_common_closed.png') as ImageSourcePropType,
-  chestWorld: require('../../assets/ui/rewards/chest_world_closed.png') as ImageSourcePropType,
+  chestCommon:
+    require('../../assets/ui/rewards/chest_common_closed.png') as ImageSourcePropType,
+  chestWorld:
+    require('../../assets/ui/rewards/chest_world_closed.png') as ImageSourcePropType,
   coin: require('../../assets/ui/rewards/reward_coin.png') as ImageSourcePropType,
   key: require('../../assets/ui/rewards/reward_key.png') as ImageSourcePropType,
   life: require('../../assets/ui/rewards/reward_life.png') as ImageSourcePropType,
 };
 
-export function RewardAssetIcon({ muted = false, name, size, style }: RewardAssetIconProps) {
+export function RewardAssetIcon({
+  muted = false,
+  name,
+  size,
+  style,
+}: RewardAssetIconProps) {
   return (
-    <View pointerEvents="none" style={[styles.frame, { height: size, width: size }, style]}>
+    <View
+      pointerEvents="none"
+      style={[styles.frame, { height: size, width: size }, style]}
+    >
       <Image
         resizeMode="contain"
         source={rewardAssets[name]}

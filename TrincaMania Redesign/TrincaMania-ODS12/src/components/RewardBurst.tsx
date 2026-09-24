@@ -13,7 +13,16 @@ type RewardBurstProps = {
   event?: RewardBurstEvent;
 };
 
-const PARTICLES = ['\u2728', '\u2B50', '\u2726', '\u2728', '\u2B50', '\u2726', '\u2728', '\u2B50'];
+const PARTICLES = [
+  '\u2728',
+  '\u2B50',
+  '\u2726',
+  '\u2728',
+  '\u2B50',
+  '\u2726',
+  '\u2728',
+  '\u2B50',
+];
 
 export function RewardBurst({ event }: RewardBurstProps) {
   const burst = useRef(new Animated.Value(0)).current;

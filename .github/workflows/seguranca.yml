@@ -11,7 +11,8 @@ name: Seguranca
 on:
   push:
     branches: ["**"]
-  pull_request: {}
+  pull_request:
+    branches: ["**"]
   # Segunda-feira, 06:00 UTC (03:00 em Sao Paulo). Pega o advisory que foi
   # publicado enquanto ninguem mexia no codigo.
   schedule:
@@ -26,6 +27,26 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  auditoria:
+    name: Vulnerabilidade em dependencia
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+        working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+      # Nao e `npm audit --audit-level=high` puro: reprovaria hoje, por causa
+      # dos 19 advisories da cadeia do Expo que nao tem correcao sem subir o
+      # major. Compara com scripts/auditoria-baseline.json e reprova em
+      # advisory novo e em entrada morta. Ver o cabecalho de scripts/auditoria.js.
+      - run: npm run auditoria
+        working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+
   segredos:
     name: Segredo vazado
     runs-on: ubuntu-latest
@@ -114,6 +135,8 @@ jobs:
     # dependencia pinada etc.), nao o diff de uma mudanca — nao ha "antes" e
     # "depois" para comparar dentro de um PR, e a maioria dos checks olha para
     # configuracao do GitHub que um PR nem consegue alterar.
+    # A action só aceita a branch padrão ao publicar resultados. Branches de
+    # trabalho continuam cobertas por audit, gitleaks e CodeQL.
     if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     permissions:
       # `security-events: write` publica o SARIF na aba Security. `id-token:

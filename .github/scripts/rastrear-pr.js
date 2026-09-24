@@ -3,7 +3,7 @@ const fs = require("node:fs");
 function referencias(body, repo) {
   const numeros = new Set();
   for (const match of (body || "").matchAll(
-    /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+(?:#(\d+)|https:\/\/github\.com\/([^/]+\/[^/]+)\/issues\/(\d+))/gi,
+    /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?|refs?|references?|tarefa:)\s+(?:#(\d+)|https:\/\/github\.com\/([^/]+\/[^/]+)\/issues\/(\d+))/gi,
   )) {
     if (match[1]) numeros.add(Number(match[1]));
     else if (match[2].toLowerCase() === repo.toLowerCase())
@@ -11,6 +11,25 @@ function referencias(body, repo) {
   }
   for (const match of (body || "").matchAll(/<!-- issue-rastreada:(\d+) -->/g))
     numeros.add(Number(match[1]));
+  return [...numeros];
+}
+
+function fechamentos(body, repo) {
+  const numeros = new Set();
+  const referencia = String.raw`(?:#\d+|https:\/\/github\.com\/[^/\s]+\/[^/\s]+\/issues\/\d+)`;
+  const clausula = new RegExp(
+    String.raw`\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+(${referencia}(?:(?:\s*,\s*|\s+and\s+)${referencia})*)`,
+    "gi",
+  );
+  const numero =
+    /#(\d+)|https:\/\/github\.com\/([^/\s]+\/[^/\s]+)\/issues\/(\d+)/gi;
+  for (const match of (body || "").matchAll(clausula)) {
+    for (const alvo of match[1].matchAll(numero)) {
+      if (alvo[1]) numeros.add(Number(alvo[1]));
+      else if (alvo[2].toLowerCase() === repo.toLowerCase())
+        numeros.add(Number(alvo[3]));
+    }
+  }
   return [...numeros];
 }
 async function rastrear({
@@ -47,6 +66,16 @@ async function rastrear({
   }
   issue ||= automatica;
   if (pr.state === "closed") {
+    if (!somenteLeitura && pr.merged) {
+      for (const number of fechamentos(pr.body, repo)) {
+        const vinculada = await api("GET", `/issues/${number}`);
+        if (vinculada.pull_request || vinculada.state === "closed") continue;
+        await api("PATCH", `/issues/${number}`, {
+          state: "closed",
+          state_reason: "completed",
+        });
+      }
+    }
     if (!somenteLeitura && pr.merged && pr.base.ref === entrega && automatica)
       await api("PATCH", `/issues/${automatica.number}`, {
         state: "closed",
@@ -79,7 +108,7 @@ async function rastrear({
       labels: ["tarefa-automatica"],
     });
   }
-  if (issue === automatica && issue.state === "closed")
+  if (issue.number === automatica?.number && issue.state === "closed")
     await api("PATCH", `/issues/${issue.number}`, { state: "open" });
   // Não usar keyword de fechamento: entrega é validada acima, inclusive se a branch padrão mudar.
   const vinculo = `<!-- issue-rastreada:${issue.number} -->`;
@@ -131,7 +160,7 @@ async function main() {
       : "PR fechado sem tarefa automática",
   );
 }
-module.exports = { referencias, rastrear };
+module.exports = { referencias, fechamentos, rastrear };
 if (require.main === module)
   main().catch((error) => {
     console.error(error.message);

@@ -3,7 +3,11 @@ import { render } from '@testing-library/react-native';
 import { ResultModal } from '../ResultModal';
 import { LEVELS } from '../../data/levels';
 import { LivesState } from '../../storage/livesStorage';
-import { GameStatus, ProgressState, WorldChestOpenResult } from '../../types/game';
+import {
+  GameStatus,
+  ProgressState,
+  WorldChestOpenResult,
+} from '../../types/game';
 
 // ResultModal tem a maior superfície de props dos 4 componentes-alvo (baú
 // comum, baú de mundo, recorde, progresso de capítulo...). Este é

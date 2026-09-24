@@ -8,133 +8,88 @@ import type {
 } from '../types/campaignMap';
 import type { ChapterWorldId, WorldId } from '../types/game';
 
-export const BOSQUE_MAP_ASSET_KEYS = [
-  'forest-canopy',
-  'forest-gate',
-  'forest-river',
-  'forest-grove',
-  'forest-sunlit',
-  'forest-entry',
-  'forest-trailhead',
+export const PARQUE_MAP_ASSET_KEYS = [
+  'parque-canopy',
+  'parque-gate',
+  'parque-river',
+  'parque-grove',
+  'parque-sunlit',
+  'parque-entry',
+  'parque-trailhead',
 ] as const;
 
-export const BOSQUE_MAP_LANDMARK_VISUAL_KEYS = [
-  'forest-portal-rune',
-  'forest-rest-cart',
+export const PARQUE_MAP_LANDMARK_VISUAL_KEYS = [
+  'recycling-cycle',
+  'collection-cart',
 ] as const;
 
-const BOSQUE_LEVEL_ANCHOR_DEFINITIONS: readonly Readonly<{
+const PARQUE_LEVEL_ANCHOR_DEFINITIONS: readonly Readonly<{
   point: CampaignMapPoint;
   site: CampaignMapSite;
 }>[] = [
   { point: { x: 190, y: 2945 }, site: 'clearing' },
-  { point: { x: 180, y: 2850 }, site: 'curve' },
-  { point: { x: 178, y: 2755 }, site: 'crossing' },
   { point: { x: 188, y: 2660 }, site: 'curve' },
-  { point: { x: 195, y: 2560 }, site: 'platform' },
   { point: { x: 190, y: 2400 }, site: 'bridge' },
-  { point: { x: 180, y: 2305 }, site: 'curve' },
-  { point: { x: 150, y: 2210 }, site: 'clearing' },
   { point: { x: 180, y: 2115 }, site: 'platform' },
-  { point: { x: 205, y: 2020 }, site: 'crossing' },
-  { point: { x: 195, y: 1860 }, site: 'clearing' },
   { point: { x: 200, y: 1765 }, site: 'curve' },
-  { point: { x: 190, y: 1670 }, site: 'clearing' },
   { point: { x: 170, y: 1575 }, site: 'crossing' },
-  { point: { x: 155, y: 1480 }, site: 'curve' },
-  { point: { x: 180, y: 1320 }, site: 'bridge' },
   { point: { x: 160, y: 1225 }, site: 'bridge' },
-  { point: { x: 185, y: 1130 }, site: 'clearing' },
-  { point: { x: 175, y: 1035 }, site: 'platform' },
   { point: { x: 150, y: 940 }, site: 'crossing' },
-  { point: { x: 185, y: 780 }, site: 'curve' },
   { point: { x: 180, y: 685 }, site: 'platform' },
-  { point: { x: 155, y: 590 }, site: 'crossing' },
-  { point: { x: 170, y: 505 }, site: 'curve' },
   { point: { x: 180, y: 415 }, site: 'platform' },
 ];
 
-export const BOSQUE_LEVEL_ANCHORS: readonly CampaignMapLevelAnchor[] =
-  BOSQUE_LEVEL_ANCHOR_DEFINITIONS.map(({ point, site }, index) => ({
+export const PARQUE_LEVEL_ANCHORS: readonly CampaignMapLevelAnchor[] =
+  PARQUE_LEVEL_ANCHOR_DEFINITIONS.map(({ point, site }, index) => ({
     levelId: `w1-${String(index + 1).padStart(3, '0')}`,
     point,
-    routeProgress: (index + 1) / (BOSQUE_LEVEL_ANCHOR_DEFINITIONS.length + 1),
+    routeProgress: (index + 1) / (PARQUE_LEVEL_ANCHOR_DEFINITIONS.length + 1),
     site,
   }));
 
-const BOSQUE_ENTRY: CampaignMapPoint = { x: 180, y: 3080 };
-const BOSQUE_EXIT: CampaignMapPoint = { x: 180, y: 270 };
+const PARQUE_ENTRY: CampaignMapPoint = { x: 180, y: 3080 };
+const PARQUE_EXIT: CampaignMapPoint = { x: 180, y: 270 };
 
-export const BOSQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
+export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
   backgroundColor: '#173F2B',
   designSize: { height: 3160, width: 360 },
-  entry: BOSQUE_ENTRY,
-  exit: BOSQUE_EXIT,
-  identityKey: 'bosque-das-trincas',
+  entry: PARQUE_ENTRY,
+  exit: PARQUE_EXIT,
+  identityKey: 'parque-das-trincas',
   landmarks: [
     {
       afterLevelId: 'w1-005',
-      id: 'bosque-rest-05',
+      id: 'parque-rest-05',
       kind: 'rest',
       origin: { x: 0.5, y: 1 },
-      point: { x: 82, y: 2500 },
+      point: { x: 82, y: 1705 },
       site: 'clearing',
-      visualKey: 'forest-rest-cart',
+      visualKey: 'collection-cart',
       visualSize: { height: 96, width: 104 },
     },
     {
       afterLevelId: 'w1-010',
-      id: 'bosque-rest-10',
-      kind: 'rest',
-      origin: { x: 0.5, y: 1 },
-      point: { x: 264, y: 1960 },
-      site: 'crossing',
-      visualKey: 'forest-rest-cart',
-      visualSize: { height: 96, width: 104 },
-    },
-    {
-      afterLevelId: 'w1-015',
-      id: 'bosque-rest-15',
-      kind: 'rest',
-      origin: { x: 0.5, y: 1 },
-      point: { x: 74, y: 1420 },
-      site: 'clearing',
-      visualKey: 'forest-rest-cart',
-      visualSize: { height: 96, width: 104 },
-    },
-    {
-      afterLevelId: 'w1-020',
-      id: 'bosque-rest-20',
-      kind: 'rest',
-      origin: { x: 0.5, y: 1 },
-      point: { x: 282, y: 880 },
-      site: 'platform',
-      visualKey: 'forest-rest-cart',
-      visualSize: { height: 96, width: 104 },
-    },
-    {
-      afterLevelId: 'w1-025',
-      id: 'bosque-rest-25',
+      id: 'parque-rest-10',
       kind: 'rest',
       origin: { x: 0.5, y: 1 },
       point: { x: 72, y: 420 },
       site: 'clearing',
-      visualKey: 'forest-rest-cart',
+      visualKey: 'collection-cart',
       visualSize: { height: 96, width: 104 },
     },
     {
-      afterLevelId: 'w1-025',
-      id: 'bosque-portal-world-2',
+      afterLevelId: 'w1-010',
+      id: 'parque-portal-world-2',
       kind: 'portal',
       origin: { x: 0.5, y: 1 },
       point: { x: 286, y: 420 },
       site: 'platform',
       targetWorldId: 2,
-      visualKey: 'forest-portal-rune',
+      visualKey: 'recycling-cycle',
       visualSize: { height: 92, width: 104 },
     },
   ],
-  levelAnchors: BOSQUE_LEVEL_ANCHORS,
+  levelAnchors: PARQUE_LEVEL_ANCHORS,
   levelNodeOrigin: { x: 0.5, y: 1 },
   levelNodeSize: { height: 98, width: 88 },
   minimumTouchSize: 44,
@@ -142,51 +97,91 @@ export const BOSQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
   openingFocusRatio: 0.45,
   openingInsets: { bottom: 48, top: 170 },
   progressionDirection: 'bottom-to-top',
-  road: [BOSQUE_ENTRY, ...BOSQUE_LEVEL_ANCHORS.map(({ point }) => point), BOSQUE_EXIT],
+  road: [
+    PARQUE_ENTRY,
+    ...PARQUE_LEVEL_ANCHORS.map(({ point }) => point),
+    PARQUE_EXIT,
+  ],
   roadWidth: 68,
   segmentOverlap: 24,
   segments: [
     {
       height: 324,
-      id: 'bosque-segment-canopy',
-      layers: [{ assetKey: 'forest-canopy', id: 'bosque-canopy-terrain', role: 'terrain' }],
+      id: 'parque-segment-canopy',
+      layers: [
+        {
+          assetKey: 'parque-canopy',
+          id: 'parque-canopy-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 0,
     },
     {
       height: 564,
-      id: 'bosque-segment-gate',
-      layers: [{ assetKey: 'forest-gate', id: 'bosque-gate-terrain', role: 'terrain' }],
+      id: 'parque-segment-gate',
+      layers: [
+        { assetKey: 'parque-gate', id: 'parque-gate-terrain', role: 'terrain' },
+      ],
       top: 300,
     },
     {
       height: 564,
-      id: 'bosque-segment-river',
-      layers: [{ assetKey: 'forest-river', id: 'bosque-river-terrain', role: 'terrain' }],
+      id: 'parque-segment-river',
+      layers: [
+        {
+          assetKey: 'parque-river',
+          id: 'parque-river-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 840,
     },
     {
       height: 564,
-      id: 'bosque-segment-grove',
-      layers: [{ assetKey: 'forest-grove', id: 'bosque-grove-terrain', role: 'terrain' }],
+      id: 'parque-segment-grove',
+      layers: [
+        {
+          assetKey: 'parque-grove',
+          id: 'parque-grove-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 1380,
     },
     {
       height: 564,
-      id: 'bosque-segment-sunlit',
-      layers: [{ assetKey: 'forest-sunlit', id: 'bosque-sunlit-terrain', role: 'terrain' }],
+      id: 'parque-segment-sunlit',
+      layers: [
+        {
+          assetKey: 'parque-sunlit',
+          id: 'parque-sunlit-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 1920,
     },
     {
       height: 564,
-      id: 'bosque-segment-entry',
-      layers: [{ assetKey: 'forest-entry', id: 'bosque-entry-terrain', role: 'terrain' }],
+      id: 'parque-segment-entry',
+      layers: [
+        {
+          assetKey: 'parque-entry',
+          id: 'parque-entry-terrain',
+          role: 'terrain',
+        },
+      ],
       top: 2460,
     },
     {
       height: 160,
-      id: 'bosque-segment-trailhead',
+      id: 'parque-segment-trailhead',
       layers: [
-        { assetKey: 'forest-trailhead', id: 'bosque-trailhead-terrain', role: 'terrain' },
+        {
+          assetKey: 'parque-trailhead',
+          id: 'parque-trailhead-terrain',
+          role: 'terrain',
+        },
       ],
       top: 3000,
     },
@@ -210,7 +205,7 @@ const legacyWorldMap = (
  * `WorldMapConfigRegistry` é `Record<WorldId, WorldMapConfig>` — obrigatório —,
  * então cada id de capítulo adicionado a `WorldId` precisa da sua entrada aqui,
  * senão o `tsc` quebra. É proposital: um capítulo sem mapa registrado seria um
- * capítulo que cai no fallback visual do Bosque sem ninguém perceber.
+ * capítulo que cai no fallback visual do Parque sem ninguém perceber.
  */
 const chapterWorldMap = (
   worldId: ChapterWorldId,
@@ -223,15 +218,17 @@ const chapterWorldMap = (
 });
 
 export const WORLD_MAP_CONFIGS: WorldMapConfigRegistry = {
-  1: BOSQUE_MAP_CONFIG,
-  2: legacyWorldMap(2, 'vales-montanhosos'),
-  3: legacyWorldMap(3, 'ruinas-de-cristal'),
-  4: legacyWorldMap(4, 'praia-dos-tesouros'),
-  5: legacyWorldMap(5, 'vulcao-doce'),
-  6: legacyWorldMap(6, 'cidade-das-estrelas'),
-  7: legacyWorldMap(7, 'neve-cristalina'),
-  8: legacyWorldMap(8, 'reino-celestial'),
-  21: legacyWorldMap(21, 'reino-acucarado'),
+  1: PARQUE_MAP_CONFIG,
+  2: legacyWorldMap(2, 'vale-da-reciclagem'),
+  3: legacyWorldMap(3, 'central-de-materiais'),
+  4: legacyWorldMap(4, 'viveiro-comunitario'),
+  5: legacyWorldMap(5, 'usina-de-compostagem'),
+  6: legacyWorldMap(6, 'cooperativa-dos-catadores'),
+  7: legacyWorldMap(7, 'rota-da-logistica-reversa'),
+  8: legacyWorldMap(8, 'forum-da-economia-circular'),
+  9: legacyWorldMap(9, 'distrito-da-reindustrializacao'),
+  10: legacyWorldMap(10, 'cupula-da-reciclagem-global'),
+  21: legacyWorldMap(21, 'jardim-renascido'),
   101: chapterWorldMap(101, 'capitulo-aterro-adormecido'),
   102: chapterWorldMap(102, 'capitulo-rio-de-plastico'),
   103: chapterWorldMap(103, 'capitulo-feira-do-reaproveitamento'),
@@ -240,8 +237,8 @@ export const WORLD_MAP_CONFIGS: WorldMapConfigRegistry = {
   106: chapterWorldMap(106, 'capitulo-patio-do-metal'),
   107: chapterWorldMap(107, 'capitulo-horta-de-compostagem'),
   108: chapterWorldMap(108, 'capitulo-biblioteca-de-papel'),
-  109: chapterWorldMap(109, 'capitulo-oficina-do-conserto'),
-  110: chapterWorldMap(110, 'capitulo-cidade-circular'),
+  109: chapterWorldMap(109, 'capitulo-ferro-velho-renascido'),
+  110: chapterWorldMap(110, 'capitulo-metropole-do-ciclo-fechado'),
 };
 
 /** Ids de mundo reservados aos capítulos, na ordem dos capítulos. */
@@ -249,5 +246,6 @@ export const CHAPTER_WORLD_IDS: readonly ChapterWorldId[] = [
   101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
 ];
 
-export const getWorldMapConfig = (worldId: WorldId): WorldMapConfig | undefined =>
-  WORLD_MAP_CONFIGS[worldId];
+export const getWorldMapConfig = (
+  worldId: WorldId,
+): WorldMapConfig | undefined => WORLD_MAP_CONFIGS[worldId];

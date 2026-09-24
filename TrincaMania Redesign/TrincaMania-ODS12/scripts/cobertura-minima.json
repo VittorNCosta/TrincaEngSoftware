@@ -1,0 +1,16 @@
+{
+  "methodology": "production-source-maps-v1",
+  "nodeMajor": 22,
+  "domain": {
+    "lines": 74.18,
+    "branches": 84.24,
+    "functions": 76.2,
+    "statements": 74.18
+  },
+  "ui": {
+    "lines": 23.03,
+    "branches": 26.62,
+    "functions": 24.36,
+    "statements": 22.97
+  }
+}

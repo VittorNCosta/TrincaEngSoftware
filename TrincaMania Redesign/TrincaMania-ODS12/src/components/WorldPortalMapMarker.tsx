@@ -1,3 +1,4 @@
+import { RecyclingMarkerArt } from './RecyclingMarkerArt';
 import { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -24,7 +25,10 @@ function WorldPortalMapMarkerBase({
       accessibilityState={{ disabled: locked, selected }}
       hitSlop={6}
       onPress={onPress}
-      style={({ pressed }) => [styles.pressable, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [
+        styles.pressable,
+        pressed ? styles.pressed : null,
+      ]}
     >
       <View pointerEvents="none" style={styles.marker}>
         <View style={styles.groundShadow} />
@@ -37,26 +41,33 @@ function WorldPortalMapMarkerBase({
         />
         {selected ? <View style={styles.selectedGround} /> : null}
 
-        <View style={[styles.runeRing, locked ? styles.runeRingLocked : null]}>
-          <View style={[styles.runeInner, locked ? styles.runeInnerLocked : null]} />
+        <View
+          style={[styles.cycleRing, locked ? styles.cycleRingLocked : null]}
+        >
+          <View
+            style={[styles.cycleInner, locked ? styles.cycleInnerLocked : null]}
+          />
           <View style={styles.iconDisc}>
-            <GameIcon
-              muted={locked}
-              name={locked ? 'lock' : 'map'}
-              size={locked ? 23 : 27}
-              tone={locked ? 'neutral' : 'blue'}
-              variant="plain"
-            />
+            {locked ? (
+              <GameIcon name="lock" size={23} tone="neutral" variant="plain" />
+            ) : (
+              <RecyclingMarkerArt kind="portal" />
+            )}
           </View>
           {!locked ? (
             <>
-              <View style={[styles.runeSpark, styles.runeSparkLeft]} />
-              <View style={[styles.runeSpark, styles.runeSparkRight]} />
+              <View style={[styles.cycleSpark, styles.cycleSparkLeft]} />
+              <View style={[styles.cycleSpark, styles.cycleSparkRight]} />
             </>
           ) : null}
         </View>
 
-        <View style={[styles.labelSupport, locked ? styles.labelSupportLocked : null]} />
+        <View
+          style={[
+            styles.labelSupport,
+            locked ? styles.labelSupportLocked : null,
+          ]}
+        />
         <View
           style={[
             styles.labelStone,
@@ -184,7 +195,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 104,
   },
-  runeInner: {
+  cycleInner: {
     borderColor: 'rgba(210, 240, 255, 0.82)',
     borderRadius: radii.pill,
     borderWidth: 1,
@@ -192,10 +203,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 44,
   },
-  runeInnerLocked: {
+  cycleInnerLocked: {
     borderColor: 'rgba(217, 226, 224, 0.58)',
   },
-  runeRing: {
+  cycleRing: {
     alignItems: 'center',
     backgroundColor: 'rgba(54, 121, 172, 0.2)',
     borderColor: 'rgba(222, 245, 255, 0.88)',
@@ -206,22 +217,22 @@ const styles = StyleSheet.create({
     marginTop: 4,
     width: 58,
   },
-  runeRingLocked: {
+  cycleRingLocked: {
     backgroundColor: 'rgba(90, 102, 103, 0.2)',
     borderColor: 'rgba(218, 226, 224, 0.66)',
   },
-  runeSpark: {
+  cycleSpark: {
     backgroundColor: '#EAF8FF',
     borderRadius: radii.pill,
     height: 4,
     position: 'absolute',
     width: 4,
   },
-  runeSparkLeft: {
+  cycleSparkLeft: {
     left: 5,
     top: 18,
   },
-  runeSparkRight: {
+  cycleSparkRight: {
     right: 7,
     top: 8,
   },

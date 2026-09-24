@@ -23,7 +23,10 @@ function BackgroundPanels() {
 export function ScreenShell({ children, scroll = true }: ScreenShellProps) {
   if (!scroll) {
     return (
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.safeArea}>
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.safeArea}
+      >
         <BackgroundPanels />
         <View style={styles.content}>{children}</View>
       </SafeAreaView>
@@ -31,9 +34,15 @@ export function ScreenShell({ children, scroll = true }: ScreenShellProps) {
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.safeArea}>
+    <SafeAreaView
+      edges={['top', 'bottom', 'left', 'right']}
+      style={styles.safeArea}
+    >
       <BackgroundPanels />
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {children}
       </ScrollView>
     </SafeAreaView>

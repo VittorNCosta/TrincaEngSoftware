@@ -1,0 +1,32 @@
+name: Conteudo
+description: Texto de jogo novo ou incorreto - fase, mundo, tutorial, loja, conquista
+labels: ["conteudo"]
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que precisa
+      description: >-
+        Onde entra esse conteudo (qual fase/mundo/tela) e o texto proposto,
+        se ja tiver.
+    validations:
+      required: true
+  - type: dropdown
+    id: trilha
+    attributes:
+      label: Trilha
+      options:
+        - Campanha (src/data/levels.ts, 103 fases fixas)
+        - Capitulos (src/data/chapters.ts, procedural)
+        - Outro (loja, tutorial, conquista...)
+    validations:
+      required: false
+  - type: checkboxes
+    id: ods12
+    attributes:
+      label: Universo
+      options:
+        - label: >-
+            Vocabulario checado contra CONTEXT.md - sem sinonimo novo para
+            conceito que ja tem nome ali
+          required: true

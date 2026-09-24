@@ -16,8 +16,9 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 // <SafeAreaProvider> próprio (quem provê isso é o App.tsx real). O mock
 // oficial do pacote resolve os hooks/contexto com valores fixos em vez de
 // lançar "No safe area value available".
-jest.mock('react-native-safe-area-context', () =>
-  require('react-native-safe-area-context/jest/mock').default,
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default,
 );
 
 // `src/utils/sounds.ts` (usado por BoardTile e, via ChestOpeningModal, por

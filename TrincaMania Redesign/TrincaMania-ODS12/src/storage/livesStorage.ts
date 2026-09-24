@@ -26,13 +26,15 @@ const normalizeLivesState = (value: unknown, now = Date.now()): LivesState => {
 
   const rawState = value as Partial<LivesState>;
   const lastLifeTimestamp =
-    typeof rawState.lastLifeTimestamp === 'number' && Number.isFinite(rawState.lastLifeTimestamp)
+    typeof rawState.lastLifeTimestamp === 'number' &&
+    Number.isFinite(rawState.lastLifeTimestamp)
       ? Math.min(rawState.lastLifeTimestamp, now)
       : now;
 
   return {
     currentLives: clampLives(
-      typeof rawState.currentLives === 'number' && Number.isFinite(rawState.currentLives)
+      typeof rawState.currentLives === 'number' &&
+        Number.isFinite(rawState.currentLives)
         ? rawState.currentLives
         : MAX_LIVES,
     ),
@@ -41,7 +43,10 @@ const normalizeLivesState = (value: unknown, now = Date.now()): LivesState => {
   };
 };
 
-const applyLifeRegeneration = (state: LivesState, now = Date.now()): LivesState => {
+const applyLifeRegeneration = (
+  state: LivesState,
+  now = Date.now(),
+): LivesState => {
   if (state.currentLives >= state.maxLives) {
     return {
       currentLives: state.maxLives,
@@ -57,7 +62,10 @@ const applyLifeRegeneration = (state: LivesState, now = Date.now()): LivesState 
     return state;
   }
 
-  const currentLives = Math.min(state.maxLives, state.currentLives + regeneratedLives);
+  const currentLives = Math.min(
+    state.maxLives,
+    state.currentLives + regeneratedLives,
+  );
 
   return {
     currentLives,
@@ -98,7 +106,10 @@ const mutateLives = (
     .catch(() => undefined)
     .then(async () => {
       const now = Date.now();
-      const nextState = apply(applyLifeRegeneration(await readLivesState(now), now), now);
+      const nextState = apply(
+        applyLifeRegeneration(await readLivesState(now), now),
+        now,
+      );
 
       await saveLivesState(nextState);
       return nextState;
@@ -108,7 +119,8 @@ const mutateLives = (
   return operation;
 };
 
-export const getLivesState = (): Promise<LivesState> => mutateLives((state) => state);
+export const getLivesState = (): Promise<LivesState> =>
+  mutateLives((state) => state);
 
 export const canPlayLevel = (state: LivesState) => state.currentLives > 0;
 
@@ -140,7 +152,10 @@ export const consumeLife = () =>
       : {
           currentLives: clampLives(state.currentLives - 1, state.maxLives),
           maxLives: state.maxLives,
-          lastLifeTimestamp: state.currentLives >= state.maxLives ? now : state.lastLifeTimestamp,
+          lastLifeTimestamp:
+            state.currentLives >= state.maxLives
+              ? now
+              : state.lastLifeTimestamp,
         },
   );
 
@@ -151,8 +166,10 @@ export const addLife = () =>
     return {
       currentLives,
       maxLives: state.maxLives,
-      lastLifeTimestamp: currentLives >= state.maxLives ? now : state.lastLifeTimestamp,
+      lastLifeTimestamp:
+        currentLives >= state.maxLives ? now : state.lastLifeTimestamp,
     };
   });
 
-export const refillLives = () => mutateLives((_state, now) => createInitialLivesState(now));
+export const refillLives = () =>
+  mutateLives((_state, now) => createInitialLivesState(now));

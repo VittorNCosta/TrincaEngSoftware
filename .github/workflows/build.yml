@@ -1,0 +1,89 @@
+name: Build
+on:
+  pull_request:
+    types: [labeled, synchronize]
+  workflow_call:
+    inputs:
+      sha:
+        type: string
+        required: true
+      tag:
+        type: string
+        required: true
+      perfil:
+        type: string
+        default: production
+    secrets:
+      EXPO_TOKEN:
+        required: false
+  workflow_dispatch:
+    inputs:
+      perfil:
+        description: Perfil do eas.json
+        required: true
+        default: preview
+        type: choice
+        options: [development, preview, production]
+      auto_submit:
+        description: Enviar produção para faixa interna configurada (aprovação explícita)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: eas-${{ inputs.tag || github.ref }}-${{ inputs.perfil || 'preview' }}
+  cancel-in-progress: false
+jobs:
+  build:
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.draft == false &&
+       contains(github.event.pull_request.labels.*.name, 'build:preview'))
+    name: EAS concluído
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
+    steps:
+      - name: Verificar credencial
+        working-directory: .
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo '::error::EXPO_TOKEN ausente: nenhum build foi executado.'
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.sha || github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          cache: npm
+          cache-dependency-path: "TrincaMania Redesign/TrincaMania-ODS12/package-lock.json"
+      - run: npm ci
+      - name: Acompanhar build e verificar artefato
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          BUILD_SHA: ${{ inputs.sha || github.event.pull_request.head.sha || github.sha }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          AUTO_SUBMIT: ${{ inputs.auto_submit || false }}
+          BUILD_PROFILE: ${{ inputs.perfil || 'preview' }}
+        run: node ../../.github/scripts/disparar-build.js "$BUILD_PROFILE"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: eas-${{ inputs.sha || github.event.pull_request.head.sha || github.sha }}
+          path: |
+            TrincaMania Redesign/TrincaMania-ODS12/build-manifest.json
+            TrincaMania Redesign/TrincaMania-ODS12/app.aab
+            TrincaMania Redesign/TrincaMania-ODS12/app.apk
+          retention-days: 14
+          if-no-files-found: warn

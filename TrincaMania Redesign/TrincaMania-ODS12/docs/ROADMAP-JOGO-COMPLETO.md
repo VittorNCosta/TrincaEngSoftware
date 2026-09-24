@@ -1,0 +1,1051 @@
+# Roadmap — TrincaMania ODS 12 até o jogo completo
+
+**Meta**: 10 mapas (mundos) × 10 fases = **100 fases**, cada mapa com arte,
+som e identidade próprios, publicável na Play Store, com pipeline de
+CI/CD/DevSecOps automatizado.
+
+**Data do levantamento**: 2026-09-03
+**Branch base**: `develop` @ `678e256` (sincronizada com `origin/develop`)
+
+**Classificação Codex atualizada em 15/09/2026**, sobre `feat/campanha-10x10`
+@ `4bdac92`, conferida com `origin`. As notas datadas abaixo são histórico;
+o estado operacional vem de `BLOCKS` no painel, não da pausa de 03/09.
+
+**Integração validada em 24/09/2026:** O-01 a O-04 (#208–#211) e CI-29 a
+CI-32 (#220–#223) têm implementação e testes no branch de integração da
+campanha. A conclusão das issues depende do merge em `develop`. As demais
+issues abertas mantêm seus critérios de aceite próprios, em especial as que
+exigem aparelho, serviço externo ou revisão manual.
+
+---
+
+## Pausa de sessão — 2026-09-03 (retomar daqui)
+
+Trabalho pausado a pedido do usuário. Branch `feat/campanha-10x10` **pushada
+para `origin`** (upstream configurado, PR ainda não aberto):
+https://github.com/VittorNCosta/TrincaEngSoftware/pull/new/feat/campanha-10x10
+
+**Bloco C — estado**: C-19 a C-29 concluídos e verificados nesta sessão
+(`npm run typecheck` limpo, `node --test tests` 130/130). Falta só:
+
+- **C-30** (P1) — decisão do usuário pendente: destino dos Capítulos
+  (esconder do menu / manter como "modo infinito" pós-campanha / remover o
+  código). `ChaptersScreen` continua acessível via `onOpenChapters`. Não
+  implementar sem essa decisão.
+
+**Blocos A (arte), S (som), L (limpeza), G (git/PR), CI, SEC, Q, R**: ainda
+não iniciados — fora do escopo do que foi pedido nesta sessão.
+
+**Nota técnica**: o commit `f426af4` (C-27) foi reescrito via
+`git commit --amend` nesta sessão — a mensagem original tinha um trecho
+truncado (`` `case N:` `` virou command substitution no shell e sumiu da
+mensagem ao commitar via `-m` com aspas duplas). Conteúdo do commit em si
+nunca foi afetado, só o texto da mensagem. Lição para próximas sessões: não
+usar crases dentro de mensagem de commit passada com aspas duplas no shell —
+usar `git commit -F <arquivo>` para mensagens com trecho de código inline.
+
+---
+
+## Decisões que originaram este plano
+
+| Decisão                 | Escolha                                | Consequência                                                                                                                                                        |
+| ----------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Qual trilha vira o jogo | **Campanha vira 10 mundos × 10 fases** | Reescreve `src/data/levels.ts` (hoje 203 fases em 8 mundos × 25 + bônus). Quebra de propósito o hash congelado. Capítulos (10 × 100) viram conteúdo extra/infinito. |
+| Produção de arte        | **IA generativa**                      | Cada tarefa de arte traz prompt pronto, resolução, paleta e critério de aceite.                                                                                     |
+| Entrega do plano        | Doc no repo + Artifact + GitHub Issues | Este arquivo é a fonte de verdade em prosa.                                                                                                                         |
+
+### As três superfícies e como não desincronizam
+
+O roadmap existe em três lugares, e três cópias contando histórias diferentes
+é o modo de falha óbvio. Só um deles é editado à mão como **dados**:
+
+| Superfície | Arquivo                           | Papel                                                                  |
+| ---------- | --------------------------------- | ---------------------------------------------------------------------- |
+| Doc        | `docs/ROADMAP-JOGO-COMPLETO.md`   | Prosa, justificativa, prompts de arte na íntegra. Editado à mão.       |
+| Artifact   | `docs/roadmap/roadmap.html`       | Painel filtrável. O array `BLOCKS` é a **fonte de dados** das tarefas. |
+| Backlog    | `scripts/criar-issues-roadmap.sh` | **Gerado**, nunca editado à mão.                                       |
+
+Ao concluir ou acrescentar tarefa: mexa no `BLOCKS` do HTML (título começando
+com `✅` marca concluída — a issue é criada e fechada em seguida), rode
+
+```
+node scripts/gerar-issues-roadmap.js
+```
+
+e reflita a mesma mudança na prosa deste arquivo.
+
+### Legenda de responsável
+
+- **[CC]** — Claude Code executa (código, teste, config, doc)
+- **[VOCÊ]** — tarefa humana/externa (gerar imagem, gravar som, conta de loja)
+- **[CC→VOCÊ]** — Claude Code prepara o insumo (prompt, briefing, spec), você executa
+- **[VOCÊ→CC]** — você entrega o asset, Claude Code integra
+
+### Modelos Codex por tarefa
+
+Cada linha tem uma coluna **Codex**, adicional à recomendação Claude das issues.
+Os responsáveis `[CC]` indicam a trilha original de agente; Codex pode executar
+a parte automatizável seguindo o modelo recomendado. **Manual** continua sendo
+execução humana. Em arte/som, o modelo prepara briefing e integra o resultado:
+ele não substitui uma ferramenta de geração de imagem/áudio nem o aceite humano.
+
+| Modelo        | ID para execução | Critério                                                                              |
+| ------------- | ---------------- | ------------------------------------------------------------------------------------- |
+| GPT-5.6 Luna  | `gpt-5.6-luna`   | Mudanças mecânicas delimitadas, documentos curtos, templates e comentários.           |
+| GPT-5.6 Terra | `gpt-5.6-terra`  | Implementação cotidiana, conteúdo ODS12, configuração, testes e integração de assets. |
+| GPT-5.6 Sol   | `gpt-5.6-sol`    | Regras, economia, persistência, refactors amplos, segurança e publicação.             |
+
+Heurística por tarefa, **não benchmark**. P0 mede urgência, não complexidade;
+por isso F0-06 usa Luna, mas Q-09/Q-13 usam Sol mesmo em P2. Nas tarefas já
+concluídas o modelo é uma recomendação para trabalho futuro, não o modelo que
+executou a mudança passada. Referência: [modelos oficiais OpenAI](https://developers.openai.com/api/docs/models).
+As regras ficam em `scripts/lib/codex-models.js`, compartilhadas com o painel e
+as issues. Rode `node scripts/gerar-modelos-codex.js` e
+`node scripts/gerar-issues-roadmap.js` ao mudar a classificação;
+`node scripts/gerar-modelos-codex.js --check` confere a coluna.
+
+### Prioridade de entrega
+
+- **P0** — bloqueia o jogo ser jogável/publicável
+- **P1** — necessário para o jogo ser _bom_
+- **P2** — polimento / maturidade de engenharia
+
+---
+
+## Estado atual — o que já existe e não precisa refazer
+
+Verificado no código nesta data:
+
+- **Núcleo de domínio 100% ODS12** — `src/domain/recycling/` (material, ciclo,
+  trinca, políticas). Não muda por causa de tema.
+- **Arte das peças em SVG** — `src/components/TileIcon.tsx` (264 linhas) desenha
+  resíduo/lixeira/símbolo por código. **Não precisa de PNG por mapa.**
+- **Ícones de UI em SVG** — `src/components/GameIcon.tsx` (694 linhas).
+- **8 telas prontas** — `ChaptersScreen`, `GameScreen`, `LevelSelectScreen`,
+  `PowersScreen`, `ProfileScreen`, `RewardsScreen`, `ShopScreen`,
+  `SplashIntroScreen`.
+- **Economia e progressão** — moedas, vidas, chaves, baús, boost de bandeja,
+  power-ups, resgate de trinca mágica.
+- **19 arquivos de teste** — 15 em `tests/` (node:test) + 4 componentes (jest).
+- **CI mínimo** — `.github/workflows/ci.yml` roda lint + typecheck + test +
+  test:ui + test:playthrough em push/PR para `main` e `develop`.
+- **EAS configurado** — `eas.json` com perfis `preview` (APK) e `production`
+  (AAB); `projectId` já existe em `app.json`.
+- **Nomes ODS12 dos 8 mundos e das 203 fases** — auditados em 2026-08-13.
+
+---
+
+# BLOCO F0 — Fundação (desbloqueia todo o resto)
+
+| ID    | Tarefa                                             | Quem   | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Codex         |
+| ----- | -------------------------------------------------- | ------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| F0-01 | ✅ Instalar `gh` CLI                               | [VOCÊ] | P0   | **Feito 03/09:** binário v2.99.0 baixado do release oficial para `~/.local/bin/gh`, sem sudo — o diretório já está no PATH via `.zshrc:105`. Autenticado em 04/09 (`gh auth login` por device code, conta `VittorNCosta`) — backlog sincronizável daqui.                                                                                                                                                                                                                                   | Manual        |
+| F0-02 | Expor `node` no PATH não-interativo                | [VOCÊ] | P0   | `node` só existe via nvm (`~/.nvm/versions/node/v20.20.2`). Em shell não-interativo o comando não resolve — quebra hooks de git e scripts. Adicionar carga do nvm em `~/.zshenv` ou usar caminho absoluto nos hooks.                                                                                                                                                                                                                                                                       | Manual        |
+| F0-03 | ✅ Fixar versão de Node do projeto                 | [CC]   | P1   | **Feito 03/09**, em duas etapas. O `c8311ab` pôs `.nvmrc` em `20` e `engines: node >=20.19.0` — e foi o `engines` que revelou o CI-06: se a mínima é a 20, `npm test` tinha de funcionar da 20 em diante, e não funcionava da 22. Depois o piso subiu para `>=20.19.4 <21` (e o `.nvmrc` para `20.19.4`): `npm ci` acusou `EBADENGINE` porque `react-native@0.81.5` exige `>=20.19.4` e a máquina local tinha `v20.19.1`. Quem rodar local precisa de `nvm install` na versão do `.nvmrc`. | GPT-5.6 Terra |
+| F0-04 | ✅ Resolver o `package.json` pendente              | [CC]   | P0   | **Feito 03/09** (commit `c1e3b65`). Não era decisão em aberto e sim bug: o `package-lock.json` commitado já trazia ~54.0.37 / ~54.0.18 / ^29.5.14, então HEAD tinha manifest e lock discordando — `npm ci`, que é o que o CI roda, falharia.                                                                                                                                                                                                                                               | GPT-5.6 Terra |
+| F0-05 | ✅ Rodar `npx expo-doctor` e registrar o resultado | [CC]   | P1   | **Feito 03/09:** 17/17 checks passaram depois de restaurar um `package-lock.json` não commitado que tinha regredido (`@types/jest` voltou a `^30.0.0`, `expo` a `~54.0.34`, `jest-expo` a `~54.0.17` — mesma classe de bug do F0-04) e rodar `npm ci` limpo. `typecheck` e os 121 testes de `tests/` continuam verdes.                                                                                                                                                                     | GPT-5.6 Terra |
+| F0-06 | ✅ Criar branch de trabalho `feat/campanha-10x10`  | [CC]   | P0   | **Feito 03/09.** Toda a reescrita de conteúdo saiu nela. Em 04/09 a linha paralela de CI/build entrou por merge (`ed35d11`) e a branch `feat/renomeia-capitulos-9-10` foi apagada — sobrou uma linha só.                                                                                                                                                                                                                                                                                   | GPT-5.6 Luna  |
+
+---
+
+# BLOCO C — Conteúdo: 10 mundos × 10 fases
+
+> **Este é o bloco de maior risco.** O CLAUDE.md marca as 203 fases como
+> invariante congelado (`tests/levelComposition.test.cjs` trava
+> `sha256(JSON.stringify(LEVELS))`). Quebrar isso é intencional aqui, mas
+> exige atualizar **6 arquivos de teste** e migrar saves de jogadores.
+
+## C.1 — Design e nomeação
+
+| ID       | Tarefa                                                          | Quem          | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Codex         |
+| -------- | --------------------------------------------------------------- | ------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| ~~C-01~~ | ~~Confirmar nomes dos Mundos 9 e 10~~                           | [VOCÊ]        | P0   | ✅ **Decidido 2026-09-03, revisto 2026-09-04.** Mundo 9 = **Distrito da Reindustrialização**, Mundo 10 = **Cúpula da Reciclagem Global** — os nomes que o código recebeu em `2295575`. A primeira decisão tinha sido _Oficina do Reparo_ e _Cidade Circular_; ver C-01a.                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Manual        |
+| C-01a    | ✅ Reconciliar os nomes dos Mundos 9 e 10 com a decisão de C-01 | [VOCÊ] + [CC] | P0   | **Resolvido 04/09: valem os nomes do código.** C-01 tinha decidido "Oficina do Reparo" e "Cidade Circular", e `9bd1059` renomeou os capítulos 9 e 10 para liberar esses nomes — mas `2295575` criou os mundos como "Distrito da Reindustrialização" e "Cúpula da Reciclagem Global" e os nomes liberados nunca foram usados. **Escolhido aceitar os do código**: os títulos de fase do Mundo 9 já são de reindustrialização (Pátio das Prensas, Forno de Refundição, Torre de Extrusão) e casariam mal com "oficina de reparo", e renomear obrigaria a recalcular o hash congelado sem ganho de conteúdo. Corrigidos no lugar: C-01, A-21 a A-24, S-09, S-10, os prompts de arte e o comentário de `chapters.ts`. `src/data/worlds.ts` não mudou. | GPT-5.6 Terra |
+| C-02     | ✅ Redesenhar a curva de dificuldade para 100 fases             | [CC]          | P0   | **Feito 03/09.** `WORLD_LEVELS_PER_MAP: 25 → 10` e `WORLD_DIFFICULTY_BLOCK_SIZE: 5 → 2`. A rampa de 9→60 peças cabe em 10 fases por mundo, com `tileCount` múltiplo de 3 travado em teste.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | GPT-5.6 Sol   |
+| C-03     | ✅ Redefinir marcos (descanso/loja/guardião)                    | [CC]          | P0   | **Feito 03/09.** Descanso na fase 5 e guardião na 10 nos dez mundos; `REST_CHECKPOINT_COIN_REWARDS` reajustado para o novo ritmo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | GPT-5.6 Sol   |
+| C-04     | ✅ Escrever 100 títulos de fase ODS12                           | [CC]          | P0   | **Feito 03/09.** 103 títulos únicos (100 canônicas + 3 bônus), no vocabulário de `CONTEXT.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | GPT-5.6 Terra |
+| C-05     | ✅ Escrever 100 textos de objetivo                              | [CC]          | P0   | **Feito 03/09.** 103/103 com `objectiveText` preenchido.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | GPT-5.6 Terra |
+| C-06     | ✅ Definir `starTimeLimits` das 100 fases                       | [CC]          | P1   | **Feito 03/09.** Derivados da curva por `WORLD_STAR_TIME_BASE_OFFSET` / `WORLD_STAR_TIME_SPAN`, não à mão.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | GPT-5.6 Sol   |
+| C-07     | ✅ Definir `recommendedPower` e `mysteryTileCount` por fase     | [CC]          | P1   | **Feito 03/09.** Os 103 níveis têm `recommendedPower`; o mistério respeita o teto de 1/6 do tabuleiro.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | GPT-5.6 Sol   |
+| ~~C-08~~ | ~~Decidir destino do mundo bônus (id 21, 3 fases)~~             | [VOCÊ]        | P1   | ✅ **Feito 2026-09-03.** Fica como 11º mapa secreto, como já é hoje. Ver spec abaixo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Manual        |
+| C-08a    | ✅ Reposicionar o bônus de `25.1–25.3` para `10.1–10.3`         | [CC]          | P0   | **Feito 03/09.** `levelStart: 10.1` em `src/data/worlds.ts`, acompanhando o Mundo 1 de 10 fases.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | GPT-5.6 Terra |
+| C-08b    | ✅ Trocar o `theme: 'sweet'` do bônus                           | [CC]          | P1   | **Feito 08/09,** junto com L-02: bônus agora é `theme: 'rosado'`. Em aberto: reavaliar `unlockRule: 'three-stars-world-1'` é decisão de balanceamento, não mexida aqui.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Luna  |
+
+### Nomes dos Mundos 9 e 10 — decidido
+
+O arco atual termina em "Fórum da Economia Circular" (mundo 8), que é
+deliberação. Faltavam a **ação** e o **resultado**:
+
+| Mundo | Nome                               | Subtítulo                             | Material foco | Justificativa ODS12                                     |
+| ----- | ---------------------------------- | ------------------------------------- | ------------- | ------------------------------------------------------- |
+| 9     | **Distrito da Reindustrialização** | "Onde o material vira insumo de novo" | metal         | ODS 12.5 — o resíduo reciclado volta à cadeia produtiva |
+| 10    | **Cúpula da Reciclagem Global**    | "O mundo inteiro na mesma meta"       | todos os 5    | Clímax: o ciclo completo em escala global               |
+
+**Colisão resolvida** (2026-09-03): os Capítulos 9 e 10 usavam "Oficina do
+Conserto" e "Cidade Circular", e foram renomeados para liberar esses nomes
+para a campanha:
+
+| Capítulo | Antes               | Agora                          | Subtítulo                              |
+| -------- | ------------------- | ------------------------------ | -------------------------------------- |
+| 9        | Oficina do Conserto | **Ferro-Velho Renascido**      | "Sucata que volta a ser matéria-prima" |
+| 10       | Cidade Circular     | **Metrópole do Ciclo Fechado** | "Cem bairros, um ciclo só"             |
+
+O `ChapterTheme` do capítulo 9 passou de `'oficina'` para `'sucata'`, e os
+`titlePrefixes` "Oficina" e "Reparo" saíram da lista dele pelo mesmo motivo que
+"Peça" já estava fora: eram vocabulário reservado a outra coisa.
+
+**Desfecho (2026-09-04):** os nomes liberados nunca foram usados — a campanha
+acabou ficando com "Distrito da Reindustrialização" e "Cúpula da Reciclagem
+Global" (C-01a). Os capítulos ficam com os nomes novos assim mesmo: já estão no
+jogo, são bons nomes ODS12 e não colidem com nada. "Oficina" e "Reparo" estão
+livres de novo, mas seguem fora dos `titlePrefixes` do capítulo 9 — o conjunto
+é determinístico por id, e mexer nele renomearia mapa que jogador já viu.
+
+### Mundo bônus — decidido
+
+Fica como **11º mapa secreto**, exatamente como funciona hoje: 3 fases,
+`isBonus: true`, `subtitle: 'Mundo secreto'`, desbloqueado por 3 estrelas em
+todas as fases do Mundo 1. Não entra na contagem de 100 — a meta continua
+10 × 10, e o bônus é o que existe além dela.
+
+O que a reescrita precisa preservar, e o que precisa ajustar:
+
+| Campo                     | Hoje                             | Depois                                                                                         |
+| ------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `levelIds`                | `bonus-w1-001..003`              | igual — não renomear, é id de save                                                             |
+| `unlockRule`              | `three-stars-world-1`            | igual, mas passa a valer sobre 10 fases em vez de 25, ou seja, fica **mais fácil** de alcançar |
+| `levelStart` / `levelEnd` | `25.1` / `25.3`                  | `10.1` / `10.3`                                                                                |
+| `theme`                   | `'sweet'`                        | ODS12 (L-02)                                                                                   |
+| `lockedText`              | cita "Parque da Coleta Seletiva" | igual — o Mundo 1 mantém o nome                                                                |
+
+⚠️ O `unlockRule` ficar mais fácil é efeito colateral, não escolha. Se o bônus
+deve continuar sendo uma conquista rara, a regra precisa mudar junto — decidir
+em C-02, quando a curva for redesenhada.
+
+## C.2 — Implementação
+
+| ID   | Tarefa                                                 | Quem | Prio | Arquivo                                                                                                                                                                                                                                                                                | Codex         |
+| ---- | ------------------------------------------------------ | ---- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| C-09 | ✅ Estender `CampaignWorldId` para incluir 9 e 10      | [CC] | P0   | **Feito 03/09.** `src/types/game.ts`.                                                                                                                                                                                                                                                  | GPT-5.6 Terra |
+| C-10 | ✅ Reescrever `WORLDS` com 10 mundos × 10 fases        | [CC] | P0   | **Feito 03/09.** `levelStart`/`levelEnd` de 1-10, 11-20 … 91-100. **Ressalva:** os nomes dos Mundos 9 e 10 saíram diferentes do que C-01 decidiu — ver C-01a.                                                                                                                          | GPT-5.6 Terra |
+| C-11 | ✅ Reescrever `LEVEL_SEEDS`                            | [CC] | P0   | **Feito 03/09.** Os 10 mundos passaram a ser gerados pelo mesmo mecanismo — manter 3 autorais à mão para 10 fases cada não pagava a manutenção. É a opção "mais sustentável" do enunciado.                                                                                             | GPT-5.6 Sol   |
+| C-12 | ✅ Ajustar `GENERATED_WORLD_CONFIGS` (25 → 10 títulos) | [CC] | P0   | **Feito 03/09.** Dez entradas, uma por mundo.                                                                                                                                                                                                                                          | GPT-5.6 Sol   |
+| C-13 | ✅ Registrar mundos 9 e 10 em `WORLD_MAP_CONFIGS`      | [CC] | P0   | **Feito 03/09.** O `Record` total voltou a fechar no `tsc`.                                                                                                                                                                                                                            | GPT-5.6 Terra |
+| C-14 | ✅ Reajustar `BOSQUE_MAP_CONFIG` de 25 para 10 âncoras | [CC] | P0   | **Feito 03/09.** `src/data/worldMapConfigs.ts`.                                                                                                                                                                                                                                        | GPT-5.6 Terra |
+| C-15 | ✅ Renomear `BOSQUE_*` → vocabulário ODS12             | [CC] | P1   | **Feito 04/09.** Eram 107 ocorrências, não 15: `BOSQUE_*` → `PARQUE_*` e ids de layout `bosque-*` → `parque-*`, seguindo o nome atual do Mundo 1 (**Parque da Coleta Seletiva**). `assetKey`/`visualKey` `forest-*` ficaram de fora de propósito — apontam para PNG real, isso é L-09. | GPT-5.6 Terra |
+| C-16 | ✅ Atualizar comentário das 203 em `boardPositions.ts` | [CC] | P1   | **Feito 03/09.** Linhas 16 e 39 passaram a falar em 100 fases canônicas. As sobras em `src/types/game.ts` e `src/data/chapters.ts` caíram em 04/09.                                                                                                                                    | GPT-5.6 Luna  |
+| C-17 | ✅ Mapear `AMBIENT_BY_WORLD_ID` para 10 mundos         | [CC] | P0   | **Feito 03/09.** Mundo 9 reaproveita `volcano` e o 10, `celestial` — nenhum mundo toca em silêncio. Travado por `tests/worldAmbientAndBackgroundCoverage.test.cjs`.                                                                                                                    | GPT-5.6 Terra |
+| C-18 | ✅ Cobrir mundos 9/10 em `getGameBackground`           | [CC] | P0   | **Feito 03/09.** Mundo 9 cai no fundo do 2 e o 10 no do 3, em vez de cair no _default_ do Mundo 1.                                                                                                                                                                                     | GPT-5.6 Terra |
+
+## C.3 — Testes e migração
+
+| ID   | Tarefa                                                                   | Quem          | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Codex         |
+| ---- | ------------------------------------------------------------------------ | ------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| C-19 | ✅ Recalcular o hash sha256 das fases                                    | [CC]          | P0   | `tests/levelComposition.test.cjs` — hash recalculado para as 103 fases canônicas atuais. Confirmado nesta sessão (2026-09-03): nenhuma referência a `203` sobra em `tests/*.cjs` fora de comentário histórico; suíte completa passa.                                                                                                                                                                                                                                                                                                                                                                         | GPT-5.6 Terra |
+| C-20 | ✅ Atualizar `tests/chapterProgress.test.cjs`                            | [CC]          | P0   | Sem asserção presa em 203; suíte passa.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | GPT-5.6 Terra |
+| C-21 | ✅ Atualizar `tests/worldMapConfig.test.cjs`                             | [CC]          | P0   | Sem asserção presa em 203; suíte passa.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | GPT-5.6 Terra |
+| C-22 | ✅ Atualizar `tests/chapters.test.cjs`                                   | [CC]          | P0   | Sem asserção presa em 203; suíte passa.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | GPT-5.6 Terra |
+| C-23 | ✅ Atualizar `tests/simulateFullPlaythrough.cjs`                         | [CC]          | P0   | Simulação de playthrough completo passa contra as 103 fases atuais.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | GPT-5.6 Terra |
+| C-24 | ✅ Atualizar `tests/boardLayout.test.cjs` e `campaignMapLayout.test.cjs` | [CC]          | P0   | Sem dependência solta em contagem/âncora do esquema antigo; suíte passa.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | GPT-5.6 Terra |
+| C-25 | ✅ Migração de save 203→103                                              | [CC]          | P0   | **Decisão tomada**: sem remapeamento proporcional. Os ids `wN-001`…`wN-010` são idênticos entre o esquema antigo (8 mundos × 25) e o novo (10 mundos × 10) — `normalizeProgress` já descarta em silêncio (invariante #3) só as fases que de fato não existem mais (posição 11–25 de cada mundo antigo), sem tocar moedas/chaves/itens. Adicionado `detectDroppedCampaignProgress`/`loadStoredProgressMigrationInfo` (`src/storage/progressStorage.ts`) para a UI saber quando avisar, e `CampaignResizeNoticeModal` (aviso único, chave `@trinca-mania/campaign-resize-notice-seen-v1`) ligado em `App.tsx`. | GPT-5.6 Sol   |
+| C-26 | ✅ Teste da migração de save                                             | [CC]          | P0   | `tests/progressMigration.test.cjs` — save antigo simulado (8 mundos × 25) contra o esquema novo: conta exatamente as fases descartadas, confirma que bônus/capítulo nunca entram na conta, e que moedas/chaves/itens/fases 1–10 sobrevivem intactos.                                                                                                                                                                                                                                                                                                                                                         | GPT-5.6 Sol   |
+| C-27 | ✅ Teste travando cobertura de fundo e ambiente por mundo                | [CC]          | P1   | `tests/worldAmbientAndBackgroundCoverage.test.cjs`. Ambiente sonoro (`AMBIENT_BY_WORLD_ID`) testado de verdade contra `WORLDS` (mundos 1–10); `getGameBackground` (GameScreen.tsx, pesado demais para importar de verdade em teste — muitas dependências RN/Reanimated) travado por auditoria estrutural do `switch`. Mundo 21 (bônus) documentado como deliberadamente sem ambiente próprio, não lacuna.                                                                                                                                                                                                    | GPT-5.6 Terra |
+| C-28 | ✅ Atualizar texto do Modo Dev                                           | [CC]          | P2   | `src/components/SettingsModal.tsx:120` — "203 fases" → "103 fases"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Luna  |
+| C-29 | ✅ Atualizar `CLAUDE.md` (invariante #4)                                 | [CC]          | P0   | Invariante #4, trilha "Campanha" e a nota de `tests/levelComposition.test.cjs` reescritos para 103; novo bloco de contexto histórico documentando o resize de 2026-09-03.                                                                                                                                                                                                                                                                                                                                                                                                                                    | GPT-5.6 Luna  |
+| C-30 | ✅ Decidir e implementar destino dos Capítulos                           | [VOCÊ] + [CC] | P1   | **Feito 18/09/2026.** Decisão do responsável: Capítulos como modo extra após as 100 fases principais; bônus não obrigatório e save preservado. Acesso normal validado por testes de campanha/capítulos no PR #240.                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Terra |
+
+---
+
+# BLOCO A — Arte dos 10 mapas (IA generativa)
+
+## A.0 — Especificação técnica compartilhada
+
+**Resoluções** (conferidas nos PNGs atuais):
+
+| Uso                                 | Resolução                                                  | Referência atual                                    |
+| ----------------------------------- | ---------------------------------------------------------- | --------------------------------------------------- |
+| Fundo de jogo (`GameScreen`)        | **1080 × 1920**                                            | `map_world3_game_bg.png` = 1080×1920                |
+| Fundo de mapa (`LevelSelectScreen`) | **1080 × 1920**                                            | `map_world3_select_bg.png` = 1080×1920              |
+| Marcador/selo de mapa               | **320 × 320** (PNG transparente)                           | `forest_rest_cart.png` = 320×320                    |
+| Ícone do app                        | **1024 × 1024**                                            | `assets/icon.png` = 1254×1254 (fora do padrão Expo) |
+| Adaptive icon (Android)             | **1024 × 1024**, elemento dentro do círculo central de 66% | `assets/adaptive-icon.png`                          |
+
+⚠️ Os assets legados estão pesados: `map_world1_scene_bg.png` tem **5,8 MB**.
+Alvo por imagem: **≤ 400 KB** após compressão (tarefa A-33).
+
+**Paleta CONAMA 275/2001** — obrigatória para qualquer lixeira/símbolo na arte:
+
+| Material      | Cor      | Hex de referência |
+| ------------- | -------- | ----------------- |
+| Plástico      | Vermelho | `#E30613`         |
+| Papel/papelão | Azul     | `#0055A4`         |
+| Vidro         | Verde    | `#009640`         |
+| Metal         | Amarelo  | `#FFD500`         |
+| Orgânico      | Marrom   | `#7B3F00`         |
+
+**Bloco de estilo compartilhado** (colar em _todo_ prompt, garante os 10 mapas
+parecerem o mesmo jogo):
+
+```
+STYLE: 2D vector game illustration, flat shapes with soft gradient shading,
+clean readable silhouettes, mobile game background, warm ambient occlusion,
+no outlines heavier than 3px, cohesive with a casual puzzle game aesthetic.
+COMPOSITION: vertical 9:16, main visual interest in the upper and lower thirds,
+CENTER-BOTTOM AREA MUST STAY VISUALLY CALM (a game board is drawn on top of it).
+NEGATIVE: no text, no letters, no numbers, no logos, no watermark, no UI,
+no human faces, no fantasy elements (no castles, no dragons, no crystals,
+no magic, no candy, no treasure chests, no angels), no fruit, no photorealism.
+```
+
+**Critério de aceite comum a toda imagem de fundo:**
+
+1. Contraste ≥ 3:1 entre o terço central-inferior e as peças do tabuleiro
+2. Zero elemento de fantasia genérica (regra permanente do `CLAUDE.md`)
+3. Zero texto renderizado
+4. Sem rosto humano identificável (silhuetas são aceitas)
+5. ≤ 400 KB depois de comprimir
+
+## A.1 — Preparação
+
+| ID   | Tarefa                                                                                                                                                                                                                                                                                                                                       | Quem   | Prio | Codex         |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---- | ------------- |
+| A-01 | ✅ Escrever o art bible (paleta, estilo, do/don't ODS12) — **Feito 09/09** (`de7afdc`). `docs/ART-BIBLE.md`: o material deste bloco consolidado num documento de consulta, mais o que faltava (o porquê de cada proibição, fruta-resíduo vs. fruta-tema, dominante de cor por mundo, onde cada arquivo entra no código, ressalva do Mundo 6) | [CC]   | P0   | GPT-5.6 Terra |
+| A-02 | ✅ Criar `assets/map/worlds/` e definir convenção de nome — **Feito 09/09** (`de7afdc`). `wNN_<slug>_<map\|game>.png` + os 22 nomes esperados no `README.md` da pasta; slugs iguais aos das `AmbientKey` do L-01/S-11. O mundo bônus 21 entra como `w21_jardim_*` (A-24a/A-24b), fora do lote crítico. Exigiu o CI-27                        | [CC]   | P0   | GPT-5.6 Luna  |
+| A-03 | Escolher a ferramenta de geração e travar a seed/estilo                                                                                                                                                                                                                                                                                      | [VOCÊ] | P0   | Manual        |
+| A-04 | Gerar **1 imagem-piloto** (Mundo 1, fundo de jogo) e validar in-game antes de gerar as outras 19                                                                                                                                                                                                                                             | [VOCÊ] | P0   | Manual        |
+
+> **A-04 é um portão.** Não gere as 20 imagens antes de ver uma rodando no
+> aparelho — o custo de refazer 20 é 20×.
+
+## A.2 — Prompts por mundo
+
+Cada mundo precisa de **2 imagens**: fundo de mapa (tela de seleção) e fundo de
+jogo (tela onde se joga). Prompt = `bloco de estilo` + `bloco de cena` abaixo.
+
+### Mundo 1 — Parque da Coleta Seletiva
+
+```
+SCENE: a sunny urban public park with a selective-collection ecopoint;
+five color-coded recycling bins (red, blue, green, yellow, brown) under a
+wooden shelter, trimmed grass, paved walking path, park benches, leafy trees,
+morning light, hopeful and inviting mood.
+```
+
+| ID   | Arquivo                                 | Tipo          | Quem      | Codex         |
+| ---- | --------------------------------------- | ------------- | --------- | ------------- |
+| A-05 | `assets/map/worlds/w01_parque_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-06 | `assets/map/worlds/w01_parque_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 2 — Vale da Reciclagem
+
+```
+SCENE: a green valley with a recycling facility nested in the hillside;
+conveyor belts running between low industrial sheds, stacked color-sorted bales,
+winding road, distant hills, mid-morning haze, industrious but clean mood.
+```
+
+| ID   | Arquivo                               | Tipo          | Quem      | Codex         |
+| ---- | ------------------------------------- | ------------- | --------- | ------------- |
+| A-07 | `assets/map/worlds/w02_vale_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-08 | `assets/map/worlds/w02_vale_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 3 — Central de Materiais
+
+```
+SCENE: interior of a material recovery facility; tall stacks of compressed
+bales sorted by color, overhead skylights casting light shafts, sorting tables,
+forklift silhouette, industrial but orderly, cool neutral palette with
+color-coded accents.
+```
+
+| ID   | Arquivo                                  | Tipo          | Quem      | Codex         |
+| ---- | ---------------------------------------- | ------------- | --------- | ------------- |
+| A-09 | `assets/map/worlds/w03_central_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-10 | `assets/map/worlds/w03_central_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 4 — Viveiro Comunitário
+
+```
+SCENE: a community plant nursery built from reused materials; seedlings growing
+in cut plastic bottles and tin cans on wooden shelves, a shade cloth overhead,
+raised beds made from pallets, watering cans, warm afternoon light, green and
+terracotta palette, nurturing mood.
+```
+
+| ID   | Arquivo                                  | Tipo          | Quem      | Codex         |
+| ---- | ---------------------------------------- | ------------- | --------- | ------------- |
+| A-11 | `assets/map/worlds/w04_viveiro_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-12 | `assets/map/worlds/w04_viveiro_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 5 — Usina de Compostagem
+
+```
+SCENE: an industrial composting yard; long dark compost windrows with gentle
+steam rising, a biodigester tank, turning machinery, wood chip piles, earthy
+brown and moss green palette, soft overcast light, warm organic mood.
+```
+
+| ID   | Arquivo                                | Tipo          | Quem      | Codex         |
+| ---- | -------------------------------------- | ------------- | --------- | ------------- |
+| A-13 | `assets/map/worlds/w05_usina_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-14 | `assets/map/worlds/w05_usina_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 6 — Cooperativa dos Catadores
+
+```
+SCENE: a waste-picker cooperative yard; hand carts and pushcarts parked in rows,
+color-sorted material bales, a corrugated metal workshop with open doors,
+hanging work aprons, hand-painted signage shapes (no readable text), warm
+late-afternoon light, dignified community-work mood, human silhouettes only.
+```
+
+| ID   | Arquivo                                      | Tipo          | Quem      | Codex         |
+| ---- | -------------------------------------------- | ------------- | --------- | ------------- |
+| A-15 | `assets/map/worlds/w06_cooperativa_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-16 | `assets/map/worlds/w06_cooperativa_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 7 — Rota da Logística Reversa
+
+```
+SCENE: a reverse-logistics route; a highway curving toward a distribution hub,
+delivery trucks carrying stacked returnable crates, roadside collection points
+with color-coded containers, overpass, dusk sky with long shadows, blue and
+amber palette, motion and flow mood.
+```
+
+| ID   | Arquivo                               | Tipo          | Quem      | Codex         |
+| ---- | ------------------------------------- | ------------- | --------- | ------------- |
+| A-17 | `assets/map/worlds/w07_rota_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-18 | `assets/map/worlds/w07_rota_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 8 — Fórum da Economia Circular
+
+```
+SCENE: a civic plaza built for public debate about circular economy; a circular
+amphitheater of stone steps, tall banner poles with blank colored flags,
+a large circular arrow motif inlaid in the pavement, planted trees in reused
+containers, clear midday light, blue and stone palette, deliberative civic mood.
+```
+
+| ID   | Arquivo                                | Tipo          | Quem      | Codex         |
+| ---- | -------------------------------------- | ------------- | --------- | ------------- |
+| A-19 | `assets/map/worlds/w08_forum_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-20 | `assets/map/worlds/w08_forum_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 9 — Distrito da Reindustrialização
+
+```
+SCENE: an industrial remanufacturing district; hydraulic baling presses and
+conveyor lines, colour-sorted bales stacked high, the orange glow of a
+re-melting furnace, extrusion towers venting steam, gantry cranes, warehouse
+skylights, steel and amber palette, purposeful working mood.
+```
+
+| ID   | Arquivo                                   | Tipo          | Quem      | Codex         |
+| ---- | ----------------------------------------- | ------------- | --------- | ------------- |
+| A-21 | `assets/map/worlds/w09_distrito_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-22 | `assets/map/worlds/w09_distrito_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo 10 — Cúpula da Reciclagem Global
+
+```
+SCENE: a global recycling summit; a great domed assembly hall, tiered delegate
+seating, a projected world map and target dashboards on wide screens, daylight
+through the glass dome, a large circular flow motif in the floor mosaic, formal
+and hopeful climax mood, full CONAMA color accents.
+```
+
+| ID   | Arquivo                                 | Tipo          | Quem      | Codex         |
+| ---- | --------------------------------------- | ------------- | --------- | ------------- |
+| A-23 | `assets/map/worlds/w10_cupula_map.png`  | Fundo de mapa | [CC→VOCÊ] | GPT-5.6 Terra |
+| A-24 | `assets/map/worlds/w10_cupula_game.png` | Fundo de jogo | [CC→VOCÊ] | GPT-5.6 Terra |
+
+### Mundo bônus 21 — Jardim Renascido
+
+Terreno degradado que virou jardim — o fecho otimista do ciclo, e o único mundo
+onde flor é o elemento principal. Dominante rosa-dourada, casando com o
+`theme: 'rosado'` do `worlds.ts`. "Renascido" é recuperação de área, não
+fantasia: nada de brilho mágico, portal ou fada.
+
+```
+SCENE: a former degraded lot reclaimed as a community garden, flowering beds
+laid out over recovered ground, raised planters built from reused pallets and
+crates, a rainwater cistern, compost bins, butterflies and pollinators, soft
+pink and gold dawn light.
+```
+
+| ID    | Arquivo                                 | Tipo          | Quem      | Prio                                                                                                                                                          | Codex         |
+| ----- | --------------------------------------- | ------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| A-24a | `assets/map/worlds/w21_jardim_map.png`  | Fundo de mapa | [CC→VOCÊ] | P1 **Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| A-24b | `assets/map/worlds/w21_jardim_game.png` | Fundo de jogo | [CC→VOCÊ] | P1 **Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+
+> **Fora do lote crítico.** O mundo bônus é conteúdo opcional (destrava com 3
+> estrelas no Mundo 1), por isso P1 e não P0. E substituir a arte dele não
+> libera peso: o `map_bonus_bg.png` de hoje também é o fundo do capítulo 10
+> (`CHAPTER_MAP_ASSETS`), então continua no repositório de qualquer jeito.
+
+## A.3 — Arte global (fora dos 10 mapas)
+
+| ID   | Tarefa                                                    | Quem      | Prio | Detalhe                                                                                                                                                                                                                                                                                                               | Codex         |
+| ---- | --------------------------------------------------------- | --------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| A-25 | Ícone do app 1024×1024                                    | [CC→VOCÊ] | P0   | Hoje 1254×1254, fora do padrão. Símbolo de reciclagem + trinca, sem texto. **Entrega Astra low 18/09/2026:** Ícone 1024×1024 substituído com ciclo de reciclagem. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                             | GPT-5.6 Terra |
+| A-26 | Adaptive icon Android 1024×1024                           | [CC→VOCÊ] | P0   | Elemento dentro do círculo de 66%. `backgroundColor` hoje é `#4B148C` (roxo — reavaliar, não é cor CONAMA). **Entrega Astra low 18/09/2026:** Foreground transparente 1024×1024 dentro da área central; fundo verde CONAMA. Recorte Android ainda a conferir. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| A-27 | Splash screen                                             | [CC→VOCÊ] | P1   | `SplashIntroScreen.tsx` tem 537 linhas — conferir o que já é desenhado em código. **Entrega Astra low 18/09/2026:** Intro reutiliza nova marca e cores da coleta; mantém botão de pular e logo do responsável. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                | GPT-5.6 Terra |
+| A-28 | Selo de marco "Descanso" 320×320                          | [CC→VOCÊ] | P1   | Substitui `forest_rest_cart.png` (carrinho de floresta, tema antigo). Proposta: carrinho de catador. **Entrega Astra low 18/09/2026:** Carrinho de coleta SVG substitui PNG antigo em RestStopMapMarker. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                      | GPT-5.6 Terra |
+| A-29 | Selo de marco "Loja" 320×320                              | [CC→VOCÊ] | P1   | Hoje `map_shop.png` **Entrega Astra low 18/09/2026:** Loja usa carrinho SVG; mesma base no marco de capítulo. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                 | GPT-5.6 Terra |
+| A-30 | Selo de marco "Guardião" 320×320                          | [CC→VOCÊ] | P1   | Não existe hoje **Entrega Astra low 18/09/2026:** Selo Guardião SVG integrado ao marco final dos capítulos. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                   | GPT-5.6 Terra |
+| A-31 | Marcador de portal entre mundos 320×320                   | [CC→VOCÊ] | P1   | Hoje `forest-portal-rune` (runa — fantasia). Proposta: seta de ciclo. **Entrega Astra low 18/09/2026:** Setas de reciclagem substituem runa; chaves de layout atualizadas. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                    | GPT-5.6 Terra |
+| A-32 | Nós de fase (bloqueado/atual/completo)                    | [CC→VOCÊ] | P2   | `map_level_locked/current/complete.png`. Avaliar se vira SVG em código. **Entrega Astra low 18/09/2026:** Nós já desenhados em código com estados e labels acessíveis; testes dos estados preservados. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                        | GPT-5.6 Terra |
+| A-33 | Comprimir todos os PNGs para ≤ 400 KB                     | [VOCÊ]    | P1   | Total atual em `assets/`: ~50 MB. `map_world1_scene_bg.png` sozinho tem 5,8 MB. Usar `pngquant`/`oxipng`/TinyPNG.                                                                                                                                                                                                     | Manual        |
+| A-34 | ✅ Remover `Identidade visual de TrincaMania.png` da raiz | [CC]      | P1   | **Feito 09/09** (`cd5b008`). 6 MB, duplicata byte-idêntica (sha256 `aca4253d…`) de `map_world1_scene_bg.png`, sem referência em código.                                                                                                                                                                               | GPT-5.6 Luna  |
+| A-35 | ✅ Remover os 6 arquivos `.png.png` duplicados            | [CC]      | P1   | **Feito 09/09** (`cd5b008`). `map_bonus_bg`, `map_shop`, `map_world2_bg` + os três `map_path_pieces_*` — extensão dupla, órfãos, zero referência em `src/`.                                                                                                                                                           | GPT-5.6 Luna  |
+| A-36 | Integrar cada asset entregue no código                    | [VOCÊ→CC] | P0   | `campaignMapAssets.ts` + `getGameBackground` em `GameScreen.tsx` **Entrega Astra low 18/09/2026:** Piloto, ícones e marcadores integrados; fundos restantes aguardam A-04. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                    | GPT-5.6 Terra |
+
+---
+
+# BLOCO S — Som dos 10 mapas
+
+**Spec**: MP3, loop contínuo sem emenda audível, 30–60 s, mono ou estéreo,
+128 kbps, ≤ 800 KB. Sem trilha melódica forte (o jogo é de concentração).
+Referência de volume: os `ambient_*.mp3` existentes.
+
+| ID   | Arquivo                   | Mundo           | Descrição                                                           | Quem                                                                                                                                                                                                                                              | Codex         |
+| ---- | ------------------------- | --------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| S-01 | `ambient_parque.mp3`      | 1 · Parque      | Pássaros distantes, folhas, passos ocasionais                       | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-02 | `ambient_vale.mp3`        | 2 · Vale        | Esteira ao longe, vento de vale, maquinário abafado                 | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-03 | `ambient_central.mp3`     | 3 · Central     | Galpão amplo, eco, prensa distante, ventilação                      | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-04 | `ambient_viveiro.mp3`     | 4 · Viveiro     | Regador, insetos, lona ao vento                                     | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-05 | `ambient_usina.mp3`       | 5 · Usina       | Zumbido grave de biodigestor, vapor, pá revolvendo                  | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-06 | `ambient_cooperativa.mp3` | 6 · Cooperativa | Carrinho de metal, fardos, vozes distantes indistintas              | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-07 | `ambient_rota.mp3`        | 7 · Rota        | Rodovia distante, caminhão manobrando, engradado                    | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-08 | `ambient_forum.mp3`       | 8 · Fórum       | Praça aberta, murmúrio cívico, bandeira ao vento                    | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-09 | `ambient_distrito.mp3`    | 9 · Distrito    | Prensa hidráulica ao longe, esteira rolante, zumbido grave de forno | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| S-10 | `ambient_cupula.mp3`      | 10 · Cúpula     | Murmúrio de plenário, papel manuseado, passos em saguão amplo       | [CC→VOCÊ] **Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+
+| ID   | Tarefa                                                                                                                                                           | Quem      | Prio | Codex         |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---- | ------------- |
+| S-11 | ✅ Renomear as `AmbientKey` de fantasia — **Feito 09/09** (`f771981`, via L-01)                                                                                  | [CC]      | P1   | GPT-5.6 Terra |
+| S-12 | Remover os 8 `ambient_*.mp3` antigos após substituição                                                                                                           | [CC]      | P1   | GPT-5.6 Terra |
+| S-13 | Integrar os 10 ambientes em `sounds.ts`                                                                                                                          | [VOCÊ→CC] | P0   | GPT-5.6 Terra |
+| S-14 | Revisar SFX de voz (`voice_amazing`, `voice_excellent`…)                                                                                                         | [VOCÊ]    | P2   | Manual        |
+| S-15 | ✅ Teste travando que todo mundo tem ambiente — **Feito 09/09** (`6aebd00`), +4 testes (source resolvido, sem órfã, 1-8 distintos, sem regressão de vocabulário) | [CC]      | P1   | GPT-5.6 Terra |
+
+---
+
+# BLOCO L — Limpeza de drift ODS12
+
+> Regra permanente do `CLAUDE.md`: sobra de vocabulário de fantasia é **bug de
+> conteúdo**. O levantamento abaixo é o que ainda existe hoje.
+
+| ID   | Tarefa                                                                                                                                                                                                        | Quem   | Prio | Onde                                                                                                                                                                                                                                                                                                                                                                                                                                       | Codex         |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| L-01 | ✅ `AmbientKey`: `beach\|celestial\|crystal\|forest\|mountain\|snow\|stars\|volcano` → nomes ODS12                                                                                                            | [CC]   | P1   | **Feito 09/09** (`f771981`, mesmo commit que S-11). A union e as chaves de `ambientSources`/`AMBIENT_CONFIGS`/`AMBIENT_BY_WORLD_ID` → vocabulário ODS12. Some a entrada `sounds.ts::celestial` do livro-razão (as 6 ocorrências eram só a chave); guarda 7 → 6 pendências.                                                                                                                                                                 | GPT-5.6 Terra |
+| L-02 | ✅ `WorldTheme`: `'forest' \| 'mountain' \| 'crystal' \| 'sweet'` → temas ODS12                                                                                                                               | [CC]   | P1   | **Feito 08/09.** → `'padrao' \| 'azulado' \| 'violeta' \| 'rosado'`, nome pelo acento de cor (sem persistir em save).                                                                                                                                                                                                                                                                                                                      | GPT-5.6 Terra |
+| L-03 | ✅ `identityKey` dos mundos 2–8 e bônus                                                                                                                                                                       | [CC]   | P1   | **Feito 04/09 (via L-04).** Duplicata de escopo: o commit 51e02f8 do L-04 já trocou os oito `identityKey` daqui pelos nomes ODS12 (`vale-da-reciclagem`, `central-de-materiais`, `viveiro-comunitario`, `usina-de-compostagem`, `cooperativa-dos-catadores`, `rota-da-logistica-reversa`, `forum-da-economia-circular`, `jardim-renascido`). Conferido em `worldMapConfigs.ts`, nada pendente.                                             | GPT-5.6 Terra |
+| L-04 | ✅ Renomear os `BOSQUE_*` e os `identityKey` legados                                                                                                                                                          | [CC]   | P1   | **Feito 04/09.** Mesmo escopo do C-15, mais os oito `identityKey` que ainda carregavam nome de fantasia (`vulcao-doce`, `reino-celestial`, `praia-dos-tesouros`, `reino-acucarado`…): agora derivam do nome ODS12 do mundo. Nenhum é persistido em save. Livro-razão da guarda: 19 → 14 pendências.                                                                                                                                        | GPT-5.6 Terra |
+| L-05 | ✅ Chaves `forest-*` de asset de mapa                                                                                                                                                                         | [CC]   | P1   | **Feito 09/09** (`f771981`). `forest-*` → `parque-*` em `campaignMapAssets.ts`, `chapterVisualIdentity.ts`, `worldMapConfigs.ts` e `tests/worldMapConfig.test.cjs`. `forest-portal-rune` fica (A-31, `humano`). Os `.png` ficam até L-07.                                                                                                                                                                                                  | GPT-5.6 Terra |
+| L-06 | ✅ `ForestRestMapMarker.tsx` → nome ODS12                                                                                                                                                                     | [CC]   | P1   | **Feito 09/09** (`f771981`). Arquivo, tipo e função → `RestStopMapMarker`; o único importador (`CampaignMapLandmarkMarker.tsx`) e a `visualKey` `forest-rest-cart` → `parque-rest-cart` acompanham. `forest_rest_cart.png` fica até A-28.                                                                                                                                                                                                  | GPT-5.6 Terra |
+| L-07 | Nomes de arquivo `assets/map/world1/forest_*.png`                                                                                                                                                             | [CC]   | P2   | 8 arquivos                                                                                                                                                                                                                                                                                                                                                                                                                                 | GPT-5.6 Luna  |
+| L-08 | ✅ `map_path_pieces_bonus_reino_acucarado.png`                                                                                                                                                                | [CC]   | P1   | **Feito 09/09** (`cd5b008`). **Divergência do enunciado**: a issue pedia renomear, mas o arquivo é órfão (zero referências) e carrega nome banido — renomear só preservaria 2,5 MB de peso morto. Removido, como o livro-razão da guarda ODS12 já previa.                                                                                                                                                                                  | GPT-5.6 Terra |
+| L-09 | `map_path_pieces_world1_bosque.png`, `..._world2_vales_montanhosos.png`                                                                                                                                       | [CC]   | P2   |                                                                                                                                                                                                                                                                                                                                                                                                                                            | GPT-5.6 Luna  |
+| L-10 | `assets/map/README_MUNDO_3.txt`                                                                                                                                                                               | [CC]   | P2   | Conferir conteúdo                                                                                                                                                                                                                                                                                                                                                                                                                          | GPT-5.6 Luna  |
+| L-11 | Remover os 4 `PATCH-*.md` da raiz                                                                                                                                                                             | [VOCÊ] | P2   | 96 KB de docs de patch antigos (`PATCH-ANOMALIAS.md` 32 KB, `PATCH-EFEITOS-E-SOM.md` 41 KB, `PATCH-CORRECOES-EFEITOS.md` 13 KB, `PATCH-CORRECOES-EFEITOS-2.md` 9,8 KB)                                                                                                                                                                                                                                                                     | Manual        |
+| L-12 | Remover `TrincaMania Redesign/patch/APLICAR.md` aninhado                                                                                                                                                      | [VOCÊ] | P2   | Diretório aninhado com o mesmo nome do pai                                                                                                                                                                                                                                                                                                                                                                                                 | Manual        |
+| L-13 | ✅ Escrever o `README.md` de verdade                                                                                                                                                                          | [CC]   | P1   | **Feito 08/09.** Pitch, as duas trilhas de conteúdo, setup local, checklist de antes do PR e tabela de ponteiros pros outros docs em vez de duplicar o conteúdo deles.                                                                                                                                                                                                                                                                     | GPT-5.6 Terra |
+| L-14 | Decidir `app.json → name`                                                                                                                                                                                     | [VOCÊ] | P0   | **Nota corrigida 09/09:** a versão anterior dizia que o `app.json` trazia `TileAdventure-ODS` — não traz, e não trazia; `grep TileAdventure` não acha nada no repositório. O estado real hoje: nome `TrincaMania`, slug `tileclear-ods12` (herdado do projeto EAS no CI-28, e o EAS não deixa divergir do `projectId`), pacote Android `br.com.mhvtech.trincamania`, pacote npm `trincamania`. Continua sendo três nomes, mas outros três. | Manual        |
+| L-15 | Consolidar `COMO_GERAR_APK.md` + `ManualParaGerarApk.txt`                                                                                                                                                     | [CC]   | P2   | Dois docs sobre a mesma coisa                                                                                                                                                                                                                                                                                                                                                                                                              | GPT-5.6 Luna  |
+| L-16 | ✅ Rodar `/code-review` na limpeza — **Feito 09/09** (`2c6e4a1`). Revisão de `cd5b008..HEAD`, sem bug de correção; 2 achados de baixa severidade (texto stale do rename `f771981`) corrigidos no mesmo commit | [CC]   | P1   |                                                                                                                                                                                                                                                                                                                                                                                                                                            | GPT-5.6 Sol   |
+
+---
+
+# BLOCO G — Git, versionamento e convenções
+
+| ID       | Tarefa                                                    | Quem   | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Codex         |
+| -------- | --------------------------------------------------------- | ------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| ~~G-01~~ | ~~Adotar Conventional Commits formalmente~~               | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). Trava um hábito que o histórico já tinha, para o release-please poder versionar lendo o log.                                                                                                                                                                                                                                                                                                                                                                                                                 | GPT-5.6 Luna  |
+| ~~G-02~~ | ~~`commitlint` + `@commitlint/config-conventional`~~      | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). `commitlint.config.js` com `scope-enum` nas fatias reais do projeto. Escopo segue **opcional** — obrigar gera escopo inventado.                                                                                                                                                                                                                                                                                                                                                                              | GPT-5.6 Terra |
+| ~~G-03~~ | ~~`husky` + hook `commit-msg`~~                           | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). **Sem husky, de propósito**: ele espera o `.git` no diretório de onde roda, e o repositório é `TrincaEngSoftware/` com o projeto dois níveis abaixo. `scripts/instalar-hooks.js` faz o `core.hooksPath` no `prepare`; hooks versionados em `.githooks/`. O `common.sh` acha o node do `.nvmrc` no nvm, que era o F0-02 travando.                                                                                                                                                                             | GPT-5.6 Terra |
+| ~~G-04~~ | ~~`lint-staged` no hook `pre-commit`~~                    | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). `eslint --fix` + `prettier --write` só nos arquivos staged.                                                                                                                                                                                                                                                                                                                                                                                                                                                  | GPT-5.6 Terra |
+| ~~G-05~~ | ~~Hook `pre-push` com typecheck~~                         | [CC]   | P2   | ✅ **Feito 2026-09-03** (`c8311ab`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | GPT-5.6 Terra |
+| G-06     | ✅ `release-please` para versionar e gerar CHANGELOG      | [CC]   | P1   | **Feito 04/09.** Config em `release-please-config.json` + `.release-please-manifest.json`, workflow em `.github/workflows/release.yml`. Le os Conventional Commits, mantem um PR de release com o CHANGELOG acumulado e, no merge, cria a tag — que e o gatilho que o `build.yml` ja esperava. `include-component-in-tag: false` e obrigatorio: o padrao taggearia `trincamania-v1.0.0` e o `on: push: tags: ["v*"]` do build nao casaria. `target-branch: develop` porque `main` nao existe (ver G-09).                                          | GPT-5.6 Terra |
+| G-07     | ✅ Criar `CHANGELOG.md`                                   | [CC]   | P1   | **Feito 09/09** (`38bde35`). O G-06 já apontava `changelog-path`, mas o arquivo nunca existiu. Semente mínima no formato do `release-type: node`: `# Changelog` + seção `1.0.0` casando com o `.release-please-manifest.json`, sem preâmbulo entre o cabeçalho e a primeira versão; seções nos rótulos PT-BR de `changelog-sections`.                                                                                                                                                                                                             | GPT-5.6 Luna  |
+| ~~G-08~~ | ~~Alinhar `package.json:version` ↔ `app.json:version`~~   | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). `app.config.js` deriva `version` do `package.json` e o campo saiu do `app.json`. Sem isso o release-please bumparia o `package.json` e o APK sairia com a versão anterior — **sem quebrar nada**, que é o pior tipo de erro.                                                                                                                                                                                                                                                                                 | GPT-5.6 Sol   |
+| G-09     | Definir estratégia de branch                              | [VOCÊ] | P1   | Hoje só existe `develop`. Propor: `develop` (integração) + `main` (release) + `feat/*`. O CI já espera as duas.                                                                                                                                                                                                                                                                                                                                                                                                                                   | Manual        |
+| G-10     | Branch protection / ruleset em `main` e `develop`         | [VOCÊ] | P0   | Exigir PR, checks verdes, sem force-push.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Manual        |
+| G-11     | ✅ Template de PR                                         | [CC]   | P2   | **Feito 08/09.** `.github/PULL_REQUEST_TEMPLATE.md`: o que muda, como testar, checklist (typecheck/test, hash de levels.ts, vocabulário ODS12, Conventional Commits).                                                                                                                                                                                                                                                                                                                                                                             | GPT-5.6 Luna  |
+| G-12     | ✅ Templates de issue (bug / arte / conteúdo)             | [CC]   | P2   | **Feito 08/09.** `.github/ISSUE_TEMPLATE/{bug,arte,conteudo}.yml`, formulário estruturado, label correspondente já aplicada em cada um.                                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Luna  |
+| G-13     | ✅ `CODEOWNERS`                                           | [CC]   | P2   | **Feito 08/09.** `.github/CODEOWNERS`: `* @VittorNCosta` — projeto de uma pessoa só por enquanto.                                                                                                                                                                                                                                                                                                                                                                                                                                                 | GPT-5.6 Luna  |
+| G-14     | Labels padronizadas                                       | [CC]   | P2   | `arte`, `som`, `conteudo`, `automacao`, `devsecops`, `p0/p1/p2`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | GPT-5.6 Luna  |
+| ~~G-15~~ | ~~Revisar `.gitattributes`~~                              | [CC]   | P2   | ✅ **Feito 2026-09-03** (`c8311ab`). `*.ttf`, `*.otf`, `*.aab`, `*.keystore` como binário.                                                                                                                                                                                                                                                                                                                                                                                                                                                        | GPT-5.6 Luna  |
+| G-16     | Git LFS para os PNGs pesados                              | [VOCÊ] | P2   | Decidir depois de A-33. Com tudo ≤ 400 KB pode não valer.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Manual        |
+| ~~G-17~~ | ~~`.gitignore`: adicionar `.eas/`, `*.aab`, `coverage/`~~ | [CC]   | P2   | ✅ **Feito 2026-09-03** (`c8311ab`). **Divergência**: ignora `.eas/build-cache/`, não `.eas/` inteiro — CI-23 quer `.eas/workflows/` versionado.                                                                                                                                                                                                                                                                                                                                                                                                  | GPT-5.6 Luna  |
+| ~~G-18~~ | ~~Liberar `git push` sem prompt no modo `auto`~~          | [CC]   | P1   | ✅ **Feito 2026-09-08** (`cf38a0f`). O `defaultMode: "auto"` mandava todo push para o classificador de permissão, que barrava — esvaziando o CI-26 no ponto dele: o commit de ponto de parada ficava preso na máquina de onde ele estava saindo. `permissions.allow` com `Bash(git push)` e `Bash(git push:*)` no `.claude/settings.json` versionado, para a regra viajar para a outra máquina. Force-push fica no `deny` — e a regra casa por prefixo, então `git push origin main --force` escapa: é rede contra descuido, não contra intenção. | GPT-5.6 Sol   |
+
+---
+
+| ID   | Tarefa                                           | Quem | Prio | Detalhe                                                                                                                                                                                                                                                                                                         | Codex       |
+| ---- | ------------------------------------------------ | ---- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| G-19 | ✅ Classificar todas as tarefas por modelo Codex | [CC] | P1   | **Feito 15/09.** Classificação por escopo/risco no painel, markdown e issues, preservando Claude e tarefas humanas. Classificador compartilhado, filtros Codex e coluna gerada com checagem de sincronismo. Lint, typecheck e 188/188 testes passam. Base remota `4bdac92`; alterações locais ainda sem commit. | GPT-5.6 Sol |
+
+| ID   | Tarefa                                                  | Quem | Prio | Detalhe                                                                                                                                                                                                                                                                                                             | Codex       |
+| ---- | ------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| G-20 | ✅ Configurar YOLO como padrão para novas sessões Codex | [CC] | P1   | **Feito 15/09.** Autorizado explicitamente nesta conversa. `approval_policy = "never"` no nível global de `~/.codex/config.toml`, com `sandbox_mode = "danger-full-access"` existente. Configuração pessoal fora do Git; não altera políticas administradas da sessão atual. Continuidade por objetivo via `/goal`. | GPT-5.6 Sol |
+
+# BLOCO CI — Integração e entrega contínua
+
+## CI.1 — Reforçar o workflow existente
+
+O `ci.yml` atual roda tudo em **um job sequencial**. Se o lint falha, você não
+descobre se os testes passariam.
+
+| ID         | Tarefa                                                         | Quem | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                           | Codex         |
+| ---------- | -------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| ~~CI-01~~  | ~~Quebrar em jobs paralelos~~                                  | [CC] | P1   | ✅ **Feito 2026-09-03.** Sete jobs no lugar de um sequencial: `lint`, `typecheck`, `guardas`, `test`, `test-ui`, `playthrough`, `expo-doctor`. O PR volta com a lista inteira do que está errado, não com um problema de cada vez.                                                                                                                | GPT-5.6 Terra |
+| ~~CI-02~~  | ~~Adicionar `concurrency` com cancelamento~~                   | [CC] | P1   | ✅ **Feito 2026-09-03.** Cancela só em PR (`cancel-in-progress` condicionado a `github.event_name == 'pull_request'`); push em `main`/`develop` sempre completa.                                                                                                                                                                                  | GPT-5.6 Luna  |
+| ~~CI-03~~  | ~~`timeout-minutes` em todo job~~                              | [CC] | P1   | ✅ **Feito 2026-09-03.** 10 min nos curtos, 15 nos de teste, 20 no playthrough.                                                                                                                                                                                                                                                                   | GPT-5.6 Luna  |
+| ~~CI-04~~  | ~~`permissions: contents: read` no topo~~                      | [CC] | P0   | ✅ **Feito 2026-09-03.** No nível do workflow. Nenhum dos sete jobs precisa de mais que leitura.                                                                                                                                                                                                                                                  | GPT-5.6 Sol   |
+| ~~CI-05~~  | ~~Fixar actions por SHA, não por tag~~                         | [CC] | P1   | ✅ **Feito 2026-09-03, pins atualizados 2026-09-04.** `checkout` em `3d3c42e` (v7.0.1), `setup-node` em `8207627` (v7.0.0). A versão no comentário ao lado é o que deixa o Dependabot (SEC-04) abrir o bump.                                                                                                                                      | GPT-5.6 Terra |
+| ~~CI-06~~  | ~~Matrix de Node (20 + 22)~~                                   | [CC] | P2   | ✅ **Feito 2026-09-03**, com `fail-fast: false`. Achou um bug real: `node --test tests` só funciona até o Node 21 — ver CI-06a.                                                                                                                                                                                                                   | GPT-5.6 Terra |
+| ~~CI-06a~~ | ~~Corrigir `npm test` para qualquer Node >= 20~~               | [CC] | P1   | ✅ **Feito 2026-09-03.** Saiu de CI-06. `scripts/rodar-testes.js` monta a lista de `tests/*.test.cjs` no Node, sem depender de glob de shell (que o cmd/PowerShell não expande). 128/128 no Node 20 e no 24.                                                                                                                                      | GPT-5.6 Terra |
+| ~~CI-07~~  | ~~Rodar `npm run format:check` no CI~~                         | [CC] | P1   | ✅ **Feito 2026-09-03.** Segundo passo do job `lint`.                                                                                                                                                                                                                                                                                             | GPT-5.6 Terra |
+| ~~CI-08~~  | ~~Rodar `npx expo-doctor` no CI~~                              | [CC] | P1   | ✅ **Feito 2026-09-03.** Job próprio; 18/18 checks passam hoje, entra verde.                                                                                                                                                                                                                                                                      | GPT-5.6 Terra |
+| ~~CI-09~~  | ~~Cobertura de teste + threshold~~                             | [CC] | P1   | ✅ **Feito 2026-09-03.** `npm run cobertura`, job próprio. **Não é `jest --coverage`**: o Jest roda 4 smoke tests de componente, e as 128 asserções de regra de jogo são `node:test`, que ele não coleta. Piso = o que a suíte cobre hoje (85,70/87,42/87,03), em `scripts/cobertura-minima.json`; cair reprova, baixar exige `--permitir-queda`. | GPT-5.6 Terra |
+| ~~CI-09a~~ | ~~Fixar o job de cobertura numa versão de Node~~               | [CC] | P1   | ✅ **Feito 2026-09-03.** Saiu de CI-09. O V8 conta diferente entre versões — 85,70% no Node 20 contra 79,57% no 24, mesmo código e mesmos testes —, então o job fica fora da matrix e o piso grava o `nodeMajor` em que foi medido.                                                                                                               | GPT-5.6 Terra |
+| ~~CI-10~~  | ~~Publicar relatório de cobertura~~                            | [CC] | P2   | ✅ **Feito 2026-09-03.** Vai para o resumo do job (`$GITHUB_STEP_SUMMARY`), não para um comentário no PR: comentar exigiria `pull-requests: write` e reabriria o privilégio que CI-04 fechou. Traz as três métricas contra o piso e os 10 arquivos de `src/` menos cobertos.                                                                      | GPT-5.6 Luna  |
+| ~~CI-11~~  | ~~Path filters (não rodar teste de código se só mudou `.md`)~~ | [CC] | P2   | ✅ **Feito 2026-09-03.** Job `mudancas` + `if:` nos jobs de código. **Não** `paths:` no workflow: com ele o check obrigatório nunca reporta e o PR de doc trava; job pulado por `if:` conta como sucesso. `lint` fica fora do gate. Na dúvida, roda tudo.                                                                                         | GPT-5.6 Terra |
+| ~~CI-12~~  | ~~Job de validação de assets~~                                 | [CC] | P2   | ✅ **Feito 2026-09-03.** `scripts/valida-assets.js` no CI: teto de 400 KB por arquivo, órfão sem referência em `src/` e extensão duplicada (`.png.png`). Como 42 arquivos já estouram o teto, compara com o livro-razão `scripts/assets-baseline.json` — a dívida só pode encolher.                                                               | GPT-5.6 Terra |
+| ~~CI-13~~  | ~~Job de guarda ODS12~~                                        | [CC] | P1   | ✅ **Feito 2026-09-03.** `scripts/guarda-ods12.js` no CI, varrendo `src/` e o **nome** dos assets. Grep puro reprovaria hoje, então compara com `scripts/ods12-baseline.json`: falha em ocorrência nova e em entrada morta. Restam 19 pendências, todas com tarefa nos blocos L, S e C-08b.                                                       | GPT-5.6 Terra |
+
+## CI.2 — Build e publicação (EAS)
+
+| ID        | Tarefa                                                       | Quem   | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Codex         |
+| --------- | ------------------------------------------------------------ | ------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| CI-14     | Criar `EXPO_TOKEN` como secret do repo                       | [VOCÊ] | P0   | `expo.dev` → Access Tokens                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Manual        |
+| ~~CI-15~~ | ~~Migrar `eas.json` para `appVersionSource: "remote"`~~      | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). Sai de tabela com G-08: com a versão vindo do `package.json`, `versionCode`/`buildNumber` precisam de dono, e o dono é o EAS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | GPT-5.6 Terra |
+| ~~CI-16~~ | ~~`autoIncrement: true` no perfil `production`~~             | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | GPT-5.6 Terra |
+| ~~CI-17~~ | ~~Adicionar perfil `development` no `eas.json`~~             | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). Com `developmentClient: true` e APK interno; o `preview` também ganhou `distribution: internal`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | GPT-5.6 Terra |
+| ~~CI-18~~ | ~~Workflow de build de preview em PR~~                       | [CC]   | P1   | ✅ **Feito 2026-09-03.** `.github/workflows/build.yml`. **Divergência**: APK por PR **rotulado** com `build:preview`, não por PR — buildar todo push queimaria a cota do EAS. `synchronize` rebuilda o PR rotulado. Sem o `EXPO_TOKEN` (CI-14) o workflow fica verde e inerte, não vermelho.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | GPT-5.6 Sol   |
+| ~~CI-19~~ | ~~Workflow de build de produção em tag~~                     | [CC]   | P1   | ✅ **Feito 2026-09-03.** Tag `v*` (a do release-please) + `workflow_dispatch` com escolha de perfil. `--no-wait` e link no resumo do job; sem `expo/expo-github-action`, um terceiro a menos com acesso ao token.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | GPT-5.6 Sol   |
+| CI-20     | Configurar EAS Submit para a Play Store                      | [VOCÊ] | P1   | Exige service account JSON do Google Play                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Manual        |
+| CI-21     | `--auto-submit` no build de produção                         | [CC]   | P2   | **Entrega Astra low 18/09/2026:** Auto-submit de produção manual e opt-in; depende de credenciais EAS/Play e publicação aprovada. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | GPT-5.6 Sol   |
+| CI-22     | Configurar EAS Update (OTA) para correção de JS              | [CC]   | P1   | Correção de bug sem passar pela revisão da loja **Entrega Astra low 18/09/2026:** expo-updates, runtime fingerprint e workflow OTA preparados; falta execução EAS com credenciais. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | GPT-5.6 Sol   |
+| CI-23     | ✅ Avaliar EAS Workflows (`.eas/workflows/`)                 | [CC]   | P2   | **Feito 08/09.** `docs/adr/0005-eas-workflows-nao-substitui-o-github-actions.md`: decisão de não adotar por ora. O material oficial da Expo descreve EAS Workflows como complemento ao GitHub Actions, não substituto — nenhum dos guardas hoje (ODS12, assets, cobertura, orçamento de bundle, gitleaks, CodeQL, dependency-review, SBOM, Scorecard) é job pré-empacotado do EAS, e o único uso real de EAS hoje (`eas build`, via `disparar-build.js`) já roda direto pelo `eas-cli` dentro do Actions — migrar trocaria um orquestrador gratuito por outro com quota paga sem ganhar capacidade nova. Reavaliar se surgir dor concreta que o Actions não resolva bem.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | GPT-5.6 Terra |
+| CI-24     | Canal de update por branch (`preview`/`production`)          | [CC]   | P2   | **Entrega Astra low 18/09/2026:** Canais preview/production definidos; falta validar atualização instalada. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | GPT-5.6 Terra |
+| ~~CI-25~~ | ~~Registrar o estado da sessão a cada turno~~                | [CC]   | P1   | ✅ **Feito 2026-09-08** (`047bc74`). Sessão do Claude Code não tem memória entre execuções, e a que estoura o limite de 5h morre no meio da tarefa — sobra só o que estiver em disco. `scripts/estado.js` escreve `.claude/estado.md` (branch, divergência com o origin, arquivos não commitados, últimos commits, placar do backlog e a fila por prioridade); os hooks `Stop` e `SessionStart` regeneram a cada turno e injetam na sessão seguinte. A intenção — o que o script não deriva — entra por `--nota`, ao **começar** a tarefa. O registro dos hooks saiu do `settings.local.json` gitignored para o `settings.json` versionado, senão um clone novo ficava sem hook nenhum.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | GPT-5.6 Terra |
+| ~~CI-26~~ | ~~Janela de trabalho: parar nos cortes de 16h e 22h~~        | [CC]   | P1   | ✅ **Feito 2026-09-08** (`00d416e`). Ele troca de máquina às 16h e sai da faculdade às 22h; sessão que segue sozinha depois disso produz commit que a outra máquina não vê. `scripts/janela.js` + hook em `PreToolUse`/`UserPromptSubmit`: aviso 20 min antes, corte devolvendo `continue: false`, 90 min de bloqueio e reabertura automática. No corte faz commit de checkpoint e push com `--no-verify` — o `pre-push` roda `tsc --noEmit` e trabalho pela metade não compila. A saída de emergência é o próprio usuário: um prompt renova licença de 45 min, nunca além do próximo corte. 12 testes em `tests/janela.test.cjs`. Depende do G-18.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | GPT-5.6 Sol   |
+| ~~CI-27~~ | ~~Ignorar `README.md` na checagem de órfão de asset~~        | [CC]   | P1   | ✅ **Feito 2026-09-09** (`de7afdc`, junto do A-02 — sem isso o A-02 era impossível). Pasta vazia não existe no git, então `assets/map/worlds/` precisa de arquivo; e como nada em `src/` referencia texto, o próprio README que documenta a convenção reprovava a validação com `asset órfão novo`. `valida-assets.js` passou a tratar `README.md` como documentação da pasta, não asset. Só `README.md`, de propósito — liberar `.md` inteiro abriria a porta para despejar qualquer coisa em `assets/` chamando de documentação. Efeito colateral: `assets/sfx/README.md` saiu do livro-razão, que baixou de 44 para 43 órfãos.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | GPT-5.6 Luna  |
+| ~~CI-28~~ | ~~Apontar o `app.json` para o projeto EAS certo~~            | [CC]   | P0   | ✅ **Feito 2026-09-09** (`f241b78`). O `extra.eas.projectId` apontava para `083f0c73-59f4-49b8-badc-a219daf61640`, um projeto que não é o que existe hoje no expo.dev. Isso sozinho já anularia o CI-14: `eas build --non-interactive` resolve o projeto **só por esse id** — nunca pelo `slug` nem pelo `name` — então com o token certo e o id errado a falha vem como `project not found`, que se lê como problema de permissão e manda depurar o lugar errado. Três campos passaram a descrever o mesmo projeto: `projectId` `42d46466-3a11-41c1-9f2e-bd17829c7356`, `owner` `vittorbestys-team` e `slug` `tileclear-ods12`. O `slug` teve que mudar porque o EAS recusa build quando o slug do `app.json` não bate com o do projeto apontado pelo `projectId` — não é campo cosmético. Isso deixa o app com **três nomes diferentes** (nome `TrincaMania`, slug `tileclear-ods12`, package `br.com.mhvtech.trincamania`); é dívida do R-02, registrada lá. Quem pegou isso foi o `tests/appConfig.test.cjs`, que travava `slug === 'trinca-mania'` sob o título _"a identidade publicada é a do jogo atual"_ — a trava funcionou como devia. Ela não foi apagada: passou a exigir `tileclear-ods12` e `owner`, com o porquê no comentário, para a divergência ficar registrada como decisão em vez de virar descuido silencioso. | GPT-5.6 Sol   |
+| CI-29     | Atualizar as instruções dos agentes conforme o projeto atual | [CC]   | P1   | Revisar as instruções dos seis agentes existentes, os comandos de verificação e as invariantes contra a branch feat/campanha-10x10. Corrigir a documentação sem alterar gameplay ou introduzir outro runner. Dependências: Nenhuma. O problema de manifest/lockfile já foi tratado na issue #4; não reabri-lo nesta tarefa. GPT-5.6 Terra **Entrega Astra low 18/09/2026:** Seis instruções de agentes revisadas contra ferramentas atuais. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | GPT-5.6 Terra |
+| CI-30     | Compartilhar as regras do projeto entre Claude e Codex       | [CC]   | P1   | Criar AGENTS.md na raiz do repositório, apontando para o aplicativo em TrincaMania Redesign/TrincaMania-ODS12. Centralizar as regras comuns e manter em CLAUDE.md as instruções específicas de Claude, com referência explícita ao conteúdo compartilhado. Dependências: CI-29. GPT-5.6 Terra **Entrega Astra low 18/09/2026:** AGENTS.md raiz compartilhado; CLAUDE.md referencia regras comuns e mantém especificidades. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | GPT-5.6 Terra |
+| CI-31     | Adicionar três agentes Codex especializados no TrincaMania   | [CC]   | P2   | Adaptar react-native-engineer, qa-engineer e code-reviewer para .codex/agents/\*.toml na raiz. Aproveitar apenas instruções complementares dos perfis reviewer, typescript-pro e mobile-developer do VoltAgent; preservar o conhecimento do projeto. Dependências: CI-30. GPT-5.6 Terra **Entrega Astra low 18/09/2026:** Três perfis especializados, sem troca de modelo; reviewer read-only. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | GPT-5.6 Terra |
+| CI-32     | Adicionar duas skills de investigação e verificação          | [CC]   | P2   | Criar duas skills locais em .agents/skills na raiz, adaptadas de systematic-debugging e verification-before-completion. Usar nomes trinca-systematic-debugging e trinca-verification-before-completion para evitar colisão com instalações pessoais. Dependências: CI-30. GPT-5.6 Terra **Entrega Astra low 18/09/2026:** Duas skills locais e origem/licenças documentadas. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | GPT-5.6 Terra |
+| CI-33     | Validar o fluxo Codex em um piloto controlado                | [CC]   | P2   | Executar um piloto em branch/worktree isolado: revisão de um diff concluído, reprodução de uma regressão histórica e uma alteração pequena com critério verificável. Documentar resultados e limitações sem modificar configurações globais. Dependências: CI-31 e CI-32. GPT-5.6 Terra **Entrega Astra low 18/09/2026:** Piloto local isolado realizado; descoberta/invocação dos perfis no cliente requer nova sessão. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | GPT-5.6 Terra |
+| CI-34     | Automatizar validação de PR e corrigir checks de entrega     | [CC]   | P1   | Corrigir as falhas do PR #225 sem afrouxar gates; adicionar validação local, monitor remoto por SHA e instruções de correção até os checks passarem. Testar o monitor e compra/expiração/persistência dos espaços extras. Entrega no [PR #225](https://github.com/VittorNCosta/TrincaEngSoftware/pull/225), aberta enquanto aguarda validação e integração. **Entrega Astra low 18/09/2026:** Validação local/PR por SHA, checks aplicáveis e testes de scripts; confirmar CI remoto no PR. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | GPT-5.6 Terra |
+
+### Melhoria do fluxo com IA — CI-29 a CI-33
+
+**Base da avaliação:** `feat/campanha-10x10` em `4bdac920`, em 15/09/2026. As cinco tarefas estão abertas; este registro não instala ferramentas nem implementa suas configurações. A correção de manifest/lockfile já está concluída em F0-04 ([issue #4](https://github.com/VittorNCosta/TrincaEngSoftware/issues/4)).
+
+A sequência é CI-29 → CI-30 → CI-31 e CI-32 → CI-33. Os metadados de responsável e modelo continuam seguindo o padrão atual do roadmap; o cliente-alvo das configurações é o Codex. Os critérios de aceite abaixo também são publicados nas issues a partir do painel HTML.
+
+#### CI-29 — Atualizar as instruções dos agentes conforme o projeto atual
+
+**Problema e benefício:** O agente de QA ainda afirma que não há Jest, renderer ou Testing Library, embora essas ferramentas e testes de componentes já existam. Instruções antigas podem impedir a validação correta.
+
+**Escopo:** Revisar as instruções dos seis agentes existentes, os comandos de verificação e as invariantes contra a branch feat/campanha-10x10. Corrigir a documentação sem alterar gameplay ou introduzir outro runner.
+
+**Critérios de aceite:**
+
+- [ ] Distinguir testes de domínio com node:test, testes de componentes com Jest/Testing Library e simulação de playthrough.
+- [ ] Conferir comandos e caminhos com package.json e workflows atuais, incluindo a versão de Node exigida pelo projeto.
+- [ ] Conferir as regras de campanha, capítulos, progresso e vidas contra o código atual; não copiar a antiga contagem de fases como verdade.
+- [ ] Substituir instruções de reversão potencialmente destrutivas por comparação em checkout/worktree isolado para validar regressões.
+- [ ] Remover contradições entre agentes e documentação compartilhada, registrando os arquivos revisados.
+
+**Dependências:** Nenhuma. O problema de manifest/lockfile já foi tratado na issue #4; não reabri-lo nesta tarefa.
+
+**Fontes:**
+
+- [Referência 1](https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/.claude/agents/qa-engineer.md)
+
+#### CI-30 — Compartilhar as regras do projeto entre Claude e Codex
+
+**Problema e benefício:** O conhecimento de domínio e o roteamento estão concentrados em CLAUDE.md. Uma sessão Codex iniciada na raiz não dispõe de uma entrada compartilhada equivalente.
+
+**Escopo:** Criar AGENTS.md na raiz do repositório, apontando para o aplicativo em TrincaMania Redesign/TrincaMania-ODS12. Centralizar as regras comuns e manter em CLAUDE.md as instruções específicas de Claude, com referência explícita ao conteúdo compartilhado.
+
+**Critérios de aceite:**
+
+- [ ] Documentar arquitetura, vocabulário, referências de domínio e comandos atuais a executar a partir da pasta correta.
+- [ ] Preservar as invariantes verificadas em CI-29, sem duplicar regras mutáveis em vários arquivos.
+- [ ] Documentar quando delegar e exigir escopos de arquivo disjuntos nas edições paralelas.
+- [ ] Conferir a descoberta das instruções e a resolução dos links tanto da raiz quanto da pasta do aplicativo.
+- [ ] Preservar os hooks e o registro de estado existentes; não introduzir dependências do aplicativo.
+
+**Dependências:** [CI-29](https://github.com/VittorNCosta/TrincaEngSoftware/issues/220).
+
+**Fontes:**
+
+- [Referência 1](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+- [Referência 2](https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/CLAUDE.md)
+
+#### CI-31 — Adicionar três agentes Codex especializados no TrincaMania
+
+**Problema e benefício:** Já existem agentes específicos de Claude, mas não equivalentes locais para Codex. O catálogo VoltAgent oferece referências úteis, sem conhecer as invariantes do TrincaMania.
+
+**Escopo:** Adaptar react-native-engineer, qa-engineer e code-reviewer para .codex/agents/\*.toml na raiz. Aproveitar apenas instruções complementares dos perfis reviewer, typescript-pro e mobile-developer do VoltAgent; preservar o conhecimento do projeto.
+
+**Critérios de aceite:**
+
+- [ ] Validar sintaxe TOML e os campos name, description e developer_instructions; confirmar descoberta e invocação no Codex instalado.
+- [ ] Definir implementação, QA e revisão com escopos distintos; configurar code-reviewer como read-only e registrar a precedência das permissões da sessão.
+- [ ] Omitir model e model_reasoning_effort para herdar a configuração da sessão por padrão; não fixar modelos do catálogo sem necessidade.
+- [ ] Documentar exemplos de invocação, responsabilidades e prevenção de edições concorrentes no mesmo arquivo.
+- [ ] Registrar upstream, commit de origem e avisos da licença MIT para conteúdo reutilizado.
+- [ ] Não importar o catálogo inteiro, instalar ferramentas globalmente ou alterar dependências de runtime.
+
+**Dependências:** [CI-30](https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).
+
+**Fontes:**
+
+- [Referência 1](https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857)
+- [Referência 2](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+
+#### CI-32 — Adicionar duas skills de investigação e verificação
+
+**Problema e benefício:** O fluxo pode ganhar consistência na investigação de bugs e na comprovação de conclusão, sem adotar toda a metodologia e os pontos de aprovação do Superpowers.
+
+**Escopo:** Criar duas skills locais em .agents/skills na raiz, adaptadas de systematic-debugging e verification-before-completion. Usar nomes trinca-systematic-debugging e trinca-verification-before-completion para evitar colisão com instalações pessoais.
+
+**Critérios de aceite:**
+
+- [ ] Limitar os gatilhos a investigação de bugs reproduzíveis e verificação de mudanças relevantes; não ativar um fluxo completo para qualquer pergunta.
+- [ ] Exigir reprodução, hipótese fundamentada, investigação da causa e teste de regressão quando pertinente.
+- [ ] Selecionar comandos de validação conforme a mudança e o CI atual; distinguir verificação automatizada de validação manual em aparelho.
+- [ ] Exigir evidências no relatório final, incluindo falhas e verificações não executadas.
+- [ ] Não adicionar aprovação obrigatória a cada ajuste pequeno já autorizado, TDD para mudanças puramente documentais ou execução automática de outras skills.
+- [ ] Registrar origem, commit e licença MIT; manter a instalação no escopo do repositório e sem hooks globais.
+
+**Dependências:** [CI-30](https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).
+
+**Fontes:**
+
+- [Referência 1](https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797)
+- [Referência 2](https://learn.chatgpt.com/docs/build-skills)
+
+#### CI-33 — Validar o fluxo Codex em um piloto controlado
+
+**Problema e benefício:** Arquivos de agentes e skills válidos não comprovam ganho de qualidade ou adequação ao ambiente. É necessário exercitar o fluxo antes de expandi-lo.
+
+**Escopo:** Executar um piloto em branch/worktree isolado: revisão de um diff concluído, reprodução de uma regressão histórica e uma alteração pequena com critério verificável. Documentar resultados e limitações sem modificar configurações globais.
+
+**Critérios de aceite:**
+
+- [ ] Registrar os três cenários, commits de referência, resultado esperado, agente/skill usado e evidência observada.
+- [ ] Confirmar que a revisão não altera arquivos e que agentes não editam simultaneamente os mesmos arquivos.
+- [ ] Confirmar que a regressão é detectada antes da correção e que a alteração pequena passa nas verificações aplicáveis.
+- [ ] Registrar tempo, intervenções humanas e consumo quando disponível, marcando métricas indisponíveis sem estimá-las.
+- [ ] Documentar limitações do cliente/ambiente e como desativar ou remover as configurações locais.
+- [ ] Concluir com recomendação fundamentada de manter, ajustar ou desativar cada componente; não instalar OMX nem ampliar o catálogo nesta tarefa.
+
+**Dependências:** [CI-31](https://github.com/VittorNCosta/TrincaEngSoftware/issues/222) e [CI-32](https://github.com/VittorNCosta/TrincaEngSoftware/issues/223).
+
+**Fontes:**
+
+- [Referência 1](https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857)
+- [Referência 2](https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797)
+
+**Limite desta adoção:** não importar o catálogo completo do VoltAgent, não instalar globalmente o Superpowers e não adicionar OMX. A memória de sessão já possui solução própria (CI-25); reavaliar outra camada de orquestração apenas se o piloto demonstrar uma necessidade concreta.
+
+---
+
+# BLOCO SEC — DevSecOps
+
+| ID         | Tarefa                                                         | Quem   | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Codex       |
+| ---------- | -------------------------------------------------------------- | ------ | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| SEC-01     | ✅ Habilitar CodeQL (JS/TS)                                    | [CC]   | P0   | **Feito 04/09.** Job `codeql` em `.github/workflows/seguranca.yml`, linguagem `javascript-typescript` com o pacote `security-and-quality`. O `security-events: write` fica escopado so nesse job; o topo do workflow e `contents: read`.                                                                                                                                                                                                                                                                                               | GPT-5.6 Sol |
+| SEC-02     | Habilitar Secret Scanning + Push Protection                    | [VOCÊ] | P0   | Settings → Code security. Bloqueia commit de segredo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Manual      |
+| SEC-03     | Habilitar Dependabot alerts + security updates                 | [VOCÊ] | P0   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Manual      |
+| SEC-04     | ✅ `dependabot.yml` para npm + github-actions                  | [CC]   | P1   | **Feito 04/09.** `.github/dependabot.yml` para npm (no subdiretorio do projeto) e github-actions (na raiz), semanal. Agrupa minor e patch; **ignora major** de expo, react, react-native, jest e typescript — porque foi exatamente um major solto (`@types/jest` ^30 contra o jest ~29 que o `jest-expo ~54` fixa) que deixou o develop vermelho. Esses sobem junto com o SDK, por decisao. Prefixo `chore(deps)`/`chore(ci)` para passar no commitlint.                                                                              | GPT-5.6 Sol |
+| SEC-05     | Avaliar Renovate no lugar do Dependabot                        | [VOCÊ] | P2   | Agrupa PRs, respeita ranges do Expo melhor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Manual      |
+| SEC-06     | ✅ `npm audit --audit-level=high` no CI                        | [CC]   | P1   | **Feito 04/09.** Nao entrou como `--audit-level=high` puro porque nasceria vermelho: 11 advisories abertos (6 high) que chegam pela cadeia do Expo e cuja correcao passa por subir o major. Gate que nasce vermelho alguem desliga. Entao `scripts/auditoria.js` usa o livro-razao das outras guardas: reprova em advisory novo acima do piso e em entrada morta, chaveado por `pacote::id-do-advisory` (nao pela versao, que muda a cada install). Registry fora do ar nao reprova — 3 tentativas, teto de 90s, e sai verde avisando. | GPT-5.6 Sol |
+| SEC-07     | ✅ `gitleaks` no CI                                            | [CC]   | P1   | **Feito 04/09.** Job `segredos`, com `fetch-depth: 0` para varrer o historico e nao so o diff. Baixa o binario do gitleaks 8.30.1 da release em vez de usar a action de terceiro — mesma razao ja registrada no CI-05: nao dar acesso a token para action de terceiro.                                                                                                                                                                                                                                                                 | GPT-5.6 Sol |
+| SEC-08     | ✅ Job de `dependency-review` em PR                            | [CC]   | P1   | **Feito 04/09.** Job `dependencias`, so em PR (a action exige o par base/head). Barra severidade >= high e licenca GPL-2.0/GPL-3.0/AGPL-3.0.                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Sol |
+| SEC-09     | ✅ Gerar SBOM (CycloneDX) por release                          | [CC]   | P2   | **Feito 08/09.** Job `sbom` novo em `.github/workflows/release.yml`, depois do `release-please` e so quando ele de fato cria release (`release_created == 'true'`). Gera com `npx @cyclonedx/cyclonedx-npm@6.0.1` a partir do `package-lock.json` e publica o arquivo no release via `gh release upload`.                                                                                                                                                                                                                              | GPT-5.6 Sol |
+| SEC-10     | ✅ OpenSSF Scorecard                                           | [CC]   | P2   | **Feito 08/09.** Job `scorecard` novo em `.github/workflows/seguranca.yml`, fora de PR. `ossf/scorecard-action@v2.4.4` gera o SARIF e publica no registro publico do OpenSSF; `github/codeql-action/upload-sarif@v4` sobe o mesmo resultado para a aba Security.                                                                                                                                                                                                                                                                       | GPT-5.6 Sol |
+| ~~SEC-11~~ | ~~Auditar `android.permissions`~~                              | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). Continua `[]`, e `tests/appConfig.test.cjs` reprova se deixar de ser — que era a parte que faltava: o risco não é o valor de hoje, é a lib nova de amanhã.                                                                                                                                                                                                                                                                                                                                        | GPT-5.6 Sol |
+| ~~SEC-12~~ | ~~Revisar o plugin `expo-audio`~~                              | [CC]   | P1   | ✅ **Feito 2026-09-03** (`c8311ab`). `microphonePermission: false` e `recordAudioAndroid: false` travados em teste.                                                                                                                                                                                                                                                                                                                                                                                                                    | GPT-5.6 Sol |
+| ~~SEC-13~~ | ~~Verificar que nenhum segredo está em `app.json`/`eas.json`~~ | [CC]   | P0   | ✅ **Feito 2026-09-03** (`c8311ab`). Conferido e travado em teste. O `projectId` é público por definição; o resto está limpo.                                                                                                                                                                                                                                                                                                                                                                                                          | GPT-5.6 Sol |
+| SEC-14     | ✅ Política de segurança (`SECURITY.md`)                       | [CC]   | P2   | **Feito 04/09.** `.github/SECURITY.md`. Aponta para o **private vulnerability reporting** do GitHub em vez de um e-mail — o repositorio e publico e o endereco seria pessoal. Traz a tabela das verificacoes automaticas e o que cada uma cobre.                                                                                                                                                                                                                                                                                       | GPT-5.6 Sol |
+| SEC-15     | Rodar `/security-review` antes do release                      | [CC]   | P0   | Skill já disponível **Entrega Astra low 18/09/2026:** Revisão manual registrada; skill /security-review indisponível. Não declarar execução da skill. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                          | GPT-5.6 Sol |
+| SEC-16     | Proteger o keystore Android                                    | [VOCÊ] | P0   | `.gitignore` já barra `*.jks`/`*.p12`/`*.key`. Guardar no EAS credentials, nunca no repo.                                                                                                                                                                                                                                                                                                                                                                                                                                              | Manual      |
+| SEC-17     | Revisar dados coletados (LGPD)                                 | [VOCÊ] | P1   | O jogo usa AsyncStorage local. Se entrar analytics, muda a política.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Manual      |
+
+---
+
+# BLOCO Q — Qualidade e DX
+
+| ID       | Tarefa                                                         | Quem   | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Codex         |
+| -------- | -------------------------------------------------------------- | ------ | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Q-01     | ✅ Setup de E2E com **Maestro**                                | [CC]   | P1   | **Feito 08/09.** `.maestro/01-entrar-numa-fase.yaml` e `02-configuracao-sobrevive-ao-reinicio.yaml`. YAML, fora do build, roda em CI.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | GPT-5.6 Terra |
+| Q-02     | ✅ Fluxo E2E: abrir app → mapa → jogar fase 1 → vencer         | [CC]   | P1   | **Feito 18/09/2026.** PR #240 integrado; vitória e desbloqueio da fase seguinte persistem após reinício. JUnit 4/4 aprovado: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35354539043.                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Terra |
+| Q-03     | ✅ Fluxo E2E: comprar na loja                                  | [CC]   | P2   | **Feito 18/09/2026.** PR #240 integrado; compra reduz 45 moedas, acrescenta uma unidade ao inventário e ambos persistem após reinício. JUnit aprovado: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35354539043.                                                                                                                                                                                                                                                                                                                                                                                                                                                 | GPT-5.6 Terra |
+| Q-04     | ✅ Fluxo E2E: perder vida e esperar recarga                    | [CC]   | P2   | **Feito 18/09/2026.** Perde vida, reinicia mantendo quatro vidas e recarrega para cinco após o intervalo real. JUnit e capturas: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35352904452 (34min32s).                                                                                                                                                                                                                                                                                                                                                                                                                                                            | GPT-5.6 Terra |
+| Q-05     | ✅ Maestro no CI                                               | [CC]   | P2   | **Feito 08/09.** `.github/workflows/e2e.yml`: prebuild + `assembleRelease` + emulador Android, push/dispatch/cron semanal, Maestro com sha256 fixado.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | GPT-5.6 Terra |
+| Q-06     | ✅ Teste de acessibilidade (labels, touch target ≥ 44px)       | [CC]   | P1   | **Feito 08/09.** `tests/touchTargets.test.cjs` novo: trava `TILE_SIZE` (peça do tabuleiro) e `levelNodeSize`/`minimumTouchSize` de todo mundo `segmented` em ≥44px, e recalcula o alvo de toque de todo nó/marco do Mundo 1 nas três larguras alvo. Achado no caminho: `frames.touch` (a caixa expandida que `getCampaignMapEntityFrames` calcula) não é consumida por nenhum renderer hoje — o alvo real em tela é `levelNodeSize`, porque `transform: scale` não encolhe área de toque no React Native. Rótulo de acessibilidade já tinha cobertura em `BoardTile.test.tsx`/`mapLevelNode.test.tsx`.                                                                             | GPT-5.6 Terra |
+| Q-07     | Quebrar `GameScreen.tsx` (3166 linhas)                         | [CC]   | P1   | O `CLAUDE.md` já avisa para não deixar crescer **Entrega Astra low 18/09/2026:** Estilos, tutorial e montagem do tabuleiro extraídos em módulos; seeds reais registrados. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                  | GPT-5.6 Sol   |
+| Q-08     | Quebrar `LevelSelectScreen.tsx` (1879 linhas)                  | [CC]   | P2   | **Entrega Astra low 18/09/2026:** Estilos e geometria/apresentação do mapa separados; acesso Dev e pós-campanha testados. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | GPT-5.6 Sol   |
+| Q-09     | Quebrar `App.tsx` (1169 linhas)                                | [CC]   | P2   | **Entrega Astra low 18/09/2026:** Fila de persistência extraída para hook, preservando geração e serialização. Outros handlers continuam em App. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Sol   |
+| Q-10     | ✅ Orçamento de tamanho de bundle no CI                        | [CC]   | P2   | **Feito 08/09.** Novo job `orcamento-bundle` em `ci.yml`: roda `npx expo export --platform android` (o mesmo artefato que o build de produção embarca, só local, sem consumir cota do EAS nem exigir `EXPO_TOKEN`) e mede o `.hbc` resultante contra um teto em `scripts/bundle-orcamento.json`, mesmo idioma de `cobertura`/assets/ODS12: só sobe de propósito (`--atualizar --permitir-alta`). Achado no caminho: o bundle não é 100% reprodutível byte a byte — cinco execuções seguidas sobre o mesmo código variaram 2 bytes, porque o Metro não garante ordem estável de módulo — então o teto tem 1% de folga sobre o medido para não reprovar PR ao acaso. Hoje: ~2,50 MB. | GPT-5.6 Terra |
+| Q-11     | Perfilar performance em aparelho de entrada                    | [VOCÊ] | P1   | Depois da arte nova — 20 PNGs novos mudam o consumo de memória                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Manual        |
+| Q-12     | ✅ ADR sobre a mudança 203 → 100 fases                         | [CC]   | P1   | **Feito 08/09.** `docs/adr/0004-campanha-vira-10-mundos-de-10-fases.md`: por que 10×10, opções consideradas e consequências (destino dos Capítulos foi resolvido no C-30 em 18/09/2026).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | GPT-5.6 Terra |
+| Q-13     | Resolver o gap do Modo Dev                                     | [CC]   | P2   | `CLAUDE.md` registra: escreve direto no save real, não é reversível **Entrega Astra low 18/09/2026:** Override efêmero reversível, sem fabricar progresso; teste prova ausência de escrita no toggle. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                                                                                                                                                                      | GPT-5.6 Sol   |
+| Q-14     | ✅ Atualizar `CONTEXT.md` com o vocabulário dos 10 mundos      | [CC]   | P1   | **Feito 08/09.** Seção `## Mundos` nova: os 10 nomes ODS12 + bônus, o que cada um representa e o nome de fantasia a evitar.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | GPT-5.6 Terra |
+| ~~Q-15~~ | ~~Faixa de dificuldade errada no 1º mapa dos capítulos 4 e 7~~ | [CC]   | P1   | ✅ **Feito 2026-09-03.** `Math.floor(score * 5)` em `src/data/chapters.ts` rotulava `ch04-001` como `easy` (devia ser `normal`) e `ch07-001` como `normal` (devia ser `hard`): `(n-1)/9*0,6` cai abaixo da fronteira em binário (0.9999999999999999 / 1.9999999999999998). 2 mapas em 1000; a carga de peças sempre esteve certa, errado era só o rótulo. `BORDA_DE_FAIXA = 1e-9` + teste de regressão das 10 faixas.                                                                                                                                                                                                                                                              | GPT-5.6 Terra |
+
+---
+
+# BLOCO O — Observabilidade e diagnóstico
+
+> O CI já cobre tudo que dá para saber **antes** de o app rodar: lint, formato, tipo, 188 testes, piso de cobertura, orçamento de bundle, guardas de conteúdo, CodeQL, gitleaks, SBOM, Scorecard. O que não existe é o outro lado — **o que acontece no aparelho, na mão do jogador**. Hoje, se o jogo quebrar num build de release, não sobra nada: nenhum log, nenhum stack, nenhuma tela de erro, nada para pedir a quem reportou. Este bloco fecha o buraco de dentro para fora: primeiro o que funciona offline e sem terceiro (O-01…O-06), depois o relato remoto (O-07…O-10).
+
+| ID   | Tarefa                                                         | Quem   | Prio | Detalhe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Codex         |
+| ---- | -------------------------------------------------------------- | ------ | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| O-01 | Logger estruturado em `src/utils/log.ts`                       | [CC]   | P0   | Nível (`debug`/`info`/`warn`/`error`) e namespace por módulo, silencioso em release menos `warn` e `error`. Sem dependência nova: é uma função e um `switch`. Toda a graça está em existir **um** ponto por onde o erro passa — sem isso o O-03, o O-04 e o O-09 não têm onde se plugar. Substitui os `console.log` espalhados hoje. É a base do bloco: nada aqui anda antes dela. **Entrega Astra low 18/09/2026:** Logger com buffer limitado, níveis, contexto e redação de dados. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                       | GPT-5.6 Terra |
+| O-02 | Error boundary global com tela de erro                         | [CC]   | P0   | `App.tsx` envolvido num boundary: stack visível em `__DEV__`, e em release uma tela sóbria com botão de copiar o relatório. Regra dura — a tela de erro **não escreve no storage**. O invariante 1 diz que progresso só passa por `commitProgress`, e um boundary que tenta “salvar antes de morrer” é exatamente o caminho por onde save de jogador já foi apagado. Hoje um erro de render dá tela branca, sem nada escrito. **Entrega Astra low 18/09/2026:** ErrorBoundary com diagnóstico/copiar/compartilhar, sem escrita no save. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                     | GPT-5.6 Sol   |
+| O-03 | Capturar erro não tratado e promise rejeitada                  | [CC]   | P0   | `ErrorUtils.setGlobalHandler` mais o handler de `unhandledrejection`. O boundary do O-02 só pega o que acontece dentro do ciclo de render; um `throw` dentro de `setTimeout`, de listener de áudio ou de promise de storage passa por fora e some — o app fecha e não fica rastro. Depende do O-01. **Entrega Astra low 18/09/2026:** Captura ErrorUtils/browser/Hermes e encaminhamento remoto opcional deduplicado. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                                                       | GPT-5.6 Sol   |
+| O-04 | Tela de Diagnóstico com os últimos logs                        | [CC]   | P1   | Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste interno do R-13, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01. **Entrega Astra low 18/09/2026:** Diagnóstico acessível nas Configurações; exportação somente por ação do usuário. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                     | GPT-5.6 Terra |
+| O-05 | Transformar os invariantes do `CLAUDE.md` em assert de runtime | [CC]   | P0   | Os sete invariantes que já quebraram (`commitProgress`, `mutateLives`, id de capítulo no storage da campanha, `tileCount` múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e **loga**, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01. **Entrega Astra low 18/09/2026:** Logs para quantidade de peças, contagem canônica e ids de capítulo no save da campanha antes da normalização, na leitura e escrita. Invariantes arquiteturais/concorrência seguem em testes; conversão completa não alegada. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Sol   |
+| O-06 | Proibir `console.*` fora do logger                             | [CC]   | P2   | Regra `no-console` do ESLint com exceção só em `src/utils/log.ts`. Sem isso o O-01 vira _mais um_ caminho em vez do único caminho, e em seis meses metade do código volta para o `console.log` — que não aparece em release e não entra no buffer do O-04. Entra no job de lint que o CI-07 já roda, então não custa workflow novo. Depende do O-01.                                                                                                                                                                                                                                                                                                                                                                                                | GPT-5.6 Luna  |
+| O-07 | Criar a conta no Sentry e gerar o DSN                          | [VOCÊ] | P1   | O free tier cobre com folga o volume deste projeto. Precisa de você porque envolve criar conta e aceitar termos. O DSN não é segredo forte — ele vai embutido no app, qualquer um que abra o APK acha — mas entra como secret do mesmo jeito, para não ficar chumbado no repositório e para trocar sem recompilar. Bloqueia o O-08.                                                                                                                                                                                                                                                                                                                                                                                                                 | Manual        |
+| O-08 | Integrar o Sentry com upload de sourcemap                      | [CC]   | P1   | `@sentry/react-native`, DSN por variável de ambiente, e o upload de sourcemap no build do EAS. O sourcemap é a parte que costuma ser esquecida e é a que decide se serve para alguma coisa: sem ele o stack que chega é bundle minificado, ou seja, ilegível. Depende do O-07 e do CI-14. **Entrega Astra low 18/09/2026:** SDK opcional, filtragem de eventos e upload sourcemaps preparados; falta validar evento simbolicado com DSN/credenciais. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                                                                        | GPT-5.6 Sol   |
+| O-09 | Anexar contexto de domínio a todo erro                         | [CC]   | P1   | Erro sem contexto é `TypeError: undefined` numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01. **Entrega Astra low 18/09/2026:** Tela, mundo, fase, retry e seed real no diagnóstico; sem contexto livre enviado ao Sentry. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                                                                            | GPT-5.6 Sol   |
+| O-10 | Revisar o que sai para o Sentry à luz da LGPD                  | [VOCÊ] | P1   | Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do _Data safety form_ do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário.                                                                                                                                                                                                                                                                                                                                                                                                                                | Manual        |
+
+---
+
+# BLOCO R — Release e publicação
+
+| ID   | Tarefa                                              | Quem      | Prio | Detalhe                                                                                                                                                                                                       | Codex         |
+| ---- | --------------------------------------------------- | --------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| R-01 | Criar/confirmar a conta Google Play Console         | [VOCÊ]    | P0   | US$ 25, uma vez                                                                                                                                                                                               | Manual        |
+| R-02 | Definir o nome final do app                         | [VOCÊ]    | P0   | Ver L-14 — hoje há 3 nomes divergentes                                                                                                                                                                        | Manual        |
+| R-03 | Gerar e guardar o keystore de produção              | [VOCÊ]    | P0   | Via EAS credentials                                                                                                                                                                                           | Manual        |
+| R-04 | Ficha da loja: título + descrição curta + longa     | [CC→VOCÊ] | P0   | Com o enquadramento ODS 12 **Entrega Astra low 18/09/2026:** Ficha pt-BR em docs/release/ficha-google-play.md. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                        | GPT-5.6 Terra |
+| R-05 | 8 screenshots de telefone                           | [VOCÊ]    | P0   | Mínimo 2, ideal 8. Rodar o app e capturar.                                                                                                                                                                    | Manual        |
+| R-06 | Feature graphic 1024×500                            | [CC→VOCÊ] | P0   | **Entrega Astra low 18/09/2026:** Feature graphic PNG 1024×500 em docs/release/assets. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                | GPT-5.6 Terra |
+| R-07 | Ícone da loja 512×512                               | [CC→VOCÊ] | P0   | **Entrega Astra low 18/09/2026:** Ícone da loja PNG RGB 512×512 em docs/release/assets. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                               | GPT-5.6 Terra |
+| R-08 | Vídeo de preview (opcional)                         | [VOCÊ]    | P2   |                                                                                                                                                                                                               | Manual        |
+| R-09 | ✅ Política de privacidade hospedada                | [CC→VOCÊ] | P0   | **Feito 18/09/2026.** Publicado e verificado HTTP 200: https://vittorncosta.github.io/TrincaEngSoftware/ (commit gh-pages 792ed88). Contato informado pelo responsável.                                       | GPT-5.6 Sol   |
+| R-10 | Questionário de classificação etária                | [VOCÊ]    | P0   |                                                                                                                                                                                                               | Manual        |
+| R-11 | Data safety form                                    | [VOCÊ]    | P0   | Conferir Expo Update e eventual Sentry no build real; revisão O-10 antes de declarar coleta                                                                                                                   | Manual        |
+| R-12 | Declarar público-alvo (se < 13 anos, regras extras) | [VOCÊ]    | P0   | Jogo educativo tende a atrair criança — atenção às regras de Famílias                                                                                                                                         | Manual        |
+| R-13 | Teste interno (até 100 testadores)                  | [VOCÊ]    | P1   |                                                                                                                                                                                                               | Manual        |
+| R-14 | Teste fechado + coletar feedback                    | [VOCÊ]    | P1   |                                                                                                                                                                                                               | Manual        |
+| R-15 | Playthrough completo manual das 100 fases           | [VOCÊ]    | P0   | O `test:playthrough` simula, mas não substitui jogar                                                                                                                                                          | Manual        |
+| R-16 | Rodar `/security-review`                            | [CC]      | P0   | **Entrega Astra low 18/09/2026:** Revisão manual registrada; skill /security-review indisponível e build release ainda não validado. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                  | GPT-5.6 Sol   |
+| R-17 | Tag `v1.0.0` e release                              | [CC]      | P0   | **Entrega Astra low 18/09/2026:** Não publicar v1.0.0 antes dos aceites de arte/áudio, testes Android, segurança, credenciais e aprovação de release. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Sol   |
+| R-18 | Publicar em produção                                | [VOCÊ]    | P0   |                                                                                                                                                                                                               | Manual        |
+
+---
+
+## Ordem de execução recomendada
+
+```
+F0 (fundação)
+ └─► C.1–C.2 (conteúdo 10×10)  ──┐
+ └─► G + CI.1 + SEC (automação)  │  ← paralelos, escopos disjuntos
+ └─► A-01..A-04 (art bible +     │
+      imagem-piloto)             │
+                                 ▼
+                          C.3 (testes + migração)
+                                 │
+                                 ▼
+                   A-05..A-24 (as 20 imagens)  ──► A-36 (integrar)
+                   S-01..S-10 (os 10 ambientes) ──► S-13 (integrar)
+                                 │
+                                 ▼
+                          L (limpeza ODS12)
+                                 │
+                                 ▼
+                          Q (E2E + refactor)
+                                 │
+                                 ▼
+                          CI.2 (EAS build/submit)
+                                 │
+                                 ▼
+                          R (loja e release)
+```
+
+**Caminho crítico**: `F0-01/02 → C-02 → C-11 → C-19..C-26 → A-04 → A-05..A-24 → R-15 → R-18`
+
+**Contagem**: 6 (F0) + 32 (C) + 36 (A) + 15 (S) + 16 (L) + 17 (G) + 26 (CI) +
+17 (SEC) + 15 (Q) + 18 (R) = **198 tarefas**, 37 concluídas.
+
+> C subiu de 30 para 32 quando a decisão de C-08 (mundo bônus fica como 11º
+> mapa secreto) desdobrou em C-08a e C-08b.
+
+De longe o maior gargalo é o **Bloco A** — 20 imagens de mapa mais 8 assets
+globais, todos dependentes de A-04 (a imagem-piloto validada in-game).
+
+---
+
+## Riscos registrados
+
+| Risco                                                | Impacto | Mitigação                                                                                                                                                                                                             |
+| ---------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ✅ Perda silenciosa de progresso na migração 203→103 | Alto    | Resolvido em C-25 + C-26: `detectDroppedCampaignProgress` + `CampaignResizeNoticeModal` avisam o jogador quando `normalizeProgress` descarta fase que não existe mais; testado em `tests/progressMigration.test.cjs`. |
+| As 20 imagens saírem inconsistentes entre si         | Alto    | Bloco de estilo compartilhado + portão A-04 antes de gerar em lote                                                                                                                                                    |
+| Hash congelado ser "consertado" por engano           | Médio   | C-19 diz explicitamente para recalcular, não deletar a asserção                                                                                                                                                       |
+| Colisão de nome Mundo 9/10 ↔ Capítulo 9/10           | Médio   | C-01 resolve antes de escrever conteúdo                                                                                                                                                                               |
+| Peso do app (assets hoje ~50 MB)                     | Médio   | A-33 (compressão) + CI-12 (guarda automatizada)                                                                                                                                                                       |
+| Hooks de git quebrarem por `node` fora do PATH       | Baixo   | F0-02 antes de G-03                                                                                                                                                                                                   |
+
+## Auditoria de automações — 15/09/2026
+
+Tarefas adicionais, sem duplicar proteção de branches (#115), Dependabot (#149), credencial EAS (#136), jornadas E2E (#165–#167) e observabilidade (#208–#217). A implementação permanece pendente.
+
+| ID     | Tarefa                                                              | Quem | Prioridade | Escopo                                                                                                                                                                                                                                                                                                                                                                                                           | Codex         |
+| ------ | ------------------------------------------------------------------- | ---- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| CI-35  | Consolidar e ativar as automações na branch padrão                  | [CC] | P0         | A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão. **Entrega Astra low 18/09/2026:** Fatia independente preparada em chore/ci35-automacoes-isoladas, sem mudanças da campanha; faltam merge e primeira execução agendada. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente. | GPT-5.6 Terra |
+| CI-36  | Migrar ferramentas e CI do Node 20 para LTS suportado               | [CC] | P1         | O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines. **Entrega Astra low 18/09/2026:** Node22.23.2 alinhado; instalação limpa/doctor verificados, cobertura com nova metodologia explícita. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                       | GPT-5.6 Terra |
+| CI-37  | Garantir release até build EAS concluído e artefatos verificáveis   | [CC] | P1         | Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento. **Entrega Astra low 18/09/2026:** Release chama build reutilizável, espera EAS e confere artefato; falta build real EXPO_TOKEN. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                              | GPT-5.6 Terra |
+| CI-38  | Ajustar gatilhos e relatórios do E2E Android                        | [CC] | P1         | O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10x10. O diagnóstico e JUnit só são publicados em caso de falha. **Entrega Astra low 18/09/2026:** Smoke por PR relevante e suíte completa manual/semanal; falta execução remota e caso documentação. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                        | GPT-5.6 Terra |
+| G-21   | Criar ou vincular automaticamente uma issue por PR                  | [CC] | P1         | Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade. **Entrega Astra low 18/09/2026:** Workflow de rastreabilidade idempotente em base confiável; confirmar eventos reais após integração. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                    | GPT-5.6 Terra |
+| G-22   | ✅ Reconciliar roadmap e issues sem reabertura indevida             | [CC] | P1         | **Critérios cobertos pelo PR #259; validação e fechamento após integração.** Sincronizador preserva corpo/labels humanos, pagina o backlog e bloqueia conflitos. O workflow fecha issues existentes somente quando o PR integrado explicita `Closes`, `Fixes` ou `Resolves`; `Refs` nunca fecha. Testes cobrem merge, base não padrão, PR fechado sem merge, idempotência, PRs e referências externas.           | GPT-5.6 Terra |
+| SEC-20 | Adicionar análise de segurança do APK com MobSF                     | [CC] | P1         | CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Android gerado. **Entrega Astra low 18/09/2026:** MobSF isolado e fixado por digest, gate+fixtures; falta APK verificável/execução real. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                                                                         | GPT-5.6 Sol   |
+| SEC-21 | Montar validação dinâmica de segurança mobile baseada no MASVS      | [CC] | P2         | Não foi identificado backend próprio; o alvo atual é Android com armazenamento local. DAST web com ZAP não cobre sozinho essa superfície. **Entrega Astra low 18/09/2026:** Roteiro MASVS e job parcial; falta runner Android isolado, tráfego/logs/backup reais. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                                                        | GPT-5.6 Sol   |
+| Q-16   | Medir cobertura de produção separada por domínio e interface        | [CC] | P1         | O piso atual usa o total do node:test, que inclui arquivos de testes e não representa cobertura completa de src/. A suíte Jest de componentes é separada. **Entrega Astra low 18/09/2026:** c8 com sourcemaps mede todas fontes .ts; Jest mede .tsx/App, inclusive não exercitados; baseline antiga preservada. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                          | GPT-5.6 Terra |
+| Q-17   | Testar recuperação e migração de progresso no Android instalado     | [CC] | P1         | Existem testes unitários de migração, mas os dois fluxos Maestro atuais não comprovam recuperação do save em cenário real de atualização/interrupção. **Entrega Astra low 18/09/2026:** Persistência pós-reinício preparada; falta instalar APK legado, upgrade e interrupção de gravação no aparelho. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.                                                   | GPT-5.6 Terra |
+| Q-18   | Adicionar regressão visual e acessibilidade das jornadas principais | [CC] | P2         | O teste de acessibilidade existente não substitui verificação de foco/leitor de tela nem comparação das telas renderizadas. **Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver `docs/ENTREGA-TERRA-SOL.md`; aceite/merge pendente.      | GPT-5.6 Terra |
+
+### CI-35 — Consolidar e ativar as automações na branch padrão
+
+A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão.
+
+- [ ] Integrar por PR as automações e seus scripts/configurações dependentes, sem incluir mudanças de campanha inadvertidamente; registrar dependências que impeçam separação.
+- [ ] Confirmar na develop os workflows e o dependabot.yml, e comprovar execução manual e a primeira execução agendada.
+- [ ] Ajustar os filtros de PR às branches realmente usadas, inclusive PRs para feat/campanha-10x10 enquanto ela for base de integração.
+- [ ] Reutilizar G-09 (#114), G-10 (#115) e SEC-03 (#149) para estratégia de branches, proteção e ativação do Dependabot.
+
+**Dependências e referências:** Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule .
+
+### CI-36 — Migrar ferramentas e CI do Node 20 para LTS suportado
+
+O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines.
+
+- [ ] Adotar Node 22 LTS como alvo inicial e validar compatibilidade com Expo SDK 54, npm, Jest e EAS.
+- [ ] Alinhar engines, arquivo de versão, workflows e documentação; atualizar lock somente quando necessário.
+- [ ] Recalibrar a medição de cobertura por mudança de runtime com comparação documentada, sem ocultar redução real de testes.
+- [ ] Passar instalação limpa, expo-doctor, typecheck, testes, export e build Android no runtime escolhido.
+
+**Dependências e referências:** Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16.
+
+### CI-37 — Garantir release até build EAS concluído e artefatos verificáveis
+
+Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento.
+
+- [ ] Encadear explicitamente o build a partir do resultado do release, preferindo workflow reutilizável e o SHA/tag exato; impedir builds duplicados.
+- [ ] Corrigir a checagem de token que herda working-directory do app antes de checkout e validar o caminho sem EXPO_TOKEN.
+- [ ] Acompanhar resultado final do EAS com timeout e registrar URL/ID do build; falha ou cancelamento não pode ser reportado como sucesso.
+- [ ] Vincular release, versão, commit, SBOM e artefato correspondente; testar falha de build e release sem credencial.
+- [ ] Não publicar automaticamente na Play Store nesta tarefa; manter isso em CI-20/CI-21.
+
+**Dependências e referências:** Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: https://github.com/googleapis/release-please-action .
+
+### CI-38 — Ajustar gatilhos e relatórios do E2E Android
+
+O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10x10. O diagnóstico e JUnit só são publicados em caso de falha.
+
+- [ ] Executar smoke E2E em PR com mudança relevante ao app e suíte completa semanal/manual após integração na develop.
+- [ ] Remover o gatilho temporário, aplicar cancelamento por PR e registrar duração para controlar custo.
+- [ ] Publicar JUnit em sucesso e falha, e screenshots/logs em falha com retenção definida.
+- [ ] Validar PR de documentação sem build desnecessário e PR de código com execução real, sem esconder falhas com retries ilimitados.
+
+**Dependências e referências:** Depende de CI-35; reutiliza Maestro existente e Q-02/Q-03/Q-04 (#165–#167).
+
+### G-21 — Criar ou vincular automaticamente uma issue por PR
+
+Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade.
+
+- [ ] Ao abrir PR, reutilizar a issue válida já vinculada; se não houver, criar uma tarefa com título, contexto e link do PR.
+- [ ] Usar chave persistente por número do PR para que edição, synchronize e reexecução não criem duplicatas.
+- [ ] Adicionar vínculo e labels; exigir rastreabilidade no check de integração, inclusive para PRs automatizados.
+- [ ] Fechar a issue automática apenas após merge na branch de entrega definida; PR fechado sem merge não representa tarefa concluída.
+- [ ] Testar PR com issue existente, sem issue, de fork, edição/reabertura e execuções concorrentes.
+- [ ] Executar automação privilegiada somente com metadados e código confiável da base; nunca executar código do PR com token de escrita.
+
+**Dependências e referências:** Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue .
+
+### G-22 — Reconciliar roadmap e issues sem reabertura indevida
+
+O sincronizador atual considera roadmap.html a fonte de verdade e reabre uma issue fechada se a tarefa local continuar pendente. Isso conflita com fechamento automático por PR.
+
+- [ ] Definir e documentar a autoridade: roadmap para escopo/prioridade de tarefas planejadas; merge validado para conclusão; issues automáticas sem ID de roadmap ficam fora do sincronizador legado.
+- [ ] Propagar conclusão comprovada para os espelhos HTML/Markdown por alteração revisável antes de permitir nova reconciliação de estado.
+- [ ] Rodar validação de consistência no CI e sincronização de escrita apenas após integração de alteração confiável.
+- [ ] Preservar labels/corpo mantidos por pessoas fora das seções gerenciadas e não excluir issues órfãs ou duplicadas automaticamente.
+- [ ] Cobrir idempotência, paginação, falha parcial da API, tarefa nova, merge, PR abandonado e conflito entre roadmap e GitHub.
+- [ ] Registrar as tarefas novas desta auditoria e manter o script de criação inicial gerado, sem executá-lo sobre backlog existente.
+
+**Dependências e referências:** Complementa G-21. Não migrar todo o histórico nem substituir GitHub Issues por outra ferramenta.
+
+### SEC-20 — Adicionar análise de segurança do APK com MobSF
+
+CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Android gerado.
+
+- [ ] Executar MobSF em ambiente controlado sobre APK de preview/release por tag ou execução manual, com versão/imagem fixada.
+- [ ] Publicar relatório associado ao hash do APK e verificar permissões, componentes exportados, debug, backup e configuração de rede.
+- [ ] Classificar achados com base no contexto; estabelecer política explícita para bloquear novos achados altos/críticos confirmados e exceções com prazo.
+- [ ] Não enviar APKs, credenciais ou relatórios sensíveis para um serviço público de análise.
+- [ ] Validar relatório normal, achado conhecido em fixture segura e indisponibilidade do scanner sem falso verde.
+
+**Dependências e referências:** Depende de build verificável (CI-37); complementa SEC-11 (#157). Fonte: https://github.com/MobSF/Mobile-Security-Framework-MobSF .
+
+### SEC-21 — Montar validação dinâmica de segurança mobile baseada no MASVS
+
+Não foi identificado backend próprio; o alvo atual é Android com armazenamento local. DAST web com ZAP não cobre sozinho essa superfície.
+
+- [ ] Preparar emulador/aparelho de teste isolado e roteiro reproduzível segundo OWASP MASVS/MASTG para storage, logs, backup e tráfego.
+- [ ] Verificar o comportamento real de permissões, ausência de dados sensíveis em logs e conexões inesperadas, com evidências sanitizadas.
+- [ ] Automatizar os casos viáveis em job manual/semanal e documentar os casos que ainda exigem inspeção humana.
+- [ ] Não classificar Maestro funcional como DAST de segurança nem MobSF estático como análise dinâmica.
+- [ ] Registrar DAST HTTP/API como condicional a uma futura URL de homologação e backend; não criar servidor apenas para executar scanner.
+
+**Dependências e referências:** Após SEC-20; alinhar com SEC-17 (#163) e O-10 (#217). Fonte: https://mas.owasp.org/MASTG/tests/ .
+
+### Q-16 — Medir cobertura de produção separada por domínio e interface
+
+O piso atual usa o total do node:test, que inclui arquivos de testes e não representa cobertura completa de src/. A suíte Jest de componentes é separada.
+
+- [ ] Excluir testes, fixtures e gerados das métricas de produção; incluir arquivos relevantes não exercitados na medição.
+- [ ] Publicar relatórios separados de domínio/storage e componentes, com linhas, branches e funções e artefato legível.
+- [ ] Estabelecer baseline documentado para a medição correta e exigir que novo código crítico tenha testes, sem comparar diretamente percentuais de metodologias distintas.
+- [ ] Provar que um ramo de produção não testado reduz a métrica e que adicionar apenas código de teste não a infla.
+- [ ] Cobrir especificamente concorrência, idempotência e recuperação de persistência conforme invariantes do projeto.
+
+**Dependências e referências:** Coordenar com CI-34 (#226) e CI-36; complementa #131 e #132.
+
+### Q-17 — Testar recuperação e migração de progresso no Android instalado
+
+Existem testes unitários de migração, mas os dois fluxos Maestro atuais não comprovam recuperação do save em cenário real de atualização/interrupção.
+
+- [ ] Adicionar fluxo determinístico que obtenha progresso, encerre/reabra o app e valide fases, moedas e vidas persistidas.
+- [ ] Instalar versão nova sobre fixture de save antigo e confirmar preservação dos dados e aviso de migração sem repetição indevida.
+- [ ] Cobrir interrupção durante gravação e reinício sem recompensas duplicadas ou perda de progresso já confirmado.
+- [ ] Usar dados e build de teste isolados, sem contaminar saves reais nem liberar Modo Dev no aplicativo de produção.
+- [ ] Publicar evidência e diagnóstico em CI; reutilizar os fluxos de vitória/loja/vidas quando forem implementados.
+
+**Dependências e referências:** Complementa C-26 (#34) e Q-02/Q-03/Q-04 (#165–#167); coordenar com Q-13 (#176).
+
+### Q-18 — Adicionar regressão visual e acessibilidade das jornadas principais
+
+O teste de acessibilidade existente não substitui verificação de foco/leitor de tela nem comparação das telas renderizadas.
+
+- [ ] Cobrir mapa, partida, resultado e loja com estado determinístico, animações controladas e dimensões de aparelho fixas.
+- [ ] Criar snapshots visuais com tolerância documentada, diff anexado e atualização de baseline somente após revisão.
+- [ ] Verificar labels, ordem de foco, fontes ampliadas e alvos de toque; incluir roteiro TalkBack para os casos não automatizáveis.
+- [ ] Comprovar detecção de regressão visual proposital e ausência de instabilidade por conteúdo aleatório.
+- [ ] Manter as verificações existentes de acessibilidade; não depender apenas de snapshots para validar comportamento.
+
+**Dependências e referências:** Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.

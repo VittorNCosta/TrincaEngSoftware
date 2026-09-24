@@ -2,7 +2,10 @@ import { render } from '@testing-library/react-native';
 
 import { Tray } from '../Tray';
 import { Tile } from '../../types/game';
-import { BASE_TRAY_CAPACITY, COIN_TRAY_SLOT_COST } from '../../storage/trayBoostStorage';
+import {
+  BASE_TRAY_CAPACITY,
+  COIN_TRAY_SLOT_COST,
+} from '../../storage/trayBoostStorage';
 
 const makeTile = (overrides: Partial<Tile> = {}): Tile => ({
   cardId: 'plastico-residuo-1',
@@ -20,7 +23,12 @@ describe('Tray', () => {
   it('renderiza sem lançar exceção com peças na capacidade base', () => {
     const tiles: Tile[] = [
       makeTile({ id: 'tray-tile-1' }),
-      makeTile({ id: 'tray-tile-2', kind: 'papel', role: 'lixeira', emoji: '📦' }),
+      makeTile({
+        id: 'tray-tile-2',
+        kind: 'papel',
+        role: 'lixeira',
+        emoji: '📦',
+      }),
     ];
 
     const { getByText } = render(

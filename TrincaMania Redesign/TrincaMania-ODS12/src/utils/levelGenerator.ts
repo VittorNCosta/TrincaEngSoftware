@@ -20,20 +20,24 @@ type TileRect = {
   top: number;
 };
 
-export const LEVEL_DIFFICULTY_PROFILES: Record<string, LevelDifficultyProfile> = {
-  ...LEVELS.reduce<Record<string, LevelDifficultyProfile>>((profiles, level) => {
-    profiles[level.id] = {
-      difficulty: level.difficulty,
-      kindCount: new Set(level.tiles.map((tile) => tile.kind)).size,
-      maxZ: Math.max(...level.tiles.map((tile) => tile.z)),
-      mysteryTileCount: level.mysteryTileCount ?? 0,
-      openingTriple: level.worldId === 1 && level.worldLevelNumber <= 3,
-      tileCount: level.tiles.length,
-    };
+export const LEVEL_DIFFICULTY_PROFILES: Record<string, LevelDifficultyProfile> =
+  {
+    ...LEVELS.reduce<Record<string, LevelDifficultyProfile>>(
+      (profiles, level) => {
+        profiles[level.id] = {
+          difficulty: level.difficulty,
+          kindCount: new Set(level.tiles.map((tile) => tile.kind)).size,
+          maxZ: Math.max(...level.tiles.map((tile) => tile.z)),
+          mysteryTileCount: level.mysteryTileCount ?? 0,
+          openingTriple: level.worldId === 1 && level.worldLevelNumber <= 3,
+          tileCount: level.tiles.length,
+        };
 
-    return profiles;
-  }, {}),
-};
+        return profiles;
+      },
+      {},
+    ),
+  };
 
 const getTileRect = (tile: Tile): TileRect => ({
   bottom: tile.y + TILE_SIZE,
@@ -65,7 +69,7 @@ const isBlocked = (tile: Tile, board: Tile[]) => {
   );
 };
 
-const shuffleList = <T,>(items: T[], random: () => number) => {
+const shuffleList = <T>(items: T[], random: () => number) => {
   const shuffledItems = [...items];
 
   for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
@@ -79,7 +83,7 @@ const shuffleList = <T,>(items: T[], random: () => number) => {
   return shuffledItems;
 };
 
-const pickRandomItem = <T,>(items: T[], random: () => number) =>
+const pickRandomItem = <T>(items: T[], random: () => number) =>
   items[Math.floor(random() * items.length)];
 
 const getAvailableTiles = (board: Tile[]) =>
@@ -92,7 +96,10 @@ const getOpeningTriple = (board: Tile[], random: () => number) => {
   const availableTiles = getAvailableTiles(board);
   const topRowTiles = availableTiles.filter((tile) => tile.z === 0).slice(0, 6);
 
-  return shuffleList(topRowTiles.length >= 3 ? topRowTiles : availableTiles, random).slice(0, 3);
+  return shuffleList(
+    topRowTiles.length >= 3 ? topRowTiles : availableTiles,
+    random,
+  ).slice(0, 3);
 };
 
 const buildPlayableRemovalOrder = (
@@ -101,7 +108,10 @@ const buildPlayableRemovalOrder = (
   preserveOpeningTriple: boolean,
   random: () => number,
 ) => {
-  let workingBoard: Tile[] = layout.map((tile) => ({ ...tile, removed: false }));
+  let workingBoard: Tile[] = layout.map((tile) => ({
+    ...tile,
+    removed: false,
+  }));
   const removalOrder: Tile[] = [];
 
   if (profile.openingTriple && preserveOpeningTriple) {
@@ -153,7 +163,10 @@ const addMysteryTiles = (
 
   const selectCandidates = (allowRepeatedKind: boolean) => {
     candidates.forEach((tile) => {
-      if (mysteryTileIds.size >= mysteryTileCount || mysteryTileIds.has(tile.id)) {
+      if (
+        mysteryTileIds.size >= mysteryTileCount ||
+        mysteryTileIds.has(tile.id)
+      ) {
         return;
       }
 
@@ -212,11 +225,19 @@ export const generatePlayableLevelFrom = (
   const preserveOpeningTriple = options.preserveOpeningTriple ?? true;
   const layout = clampLayoutToProfile(baseLevel, profile);
 
-  if (layout.length !== profile.tileCount || layout.length % TRIPLE_SIZE !== 0) {
+  if (
+    layout.length !== profile.tileCount ||
+    layout.length % TRIPLE_SIZE !== 0
+  ) {
     return baseLevel;
   }
 
-  const removalOrder = buildPlayableRemovalOrder(layout, profile, preserveOpeningTriple, random);
+  const removalOrder = buildPlayableRemovalOrder(
+    layout,
+    profile,
+    preserveOpeningTriple,
+    random,
+  );
   const materialSequence = buildMaterialSequence(
     layout.length / TRIPLE_SIZE,
     profile.kindCount,

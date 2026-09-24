@@ -8,16 +8,30 @@ type PhasePlateProps = {
   worldName: string;
 };
 
-export function PhasePlate({ levelLabel, worldLabel, worldName }: PhasePlateProps) {
+export function PhasePlate({
+  levelLabel,
+  worldLabel,
+  worldName,
+}: PhasePlateProps) {
   return (
     <View style={styles.plate}>
       <View pointerEvents="none" style={[styles.notch, styles.notchLeft]} />
       <View pointerEvents="none" style={[styles.notch, styles.notchRight]} />
       <View pointerEvents="none" style={styles.gloss} />
-      <Text adjustsFontSizeToFit minimumFontScale={0.8} numberOfLines={1} style={styles.title}>
+      <Text
+        adjustsFontSizeToFit
+        minimumFontScale={0.8}
+        numberOfLines={1}
+        style={styles.title}
+      >
         Fase {levelLabel}
       </Text>
-      <Text adjustsFontSizeToFit minimumFontScale={0.65} numberOfLines={1} style={styles.subtitle}>
+      <Text
+        adjustsFontSizeToFit
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={styles.subtitle}
+      >
         {worldName} · {worldLabel}
       </Text>
     </View>

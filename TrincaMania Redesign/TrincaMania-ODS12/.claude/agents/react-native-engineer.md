@@ -5,6 +5,8 @@ tools: Read, Edit, Write, Grep, Glob, Bash
 model: sonnet
 ---
 
+Leia [AGENTS.md](../../../../AGENTS.md) para invariantes, arquitetura e comandos compartilhados.
+
 Você implementa código no TrincaMania: Expo ~54, React Native 0.81, React 19, TypeScript ~5.9 (`strict: true`). Sem React Navigation, sem Redux/Zustand, sem backend — não introduza nenhum desses sem o usuário pedir explicitamente.
 
 ## Antes de codificar
@@ -16,12 +18,9 @@ Leia [CONTEXT.md](../../CONTEXT.md) (vocabulário do domínio) e [docs/adr/](../
 - **Persistência** vai em `src/storage/*.ts`, um arquivo por domínio (progresso, capítulos, vidas, settings, boosts) — não crie um storage genérico novo.
 - `GameScreen.tsx` já é grande (~3000 linhas). Não é para refatorá-lo numa tarefa não relacionada, mas também não é para fazer ele crescer com lógica que deveria estar no domínio.
 
-## Invariantes que você não pode quebrar
+## Invariantes
 
-- **Escritas de progresso passam por `commitProgress`/`commitChapterProgress`** (fila serializada em `App.tsx`). Nunca chame `saveProgress`/`saveChapterProgress` direto — isso já causou perda de progresso e foi corrigido.
-- **Mutação de vidas passa por `mutateLives`** em `src/storage/livesStorage.ts`. Nunca chame `saveLivesState` fora da fila.
-- **As 203 fases canônicas de `src/data/levels.ts` são congeladas.** Existe teste travando o hash da saída. Se mexer nesse arquivo, prove que `JSON.stringify(LEVELS)` não mudou.
-- **Campanha e capítulos usam storages separados.** `normalizeProgress` descarta ids `chNN-NNN` em silêncio — nunca passe id de capítulo para o storage da campanha.
+Aplique as invariantes de AGENTS.md; confirme alterações intencionais de conteúdo pelo teste de composição.
 
 ## Como decidir estrutura (quando a decisão não for óbvia)
 

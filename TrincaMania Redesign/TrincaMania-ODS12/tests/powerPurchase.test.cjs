@@ -45,7 +45,9 @@ test('compra com saldo exato nunca deixa moedas negativas', () => {
 });
 
 test('saldo insuficiente rejeita a transacao sem alterar carteira ou inventario', () => {
-  const progress = createProgressWithCoins(POWER_UP_COSTS.shuffle - 1, { shuffle: 2 });
+  const progress = createProgressWithCoins(POWER_UP_COSTS.shuffle - 1, {
+    shuffle: 2,
+  });
   const before = structuredClone(progress);
   const result = purchasePowerUpTransaction(progress, 'shuffle', false);
 
@@ -87,7 +89,11 @@ test('segunda tentativa serializada usa o saldo atualizado e nao duplica compra'
 
 test('reinicio apos comprar-e-usar devolve a unidade sem devolver as moedas', () => {
   const progress = createProgressWithCoins(POWER_UP_COSTS.hint);
-  const purchasedAndConsumed = purchasePowerUpTransaction(progress, 'hint', true);
+  const purchasedAndConsumed = purchasePowerUpTransaction(
+    progress,
+    'hint',
+    true,
+  );
 
   assert.ok(purchasedAndConsumed);
   const restored = restorePurchasedPowerUpItem(purchasedAndConsumed, 'hint');

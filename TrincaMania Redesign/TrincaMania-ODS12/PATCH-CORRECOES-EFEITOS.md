@@ -9,13 +9,13 @@ me mostre**. No fim, `npm run typecheck` e a lista do que mudou.
 
 Diagnóstico curto de cada um:
 
-| # | sintoma | causa |
-| --- | --- | --- |
-| C1 | peça invisível na bandeja (diz 3/6, mostra 2) | `onComplete` do voo não dispara quando um toque novo substitui o evento; o id fica preso em `hiddenTrayTileIds` |
-| C2 | peça "vai para atrás da tela" no voo | no Android, `elevation` vence `zIndex`: as camadas de efeito têm `zIndex` mas **nenhuma** tem `elevation`, e o tabuleiro/bandeja têm |
-| C3 | não dá para ver o efeito da trinca | mesma causa do C2 (o estouro acontece atrás do dock da bandeja) + duração curta demais |
-| C4 | selo "TRINCA!" colado na borda esquerda, sobre "BANDEJA x/y" | o selo é posicionado no centro do grupo consumido; quando a trinca cai nos primeiros encaixes ele sai da tela |
-| D5 | bandeja fica leitosa e some as peças no flash da trinca | o `flashLayer` que criamos ficou com `zIndex: 1`, acima dos encaixes |
+| #   | sintoma                                                      | causa                                                                                                                                |
+| --- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| C1  | peça invisível na bandeja (diz 3/6, mostra 2)                | `onComplete` do voo não dispara quando um toque novo substitui o evento; o id fica preso em `hiddenTrayTileIds`                      |
+| C2  | peça "vai para atrás da tela" no voo                         | no Android, `elevation` vence `zIndex`: as camadas de efeito têm `zIndex` mas **nenhuma** tem `elevation`, e o tabuleiro/bandeja têm |
+| C3  | não dá para ver o efeito da trinca                           | mesma causa do C2 (o estouro acontece atrás do dock da bandeja) + duração curta demais                                               |
+| C4  | selo "TRINCA!" colado na borda esquerda, sobre "BANDEJA x/y" | o selo é posicionado no centro do grupo consumido; quando a trinca cai nos primeiros encaixes ele sai da tela                        |
+| D5  | bandeja fica leitosa e some as peças no flash da trinca      | o `flashLayer` que criamos ficou com `zIndex: 1`, acima dos encaixes                                                                 |
 
 ---
 
@@ -24,40 +24,40 @@ Diagnóstico curto de cada um:
 Em `src/screens/GameScreen.tsx`, procure o efeito que limpa o destaque da peça (é um
 `useEffect` curto, logo antes do de `highlightedTileId`):
 
-~~~tsx
-  useEffect(() => {
-    if (!highlightedTrayKind) {
-      return undefined;
-    }
+```tsx
+useEffect(() => {
+  if (!highlightedTrayKind) {
+    return undefined;
+  }
 
-    const timeout = setTimeout(() => {
-      setHighlightedTrayKind(undefined);
-    }, 520);
+  const timeout = setTimeout(() => {
+    setHighlightedTrayKind(undefined);
+  }, 520);
 
-    return () => clearTimeout(timeout);
-  }, [highlightedTrayKind]);
-~~~
+  return () => clearTimeout(timeout);
+}, [highlightedTrayKind]);
+```
 
 E **acrescente logo abaixo dele**:
 
-~~~tsx
-  // Rede de segurança do voo da peça. A peça sai da bandeja enquanto voa e só
-  // volta no `onComplete` do FlyingTileOverlay — que NÃO dispara quando um toque
-  // novo substitui o evento no meio do voo (`animation.stop()` devolve
-  // `finished: false`). Sem isso o id fica preso em hiddenTrayTileIds e a peça
-  // fica invisível na bandeja para sempre, com o contador certo.
-  useEffect(() => {
-    if (hiddenTrayTileIds.length === 0) {
-      return undefined;
-    }
+```tsx
+// Rede de segurança do voo da peça. A peça sai da bandeja enquanto voa e só
+// volta no `onComplete` do FlyingTileOverlay — que NÃO dispara quando um toque
+// novo substitui o evento no meio do voo (`animation.stop()` devolve
+// `finished: false`). Sem isso o id fica preso em hiddenTrayTileIds e a peça
+// fica invisível na bandeja para sempre, com o contador certo.
+useEffect(() => {
+  if (hiddenTrayTileIds.length === 0) {
+    return undefined;
+  }
 
-    const timeout = setTimeout(() => {
-      setHiddenTrayTileIds([]);
-    }, TILE_FLY_DURATION_MS + 240);
+  const timeout = setTimeout(() => {
+    setHiddenTrayTileIds([]);
+  }, TILE_FLY_DURATION_MS + 240);
 
-    return () => clearTimeout(timeout);
-  }, [hiddenTrayTileIds]);
-~~~
+  return () => clearTimeout(timeout);
+}, [hiddenTrayTileIds]);
+```
 
 `TILE_FLY_DURATION_MS` já está importado no arquivo (vem de `../components/FlyingTileOverlay`).
 Se não estiver, acrescente ao import existente desse módulo.
@@ -75,18 +75,18 @@ São quatro arquivos, sempre a mesma linha nova ao lado do `zIndex`.
 
 **`src/components/FlyingTileOverlay.tsx`** — procure:
 
-~~~ts
+```ts
   flying: {
     height: TILE_SIZE,
     position: 'absolute',
     width: TILE_SIZE,
     zIndex: 40,
   },
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   flying: {
     elevation: 40,
     height: TILE_SIZE,
@@ -94,11 +94,11 @@ Troque por:
     width: TILE_SIZE,
     zIndex: 40,
   },
-~~~
+```
 
 **`src/components/TripleConsumeEffect.tsx`** — quatro estilos. Procure e troque cada um:
 
-~~~ts
+```ts
   flash: {
     backgroundColor: 'rgba(255, 255, 255, 0.82)',
     borderRadius: radii.pill,
@@ -107,9 +107,9 @@ Troque por:
     width: 88,
     zIndex: 43,
   },
-~~~
+```
 
-~~~ts
+```ts
   flash: {
     backgroundColor: 'rgba(255, 255, 255, 0.82)',
     borderRadius: radii.pill,
@@ -119,18 +119,18 @@ Troque por:
     width: 88,
     zIndex: 43,
   },
-~~~
+```
 
-~~~ts
+```ts
   particle: {
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
     zIndex: 45,
   },
-~~~
+```
 
-~~~ts
+```ts
   particle: {
     alignItems: 'center',
     elevation: 45,
@@ -138,9 +138,9 @@ Troque por:
     position: 'absolute',
     zIndex: 45,
   },
-~~~
+```
 
-~~~ts
+```ts
   ring: {
     borderColor: 'rgba(255, 244, 184, 0.92)',
     borderRadius: radii.pill,
@@ -150,9 +150,9 @@ Troque por:
     width: 100,
     zIndex: 44,
   },
-~~~
+```
 
-~~~ts
+```ts
   ring: {
     borderColor: 'rgba(255, 244, 184, 0.92)',
     borderRadius: radii.pill,
@@ -163,18 +163,18 @@ Troque por:
     width: 100,
     zIndex: 44,
   },
-~~~
+```
 
-~~~ts
+```ts
   tilePosition: {
     height: TILE_SIZE,
     position: 'absolute',
     width: TILE_SIZE,
     zIndex: 42,
   },
-~~~
+```
 
-~~~ts
+```ts
   tilePosition: {
     elevation: 42,
     height: TILE_SIZE,
@@ -182,31 +182,31 @@ Troque por:
     width: TILE_SIZE,
     zIndex: 42,
   },
-~~~
+```
 
 No mesmo arquivo, o `stamp` (criado no patch anterior) também precisa — ele é tratado no C4,
 já com `elevation`.
 
 **`src/components/ScreenFlash.tsx`** — procure:
 
-~~~ts
+```ts
   flash: {
     zIndex: 60,
   },
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   flash: {
     elevation: 60,
     zIndex: 60,
   },
-~~~
+```
 
 **`src/components/MoveFeedbackEffect.tsx`** — procure:
 
-~~~ts
+```ts
   layer: {
     alignItems: 'center',
     bottom: 156,
@@ -215,11 +215,11 @@ Troque por:
     right: 0,
     zIndex: 24,
   },
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   layer: {
     alignItems: 'center',
     bottom: 156,
@@ -229,7 +229,7 @@ Troque por:
     right: 0,
     zIndex: 24,
   },
-~~~
+```
 
 ---
 
@@ -237,19 +237,19 @@ Troque por:
 
 Duas mudanças de tempo. Em `src/components/TripleConsumeEffect.tsx`, procure:
 
-~~~ts
+```ts
 export const TRIPLE_CONSUME_DELAY_MS = 340;
 export const TRIPLE_CONSUME_DURATION_MS = 540;
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
 // 340 era o tempo do voo: as peças mal assentavam antes de serem consumidas.
 export const TRIPLE_CONSUME_DELAY_MS = 260;
 // 540 dava ~290ms de estouro visível; 820 deixa a coreografia inteira legível.
 export const TRIPLE_CONSUME_DURATION_MS = 820;
-~~~
+```
 
 **Não** mexa na trava do toque (`visualWaitMs = TILE_FLY_DURATION_MS`): o estouro é decorativo
 e continua rodando por cima do tabuleiro já jogável — é isso que mantém o jogo solto.
@@ -260,100 +260,108 @@ com fila de um, igual à fila de toque.
 
 Em `src/screens/GameScreen.tsx`, procure:
 
-~~~tsx
-  const startTripleConsume = (consumeTiles: TripleConsumeTile[], kind: TileKind) => {
-    if (consumeTiles.length === 0) {
-      return;
-    }
+```tsx
+const startTripleConsume = (
+  consumeTiles: TripleConsumeTile[],
+  kind: TileKind,
+) => {
+  if (consumeTiles.length === 0) {
+    return;
+  }
 
-    setTripleConsumeEvent({
-      id: Date.now() + Math.random(),
-      kind,
-      tiles: consumeTiles.slice(0, 3),
-    });
-  };
-~~~
+  setTripleConsumeEvent({
+    id: Date.now() + Math.random(),
+    kind,
+    tiles: consumeTiles.slice(0, 3),
+  });
+};
+```
 
 Troque por:
 
-~~~tsx
-  const startTripleConsume = (consumeTiles: TripleConsumeTile[], kind: TileKind) => {
-    if (consumeTiles.length === 0) {
-      return;
-    }
+```tsx
+const startTripleConsume = (
+  consumeTiles: TripleConsumeTile[],
+  kind: TileKind,
+) => {
+  if (consumeTiles.length === 0) {
+    return;
+  }
 
-    const nextEvent: TripleConsumeEvent = {
-      id: Date.now() + Math.random(),
-      kind,
-      tiles: consumeTiles.slice(0, 3),
-    };
-
-    // Um estouro por vez. Trocar o evento no meio cortava a animação da trinca
-    // anterior — era por isso que não dava para ver o efeito.
-    if (isTripleConsumeActiveRef.current) {
-      pendingTripleConsumeRef.current = nextEvent;
-      return;
-    }
-
-    isTripleConsumeActiveRef.current = true;
-    setTripleConsumeEvent(nextEvent);
+  const nextEvent: TripleConsumeEvent = {
+    id: Date.now() + Math.random(),
+    kind,
+    tiles: consumeTiles.slice(0, 3),
   };
 
-  const finishTripleConsume = () => {
-    const pendingEvent = pendingTripleConsumeRef.current;
-    pendingTripleConsumeRef.current = undefined;
+  // Um estouro por vez. Trocar o evento no meio cortava a animação da trinca
+  // anterior — era por isso que não dava para ver o efeito.
+  if (isTripleConsumeActiveRef.current) {
+    pendingTripleConsumeRef.current = nextEvent;
+    return;
+  }
 
-    if (pendingEvent) {
-      setTripleConsumeEvent(pendingEvent);
-      return;
-    }
+  isTripleConsumeActiveRef.current = true;
+  setTripleConsumeEvent(nextEvent);
+};
 
-    isTripleConsumeActiveRef.current = false;
-    setTripleConsumeEvent(undefined);
-  };
-~~~
+const finishTripleConsume = () => {
+  const pendingEvent = pendingTripleConsumeRef.current;
+  pendingTripleConsumeRef.current = undefined;
+
+  if (pendingEvent) {
+    setTripleConsumeEvent(pendingEvent);
+    return;
+  }
+
+  isTripleConsumeActiveRef.current = false;
+  setTripleConsumeEvent(undefined);
+};
+```
 
 Os dois refs novos vão junto dos outros. Procure:
 
-~~~tsx
-  const isVisualMoveResolvingRef = useRef(false);
-~~~
+```tsx
+const isVisualMoveResolvingRef = useRef(false);
+```
 
 Troque por:
 
-~~~tsx
-  const isVisualMoveResolvingRef = useRef(false);
-  const isTripleConsumeActiveRef = useRef(false);
-  const pendingTripleConsumeRef = useRef<TripleConsumeEvent | undefined>(undefined);
-~~~
+```tsx
+const isVisualMoveResolvingRef = useRef(false);
+const isTripleConsumeActiveRef = useRef(false);
+const pendingTripleConsumeRef = useRef<TripleConsumeEvent | undefined>(
+  undefined,
+);
+```
 
 Ligue o fim da animação na função nova. Procure:
 
-~~~tsx
+```tsx
           onComplete={() => setTripleConsumeEvent(undefined)}
-~~~
+```
 
 Troque por:
 
-~~~tsx
-          onComplete={finishTripleConsume}
-~~~
+```tsx
+onComplete = { finishTripleConsume };
+```
 
 E limpe a fila ao recomeçar a fase. Em `resetRoundState`, procure:
 
-~~~tsx
-    clearMoveFeedbackStreak();
-    unduckAmbient();
-~~~
+```tsx
+clearMoveFeedbackStreak();
+unduckAmbient();
+```
 
 Troque por:
 
-~~~tsx
-    clearMoveFeedbackStreak();
-    unduckAmbient();
-    isTripleConsumeActiveRef.current = false;
-    pendingTripleConsumeRef.current = undefined;
-~~~
+```tsx
+clearMoveFeedbackStreak();
+unduckAmbient();
+isTripleConsumeActiveRef.current = false;
+pendingTripleConsumeRef.current = undefined;
+```
 
 > `TripleConsumeEvent` já é importado no arquivo (vem de
 > `../components/TripleConsumeEffect`). Se o import estiver só como tipo de `useState`,
@@ -368,51 +376,51 @@ sai da tela e cobre o rótulo "BANDEJA x/y". Ele passa a ser centralizado na lar
 
 Em `src/components/TripleConsumeEffect.tsx`, procure:
 
-~~~tsx
-      <Animated.View
-        style={[
-          styles.stamp,
-          {
-            left: center.x - 66,
-            opacity: stampOpacity,
-            top: center.y - 78,
-            transform: [{ translateY: stampLift }, { scale: stampScale }],
-          },
-        ]}
-      >
-        <Text style={styles.stampText}>TRINCA!</Text>
-        <View style={styles.stampChip}>
-          <Text style={styles.stampChipText}>+3</Text>
-        </View>
-      </Animated.View>
-~~~
+```tsx
+<Animated.View
+  style={[
+    styles.stamp,
+    {
+      left: center.x - 66,
+      opacity: stampOpacity,
+      top: center.y - 78,
+      transform: [{ translateY: stampLift }, { scale: stampScale }],
+    },
+  ]}
+>
+  <Text style={styles.stampText}>TRINCA!</Text>
+  <View style={styles.stampChip}>
+    <Text style={styles.stampChipText}>+3</Text>
+  </View>
+</Animated.View>
+```
 
 Troque por:
 
-~~~tsx
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.stampLayer,
-          {
-            opacity: stampOpacity,
-            top: center.y - 92,
-            transform: [{ translateY: stampLift }, { scale: stampScale }],
-          },
-        ]}
-      >
-        <View style={styles.stamp}>
-          <Text style={styles.stampText}>TRINCA!</Text>
-          <View style={styles.stampChip}>
-            <Text style={styles.stampChipText}>+3</Text>
-          </View>
-        </View>
-      </Animated.View>
-~~~
+```tsx
+<Animated.View
+  pointerEvents="none"
+  style={[
+    styles.stampLayer,
+    {
+      opacity: stampOpacity,
+      top: center.y - 92,
+      transform: [{ translateY: stampLift }, { scale: stampScale }],
+    },
+  ]}
+>
+  <View style={styles.stamp}>
+    <Text style={styles.stampText}>TRINCA!</Text>
+    <View style={styles.stampChip}>
+      <Text style={styles.stampChipText}>+3</Text>
+    </View>
+  </View>
+</Animated.View>
+```
 
 E no `StyleSheet.create`, procure o `stamp`:
 
-~~~ts
+```ts
   stamp: {
     alignItems: 'center',
     backgroundColor: 'rgba(36, 16, 68, 0.96)',
@@ -429,11 +437,11 @@ E no `StyleSheet.create`, procure o `stamp`:
     width: 132,
     zIndex: 46,
   },
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   stamp: {
     alignItems: 'center',
     backgroundColor: 'rgba(36, 16, 68, 0.96)',
@@ -455,28 +463,28 @@ Troque por:
     right: 0,
     zIndex: 46,
   },
-~~~
+```
 
 Aumentei o `top` de `-78` para `-92`: o selo sobe um pouco mais, para não brigar com a
 primeira fileira de encaixes.
 
 A janela visível do selo também abre. Procure:
 
-~~~tsx
-  const stampOpacity = consume.interpolate({
-    inputRange: [0, 0.16, 0.24, 0.78, 1],
-    outputRange: [0, 0, 1, 1, 0],
-  });
-~~~
+```tsx
+const stampOpacity = consume.interpolate({
+  inputRange: [0, 0.16, 0.24, 0.78, 1],
+  outputRange: [0, 0, 1, 1, 0],
+});
+```
 
 Troque por:
 
-~~~tsx
-  const stampOpacity = consume.interpolate({
-    inputRange: [0, 0.1, 0.18, 0.86, 1],
-    outputRange: [0, 0, 1, 1, 0],
-  });
-~~~
+```tsx
+const stampOpacity = consume.interpolate({
+  inputRange: [0, 0.1, 0.18, 0.86, 1],
+  outputRange: [0, 0, 1, 1, 0],
+});
+```
 
 ---
 
@@ -485,7 +493,7 @@ Troque por:
 O `flashLayer` que criamos no patch de desempenho ficou **acima** dos encaixes. Em
 `src/components/Tray.tsx`, procure:
 
-~~~ts
+```ts
   flashLayer: {
     backgroundColor: '#B0793A',
     borderColor: '#FFF0C4',
@@ -498,11 +506,11 @@ O `flashLayer` que criamos no patch de desempenho ficou **acima** dos encaixes. 
     top: 0,
     zIndex: 1,
   },
-~~~
+```
 
 Troque por:
 
-~~~ts
+```ts
   flashLayer: {
     backgroundColor: '#B0793A',
     borderColor: '#FFF0C4',
@@ -514,7 +522,7 @@ Troque por:
     right: 0,
     top: 0,
   },
-~~~
+```
 
 Sem o `zIndex`, ele volta a pintar na ordem natural — ele é o primeiro filho, então fica
 **atrás** dos encaixes e das peças, iluminando a madeira em vez de lavar a bandeja.

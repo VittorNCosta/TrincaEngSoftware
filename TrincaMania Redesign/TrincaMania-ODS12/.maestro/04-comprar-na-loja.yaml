@@ -1,0 +1,73 @@
+appId: br.com.mhvtech.trincamania.e2e
+name: Ganhar moedas em partidas reais, comprar e preservar inventário
+---
+- runFlow:
+    file: 01-entrar-numa-fase.yaml
+    env:
+      APP_ID: br.com.mhvtech.trincamania.e2e
+- runFlow: subflows/vencer-w1-001.yaml
+- tapOn: 'Próxima fase'
+- runFlow: subflows/vencer-w1-002.yaml
+- tapOn: 'Próxima fase'
+- runFlow: subflows/vencer-w1-003.yaml
+- tapOn: 'Próxima fase'
+- runFlow: subflows/vencer-w1-004.yaml
+- tapOn: 'Próxima fase'
+# Primeira aparição de peças misteriosas: o jogador lê e fecha a explicação.
+- assertVisible: 'Pilha Misteriosa'
+- tapOn: 'Entendi'
+- assertNotVisible: 'Pilha Misteriosa'
+- runFlow: subflows/vencer-w1-005.yaml
+- tapOn: 'Mapa'
+- tapOn: 'Ganhar moedas'
+- copyTextFrom:
+    id: shop-coins
+- evalScript: ${output.coinsBefore = Number(maestro.copiedText)}
+- scrollUntilVisible:
+    element:
+      id: shop-buy-undo
+    direction: DOWN
+- copyTextFrom:
+    id: shop-stock-undo
+- evalScript: ${output.stockBefore = Number(maestro.copiedText)}
+- tapOn:
+    id: shop-buy-undo
+- assertVisible:
+    id: shop-stock-undo
+    text: ${String(output.stockBefore + 1)}
+- scrollUntilVisible:
+    element:
+      id: shop-coins
+    direction: UP
+- assertVisible:
+    id: shop-coins
+    text: ${String(output.coinsBefore - 45)}
+- takeScreenshot: artifacts/compra
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'splash-skip|tutorial-pular|nav-map'
+    timeout: 40000
+- tapOn:
+    id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
+- tapOn: 'Ganhar moedas'
+- scrollUntilVisible:
+    element:
+      id: shop-stock-undo
+    direction: DOWN
+- assertVisible:
+    id: shop-stock-undo
+    text: ${String(output.stockBefore + 1)}
+- scrollUntilVisible:
+    element:
+      id: shop-coins
+    direction: UP
+- assertVisible:
+    id: shop-coins
+    text: ${String(output.coinsBefore - 45)}

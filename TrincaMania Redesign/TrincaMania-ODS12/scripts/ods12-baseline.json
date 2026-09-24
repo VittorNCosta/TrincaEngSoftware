@@ -1,0 +1,59 @@
+{
+  "_leia": "Livro-razão da guarda ODS 12. Gerado por scripts/guarda-ods12.js --atualizar. \"situacao\": \"ok\" = ocorrência legítima; \"pendente\" = dívida com tarefa no roadmap. A lista só pode encolher.",
+  "entradas": {
+    "assets/sfx/ambient/ambient_celestial.mp3::celestial": {
+      "count": 1,
+      "linhas": [0],
+      "motivo": "Nome de arquivo da trilha ambiente do Mundo 8. A constante em src/utils/sounds.ts ja virou 'forum' no L-01/S-11; falta so renomear o .mp3 — bloco S (S-12/S-13).",
+      "situacao": "pendente"
+    },
+    "src/components/BoardTile.tsx::candy": {
+      "count": 1,
+      "linhas": [446],
+      "motivo": "Comentario do tratamento visual da peca ainda usa o vocabulario do jogo pre-redesign. Bloco L.",
+      "situacao": "pendente"
+    },
+    "src/components/BoardTile.tsx::doce": {
+      "count": 2,
+      "linhas": [446, 466],
+      "motivo": "Idem: os comentarios chamam a peca de doce. Bloco L.",
+      "situacao": "pendente"
+    },
+    "src/components/BoardTile.tsx::fruta": {
+      "count": 1,
+      "linhas": [447],
+      "motivo": "Comentario descreve o bug antigo em termos de fruta. Reescrever no bloco L.",
+      "situacao": "pendente"
+    },
+    "src/components/BoardTile.tsx::jelly": {
+      "count": 1,
+      "linhas": [446],
+      "motivo": "Nome do tratamento visual (Jelly/Candy) herdado do jogo original. Bloco L.",
+      "situacao": "pendente"
+    },
+    "src/components/TileIcon.tsx::fruta": {
+      "count": 1,
+      "linhas": [12],
+      "motivo": "LEGITIMO: o comentario existe justamente para dizer que o sprite sheet de frutas NAO serve mais. Remover a palavra apagaria a explicacao da migracao.",
+      "situacao": "ok"
+    },
+    "src/components/Tray.tsx::doce": {
+      "count": 1,
+      "linhas": [301],
+      "motivo": "Comentario do encaixe ocupado chama o tile de doce. Bloco L.",
+      "situacao": "pendente"
+    },
+    "src/domain/recycling/value-objects/RecyclingCard.ts::fruta": {
+      "count": 1,
+      "linhas": [59],
+      "motivo": "LEGITIMO: Restos de fruta e a descricao correta de residuo organico. Nao e o tema de frutas do jogo antigo, e o dominio ODS 12.",
+      "situacao": "ok"
+    },
+    "src/types/game.ts::fruta": {
+      "count": 1,
+      "linhas": [6],
+      "motivo": "LEGITIMO: o comentario define TileKind dizendo que a especie e o MATERIAL e nao mais uma fruta. E a documentacao da mudanca.",
+      "situacao": "ok"
+    }
+  }
+}

@@ -8,10 +8,10 @@ heurístico, a regra do ciclo custa cerca de dois espaços de bandeja: 45% de vi
 `MAX_TRAY_CAPACITY` de 7 para 9.
 
 | bandeja | três iguais | ciclo |
-| --- | --- | --- |
-| 5 | 8% | 4% |
-| 7 | 49% | 15% |
-| 9 | 96% | 45% |
+| ------- | ----------- | ----- |
+| 5       | 8%          | 4%    |
+| 7       | 49%         | 15%   |
+| 9       | 96%         | 45%   |
 
 ## Considered Options
 

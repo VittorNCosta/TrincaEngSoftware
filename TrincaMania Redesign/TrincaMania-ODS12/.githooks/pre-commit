@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+# Roda eslint e prettier só nos arquivos staged. Ver .lintstagedrc.json.
+
+. "$(dirname -- "$0")/common.sh"
+
+npx --no-install lint-staged
