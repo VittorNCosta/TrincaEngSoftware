@@ -46,7 +46,7 @@
     "react-native-svg": "15.12.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.5.3",
+    "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^20.5.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.5.14",
