@@ -97,7 +97,9 @@ function avaliar(pr, runs, sha, required = WORKFLOWS) {
       };
 }
 const gh = (...args) =>
-  JSON.parse(execFileSync("gh", args, { encoding: "utf8" }));
+  JSON.parse(
+    execFileSync("gh", args, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }),
+  );
 async function main(args = process.argv.slice(2)) {
   const numero = args[0];
   if (

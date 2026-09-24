@@ -130,11 +130,14 @@ const toMarkdown = (value) =>
     .replace(/<code>(.*?)<\/code>/g, '`$1`')
     .replace(/<b>(.*?)<\/b>/g, '**$1**')
     .replace(/<s>(.*?)<\/s>/g, '~~$1~~')
+    .replace(/<i>(.*?)<\/i>/g, '*$1*')
     .replace(/<br\s*\/?>/g, '\n')
-    .replace(/<[^>]+>/g, '')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&');
+    .replace(/&amp;/g, '&')
+    // Texto desconhecido não pode criar HTML na issue gerada.
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 
 /**
  * Recorta o literal `const BLOCKS = [ ... ];` do HTML e avalia como JS.

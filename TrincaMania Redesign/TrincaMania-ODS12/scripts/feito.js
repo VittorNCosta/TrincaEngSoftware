@@ -41,9 +41,10 @@ const iData = argv.indexOf('--data');
 const data =
   iData >= 0 && argv[iData + 1]
     ? argv[iData + 1]
-    : new Date()
-        .toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
-        .replace(/\//g, '/');
+    : new Date().toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+      });
 
 /** O texto é tudo que não é o id nem opção — juntado, para não exigir aspas. */
 const texto = argv
