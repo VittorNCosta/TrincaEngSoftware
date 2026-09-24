@@ -36,13 +36,17 @@ export type MatchRule = {
    * Encontra, na bandeja, uma trinca já fechada. Retorna as peças exatas que
    * devem sair (na ordem em que estão na bandeja) ou `undefined`.
    */
-  findCompletedTriple<TTile extends MatchableTile>(tray: TTile[]): TTile[] | undefined;
+  findCompletedTriple<TTile extends MatchableTile>(
+    tray: TTile[],
+  ): TTile[] | undefined;
 
   /**
    * Dado um conjunto de peças candidatas de um mesmo material, retorna a
    * combinação que fecha trinca — usado pela dica e pela "trinca mágica".
    */
-  selectTripleFrom<TTile extends MatchableTile>(candidates: TTile[]): TTile[] | undefined;
+  selectTripleFrom<TTile extends MatchableTile>(
+    candidates: TTile[],
+  ): TTile[] | undefined;
 };
 
 export const groupByMaterial = <TTile extends MatchableTile>(tiles: TTile[]) =>

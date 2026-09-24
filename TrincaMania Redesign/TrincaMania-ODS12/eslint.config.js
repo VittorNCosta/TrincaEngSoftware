@@ -21,9 +21,10 @@ module.exports = defineConfig([
     ],
   },
   {
-    // Suíte node:test roda em CommonJS puro (require/__dirname), não no
-    // ambiente React Native que o resto do config assume.
-    files: ['tests/**/*.cjs'],
+    // Suíte node:test e scripts de ferramenta rodam em CommonJS puro
+    // (require/__dirname), não no ambiente React Native que o resto do config
+    // assume.
+    files: ['tests/**/*.cjs', 'scripts/**/*.js'],
     languageOptions: {
       globals: globals.node,
     },

@@ -23,7 +23,11 @@ const PILE_HEIGHT = 100;
 const PILE_WIDTH = 132;
 const POP_MS = 420;
 
-export function CoinPile({ animationKey = 0, size = 74, visible = true }: CoinPileProps) {
+export function CoinPile({
+  animationKey = 0,
+  size = 74,
+  visible = true,
+}: CoinPileProps) {
   const pops = useMemo(() => COINS.map(() => new Animated.Value(0)), []);
   const popsRef = useRef(pops);
 

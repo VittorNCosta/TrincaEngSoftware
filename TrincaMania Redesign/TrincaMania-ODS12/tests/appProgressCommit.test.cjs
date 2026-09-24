@@ -1,3 +1,4 @@
+const { performance } = require('node:perf_hooks');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -28,7 +29,11 @@ require.extensions['.tsx'] = compile;
 
 // A árvore de elementos vira dado inspecionável: é assim que o teste alcança os
 // handlers que o App entrega às telas sem precisar de um renderer nativo.
-globalThis.__jsx = (type, props, ...children) => ({ type, props: props || {}, children });
+globalThis.__jsx = (type, props, ...children) => ({
+  type,
+  props: props || {},
+  children,
+});
 globalThis.__jsxFragment = 'Fragment';
 
 const stub = (request, exports) => {
@@ -83,19 +88,36 @@ stub('react-native-safe-area-context', {
 
 const projectModule = (relativePath) => path.join(ROOT, relativePath);
 
+stub(projectModule('src/components/CampaignResizeNoticeModal'), {
+  CampaignResizeNoticeModal: 'CampaignResizeNoticeModal',
+});
 stub(projectModule('src/components/MysteryTutorialModal'), {
   MysteryTutorialModal: 'MysteryTutorialModal',
 });
-stub(projectModule('src/components/NoLivesModal'), { NoLivesModal: 'NoLivesModal' });
-stub(projectModule('src/components/SettingsModal'), { SettingsModal: 'SettingsModal' });
-stub(projectModule('src/components/TutorialModal'), { TutorialModal: 'TutorialModal' });
-stub(projectModule('src/components/WorldChestModal'), { WorldChestModal: 'WorldChestModal' });
+stub(projectModule('src/components/NoLivesModal'), {
+  NoLivesModal: 'NoLivesModal',
+});
+stub(projectModule('src/components/SettingsModal'), {
+  SettingsModal: 'SettingsModal',
+});
+stub(projectModule('src/components/TutorialModal'), {
+  TutorialModal: 'TutorialModal',
+});
+stub(projectModule('src/components/WorldChestModal'), {
+  WorldChestModal: 'WorldChestModal',
+});
 stub(projectModule('src/navigation/MainTabs'), { MainTabs: 'MainTabs' });
-stub(projectModule('src/screens/ChaptersScreen'), { ChaptersScreen: 'ChaptersScreen' });
+stub(projectModule('src/screens/ChaptersScreen'), {
+  ChaptersScreen: 'ChaptersScreen',
+});
 stub(projectModule('src/screens/GameScreen'), { GameScreen: 'GameScreen' });
 stub(projectModule('src/screens/ShopScreen'), { ShopScreen: 'ShopScreen' });
-stub(projectModule('src/screens/SplashIntroScreen'), { SplashIntroScreen: 'SplashIntroScreen' });
-stub(projectModule('src/utils/sounds'), { setSoundEnabled: async () => undefined });
+stub(projectModule('src/screens/SplashIntroScreen'), {
+  SplashIntroScreen: 'SplashIntroScreen',
+});
+stub(projectModule('src/utils/sounds'), {
+  setSoundEnabled: async () => undefined,
+});
 
 // Runtime de hooks mínimo: só o suficiente para o App executar de verdade — os
 // mesmos refs, a mesma fila, os mesmos efeitos.
@@ -141,7 +163,11 @@ const createHookRuntime = () => {
       return slotAt(cursor++, () => ({ current: initial }));
     },
     useCallback(callback, deps) {
-      const slot = slotAt(cursor++, () => ({ deps: undefined, value: undefined, set: false }));
+      const slot = slotAt(cursor++, () => ({
+        deps: undefined,
+        value: undefined,
+        set: false,
+      }));
 
       if (!slot.set || !depsEqual(slot.deps, deps)) {
         slot.value = callback;
@@ -152,7 +178,11 @@ const createHookRuntime = () => {
       return slot.value;
     },
     useMemo(factory, deps) {
-      const slot = slotAt(cursor++, () => ({ deps: undefined, value: undefined, set: false }));
+      const slot = slotAt(cursor++, () => ({
+        deps: undefined,
+        value: undefined,
+        set: false,
+      }));
 
       if (!slot.set || !depsEqual(slot.deps, deps)) {
         slot.value = factory();
@@ -163,7 +193,11 @@ const createHookRuntime = () => {
       return slot.value;
     },
     useEffect(effect, deps) {
-      const slot = slotAt(cursor++, () => ({ deps: undefined, cleanup: undefined, set: false }));
+      const slot = slotAt(cursor++, () => ({
+        deps: undefined,
+        cleanup: undefined,
+        set: false,
+      }));
 
       if (!slot.set || !depsEqual(slot.deps, deps)) {
         slot.deps = deps;
@@ -207,9 +241,12 @@ stub('react', {
   useEffect: (...args) => activeHooks.runtime.useEffect(...args),
 });
 
-const { createInitialProgress, applyLevelCompletion, loadProgress, saveProgress } = require(
-  projectModule('src/storage/progressStorage.ts'),
-);
+const {
+  createInitialProgress,
+  applyLevelCompletion,
+  loadProgress,
+  saveProgress,
+} = require(projectModule('src/storage/progressStorage.ts'));
 const { LIVES_STORAGE_KEY, MAX_LIVES, getLivesState } = require(
   projectModule('src/storage/livesStorage.ts'),
 );
@@ -221,14 +258,20 @@ const findProps = (node, type) => {
   }
 
   if (Array.isArray(node)) {
-    return node.reduce((found, child) => found ?? findProps(child, type), undefined);
+    return node.reduce(
+      (found, child) => found ?? findProps(child, type),
+      undefined,
+    );
   }
 
   if (node.type === type) {
     return node.props;
   }
 
-  return (node.children || []).reduce((found, child) => found ?? findProps(child, type), undefined);
+  return (node.children || []).reduce(
+    (found, child) => found ?? findProps(child, type),
+    undefined,
+  );
 };
 
 const createAppHarness = () => {
@@ -260,9 +303,9 @@ const createAppHarness = () => {
   };
 
   const settle = async (durationMs) => {
-    const deadline = Date.now() + durationMs;
+    const deadline = performance.now() + durationMs;
 
-    while (Date.now() < deadline) {
+    while (performance.now() < deadline) {
       await wait(5);
       flush();
     }
@@ -273,6 +316,14 @@ const createAppHarness = () => {
   return {
     flush,
     settle,
+    waitFor: async (predicate, timeoutMs = 10000) => {
+      const deadline = performance.now() + timeoutMs;
+      while (!predicate()) {
+        if (performance.now() >= deadline)
+          throw new Error('App condition did not settle');
+        await settle(5);
+      }
+    },
     props: (type) => findProps(tree, type),
   };
 };
@@ -280,7 +331,11 @@ const createAppHarness = () => {
 const seedLives = (currentLives) => {
   store.set(
     LIVES_STORAGE_KEY,
-    JSON.stringify({ currentLives, maxLives: MAX_LIVES, lastLifeTimestamp: Date.now() }),
+    JSON.stringify({
+      currentLives,
+      maxLives: MAX_LIVES,
+      lastLifeTimestamp: Date.now(),
+    }),
   );
 };
 
@@ -290,7 +345,7 @@ const bootApp = async () => {
   // Splash → mapa, e espera o carregamento inicial do disco.
   app.props('SplashIntroScreen').onFinish();
   app.flush();
-  await app.settle(200);
+  await app.waitFor(() => app.props('MainTabs') && app.props('SettingsModal'));
 
   return app;
 };
@@ -327,14 +382,23 @@ test('apagar progresso não é desfeito pelas compras que ainda estavam na fila'
 
   assert.equal(persisted.coins, 0);
   assert.deepEqual(persisted.itemCounts, createInitialProgress().itemCounts);
-  assert.deepEqual(persisted.unlockedLevelIds, createInitialProgress().unlockedLevelIds);
+  assert.deepEqual(
+    persisted.unlockedLevelIds,
+    createInitialProgress().unlockedLevelIds,
+  );
 });
 
 test('duplo toque no ponto de descanso premia uma vida só', async () => {
   store.clear();
   seedLives(2);
 
-  const seededProgress = ['w1-001', 'w1-002', 'w1-003', 'w1-004', 'w1-005'].reduce(
+  const seededProgress = [
+    'w1-001',
+    'w1-002',
+    'w1-003',
+    'w1-004',
+    'w1-005',
+  ].reduce(
     (progress, levelId) => applyLevelCompletion(progress, levelId, 3).progress,
     createInitialProgress(),
   );
@@ -362,4 +426,34 @@ test('duplo toque no ponto de descanso premia uma vida só', async () => {
 
   const persisted = await loadProgress();
   assert.deepEqual(persisted.collectedRestCheckpointIds, ['w1-005']);
+});
+
+test('modo dev libera navegação apenas em memória e é reversível sem alterar save', async () => {
+  store.clear();
+  globalThis.__DEV__ = true;
+  try {
+    const app = await bootApp();
+    const before = new Map(store);
+    app.props('SettingsModal').onUnlockAllForDevMode();
+    app.flush();
+    assert.equal(app.props('MainTabs').devMode, true);
+    await app.settle(60);
+    assert.deepEqual(store, before);
+    app.props('SettingsModal').onUnlockAllForDevMode();
+    app.flush();
+    assert.equal(app.props('MainTabs').devMode, false);
+    assert.deepEqual(store, before);
+  } finally {
+    globalThis.__DEV__ = false;
+  }
+});
+
+test('capítulos bloqueados não abrem antes de concluir campanha e preservam save legado', async () => {
+  store.clear();
+  const app = await bootApp();
+  const before = new Map(store);
+  app.props('MainTabs').onOpenChapters();
+  app.flush();
+  assert.equal(app.props('ChaptersScreen'), undefined);
+  assert.deepEqual(store, before);
 });

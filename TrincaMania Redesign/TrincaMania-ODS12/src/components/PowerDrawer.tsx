@@ -15,9 +15,24 @@ type PowerTone = {
 };
 
 const POWER_TONES: Record<PowerUpType, PowerTone> = {
-  hint: { border: '#EAF8FF', face: '#2E9BEE', foot: '#0C4C8E', label: '#EAF8FF' },
-  shuffle: { border: '#FFE6FB', face: '#C93BBE', foot: '#6B1866', label: '#FFE6FB' },
-  undo: { border: '#E9FFE2', face: '#45BF28', foot: '#1B5F0C', label: '#E9FFE2' },
+  hint: {
+    border: '#EAF8FF',
+    face: '#2E9BEE',
+    foot: '#0C4C8E',
+    label: '#EAF8FF',
+  },
+  shuffle: {
+    border: '#FFE6FB',
+    face: '#C93BBE',
+    foot: '#6B1866',
+    label: '#FFE6FB',
+  },
+  undo: {
+    border: '#E9FFE2',
+    face: '#45BF28',
+    foot: '#1B5F0C',
+    label: '#E9FFE2',
+  },
 };
 
 // O texto fica dentro do próprio botão para manter o conjunto compacto em telas
@@ -60,12 +75,11 @@ export function PowerDrawer({
     // Só um bloqueio global (modal, fim da rodada ou movimento em curso) desativa
     // de fato o botão.
     const isDisabled = disabled;
-    const availabilityLabel =
-      isPurchasable
-        ? `sem unidades, comprar por ${POWER_UP_COSTS[power]} moedas`
-        : isTemporarilyUnavailable
-          ? 'indisponível agora'
-          : `${inventoryCount} ${inventoryCount === 1 ? 'unidade disponível' : 'unidades disponíveis'}`;
+    const availabilityLabel = isPurchasable
+      ? `sem unidades, comprar por ${POWER_UP_COSTS[power]} moedas`
+      : isTemporarilyUnavailable
+        ? 'indisponível agora'
+        : `${inventoryCount} ${inventoryCount === 1 ? 'unidade disponível' : 'unidades disponíveis'}`;
 
     return (
       <Pressable
@@ -80,7 +94,11 @@ export function PowerDrawer({
         }}
         style={({ pressed }) => [
           styles.powerButton,
-          { backgroundColor: tone.face, borderBottomColor: tone.foot, borderColor: tone.border },
+          {
+            backgroundColor: tone.face,
+            borderBottomColor: tone.foot,
+            borderColor: tone.border,
+          },
           isPurchasable ? styles.powerButtonPurchasable : null,
           isTemporarilyUnavailable && !isPurchasable
             ? styles.powerButtonUnavailable
@@ -93,7 +111,11 @@ export function PowerDrawer({
         <View pointerEvents="none" style={styles.iconWrap}>
           <PowerIcon name={power} size={29} />
         </View>
-        <Text numberOfLines={1} pointerEvents="none" style={[styles.powerLabel, { color: tone.label }]}>
+        <Text
+          numberOfLines={1}
+          pointerEvents="none"
+          style={[styles.powerLabel, { color: tone.label }]}
+        >
           {POWER_LABELS[power]}
         </Text>
         <View
@@ -116,7 +138,9 @@ export function PowerDrawer({
         </View>
         {isPurchasable ? (
           <View pointerEvents="none" style={styles.purchasePriceBadge}>
-            <Text style={styles.purchasePriceText}>{POWER_UP_COSTS[power]}</Text>
+            <Text style={styles.purchasePriceText}>
+              {POWER_UP_COSTS[power]}
+            </Text>
           </View>
         ) : null}
       </Pressable>

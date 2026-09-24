@@ -1,0 +1,31 @@
+name: Arte
+description: Asset visual novo, faltando ou fora do tema ODS 12
+labels: ["arte"]
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que precisa
+      description: >-
+        Qual asset (fundo de mapa, icone, selo de marco...), para qual mundo
+        ou tela, e as dimensoes esperadas se ja souber.
+    validations:
+      required: true
+  - type: textarea
+    id: referencia
+    attributes:
+      label: Referencia
+      description: >-
+        Link de art bible (A-01), asset parecido ja existente, ou imagem de
+        referencia.
+    validations:
+      required: false
+  - type: checkboxes
+    id: ods12
+    attributes:
+      label: Universo
+      options:
+        - label: >-
+            Fica dentro do universo de reciclagem/consumo responsavel - sem
+            vocabulario de fantasia generica (ver CLAUDE.md)
+          required: true

@@ -24,10 +24,11 @@ export type Tile = {
   removed?: boolean;
 };
 
-export type LevelDifficulty = 'easy' | 'normal' | 'hard' | 'expert' | 'master' | 'bonus';
+export type LevelDifficulty =
+  'easy' | 'normal' | 'hard' | 'expert' | 'master' | 'bonus';
 
-/** Mundos da campanha canônica: as 203 fases de `LEVELS`. */
-export type CampaignWorldId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 21;
+/** Mundos da campanha canônica: as 103 fases de `LEVELS`. */
+export type CampaignWorldId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 21;
 
 /**
  * Ids reservados aos capítulos (`CHAPTERS`). Ficam numa faixa própria, a partir
@@ -35,13 +36,19 @@ export type CampaignWorldId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 21;
  * `switch` existente sobre mundo caia no `default` em vez de acertar por acaso
  * o ramo de outro mundo.
  */
-export type ChapterWorldId = 101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110;
+export type ChapterWorldId =
+  101 | 102 | 103 | 104 | 105 | 106 | 107 | 108 | 109 | 110;
 
 export type WorldId = CampaignWorldId | ChapterWorldId;
 
-export type WorldTheme = 'forest' | 'mountain' | 'crystal' | 'sweet';
+// Variante de cor do quadro do mapa na seleção de fase — decorativo, sem
+// ligação com o material/CONAMA de cada mundo. Nomeado pelo acento em vez de
+// vocabulário de fantasia (L-02): 'padrao' é o verde-base (sem override),
+// 'azulado'/'violeta' alternam nos mundos 1-10, 'rosado' é só do bônus.
+export type WorldTheme = 'padrao' | 'azulado' | 'violeta' | 'rosado';
 
-export type WorldUnlockRule = 'complete-world-1' | 'three-stars-world-1' | 'three-stars-world-2';
+export type WorldUnlockRule =
+  'complete-world-1' | 'three-stars-world-1' | 'three-stars-world-2';
 
 export type World = {
   id: WorldId;
@@ -96,9 +103,9 @@ export type ChapterTheme =
   | 'compostagem'
   | 'feira'
   | 'metal'
-  | 'oficina'
   | 'papel'
   | 'rio'
+  | 'sucata'
   | 'triagem'
   | 'vidro';
 
@@ -181,11 +188,7 @@ export type ChestRewardSummary = {
 export type WorldChestOpenMode = 'key' | 'buy-key';
 
 export type WorldChestOpenStatus =
-  | 'already-opened'
-  | 'insufficient-coins'
-  | 'no-key'
-  | 'opened'
-  | 'unavailable';
+  'already-opened' | 'insufficient-coins' | 'no-key' | 'opened' | 'unavailable';
 
 export type WorldChestRewardSummary = {
   coins: number;

@@ -38,10 +38,10 @@ Duas coisas, e a segunda é a causa raiz:
 
 Procure:
 
-~~~ts
+```ts
     case 'lock':
       return 'key';
-~~~
+```
 
 Remova essas duas linhas (o `case 'lock'` sai do `normalizeIconName`; `'lock'` já está na
 união `GameIconName`, então nada mais muda de tipo).
@@ -50,38 +50,84 @@ união `GameIconName`, então nada mais muda de tipo).
 
 Em `IconArtwork`, procure o bloco do `key` (é o único trecho com `cx={23} cy={29}`):
 
-~~~tsx
-      {name === 'key' ? (
-        <>
-          <Circle cx={23} cy={29} fill={softFill} r={10} stroke={ink} strokeWidth={7} />
-          <Path d="M32 33h20v8h-6v6h-7v-6h-7z" fill={softFill} stroke={ink} strokeLinejoin="round" strokeWidth={6} />
-          <Circle cx={23} cy={29} fill={ink} r={3} />
-        </>
-      ) : null}
-~~~
+```tsx
+{
+  name === 'key' ? (
+    <>
+      <Circle
+        cx={23}
+        cy={29}
+        fill={softFill}
+        r={10}
+        stroke={ink}
+        strokeWidth={7}
+      />
+      <Path
+        d="M32 33h20v8h-6v6h-7v-6h-7z"
+        fill={softFill}
+        stroke={ink}
+        strokeLinejoin="round"
+        strokeWidth={6}
+      />
+      <Circle cx={23} cy={29} fill={ink} r={3} />
+    </>
+  ) : null;
+}
+```
 
 Troque por (mantém o `key` e acrescenta o `lock` logo abaixo):
 
-~~~tsx
-      {name === 'key' ? (
-        <>
-          <Circle cx={23} cy={29} fill={softFill} r={10} stroke={ink} strokeWidth={7} />
-          <Path d="M32 33h20v8h-6v6h-7v-6h-7z" fill={softFill} stroke={ink} strokeLinejoin="round" strokeWidth={6} />
-          <Circle cx={23} cy={29} fill={ink} r={3} />
-        </>
-      ) : null}
+```tsx
+{
+  name === 'key' ? (
+    <>
+      <Circle
+        cx={23}
+        cy={29}
+        fill={softFill}
+        r={10}
+        stroke={ink}
+        strokeWidth={7}
+      />
+      <Path
+        d="M32 33h20v8h-6v6h-7v-6h-7z"
+        fill={softFill}
+        stroke={ink}
+        strokeLinejoin="round"
+        strokeWidth={6}
+      />
+      <Circle cx={23} cy={29} fill={ink} r={3} />
+    </>
+  ) : null;
+}
 
-      {name === 'lock' ? (
-        <>
-          {/* Arco primeiro, para o corpo do cadeado cobrir a base dele. */}
-          <StrokePath d="M22 30v-7a10 10 0 0 1 20 0v7" fill={softFill} ink={ink} width={7} />
-          <Rect fill={ink} height={26} rx={7} stroke={ink} strokeWidth={6} width={40} x={12} y={28} />
-          <Rect fill={softFill} height={26} rx={7} width={40} x={12} y={28} />
-          <Circle cx={32} cy={38} fill={ink} r={4.4} />
-          <Path d="M29.7 40.4h4.6l1.5 7.6h-7.6z" fill={ink} />
-        </>
-      ) : null}
-~~~
+{
+  name === 'lock' ? (
+    <>
+      {/* Arco primeiro, para o corpo do cadeado cobrir a base dele. */}
+      <StrokePath
+        d="M22 30v-7a10 10 0 0 1 20 0v7"
+        fill={softFill}
+        ink={ink}
+        width={7}
+      />
+      <Rect
+        fill={ink}
+        height={26}
+        rx={7}
+        stroke={ink}
+        strokeWidth={6}
+        width={40}
+        x={12}
+        y={28}
+      />
+      <Rect fill={softFill} height={26} rx={7} width={40} x={12} y={28} />
+      <Circle cx={32} cy={38} fill={ink} r={4.4} />
+      <Path d="M29.7 40.4h4.6l1.5 7.6h-7.6z" fill={ink} />
+    </>
+  ) : null;
+}
+```
 
 `StrokePath`, `Rect`, `Circle` e `Path` já estão importados/definidos no arquivo — nenhum
 import novo.
@@ -102,7 +148,7 @@ O que muda no estado bloqueado:
   da barra de progresso da placa de mundo.
 - O componente sai memoizado (`memo`) — é a mesma medida da Parte 2.
 
-~~~tsx
+```tsx
 import { memo, useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -196,7 +242,10 @@ function BonusWorldChestMarkerBase({
     <Pressable
       accessibilityLabel={`${getStateTitle(state)} ${completedCount}/${totalCount}`}
       accessibilityRole="button"
-      accessibilityState={{ disabled: isLocked, selected: selected || isAvailable }}
+      accessibilityState={{
+        disabled: isLocked,
+        selected: selected || isAvailable,
+      }}
       hitSlop={10}
       onPress={onPress}
       style={({ pressed }) => [
@@ -245,7 +294,12 @@ function BonusWorldChestMarkerBase({
           },
         ]}
       >
-        <RewardAssetIcon muted={isLocked} name="chestWorld" size={82} style={styles.chestAsset} />
+        <RewardAssetIcon
+          muted={isLocked}
+          name="chestWorld"
+          size={82}
+          style={styles.chestAsset}
+        />
       </Animated.View>
 
       {/* Bloqueado = cadeado sobre a tampa. Sem véu escuro e sem barras cruzadas: a arte
@@ -280,15 +334,23 @@ function BonusWorldChestMarkerBase({
             {Array.from({ length: totalCount }).map((_, index) => (
               <View
                 key={`chest-progress-${index}`}
-                style={[styles.segment, index < completedCount ? styles.segmentDone : null]}
+                style={[
+                  styles.segment,
+                  index < completedCount ? styles.segmentDone : null,
+                ]}
               />
             ))}
-            <Text style={[styles.progress, isLocked ? styles.progressLocked : null]}>
+            <Text
+              style={[styles.progress, isLocked ? styles.progressLocked : null]}
+            >
               {completedCount}/{totalCount}
             </Text>
           </View>
         ) : (
-          <Text numberOfLines={1} style={[styles.progress, isLocked ? styles.progressLocked : null]}>
+          <Text
+            numberOfLines={1}
+            style={[styles.progress, isLocked ? styles.progressLocked : null]}
+          >
             {completedCount}/{totalCount}
           </Text>
         )}
@@ -477,7 +539,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-~~~
+```
 
 > `markerLocked` (que só tinha `opacity: 0.98`) saiu junto — se o typecheck reclamar de
 > algum outro uso dele, me avise.
@@ -486,23 +548,27 @@ const styles = StyleSheet.create({
 
 O selo da bolha bloqueada é a mesma chave em bolha escura. Procure:
 
-~~~tsx
-          {locked ? (
-            <View style={styles.lockBadge}>
-              <GameIcon muted name="key" size={18} tone="neutral" />
-            </View>
-          ) : null}
-~~~
+```tsx
+{
+  locked ? (
+    <View style={styles.lockBadge}>
+      <GameIcon muted name="key" size={18} tone="neutral" />
+    </View>
+  ) : null;
+}
+```
 
 Troque por:
 
-~~~tsx
-          {locked ? (
-            <View style={styles.lockBadge}>
-              <GameIcon name="lock" size={17} tone="neutral" variant="plain" />
-            </View>
-          ) : null}
-~~~
+```tsx
+{
+  locked ? (
+    <View style={styles.lockBadge}>
+      <GameIcon name="lock" size={17} tone="neutral" variant="plain" />
+    </View>
+  ) : null;
+}
+```
 
 `variant="plain"` tira a bolha azul-escura do ícone: o selo claro que já existe
 (`lockBadge`) passa a ser a única bolha, com o cadeado desenhado dentro.
@@ -513,39 +579,39 @@ Todas as trocas são de `'key'` para `'lock'`, uma linha cada.
 
 **`src/components/ShopMapMarker.tsx`** — procure:
 
-~~~tsx
+```tsx
                 name={locked ? 'key' : 'bonus'}
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
                 name={locked ? 'lock' : 'bonus'}
-~~~
+```
 
 **`src/screens/LevelSelectScreen.tsx`** — procure (portal de mundo):
 
-~~~tsx
+```tsx
                               name={portalLocked ? 'key' : 'map'}
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
                               name={portalLocked ? 'lock' : 'map'}
-~~~
+```
 
 E no painel de fase bloqueada, procure:
 
-~~~tsx
-                  <GameIcon muted name="key" size={42} tone="neutral" />
-~~~
+```tsx
+<GameIcon muted name="key" size={42} tone="neutral" />
+```
 
 Troque por:
 
-~~~tsx
-                  <GameIcon muted name="lock" size={42} tone="neutral" />
-~~~
+```tsx
+<GameIcon muted name="lock" size={42} tone="neutral" />
+```
 
 ---
 
@@ -580,25 +646,27 @@ As três edições abaixo atacam nessa ordem.
 
 No corpo do componente, junto dos outros refs, procure:
 
-~~~tsx
-  const isVisualMoveResolvingRef = useRef(false);
-~~~
+```tsx
+const isVisualMoveResolvingRef = useRef(false);
+```
 
 Troque por:
 
-~~~tsx
-  const isVisualMoveResolvingRef = useRef(false);
-  // Toque que chegou enquanto a jogada anterior resolvia. Em vez de descartar
-  // (que é o "travamento"), guarda o último e reexecuta quando libera.
-  const queuedTilePressRef = useRef<string | undefined>(undefined);
-  const handleTilePressRef = useRef<(tileId: string) => Promise<void>>(async () => undefined);
-~~~
+```tsx
+const isVisualMoveResolvingRef = useRef(false);
+// Toque que chegou enquanto a jogada anterior resolvia. Em vez de descartar
+// (que é o "travamento"), guarda o último e reexecuta quando libera.
+const queuedTilePressRef = useRef<string | undefined>(undefined);
+const handleTilePressRef = useRef<(tileId: string) => Promise<void>>(
+  async () => undefined,
+);
+```
 
 ### 2.1.b — enfileirar em vez de descartar
 
 Procure o topo do `handleTilePress`:
 
-~~~tsx
+```tsx
   const handleTilePress = async (tileId: string) => {
     if (
       status !== 'playing' ||
@@ -608,11 +676,11 @@ Procure o topo do `handleTilePress`:
     ) {
       return;
     }
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
   const handleTilePress = async (tileId: string) => {
     if (status !== 'playing' || isBlockingModalVisible || isMagicTripleRescueVisible) {
       return;
@@ -622,66 +690,68 @@ Troque por:
       queuedTilePressRef.current = tileId;
       return;
     }
-~~~
+```
 
 ### 2.1.c — liberar a trava e consumir a fila num lugar só
 
 Ainda em `handleTilePress`, o `isVisualMoveResolvingRef.current = false` aparece em vários
 caminhos de saída. Em **todos** eles, troque:
 
-~~~tsx
-    isVisualMoveResolvingRef.current = false;
-~~~
+```tsx
+isVisualMoveResolvingRef.current = false;
+```
 
 por:
 
-~~~tsx
-    releaseVisualMoveLock();
-~~~
+```tsx
+releaseVisualMoveLock();
+```
 
 E declare o `releaseVisualMoveLock` logo **antes** do `const handleTilePress = async (...)`:
 
-~~~tsx
-  const releaseVisualMoveLock = () => {
-    isVisualMoveResolvingRef.current = false;
+```tsx
+const releaseVisualMoveLock = () => {
+  isVisualMoveResolvingRef.current = false;
 
-    const queuedTileId = queuedTilePressRef.current;
+  const queuedTileId = queuedTilePressRef.current;
 
-    if (!queuedTileId) {
-      return;
-    }
+  if (!queuedTileId) {
+    return;
+  }
 
-    queuedTilePressRef.current = undefined;
-    // Reexecuta na próxima volta do loop, já com board/tray novos em mão.
-    setTimeout(() => {
-      void handleTilePressRef.current(queuedTileId);
-    }, 0);
-  };
-~~~
+  queuedTilePressRef.current = undefined;
+  // Reexecuta na próxima volta do loop, já com board/tray novos em mão.
+  setTimeout(() => {
+    void handleTilePressRef.current(queuedTileId);
+  }, 0);
+};
+```
 
 E logo **depois** do fim do `handleTilePress`, mantenha a ref apontando para a versão atual
 (uma linha, executada a cada render):
 
-~~~tsx
-  handleTilePressRef.current = handleTilePress;
-~~~
+```tsx
+handleTilePressRef.current = handleTilePress;
+```
 
 ### 2.1.d — encurtar a janela da trinca
 
 O efeito de consumo da trinca roda numa camada por cima (`TripleConsumeEffect`) e não
 depende da trava. Procure:
 
-~~~tsx
-    const visualWaitMs = result.removedKind ? TRIPLE_CONSUME_TOTAL_MS : TILE_FLY_DURATION_MS;
-~~~
+```tsx
+const visualWaitMs = result.removedKind
+  ? TRIPLE_CONSUME_TOTAL_MS
+  : TILE_FLY_DURATION_MS;
+```
 
 Troque por:
 
-~~~tsx
-    // A trava só precisa cobrir o voo da peça; o consumo da trinca é decorativo e
-    // continua rodando por cima do tabuleiro já jogável.
-    const visualWaitMs = TILE_FLY_DURATION_MS;
-~~~
+```tsx
+// A trava só precisa cobrir o voo da peça; o consumo da trinca é decorativo e
+// continua rodando por cima do tabuleiro já jogável.
+const visualWaitMs = TILE_FLY_DURATION_MS;
+```
 
 Mantenha os `await wait(TRIPLE_CONSUME_TOTAL_MS)` dos caminhos de **vitória** e de
 **derrota** como estão — lá a espera é para a transição de tela, não para a trava.
@@ -699,14 +769,19 @@ aqui.** Confira só que o flash aparece.
 
 Substitua o arquivo por:
 
-~~~tsx
+```tsx
 import { memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { BoardTile } from './BoardTile';
 import { Tile } from '../types/game';
 import { WindowTarget } from '../types/ui';
-import { BOARD_HEIGHT, BOARD_WIDTH, isTileBlocked, isTileRemoved } from '../utils/gameLogic';
+import {
+  BOARD_HEIGHT,
+  BOARD_WIDTH,
+  isTileBlocked,
+  isTileRemoved,
+} from '../utils/gameLogic';
 
 type GameBoardProps = {
   allowedTileId?: string;
@@ -728,7 +803,8 @@ function GameBoardBase({
   onTilePress,
 }: GameBoardProps) {
   const orderedTiles = useMemo(
-    () => [...tiles].sort((firstTile, secondTile) => firstTile.z - secondTile.z),
+    () =>
+      [...tiles].sort((firstTile, secondTile) => firstTile.z - secondTile.z),
     [tiles],
   );
   // Antes isso rodava por peça em cada render: 30 peças x varredura do tabuleiro,
@@ -751,7 +827,10 @@ function GameBoardBase({
         isTileRemoved(tile) ? null : (
           <BoardTile
             blocked={blockedTileIds.has(tile.id)}
-            disabled={disabled || (allowedTileId !== undefined && tile.id !== allowedTileId)}
+            disabled={
+              disabled ||
+              (allowedTileId !== undefined && tile.id !== allowedTileId)
+            }
             highlighted={tile.id === highlightedTileId}
             key={tile.id}
             onLayoutInWindow={onTileLayoutInWindow}
@@ -775,121 +854,137 @@ const styles = StyleSheet.create({
     width: BOARD_WIDTH,
   },
 });
-~~~
+```
 
 ## 2.3 — memoizar peça e ícone
 
 **`src/components/BoardTile.tsx`** — procure:
 
-~~~tsx
+```tsx
 import { useCallback, useEffect, useRef } from 'react';
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
 import { memo, useCallback, useEffect, useRef } from 'react';
-~~~
+```
 
 Procure:
 
-~~~tsx
+```tsx
 export function BoardTile({
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
 function BoardTileBase({
-~~~
+```
 
 E logo **antes** do `const styles = StyleSheet.create({` do mesmo arquivo, acrescente:
 
-~~~tsx
+```tsx
 export const BoardTile = memo(BoardTileBase);
-~~~
+```
 
 **`src/components/TileIcon.tsx`** — mesma cirurgia. Procure:
 
-~~~tsx
-import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
-~~~
+```tsx
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+```
 
 Troque por:
 
-~~~tsx
+```tsx
 import { memo } from 'react';
-import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
-~~~
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+```
 
 Procure:
 
-~~~tsx
+```tsx
 export function TileIcon({
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
 function TileIconBase({
-~~~
+```
 
 E antes do `const styles = StyleSheet.create({` do arquivo, acrescente:
 
-~~~tsx
+```tsx
 export const TileIcon = memo(TileIconBase);
-~~~
+```
 
 ## 2.4 — `src/screens/GameScreen.tsx`: handlers estáveis e contas memoizadas
 
 `memo` só ajuda se as props pararem de trocar de identidade. Procure:
 
-~~~tsx
-  const remainingTiles = countRemainingTiles(board);
-~~~
+```tsx
+const remainingTiles = countRemainingTiles(board);
+```
 
 Troque por:
 
-~~~tsx
-  const remainingTiles = useMemo(() => countRemainingTiles(board), [board]);
-~~~
+```tsx
+const remainingTiles = useMemo(() => countRemainingTiles(board), [board]);
+```
 
 Procure:
 
-~~~tsx
-  const magicTripleRescueMove = findMagicTripleMove({ activeTrayCapacity, board, tray });
-~~~
+```tsx
+const magicTripleRescueMove = findMagicTripleMove({
+  activeTrayCapacity,
+  board,
+  tray,
+});
+```
 
 Troque por:
 
-~~~tsx
-  const magicTripleRescueMove = useMemo(
-    () => findMagicTripleMove({ activeTrayCapacity, board, tray }),
-    [activeTrayCapacity, board, tray],
-  );
-~~~
+```tsx
+const magicTripleRescueMove = useMemo(
+  () => findMagicTripleMove({ activeTrayCapacity, board, tray }),
+  [activeTrayCapacity, board, tray],
+);
+```
 
 Agora o handler estável. Depois da linha
 `handleTilePressRef.current = handleTilePress;` (criada em 2.1.c), acrescente:
 
-~~~tsx
-  // Identidade fixa para o GameBoard memoizado, sempre chamando a versão mais nova.
-  const handleTilePressStable = useCallback((tileId: string) => {
-    void handleTilePressRef.current(tileId);
-  }, []);
-~~~
+```tsx
+// Identidade fixa para o GameBoard memoizado, sempre chamando a versão mais nova.
+const handleTilePressStable = useCallback((tileId: string) => {
+  void handleTilePressRef.current(tileId);
+}, []);
+```
 
 E no `render`, procure:
 
-~~~tsx
-                onTilePress={handleTilePress}
-~~~
+```tsx
+onTilePress = { handleTilePress };
+```
 
 Troque por:
 
-~~~tsx
-                onTilePress={handleTilePressStable}
-~~~
+```tsx
+onTilePress = { handleTilePressStable };
+```
 
 Confira que `useCallback` e `useMemo` estão no import do `react` no topo do arquivo; se
 faltar algum, acrescente.
@@ -902,83 +997,95 @@ faltar algum, acrescente.
 
 Procure:
 
-~~~tsx
-  useEffect(() => {
-    if (isLoadingProgress || screen === 'splash') {
-      return undefined;
+```tsx
+useEffect(() => {
+  if (isLoadingProgress || screen === 'splash') {
+    return undefined;
+  }
+
+  const interval = setInterval(() => {
+    const now = Date.now();
+    setLivesNow(now);
+
+    if (
+      livesState.currentLives < livesState.maxLives &&
+      getTimeUntilNextLife(livesState, now) <= 0
+    ) {
+      refreshLivesState().catch(() => undefined);
     }
 
-    const interval = setInterval(() => {
-      const now = Date.now();
-      setLivesNow(now);
+    if (
+      (trayBoostState.coinSlotExpiresAt &&
+        getCoinTraySlotRemaining(trayBoostState, now) <= 0) ||
+      (trayBoostState.adSlotExpiresAt &&
+        getBonusTraySlotRemaining(trayBoostState, now) <= 0)
+    ) {
+      refreshTrayBoostState().catch(() => undefined);
+    }
+  }, 1000);
 
-      if (livesState.currentLives < livesState.maxLives && getTimeUntilNextLife(livesState, now) <= 0) {
-        refreshLivesState().catch(() => undefined);
-      }
-
-      if (
-        (trayBoostState.coinSlotExpiresAt && getCoinTraySlotRemaining(trayBoostState, now) <= 0) ||
-        (trayBoostState.adSlotExpiresAt && getBonusTraySlotRemaining(trayBoostState, now) <= 0)
-      ) {
-        refreshTrayBoostState().catch(() => undefined);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isLoadingProgress, livesState, refreshLivesState, refreshTrayBoostState, screen, trayBoostState]);
-~~~
+  return () => clearInterval(interval);
+}, [
+  isLoadingProgress,
+  livesState,
+  refreshLivesState,
+  refreshTrayBoostState,
+  screen,
+  trayBoostState,
+]);
+```
 
 Troque por:
 
-~~~tsx
-  const livesStateRef = useRef(livesState);
-  const trayBoostStateRef = useRef(trayBoostState);
+```tsx
+const livesStateRef = useRef(livesState);
+const trayBoostStateRef = useRef(trayBoostState);
 
-  useEffect(() => {
-    livesStateRef.current = livesState;
-  }, [livesState]);
+useEffect(() => {
+  livesStateRef.current = livesState;
+}, [livesState]);
 
-  useEffect(() => {
-    trayBoostStateRef.current = trayBoostState;
-  }, [trayBoostState]);
+useEffect(() => {
+  trayBoostStateRef.current = trayBoostState;
+}, [trayBoostState]);
 
-  useEffect(() => {
-    if (isLoadingProgress || screen === 'splash') {
-      return undefined;
+useEffect(() => {
+  if (isLoadingProgress || screen === 'splash') {
+    return undefined;
+  }
+
+  const interval = setInterval(() => {
+    const now = Date.now();
+    const currentLives = livesStateRef.current;
+    const currentTrayBoost = trayBoostStateRef.current;
+    const isCountingLives = currentLives.currentLives < currentLives.maxLives;
+    const isCountingBoost = Boolean(
+      currentTrayBoost.coinSlotExpiresAt || currentTrayBoost.adSlotExpiresAt,
+    );
+
+    // Só acorda o App quando existe contador visível. Antes o tick re-renderizava
+    // a tela inteira (tabuleiro incluído) a cada segundo, até com vidas cheias.
+    if (isCountingLives || isCountingBoost) {
+      setLivesNow(now);
     }
 
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const currentLives = livesStateRef.current;
-      const currentTrayBoost = trayBoostStateRef.current;
-      const isCountingLives = currentLives.currentLives < currentLives.maxLives;
-      const isCountingBoost = Boolean(
-        currentTrayBoost.coinSlotExpiresAt || currentTrayBoost.adSlotExpiresAt,
-      );
+    if (isCountingLives && getTimeUntilNextLife(currentLives, now) <= 0) {
+      refreshLivesState().catch(() => undefined);
+    }
 
-      // Só acorda o App quando existe contador visível. Antes o tick re-renderizava
-      // a tela inteira (tabuleiro incluído) a cada segundo, até com vidas cheias.
-      if (isCountingLives || isCountingBoost) {
-        setLivesNow(now);
-      }
+    if (
+      (currentTrayBoost.coinSlotExpiresAt &&
+        getCoinTraySlotRemaining(currentTrayBoost, now) <= 0) ||
+      (currentTrayBoost.adSlotExpiresAt &&
+        getBonusTraySlotRemaining(currentTrayBoost, now) <= 0)
+    ) {
+      refreshTrayBoostState().catch(() => undefined);
+    }
+  }, 1000);
 
-      if (isCountingLives && getTimeUntilNextLife(currentLives, now) <= 0) {
-        refreshLivesState().catch(() => undefined);
-      }
-
-      if (
-        (currentTrayBoost.coinSlotExpiresAt &&
-          getCoinTraySlotRemaining(currentTrayBoost, now) <= 0) ||
-        (currentTrayBoost.adSlotExpiresAt &&
-          getBonusTraySlotRemaining(currentTrayBoost, now) <= 0)
-      ) {
-        refreshTrayBoostState().catch(() => undefined);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isLoadingProgress, refreshLivesState, refreshTrayBoostState, screen]);
-~~~
+  return () => clearInterval(interval);
+}, [isLoadingProgress, refreshLivesState, refreshTrayBoostState, screen]);
+```
 
 As refs mantêm o intervalo com valores frescos sem recriá-lo a cada segundo. `useRef` já
 está importado no arquivo.
@@ -991,67 +1098,67 @@ resolve. Trocar por uma camada de `opacity` mantém o visual e sai da thread JS.
 
 Procure:
 
-~~~tsx
-    Animated.sequence([
-      Animated.timing(flash, {
-        duration: 120,
-        toValue: 1,
-        useNativeDriver: false,
-      }),
-      Animated.timing(flash, {
-        duration: 420,
-        toValue: 0,
-        useNativeDriver: false,
-      }),
-    ]).start();
-~~~
+```tsx
+Animated.sequence([
+  Animated.timing(flash, {
+    duration: 120,
+    toValue: 1,
+    useNativeDriver: false,
+  }),
+  Animated.timing(flash, {
+    duration: 420,
+    toValue: 0,
+    useNativeDriver: false,
+  }),
+]).start();
+```
 
 Troque por:
 
-~~~tsx
-    Animated.sequence([
-      Animated.timing(flash, {
-        duration: 120,
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-      Animated.timing(flash, {
-        duration: 420,
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-    ]).start();
-~~~
+```tsx
+Animated.sequence([
+  Animated.timing(flash, {
+    duration: 120,
+    toValue: 1,
+    useNativeDriver: true,
+  }),
+  Animated.timing(flash, {
+    duration: 420,
+    toValue: 0,
+    useNativeDriver: true,
+  }),
+]).start();
+```
 
 Procure:
 
-~~~tsx
-  const borderColor = flash.interpolate({
-    inputRange: [0, 1],
-    outputRange: [nearlyFull ? '#FF8BA9' : '#E0B26A', '#FFF0C4'],
-  });
-  const backgroundColor = flash.interpolate({
-    inputRange: [0, 1],
-    outputRange: [nearlyFull ? '#6E2A22' : '#8A5527', '#B0793A'],
-  });
-  const scale = flash.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.025],
-  });
-~~~
+```tsx
+const borderColor = flash.interpolate({
+  inputRange: [0, 1],
+  outputRange: [nearlyFull ? '#FF8BA9' : '#E0B26A', '#FFF0C4'],
+});
+const backgroundColor = flash.interpolate({
+  inputRange: [0, 1],
+  outputRange: [nearlyFull ? '#6E2A22' : '#8A5527', '#B0793A'],
+});
+const scale = flash.interpolate({
+  inputRange: [0, 1],
+  outputRange: [1, 1.025],
+});
+```
 
 Troque por:
 
-~~~tsx
-  const scale = flash.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.025],
-  });
-~~~
+```tsx
+const scale = flash.interpolate({
+  inputRange: [0, 1],
+  outputRange: [1, 1.025],
+});
+```
 
 Procure:
 
-~~~tsx
+```tsx
     <Animated.View
       style={[
         styles.wrapper,
@@ -1060,11 +1167,11 @@ Procure:
       ]}
     >
       <View pointerEvents="none" style={styles.topGloss} />
-~~~
+```
 
 Troque por:
 
-~~~tsx
+```tsx
     <Animated.View
       style={[
         styles.wrapper,
@@ -1074,11 +1181,11 @@ Troque por:
     >
       <Animated.View pointerEvents="none" style={[styles.flashLayer, { opacity: flash }]} />
       <View pointerEvents="none" style={styles.topGloss} />
-~~~
+```
 
 E no `StyleSheet.create` do arquivo acrescente:
 
-~~~ts
+```ts
   flashLayer: {
     backgroundColor: '#B0793A',
     borderColor: '#FFF0C4',
@@ -1091,7 +1198,7 @@ E no `StyleSheet.create` do arquivo acrescente:
     top: 0,
     zIndex: 1,
   },
-~~~
+```
 
 Se o `borderRadius` do `wrapper` for diferente de 14, use o mesmo valor dele no
 `flashLayer`. Confira também que o `wrapper` tem `backgroundColor` e `borderColor`

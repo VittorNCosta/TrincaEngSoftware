@@ -20,6 +20,8 @@ export const getRoundTrayCapacity = (
     baseCapacity,
     Math.min(
       maxCapacity,
-      baseCapacity + Number(snapshot.coinSlotActive) + Number(snapshot.bonusSlotActive),
+      baseCapacity +
+        Number(snapshot.coinSlotActive) +
+        Number(snapshot.bonusSlotActive),
     ),
   );

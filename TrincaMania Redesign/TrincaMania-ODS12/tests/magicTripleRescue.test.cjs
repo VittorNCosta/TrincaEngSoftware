@@ -112,7 +112,10 @@ test('bandeja folgada continua recebendo a trinca de tabuleiro que sempre recebe
 test('com a bandeja no limite, a trinca que esvazia a bandeja continua sendo escolhida', () => {
   const tray = createTrayAtRisk();
   // O símbolo do plástico fecha o ciclo com duas peças da bandeja.
-  const board = [...createBoardOnlyCycle(), createTile('B4', 'plastico', 'simbolo', 180)];
+  const board = [
+    ...createBoardOnlyCycle(),
+    createTile('B4', 'plastico', 'simbolo', 180),
+  ];
 
   const move = findMagicTripleMove({
     activeTrayCapacity: TRAY_CAPACITY,

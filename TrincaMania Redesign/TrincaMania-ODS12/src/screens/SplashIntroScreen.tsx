@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
@@ -21,12 +30,12 @@ type IntroParticle = {
 };
 
 const INTRO_PARTICLES: IntroParticle[] = [
-  { color: '#FFD35A', delay: 0, rotate: '18deg', size: 10, x: -138, y: -194 },
-  { color: '#42E5A7', delay: 0.1, rotate: '-18deg', size: 8, x: 128, y: -166 },
-  { color: '#FF6D9E', delay: 0.18, rotate: '45deg', size: 9, x: -152, y: 86 },
-  { color: '#8FD8FF', delay: 0.26, rotate: '-45deg', size: 7, x: 148, y: 116 },
+  { color: '#FFD500', delay: 0, rotate: '18deg', size: 10, x: -138, y: -194 },
+  { color: '#009640', delay: 0.1, rotate: '-18deg', size: 8, x: 128, y: -166 },
+  { color: '#E30613', delay: 0.18, rotate: '45deg', size: 9, x: -152, y: 86 },
+  { color: '#0055A4', delay: 0.26, rotate: '-45deg', size: 7, x: 148, y: 116 },
   { color: '#FFF4B8', delay: 0.32, rotate: '10deg', size: 6, x: -72, y: 184 },
-  { color: '#C8B8FF', delay: 0.22, rotate: '-10deg', size: 8, x: 76, y: -218 },
+  { color: '#7B3F00', delay: 0.22, rotate: '-10deg', size: 8, x: 76, y: -218 },
 ];
 
 export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
@@ -223,7 +232,16 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
 
   return (
     <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
-      <Pressable accessibilityRole="button" onPress={() => finishIntro(true)} style={styles.skipLayer}>
+      <Pressable
+        accessibilityLabel="Pular a introdução"
+        accessibilityRole="button"
+        // Primeira tela do app: um teste de aparelho precisa atravessá-la para
+        // chegar em qualquer outra coisa, e esperar a animação inteira acabar
+        // torna todo fluxo E2E refém do tempo dela.
+        testID="splash-skip"
+        onPress={() => finishIntro(true)}
+        style={styles.skipLayer}
+      >
         <View pointerEvents="none" style={StyleSheet.absoluteFillObject}>
           <View style={styles.topWash} />
           <View style={styles.centerGlow} />
@@ -231,11 +249,18 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
           <View style={styles.diagonalPanel} />
           <View style={[styles.glowRing, styles.glowRingTop]} />
           <View style={[styles.glowRing, styles.glowRingBottom]} />
-          <Animated.View style={[styles.finalFlash, { opacity: finalFlashOpacity }]} />
+          <Animated.View
+            style={[styles.finalFlash, { opacity: finalFlashOpacity }]}
+          />
           <View style={styles.particleLayer}>
             {INTRO_PARTICLES.map((particle, index) => {
               const opacity = particleFloat.interpolate({
-                inputRange: [0, particle.delay, Math.min(1, particle.delay + 0.24), 1],
+                inputRange: [
+                  0,
+                  particle.delay,
+                  Math.min(1, particle.delay + 0.24),
+                  1,
+                ],
                 outputRange: [0, 0, 0.78, 0.34],
               });
               const translateY = particleFloat.interpolate({
@@ -266,8 +291,16 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
           </View>
         </View>
 
-        <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.safeArea}>
-          <View style={[styles.centerStage, height < 760 ? styles.centerStageCompact : null]}>
+        <SafeAreaView
+          edges={['top', 'bottom', 'left', 'right']}
+          style={styles.safeArea}
+        >
+          <View
+            style={[
+              styles.centerStage,
+              height < 760 ? styles.centerStageCompact : null,
+            ]}
+          >
             <Animated.View
               style={[
                 styles.logoStage,
@@ -277,7 +310,10 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
                 },
               ]}
             >
-              <View accessibilityLabel="Logo IGRION" style={[styles.logoFrame, { width: logoWidth }]}>
+              <View
+                accessibilityLabel="Logo IGRION"
+                style={[styles.logoFrame, { width: logoWidth }]}
+              >
                 {logoLoadFailed ? (
                   <Text style={styles.logoFallback}>IGRION</Text>
                 ) : (
@@ -293,7 +329,10 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
                   style={[
                     styles.logoShine,
                     {
-                      transform: [{ translateX: shineTranslate }, { rotate: '-18deg' }],
+                      transform: [
+                        { translateX: shineTranslate },
+                        { rotate: '-18deg' },
+                      ],
                     },
                   ]}
                 />
@@ -313,6 +352,16 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
             </Animated.Text>
 
             <View style={[styles.titleStage, { width: titleWidth }]}>
+              <Animated.Image
+                accessible={false}
+                source={require('../../assets/adaptive-icon.png')}
+                resizeMode="contain"
+                style={{
+                  width: 110,
+                  height: Math.min(height * 0.13, 110),
+                  opacity: titleOpacity,
+                }}
+              />
               <Animated.View
                 pointerEvents="none"
                 style={[
@@ -339,7 +388,9 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
             </View>
           </View>
 
-          <Animated.View style={[styles.launchBlock, { opacity: launchOpacity }]}>
+          <Animated.View
+            style={[styles.launchBlock, { opacity: launchOpacity }]}
+          >
             <View style={styles.launchTrack}>
               <View style={styles.launchFill} />
             </View>

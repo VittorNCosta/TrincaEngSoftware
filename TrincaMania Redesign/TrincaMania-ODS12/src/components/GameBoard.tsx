@@ -31,9 +31,13 @@ function GameBoardBase({
   // `tiles` conserva as pecas removidas; por isso este fallback tambem fica
   // geometricamente estavel. GameScreen pode fornecer o snapshot da rodada para
   // tornar essa garantia explicita ao recalcular o viewport.
-  const resolvedBounds = useMemo(() => bounds ?? getBoardBounds(tiles), [bounds, tiles]);
+  const resolvedBounds = useMemo(
+    () => bounds ?? getBoardBounds(tiles),
+    [bounds, tiles],
+  );
   const orderedTiles = useMemo(
-    () => [...tiles].sort((firstTile, secondTile) => firstTile.z - secondTile.z),
+    () =>
+      [...tiles].sort((firstTile, secondTile) => firstTile.z - secondTile.z),
     [tiles],
   );
   // Antes isso rodava por peça em cada render: 30 peças x varredura do tabuleiro,
@@ -52,6 +56,9 @@ function GameBoardBase({
 
   return (
     <View
+      // Âncora de "estou numa partida": é por ela que um teste de aparelho
+      // confirma que a fase abriu, sem depender de texto que muda com o tema.
+      testID="game-board"
       style={[
         styles.board,
         {
@@ -66,7 +73,10 @@ function GameBoardBase({
             blocked={blockedTileIds.has(tile.id)}
             boardOriginX={resolvedBounds.left}
             boardOriginY={resolvedBounds.top}
-            disabled={disabled || (allowedTileId !== undefined && tile.id !== allowedTileId)}
+            disabled={
+              disabled ||
+              (allowedTileId !== undefined && tile.id !== allowedTileId)
+            }
             highlighted={tile.id === highlightedTileId}
             key={tile.id}
             onLayoutInWindow={onTileLayoutInWindow}

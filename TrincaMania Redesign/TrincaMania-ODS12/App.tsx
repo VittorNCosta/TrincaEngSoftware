@@ -1,8 +1,14 @@
+import { useProgressPersistence } from './src/hooks/useProgressPersistence';
+import { checkBoardSize } from './src/observability/runtimeInvariants';
+import { isChapterModeUnlocked } from './src/utils/chapterAvailability';
+import { installNativeErrorHandlers } from './src/observability/nativeErrors';
+import { runtimeAssert, updateDiagnosticContext } from './src/utils/log';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import { CampaignResizeNoticeModal } from './src/components/CampaignResizeNoticeModal';
 import { MysteryTutorialModal } from './src/components/MysteryTutorialModal';
 import { NoLivesModal } from './src/components/NoLivesModal';
 import { SettingsModal } from './src/components/SettingsModal';
@@ -24,22 +30,23 @@ import {
   consumePowerUpItem,
   createChestProgressSummary,
   createInitialProgress,
+  getCampaignResizeNoticeSeen,
   grantChestCoinReward,
   getMysteryTutorialSeen,
   getPracticalTutorialSeen,
   getTutorialSeen,
   loadProgress,
+  loadStoredProgressMigrationInfo,
   markBonusWorldAchievementShown,
   normalizeProgress,
   openWorldChest,
   purchasePowerUpTransaction,
   restorePurchasedPowerUpItem,
+  saveCampaignResizeNoticeSeen,
   saveMysteryTutorialSeen,
   savePracticalTutorialSeen,
-  saveProgress,
   saveTutorialSeen,
   spendCoins,
-  unlockAllLevelsForDevMode,
 } from './src/storage/progressStorage';
 import {
   ChapterProgressState,
@@ -49,8 +56,6 @@ import {
   getNextChapterMapId,
   isChapterMapUnlocked,
   loadChapterProgress,
-  saveChapterProgress,
-  unlockAllChapterMapsForDevMode,
 } from './src/storage/chapterProgressStorage';
 import {
   MagicTripleRescueState,
@@ -104,7 +109,10 @@ import {
   purchaseCoinTraySlot,
   resetTrayBoostState,
 } from './src/storage/trayBoostStorage';
-import { POWER_UP_COSTS, getIncrementalCoinRewardForLevel } from './src/utils/gameLogic';
+import {
+  POWER_UP_COSTS,
+  getIncrementalCoinRewardForLevel,
+} from './src/utils/gameLogic';
 import { getRestCheckpointCoinReward } from './src/utils/shop';
 import { setSoundEnabled } from './src/utils/sounds';
 import { getCurrentWorldId } from './src/utils/worldProgress';
@@ -113,31 +121,52 @@ type AppScreen = 'splash' | 'levels' | 'game' | 'shop' | 'chapters';
 type ShopReturnScreen = 'levels' | 'game';
 
 export default function App() {
+  useEffect(() => installNativeErrorHandlers(), []);
   const [screen, setScreen] = useState<AppScreen>('splash');
-  const [progress, setProgress] = useState<ProgressState>(createInitialProgress());
+  const [progress, setProgress] = useState<ProgressState>(
+    createInitialProgress(),
+  );
   const [chapterProgress, setChapterProgress] = useState<ChapterProgressState>(
     createInitialChapterProgress(),
   );
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
-  const [campaignInitialWorldId, setCampaignInitialWorldId] = useState<WorldId | undefined>();
+  const [campaignInitialWorldId, setCampaignInitialWorldId] = useState<
+    WorldId | undefined
+  >();
   const [selectedLevelId, setSelectedLevelId] = useState(LEVELS[0]?.id ?? '');
-  const [shopReturnScreen, setShopReturnScreen] = useState<ShopReturnScreen>('levels');
+  const [shopReturnScreen, setShopReturnScreen] =
+    useState<ShopReturnScreen>('levels');
   const [shopWorldId, setShopWorldId] = useState<WorldId>(1);
-  const [livesState, setLivesState] = useState<LivesState>(createInitialLivesState());
+  const [livesState, setLivesState] = useState<LivesState>(
+    createInitialLivesState(),
+  );
   const [livesNow, setLivesNow] = useState(Date.now());
-  const [trayBoostState, setTrayBoostState] = useState<TrayBoostState>(createInitialTrayBoostState());
+  const [trayBoostState, setTrayBoostState] = useState<TrayBoostState>(
+    createInitialTrayBoostState(),
+  );
   const [isNoLivesModalVisible, setIsNoLivesModalVisible] = useState(false);
   const [isTutorialVisible, setIsTutorialVisible] = useState(false);
   const [isMysteryTutorialSeen, setIsMysteryTutorialSeen] = useState(false);
   const [isPracticalTutorialSeen, setIsPracticalTutorialSeen] = useState(false);
+  const [isCampaignResizeNoticeVisible, setIsCampaignResizeNoticeVisible] =
+    useState(false);
   const [magicTripleRescueState, setMagicTripleRescueState] =
     useState<MagicTripleRescueState>(createInitialMagicTripleRescueState());
-  const [settings, setSettings] = useState<AppSettings>(createDefaultSettings());
+  const [settings, setSettings] = useState<AppSettings>(
+    createDefaultSettings(),
+  );
+  const [devMode, setDevMode] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-  const [activeWorldChestId, setActiveWorldChestId] = useState<string | undefined>();
-  const [worldChestResult, setWorldChestResult] = useState<WorldChestOpenResult | undefined>();
+  const [activeWorldChestId, setActiveWorldChestId] = useState<
+    string | undefined
+  >();
+  const [worldChestResult, setWorldChestResult] = useState<
+    WorldChestOpenResult | undefined
+  >();
   const [isOpeningWorldChest, setIsOpeningWorldChest] = useState(false);
-  const [coinCollectTarget, setCoinCollectTarget] = useState<WindowTarget | undefined>();
+  const [coinCollectTarget, setCoinCollectTarget] = useState<
+    WindowTarget | undefined
+  >();
   const progressRef = useRef(progress);
   const progressSaveQueueRef = useRef<Promise<void>>(Promise.resolve());
   // Apagar o progresso incrementa a geração: escritas enfileiradas antes do reset
@@ -151,8 +180,9 @@ export default function App() {
   const isPurchasingTraySlotRef = useRef(false);
   const isOpeningWorldChestRef = useRef(false);
   const isCollectingCheckpointRef = useRef(false);
-  const bonusTraySlotActivationPromiseRef =
-    useRef<Promise<BonusTraySlotActivationResult> | undefined>(undefined);
+  const bonusTraySlotActivationPromiseRef = useRef<
+    Promise<BonusTraySlotActivationResult> | undefined
+  >(undefined);
 
   useEffect(() => {
     progressRef.current = progress;
@@ -179,6 +209,8 @@ export default function App() {
       getLivesState(),
       getTrayBoostState(),
       getSettings(),
+      loadStoredProgressMigrationInfo(),
+      getCampaignResizeNoticeSeen(),
     ])
       .then(
         ([
@@ -191,6 +223,8 @@ export default function App() {
           storedLives,
           storedTrayBoost,
           storedSettings,
+          progressMigrationInfo,
+          campaignResizeNoticeSeen,
         ]) => {
           if (isMounted) {
             setProgress(storedProgress);
@@ -203,6 +237,10 @@ export default function App() {
             setIsPracticalTutorialSeen(practicalTutorialSeen);
             setIsMysteryTutorialSeen(mysteryTutorialSeen);
             setMagicTripleRescueState(storedMagicTripleRescueState);
+            setIsCampaignResizeNoticeVisible(
+              progressMigrationInfo.droppedLevelCount > 0 &&
+                !campaignResizeNoticeSeen,
+            );
           }
         },
       )
@@ -231,30 +269,15 @@ export default function App() {
     return nextTrayBoostState;
   }, []);
 
-  const commitProgress = useCallback((nextProgress: ProgressState) => {
-    const generation = progressGenerationRef.current;
-    progressRef.current = nextProgress;
-    setProgress(nextProgress);
-    const saveOperation = progressSaveQueueRef.current
-      .catch(() => undefined)
-      .then(() =>
-        progressGenerationRef.current === generation ? saveProgress(nextProgress) : undefined,
-      );
-    progressSaveQueueRef.current = saveOperation.catch(() => undefined);
-    return saveOperation;
-  }, []);
-
-  // Mesma fila de serialização do `commitProgress`, na chave dos capítulos: duas
-  // conclusões seguidas não podem gravar fora de ordem.
-  const commitChapterProgress = useCallback((nextProgress: ChapterProgressState) => {
-    chapterProgressRef.current = nextProgress;
-    setChapterProgress(nextProgress);
-    const saveOperation = chapterProgressSaveQueueRef.current
-      .catch(() => undefined)
-      .then(() => saveChapterProgress(nextProgress));
-    chapterProgressSaveQueueRef.current = saveOperation.catch(() => undefined);
-    return saveOperation;
-  }, []);
+  const { commitProgress, commitChapterProgress } = useProgressPersistence({
+    progressRef,
+    progressGenerationRef,
+    progressSaveQueueRef,
+    chapterProgressRef,
+    chapterProgressSaveQueueRef,
+    setProgress,
+    setChapterProgress,
+  });
 
   const livesStateRef = useRef(livesState);
   const trayBoostStateRef = useRef(trayBoostState);
@@ -311,20 +334,49 @@ export default function App() {
       LEVELS[0],
     [selectedLevelId],
   );
+  // Snapshot before rendering children: a render failure must not inherit the
+  // previous screen's domain context while waiting for effects to run.
+  updateDiagnosticContext({
+    screen,
+    levelId:
+      screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game')
+        ? selectedLevel?.id
+        : undefined,
+    worldId:
+      screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game')
+        ? selectedLevel?.worldId
+        : undefined,
+  });
+  useEffect(() => {
+    if (selectedLevel) checkBoardSize(selectedLevel.tiles.length);
+    runtimeAssert(LEVELS.length === 103, 'canonical-campaign-count');
+  }, [screen, selectedLevel]);
   const isChapterLevelSelected = isChapterMapId(selectedLevelId);
   const isMysteryTutorialVisible =
     screen === 'game' &&
     !isMysteryTutorialSeen &&
-    Boolean(selectedLevel?.mysteryTileCount && selectedLevel.mysteryTileCount > 0);
+    Boolean(
+      selectedLevel?.mysteryTileCount && selectedLevel.mysteryTileCount > 0,
+    );
   // A fase continua montada enquanto a Loja está aberta por cima dela: é o que
   // faz "Voltar à fase" devolver a partida em andamento, e não uma nova.
-  const isGameMounted = screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game');
+  const isGameMounted =
+    screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game');
   const timeUntilNextLifeMs = getTimeUntilNextLife(livesState, livesNow);
   const activeTrayCapacity = getActiveTrayCapacity(trayBoostState, livesNow);
-  const isCoinTraySlotActiveNow = isCoinTraySlotActive(trayBoostState, livesNow);
+  const isCoinTraySlotActiveNow = isCoinTraySlotActive(
+    trayBoostState,
+    livesNow,
+  );
   const isBonusTraySlotActiveNow = isAdTraySlotActive(trayBoostState, livesNow);
-  const coinTraySlotRemainingMs = getCoinTraySlotRemaining(trayBoostState, livesNow);
-  const bonusTraySlotRemainingMs = getBonusTraySlotRemaining(trayBoostState, livesNow);
+  const coinTraySlotRemainingMs = getCoinTraySlotRemaining(
+    trayBoostState,
+    livesNow,
+  );
+  const bonusTraySlotRemainingMs = getBonusTraySlotRemaining(
+    trayBoostState,
+    livesNow,
+  );
 
   const handleSplashFinish = useCallback(() => {
     setScreen('levels');
@@ -337,7 +389,10 @@ export default function App() {
    * isso o resumo devolve a contagem atual com `isLevelCounted: false`, que é o
    * que mantém a barra parada em vez de animar sem motivo.
    */
-  const handleChapterLevelComplete = async (mapId: string, starsEarned: number) => {
+  const handleChapterLevelComplete = async (
+    mapId: string,
+    starsEarned: number,
+  ) => {
     const completionResult = applyChapterMapCompletion(
       chapterProgressRef.current,
       mapId,
@@ -377,7 +432,11 @@ export default function App() {
       return handleChapterLevelComplete(levelId, starsEarned);
     }
 
-    const completionResult = applyLevelCompletion(progressRef.current, levelId, starsEarned);
+    const completionResult = applyLevelCompletion(
+      progressRef.current,
+      levelId,
+      starsEarned,
+    );
     let nextProgress = completionResult.progress;
     let chestReward: ChestRewardSummary | undefined;
     let shouldGrantCommonChestLife = false;
@@ -424,7 +483,8 @@ export default function App() {
     }
 
     return {
-      bonusWorldAchievementUnlocked: completionResult.bonusWorldAchievementUnlocked,
+      bonusWorldAchievementUnlocked:
+        completionResult.bonusWorldAchievementUnlocked,
       chestProgress: completionResult.chestProgress,
       chestReward,
       coinsEarned: completionResult.coinsEarned,
@@ -471,8 +531,14 @@ export default function App() {
   };
 
   const handlePurchasePowerUp = useCallback(
-    async (powerType: PowerUpType, useImmediately: boolean): Promise<boolean> => {
-      if (isPurchasingPowerUpRef.current || isProgressMutationInFlightRef.current) {
+    async (
+      powerType: PowerUpType,
+      useImmediately: boolean,
+    ): Promise<boolean> => {
+      if (
+        isPurchasingPowerUpRef.current ||
+        isProgressMutationInFlightRef.current
+      ) {
         return false;
       }
 
@@ -514,7 +580,9 @@ export default function App() {
       isProgressMutationInFlightRef.current = true;
       const previousProgress = progressRef.current;
       try {
-        await commitProgress(restorePurchasedPowerUpItem(previousProgress, powerType));
+        await commitProgress(
+          restorePurchasedPowerUpItem(previousProgress, powerType),
+        );
         return true;
       } catch {
         progressRef.current = previousProgress;
@@ -553,7 +621,9 @@ export default function App() {
     const freshMagicTripleRescueState = createInitialMagicTripleRescueState();
     progressGenerationRef.current += 1;
     void commitProgress(freshProgress).catch(() => undefined);
-    void commitChapterProgress(createInitialChapterProgress()).catch(() => undefined);
+    void commitChapterProgress(createInitialChapterProgress()).catch(
+      () => undefined,
+    );
     magicTripleRescueRef.current = freshMagicTripleRescueState;
     setMagicTripleRescueState(freshMagicTripleRescueState);
     setSelectedLevelId(LEVELS[0]?.id ?? '');
@@ -581,10 +651,10 @@ export default function App() {
   // campanha e todos os mapas de capítulo, sem passar pelo fluxo normal de
   // conclusão — é o que deixa testar fases avançadas sem jogar as anteriores.
   const handleUnlockAllForDevMode = () => {
-    void commitProgress(unlockAllLevelsForDevMode(progressRef.current)).catch(() => undefined);
-    void commitChapterProgress(unlockAllChapterMapsForDevMode(chapterProgressRef.current)).catch(
-      () => undefined,
-    );
+    if (__DEV__) {
+      setDevMode((current) => !current);
+      setScreen('levels');
+    }
   };
 
   const handleFinishTutorial = () => {
@@ -595,6 +665,11 @@ export default function App() {
   const handleFinishMysteryTutorial = () => {
     setIsMysteryTutorialSeen(true);
     saveMysteryTutorialSeen(true).catch(() => undefined);
+  };
+
+  const handleCloseCampaignResizeNotice = () => {
+    setIsCampaignResizeNoticeVisible(false);
+    saveCampaignResizeNoticeSeen(true).catch(() => undefined);
   };
 
   const handleFinishPracticalTutorial = () => {
@@ -623,66 +698,73 @@ export default function App() {
     return true;
   };
 
-  const handlePurchaseCoinTraySlot = async (): Promise<TrayBoostPurchaseResult> => {
-    if (isPurchasingTraySlotRef.current || isProgressMutationInFlightRef.current) {
-      const currentTrayBoostState = await getTrayBoostState();
-      setTrayBoostState(currentTrayBoostState);
-      setLivesNow(Date.now());
+  const handlePurchaseCoinTraySlot =
+    async (): Promise<TrayBoostPurchaseResult> => {
+      if (
+        isPurchasingTraySlotRef.current ||
+        isProgressMutationInFlightRef.current
+      ) {
+        const currentTrayBoostState = await getTrayBoostState();
+        setTrayBoostState(currentTrayBoostState);
+        setLivesNow(Date.now());
 
-      return {
-        purchased: false,
-        reason: 'active',
-        state: currentTrayBoostState,
-      };
-    }
-
-    isPurchasingTraySlotRef.current = true;
-    isProgressMutationInFlightRef.current = true;
-
-    try {
-      const purchaseResult = await purchaseCoinTraySlot(progressRef.current.coins);
-      setTrayBoostState(purchaseResult.state);
-      setLivesNow(Date.now());
-
-      if (!purchaseResult.purchased) {
-        return purchaseResult;
+        return {
+          purchased: false,
+          reason: 'active',
+          state: currentTrayBoostState,
+        };
       }
 
-      // Usa o snapshot mais recente após o await; a trava global impede outra
-      // mutação de progresso e evita sobrescrever inventário/estrelas novos.
-      const latestProgress = progressRef.current;
-      const nextProgress = spendCoins(latestProgress, COIN_TRAY_SLOT_COST);
-      await commitProgress(nextProgress);
+      isPurchasingTraySlotRef.current = true;
+      isProgressMutationInFlightRef.current = true;
 
-      return purchaseResult;
-    } finally {
-      isPurchasingTraySlotRef.current = false;
-      isProgressMutationInFlightRef.current = false;
-    }
-  };
-
-  const handleActivateBonusTraySlot = (): Promise<BonusTraySlotActivationResult> => {
-    const pendingActivation = bonusTraySlotActivationPromiseRef.current;
-
-    if (pendingActivation) {
-      return pendingActivation;
-    }
-
-    const activationPromise = activateBonusTraySlot()
-      .then((activationResult) => {
-        setTrayBoostState(activationResult.state);
+      try {
+        const purchaseResult = await purchaseCoinTraySlot(
+          progressRef.current.coins,
+        );
+        setTrayBoostState(purchaseResult.state);
         setLivesNow(Date.now());
-        return activationResult;
-      })
-      .finally(() => {
-        if (bonusTraySlotActivationPromiseRef.current === activationPromise) {
-          bonusTraySlotActivationPromiseRef.current = undefined;
-        }
-      });
 
-    bonusTraySlotActivationPromiseRef.current = activationPromise;
-    return activationPromise;
-  };
+        if (!purchaseResult.purchased) {
+          return purchaseResult;
+        }
+
+        // Usa o snapshot mais recente após o await; a trava global impede outra
+        // mutação de progresso e evita sobrescrever inventário/estrelas novos.
+        const latestProgress = progressRef.current;
+        const nextProgress = spendCoins(latestProgress, COIN_TRAY_SLOT_COST);
+        await commitProgress(nextProgress);
+
+        return purchaseResult;
+      } finally {
+        isPurchasingTraySlotRef.current = false;
+        isProgressMutationInFlightRef.current = false;
+      }
+    };
+
+  const handleActivateBonusTraySlot =
+    (): Promise<BonusTraySlotActivationResult> => {
+      const pendingActivation = bonusTraySlotActivationPromiseRef.current;
+
+      if (pendingActivation) {
+        return pendingActivation;
+      }
+
+      const activationPromise = activateBonusTraySlot()
+        .then((activationResult) => {
+          setTrayBoostState(activationResult.state);
+          setLivesNow(Date.now());
+          return activationResult;
+        })
+        .finally(() => {
+          if (bonusTraySlotActivationPromiseRef.current === activationPromise) {
+            bonusTraySlotActivationPromiseRef.current = undefined;
+          }
+        });
+
+      bonusTraySlotActivationPromiseRef.current = activationPromise;
+      return activationPromise;
+    };
 
   const handleOpenRestCheckpoint = async (
     afterLevelId: string,
@@ -722,9 +804,9 @@ export default function App() {
 
         setLivesState(nextLivesState);
         setLivesNow(Date.now());
-        void commitProgress(collectRestCheckpoint(latestProgress, afterLevelId)).catch(
-          () => undefined,
-        );
+        void commitProgress(
+          collectRestCheckpoint(latestProgress, afterLevelId),
+        ).catch(() => undefined);
 
         return {
           granted: true,
@@ -751,7 +833,8 @@ export default function App() {
   };
 
   const showWorldChest = useCallback((worldChestId?: string) => {
-    const targetWorldChestId = worldChestId ?? progressRef.current.pendingWorldChestIds[0];
+    const targetWorldChestId =
+      worldChestId ?? progressRef.current.pendingWorldChestIds[0];
 
     if (!targetWorldChestId) {
       return;
@@ -767,7 +850,10 @@ export default function App() {
   }, []);
 
   const handleOpenWorldChest = useCallback(
-    async (worldChestId: string, mode: WorldChestOpenMode): Promise<WorldChestOpenResult> => {
+    async (
+      worldChestId: string,
+      mode: WorldChestOpenMode,
+    ): Promise<WorldChestOpenResult> => {
       if (isOpeningWorldChestRef.current) {
         return (
           worldChestResult ?? {
@@ -831,7 +917,7 @@ export default function App() {
   );
 
   const handleSelectLevel = async (levelId: string) => {
-    if (!progress.unlockedLevelIds.includes(levelId)) {
+    if (!devMode && !progress.unlockedLevelIds.includes(levelId)) {
       return;
     }
 
@@ -844,7 +930,11 @@ export default function App() {
   };
 
   const handleSelectChapterLevel = async (mapId: string) => {
-    if (!isChapterMapUnlocked(mapId, chapterProgressRef.current)) {
+    if (
+      !devMode &&
+      (!isChapterModeUnlocked(progressRef.current) ||
+        !isChapterMapUnlocked(mapId, chapterProgressRef.current))
+    ) {
       return;
     }
 
@@ -880,7 +970,9 @@ export default function App() {
     }));
 
     setSoundEnabled(nextSoundEnabled).catch(() => {
-      getSettings().then(setSettings).catch(() => undefined);
+      getSettings()
+        .then(setSettings)
+        .catch(() => undefined);
     });
   };
 
@@ -893,7 +985,9 @@ export default function App() {
     }));
 
     setHapticsEnabledPreference(nextHapticsEnabled).catch(() => {
-      getSettings().then(setSettings).catch(() => undefined);
+      getSettings()
+        .then(setSettings)
+        .catch(() => undefined);
     });
   };
 
@@ -904,8 +998,13 @@ export default function App() {
       soundEnabled: false,
     }));
 
-    Promise.all([setSoundEnabled(false), setHapticsEnabledPreference(false)]).catch(() => {
-      getSettings().then(setSettings).catch(() => undefined);
+    Promise.all([
+      setSoundEnabled(false),
+      setHapticsEnabledPreference(false),
+    ]).catch(() => {
+      getSettings()
+        .then(setSettings)
+        .catch(() => undefined);
     });
   };
 
@@ -921,7 +1020,10 @@ export default function App() {
     if (isChapterMapId(selectedLevelId)) {
       const nextMapId = getNextChapterMapId(selectedLevelId);
 
-      if (nextMapId && isChapterMapUnlocked(nextMapId, chapterProgressRef.current)) {
+      if (
+        nextMapId &&
+        isChapterMapUnlocked(nextMapId, chapterProgressRef.current)
+      ) {
         if (!(await ensureCanStartLevel())) {
           return;
         }
@@ -935,7 +1037,9 @@ export default function App() {
       return;
     }
 
-    const currentIndex = LEVELS.findIndex((level) => level.id === selectedLevelId);
+    const currentIndex = LEVELS.findIndex(
+      (level) => level.id === selectedLevelId,
+    );
     const currentLevel = LEVELS[currentIndex];
     const nextLevel = LEVELS[currentIndex + 1];
 
@@ -1016,6 +1120,7 @@ export default function App() {
       <StatusBar style="light" />
       {screen === 'levels' ? (
         <MainTabs
+          devMode={devMode}
           activeTrayCapacity={activeTrayCapacity}
           bonusTraySlotRemainingMs={bonusTraySlotRemainingMs}
           coinTraySlotRemainingMs={coinTraySlotRemainingMs}
@@ -1028,7 +1133,10 @@ export default function App() {
           onOpenRestCheckpoint={handleOpenRestCheckpoint}
           onOpenSettings={openSettings}
           onOpenShop={openShop}
-          onOpenChapters={() => setScreen('chapters')}
+          onOpenChapters={() => {
+            if (devMode || isChapterModeUnlocked(progressRef.current))
+              setScreen('chapters');
+          }}
           onOpenWorldChest={showWorldChest}
           onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
           onResetProgress={handleResetProgress}
@@ -1038,6 +1146,7 @@ export default function App() {
       ) : null}
       {screen === 'chapters' ? (
         <ChaptersScreen
+          devMode={devMode}
           chapterProgress={chapterProgress}
           onBack={() => setScreen('levels')}
           onSelectChapterLevel={handleSelectChapterLevel}
@@ -1048,7 +1157,7 @@ export default function App() {
           bestStars={
             isChapterLevelSelected
               ? getChapterMapStars(chapterProgress, selectedLevel.id)
-              : progress.levelStars[selectedLevel.id] ?? 0
+              : (progress.levelStars[selectedLevel.id] ?? 0)
           }
           level={selectedLevel}
           coins={progress.coins}
@@ -1063,7 +1172,9 @@ export default function App() {
             // ficam parados enquanto o jogador compra.
             screen === 'shop'
           }
-          shouldRunPracticalTutorial={!isPracticalTutorialSeen && selectedLevel.id === 'w1-001'}
+          shouldRunPracticalTutorial={
+            !isPracticalTutorialSeen && selectedLevel.id === 'w1-001'
+          }
           magicTripleRescueState={magicTripleRescueState}
           livesState={livesState}
           activeTrayCapacity={activeTrayCapacity}
@@ -1077,7 +1188,9 @@ export default function App() {
           onPurchasePowerUp={handlePurchasePowerUp}
           onRestorePurchasedPowerUp={handleRestorePurchasedPowerUp}
           onBack={() =>
-            isChapterLevelSelected ? setScreen('chapters') : openCampaign(selectedLevel.worldId)
+            isChapterLevelSelected
+              ? setScreen('chapters')
+              : openCampaign(selectedLevel.worldId)
           }
           onBonusWorldAchievementSeen={handleBonusWorldAchievementSeen}
           onCoinCounterLayout={setCoinCollectTarget}
@@ -1097,7 +1210,9 @@ export default function App() {
       {screen === 'shop' ? (
         <View style={styles.shopOverlay}>
           <ShopScreen
-            backTitle={shopReturnScreen === 'game' ? 'Voltar à fase' : 'Voltar ao mapa'}
+            backTitle={
+              shopReturnScreen === 'game' ? 'Voltar à fase' : 'Voltar ao mapa'
+            }
             progress={progress}
             worldId={shopWorldId}
             onBack={() => setScreen(shopReturnScreen)}
@@ -1115,17 +1230,22 @@ export default function App() {
         coinCollectTarget={coinCollectTarget}
         onBuyAndOpen={() => {
           if (activeWorldChestId) {
-            handleOpenWorldChest(activeWorldChestId, 'buy-key').catch(() => undefined);
+            handleOpenWorldChest(activeWorldChestId, 'buy-key').catch(
+              () => undefined,
+            );
           }
         }}
         onClose={closeWorldChest}
         onOpenWithKey={() => {
           if (activeWorldChestId) {
-            handleOpenWorldChest(activeWorldChestId, 'key').catch(() => undefined);
+            handleOpenWorldChest(activeWorldChestId, 'key').catch(
+              () => undefined,
+            );
           }
         }}
       />
       <SettingsModal
+        devMode={devMode}
         settings={settings}
         visible={isSettingsVisible}
         onClose={() => setIsSettingsVisible(false)}
@@ -1140,10 +1260,17 @@ export default function App() {
         visible={isNoLivesModalVisible}
         onClose={() => setIsNoLivesModalVisible(false)}
       />
-      <TutorialModal visible={isTutorialVisible} onFinish={handleFinishTutorial} />
+      <TutorialModal
+        visible={isTutorialVisible}
+        onFinish={handleFinishTutorial}
+      />
       <MysteryTutorialModal
         visible={isMysteryTutorialVisible}
         onClose={handleFinishMysteryTutorial}
+      />
+      <CampaignResizeNoticeModal
+        visible={isCampaignResizeNoticeVisible}
+        onClose={handleCloseCampaignResizeNotice}
       />
     </SafeAreaProvider>
   );

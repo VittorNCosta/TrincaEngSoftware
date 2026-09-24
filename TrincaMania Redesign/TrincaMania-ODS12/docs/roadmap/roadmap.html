@@ -1,0 +1,900 @@
+<title>Linha de Triagem TrincaMania</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #EDEFEB;
+  --surface: #FFFFFF;
+  --surface-2: #F5F7F3;
+  --ink: #151B17;
+  --ink-2: #414B45;
+  --muted: #6B756E;
+  --line: #D5DAD4;
+  --line-soft: #E4E8E2;
+  --accent: #00713A;
+  --accent-ink: #FFFFFF;
+  --shadow: 0 1px 2px rgba(21,27,23,.06), 0 8px 24px -14px rgba(21,27,23,.24);
+
+  --s-f0: #4A5450;
+  --s-c:  #00803B;
+  --s-a:  #C8121B;
+  --s-s:  #B98A00;
+  --s-l:  #7B3F00;
+  --s-g:  #0055A4;
+  --s-ci: #2F6478;
+  --s-sec:#CC5F00;
+  --s-q:  #574E6B;
+  --s-o:  #B31D8C;
+  --s-r:  #0E6F6B;
+
+  --done: #00803B;
+  --p0: #C8121B;
+  --p1: #B26A00;
+  --p2: #6B756E;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101410;
+    --surface: #191E1A;
+    --surface-2: #202721;
+    --ink: #E7EDE7;
+    --ink-2: #BAC4BC;
+    --muted: #8B968D;
+    --line: #2C342D;
+    --line-soft: #232A24;
+    --accent: #4FBE7C;
+    --accent-ink: #08150D;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -16px rgba(0,0,0,.8);
+
+    --s-f0: #93A099;
+    --s-c:  #4FBE7C;
+    --s-a:  #F2585F;
+    --s-s:  #E0B333;
+    --s-l:  #C08A55;
+    --s-g:  #62A6E8;
+    --s-ci: #6FAEC4;
+    --s-sec:#F0913C;
+    --s-q:  #A093C0;
+    --s-o:  #E86BC0;
+    --s-r:  #4FB8B2;
+
+    --done: #4FBE7C;
+    --p0: #F2585F;
+    --p1: #E0A03C;
+    --p2: #8B968D;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101410;
+  --surface: #191E1A;
+  --surface-2: #202721;
+  --ink: #E7EDE7;
+  --ink-2: #BAC4BC;
+  --muted: #8B968D;
+  --line: #2C342D;
+  --line-soft: #232A24;
+  --accent: #4FBE7C;
+  --accent-ink: #08150D;
+  --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -16px rgba(0,0,0,.8);
+
+  --s-f0: #93A099;
+  --s-c:  #4FBE7C;
+  --s-a:  #F2585F;
+  --s-s:  #E0B333;
+  --s-l:  #C08A55;
+  --s-g:  #62A6E8;
+  --s-ci: #6FAEC4;
+  --s-sec:#F0913C;
+  --s-q:  #A093C0;
+  --s-o:  #E86BC0;
+  --s-r:  #4FB8B2;
+
+  --done: #4FBE7C;
+  --p0: #F2585F;
+  --p1: #E0A03C;
+  --p2: #8B968D;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 16px/1.55 "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px 96px; }
+
+h1, h2, h3 { font-family: Archivo, ui-sans-serif, system-ui, sans-serif; text-wrap: balance; margin: 0; }
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+/* ---------- masthead ---------- */
+.mast { padding: 44px 0 28px; border-bottom: 1px solid var(--line); }
+.eyebrow {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11.5px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 14px;
+}
+h1 { font-size: clamp(34px, 5.4vw, 54px); font-weight: 700; letter-spacing: -.025em; line-height: 1.02; }
+.lede {
+  margin: 16px 0 0; max-width: 62ch; font-size: 17.5px; color: var(--ink-2);
+}
+.lede b { font-weight: 600; color: var(--ink); }
+
+.stats { display: flex; flex-wrap: wrap; gap: 10px 40px; margin-top: 28px; }
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.stat .n { font-family: Archivo; font-weight: 700; font-size: 30px; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .k { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------- sorting bar ---------- */
+.line-label { display: flex; justify-content: space-between; align-items: baseline; margin: 30px 0 8px; gap: 16px; flex-wrap: wrap; }
+.line-label span { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sortbar { display: flex; height: 14px; border-radius: 2px; overflow: hidden; gap: 2px; }
+.sortbar i { display: block; height: 100%; }
+
+/* ---------- controls ---------- */
+.controls {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--ground); border-bottom: 1px solid var(--line);
+  padding: 14px 0 13px; margin-bottom: 6px;
+}
+.ctlrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ctlrow + .ctlrow { margin-top: 9px; }
+.ctlkey {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); width: 58px; flex: none;
+}
+.chip {
+  font: 500 13px/1 "Source Sans 3", sans-serif;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+  border-radius: 999px; padding: 6px 12px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.chip:hover { border-color: var(--muted); }
+.chip .dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.chip .ct { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+.chip[aria-pressed="true"] .ct { color: var(--ground); opacity: .7; }
+.chip:focus-visible, .tbtn:focus-visible, .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tbtn {
+  margin-left: auto; font: 500 12.5px/1 "Source Sans 3", sans-serif;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+  border-radius: 6px; padding: 7px 11px; cursor: pointer;
+}
+.tbtn:hover { border-color: var(--muted); }
+
+/* ---------- blocks ---------- */
+.block { margin-top: 40px; scroll-margin-top: 130px; }
+.bhead { display: flex; align-items: baseline; gap: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--st); }
+.bhead h2 { font-size: 21px; font-weight: 600; letter-spacing: -.012em; }
+.bcode {
+  font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 600;
+  letter-spacing: .09em; color: var(--st); text-transform: uppercase;
+}
+.bcount { margin-left: auto; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bnote { margin: 12px 0 0; font-size: 14.5px; color: var(--ink-2); max-width: 74ch; border-left: 2px solid var(--st); padding-left: 12px; }
+.bnote code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; background: var(--surface-2); padding: 1px 4px; border-radius: 3px; }
+
+.tasks { margin-top: 6px; }
+.task {
+  display: grid;
+  grid-template-columns: 22px 62px 1fr auto;
+  gap: 12px; align-items: start;
+  padding: 11px 4px 11px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.task:last-child { border-bottom: 0; }
+.task.hidden { display: none; }
+.task input[type=checkbox] {
+  appearance: none; width: 17px; height: 17px; margin: 3px 0 0;
+  border: 1.5px solid var(--line); border-radius: 4px; background: var(--surface);
+  cursor: pointer; position: relative; flex: none;
+}
+.task input[type=checkbox]:hover { border-color: var(--muted); }
+.task input[type=checkbox]:checked { background: var(--done); border-color: var(--done); }
+.task input[type=checkbox]:checked::after {
+  content: ""; position: absolute; left: 4.5px; top: 1px;
+  width: 4px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(42deg);
+}
+.task input[type=checkbox]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tid {
+  font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 500;
+  color: var(--st); padding-top: 3px; letter-spacing: -.01em;
+}
+.tbody { min-width: 0; }
+.tt { font-size: 15.5px; line-height: 1.4; }
+.td { font-size: 13.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+.td code { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--ink-2); }
+.task.done .tt { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.tmeta { display: flex; flex-wrap: wrap; max-width: 230px; gap: 6px; align-items: center; padding-top: 2px; flex: none; }
+.tag {
+  font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 6px; border-radius: 3px; border: 1px solid var(--line); color: var(--muted);
+  white-space: nowrap;
+}
+.tag.who-cc { color: var(--ink-2); border-color: var(--line); background: var(--surface-2); }
+.tag.who-voce { color: var(--s-sec); border-color: currentColor; background: transparent; }
+.tag.who-both { color: var(--s-g); border-color: currentColor; }
+.tag.p0 { color: var(--p0); border-color: currentColor; font-weight: 600; }
+.tag.p1 { color: var(--p1); border-color: currentColor; }
+.tag.p2 { color: var(--p2); border-color: var(--line); }
+
+/* ---------- prompts ---------- */
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; margin-top: 18px; }
+.pcard { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.pcard header { display: flex; align-items: baseline; gap: 9px; }
+.pw { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); font-weight: 500; }
+.pcard h3 { font-size: 15.5px; font-weight: 600; letter-spacing: -.01em; }
+.pcard .files { display: flex; flex-wrap: wrap; gap: 5px; }
+.pcard .files span { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; color: var(--muted); background: var(--surface-2); border-radius: 3px; padding: 2px 6px; }
+.pcard pre {
+  margin: 0; background: var(--surface-2); border: 1px solid var(--line-soft); border-radius: 6px;
+  padding: 11px 12px; overflow-x: auto;
+  font-family: "IBM Plex Mono", monospace; font-size: 12px; line-height: 1.5; color: var(--ink-2);
+  white-space: pre-wrap; word-break: break-word;
+}
+.copy {
+  align-self: flex-start; font: 500 12px/1 "Source Sans 3", sans-serif;
+  border: 1px solid var(--line); background: transparent; color: var(--ink-2);
+  border-radius: 5px; padding: 6px 10px; cursor: pointer;
+}
+.copy:hover { border-color: var(--muted); }
+
+.callout {
+  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 6px; padding: 14px 16px; margin-top: 18px; font-size: 14.5px; color: var(--ink-2);
+}
+.callout b { color: var(--ink); font-weight: 600; }
+.callout code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
+
+/* ---------- palette strip ---------- */
+.pal { display: flex; flex-wrap: wrap; gap: 0; margin-top: 16px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.pal div { flex: 1 1 130px; padding: 12px 13px; color: #fff; }
+.pal div .m { font: 600 13.5px/1.2 "Source Sans 3", sans-serif; }
+.pal div .h { font-family: "IBM Plex Mono", monospace; font-size: 11px; opacity: .85; margin-top: 2px; }
+
+/* ---------- tables ---------- */
+.tblwrap { overflow-x: auto; margin-top: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14.5px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+th {
+  font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--surface-2);
+}
+tr:last-child td { border-bottom: 0; }
+td.sev { white-space: nowrap; font-weight: 600; }
+td.sev[data-s="alto"] { color: var(--p0); }
+td.sev[data-s="médio"] { color: var(--p1); }
+td.sev[data-s="baixo"] { color: var(--muted); }
+td.sev[data-s="resolvido"] { color: var(--done); }
+
+/* ---------- flow ---------- */
+.flow { margin-top: 18px; display: flex; flex-direction: column; gap: 0; }
+.step { display: grid; grid-template-columns: 78px 1fr; gap: 16px; padding: 13px 0; border-top: 1px solid var(--line-soft); }
+.step:first-child { border-top: 0; }
+.step .ph { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.step .sb { font-size: 15px; }
+.step .sb b { font-weight: 600; }
+.step .sb em { font-style: normal; color: var(--muted); font-size: 13.5px; display: block; margin-top: 2px; }
+
+.crit { margin-top: 18px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 13px 15px; }
+.crit .k { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.crit .v { font-family: "IBM Plex Mono", monospace; font-size: 13px; margin-top: 6px; color: var(--ink); word-break: break-word; line-height: 1.7; }
+
+.sechead { margin-top: 62px; padding-top: 26px; border-top: 1px solid var(--line); }
+.sechead h2 { font-size: 25px; font-weight: 700; letter-spacing: -.02em; }
+.sechead p { margin: 8px 0 0; color: var(--ink-2); max-width: 70ch; font-size: 15.5px; }
+
+footer { margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+footer code { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
+
+@media (max-width: 620px) {
+  .task { grid-template-columns: 20px 1fr; }
+  .tid { grid-column: 2; padding-top: 0; }
+  .tbody { grid-column: 2; }
+  .tmeta { grid-column: 2; }
+  .ctlkey { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">TrincaMania · ODS 12 · Roadmap operacional · 03 set 2026</p>
+  <h1>Linha de Triagem</h1>
+  <p class="lede">Tudo que falta para o jogo ficar pronto: <b>10 mundos × 10 fases</b>, cada um com arte, som e identidade próprios, publicado na Play Store com pipeline automatizado. As tarefas estão separadas em fluxos, como o jogo separa material.</p>
+
+  <div class="stats">
+    <div class="stat"><span class="n" id="statTotal">193</span><span class="k">tarefas</span></div>
+    <div class="stat"><span class="n">100</span><span class="k">fases finais</span></div>
+    <div class="stat"><span class="n">20</span><span class="k">imagens de mapa</span></div>
+    <div class="stat"><span class="n">10</span><span class="k">trilhas de som</span></div>
+    <div class="stat"><span class="n" id="statDone">0</span><span class="k">concluídas</span></div>
+  </div>
+
+  <div class="line-label"><span>Distribuição por fluxo</span><span id="pctDone">0% concluído</span></div>
+  <div class="sortbar" id="sortbar"></div>
+</header>
+
+<div class="controls">
+  <div class="ctlrow" id="rowStream"><span class="ctlkey">Fluxo</span></div>
+  <div class="ctlrow" id="rowMeta">
+    <span class="ctlkey">Filtro</span>
+    <button class="chip" data-f="who" data-v="cc" aria-pressed="false">Claude Code <span class="ct" id="cWhoCc"></span></button>
+    <button class="chip" data-f="who" data-v="voce" aria-pressed="false">Você <span class="ct" id="cWhoVoce"></span></button>
+    <button class="chip" data-f="who" data-v="both" aria-pressed="false">Os dois <span class="ct" id="cWhoBoth"></span></button>
+    <button class="chip" data-f="prio" data-v="0" aria-pressed="false">P0 <span class="ct" id="cP0"></span></button>
+    <button class="chip" data-f="prio" data-v="1" aria-pressed="false">P1 <span class="ct" id="cP1"></span></button>
+    <button class="chip" data-f="prio" data-v="2" aria-pressed="false">P2 <span class="ct" id="cP2"></span></button>
+    <button class="chip" data-f="open" data-v="1" aria-pressed="false">Só em aberto</button>
+    <button class="tbtn" id="clearBtn">Limpar filtros</button>
+  </div>
+</div>
+
+<div class="callout">
+  <b>Modelo Codex por tarefa · 15/09/2026.</b> Luna: mudanças mecânicas; Terra: implementação cotidiana, conteúdo e integração; Sol: persistência, regras, refactors amplos, segurança e publicação. Prioridade não é complexidade. A classificação é uma recomendação para execução futura, inclusive nas tarefas já feitas, não um registro do modelo que as executou. Arte e áudio exigem ferramentas próprias e validação humana. <a href="https://developers.openai.com/api/docs/models">Referência oficial</a>.
+</div>
+
+<div class="ctlrow" style="margin-top:14px">
+  <span class="ctlkey">Codex</span>
+  <button class="chip" data-f="model" data-v="luna" aria-pressed="false">Luna</button>
+  <button class="chip" data-f="model" data-v="terra" aria-pressed="false">Terra</button>
+  <button class="chip" data-f="model" data-v="sol" aria-pressed="false">Sol</button>
+  <button class="chip" data-f="model" data-v="manual" aria-pressed="false">Manual</button>
+</div>
+
+<main id="blocks"></main>
+
+<section class="sechead">
+  <h2>Os 20 prompts de arte</h2>
+  <p>Cada mundo precisa de duas imagens — fundo de mapa e fundo de jogo — em <b>1080 × 1920</b>. O prompt de cada mundo é o bloco de cena abaixo colado depois do bloco de estilo compartilhado. É o bloco de estilo que faz os dez mapas parecerem o mesmo jogo.</p>
+</section>
+
+<div class="callout">
+  <b>Portão A-04.</b> Gere <b>uma</b> imagem-piloto (Mundo 1, fundo de jogo), coloque no aparelho e valide antes de gerar as outras dezenove. Refazer uma custa uma; refazer vinte custa vinte.
+</div>
+
+<div class="pcard" style="margin-top:14px">
+  <header><span class="pw">Base</span><h3>Bloco de estilo — colar em todo prompt</h3></header>
+  <pre id="styleblock">STYLE: 2D vector game illustration, flat shapes with soft gradient shading,
+clean readable silhouettes, mobile game background, warm ambient occlusion,
+no outlines heavier than 3px, cohesive with a casual puzzle game aesthetic.
+COMPOSITION: vertical 9:16, main visual interest in the upper and lower thirds,
+CENTER-BOTTOM AREA MUST STAY VISUALLY CALM (a game board is drawn on top of it).
+NEGATIVE: no text, no letters, no numbers, no logos, no watermark, no UI,
+no human faces, no fantasy elements (no castles, no dragons, no crystals,
+no magic, no candy, no treasure chests, no angels), no fruit, no photorealism.</pre>
+  <button class="copy" data-t="styleblock">Copiar bloco de estilo</button>
+</div>
+
+<p class="eyebrow" style="margin:28px 0 0">Paleta obrigatória — CONAMA 275/2001</p>
+<div class="pal">
+  <div style="background:#E30613"><div class="m">Plástico</div><div class="h">#E30613</div></div>
+  <div style="background:#0055A4"><div class="m">Papel</div><div class="h">#0055A4</div></div>
+  <div style="background:#009640"><div class="m">Vidro</div><div class="h">#009640</div></div>
+  <div style="background:#FFD500;color:#2A2400"><div class="m">Metal</div><div class="h">#FFD500</div></div>
+  <div style="background:#7B3F00"><div class="m">Orgânico</div><div class="h">#7B3F00</div></div>
+</div>
+
+<div class="pgrid" id="pgrid"></div>
+
+<section class="sechead">
+  <h2>Ordem de execução</h2>
+  <p>Os fluxos de automação e de conteúdo tocam arquivos diferentes e podem correr em paralelo. O que não pode adiantar é a produção em lote de arte antes da piloto validada, nem o build público antes da migração de save.</p>
+</section>
+
+<div class="flow" id="flow"></div>
+
+<div class="crit">
+  <div class="k">Caminho crítico</div>
+  <div class="v">F0-01 → F0-02 → C-02 → C-11 → C-19…C-26 → A-04 → A-05…A-24 → R-15 → R-18</div>
+</div>
+
+<section class="sechead">
+  <h2>Riscos registrados</h2>
+  <p>Cada um destes já tem uma tarefa que o cobre. Estão aqui porque são as falhas que custam caro se passarem despercebidas.</p>
+</section>
+
+<div class="tblwrap">
+  <table>
+    <thead><tr><th>Risco</th><th>Impacto</th><th>O que o cobre</th></tr></thead>
+    <tbody id="risks"></tbody>
+  </table>
+</div>
+
+<footer>
+  Fonte de verdade no repositório: <code>docs/ROADMAP-JOGO-COMPLETO.md</code>, na branch <code>develop</code>.
+  Integração validada em 24/09/2026: O-01 a O-04 e CI-29 a CI-32 aguardam merge para encerramento das issues.
+  As marcações desta página ficam salvas só neste navegador.
+</footer>
+
+</div>
+
+<script src="../../scripts/lib/codex-models.js"></script>
+<script>
+const S = {
+  f0:  {n:"Fundação",         c:"var(--s-f0)",  code:"F0"},
+  c:   {n:"Conteúdo 10×10",   c:"var(--s-c)",   code:"C"},
+  a:   {n:"Arte",             c:"var(--s-a)",   code:"A"},
+  s:   {n:"Som",              c:"var(--s-s)",   code:"S"},
+  l:   {n:"Limpeza ODS12",    c:"var(--s-l)",   code:"L"},
+  g:   {n:"Git e versão",     c:"var(--s-g)",   code:"G"},
+  ci:  {n:"CI/CD",            c:"var(--s-ci)",  code:"CI"},
+  sec: {n:"DevSecOps",        c:"var(--s-sec)", code:"SEC"},
+  q:   {n:"Qualidade",        c:"var(--s-q)",   code:"Q"},
+  o:   {n:"Observabilidade",  c:"var(--s-o)",   code:"O"},
+  r:   {n:"Release",          c:"var(--s-r)",   code:"R"},
+};
+
+const BLOCKS = [
+{k:"f0", h:"Fundação", note:"Desbloqueia todo o resto. Duas destas travam ferramenta: <code>gh</code> não existe no WSL e <code>node</code> só resolve em shell interativo.", t:[
+ ["F0-01","✅ Instalar o <code>gh</code> CLI","voce",0,"<b>Feito 03/09:</b> binário v2.99.0 baixado do release oficial para <code>~/.local/bin/gh</code>, sem sudo — o diretório já está no PATH via <code>.zshrc:105</code>. Autenticado em 04/09 (<code>gh auth login</code> por device code, conta <code>VittorNCosta</code>) — o backlog do GitHub passou a ser sincronizável daqui."],
+ ["F0-02","Expor <code>node</code> no PATH não-interativo","voce",0,"Hoje só existe via nvm. Em shell não-interativo o comando não resolve — isso quebra hook de git e script de CI local."],
+ ["F0-03","✅ Fixar a versão de Node do projeto","cc",1,"<b>Feito 03/09</b>, em duas etapas. O commit <code>c8311ab</code> pôs <code>.nvmrc</code> em <code>20</code> e <code>engines: node &gt;=20.19.0</code> — e foi o <code>engines</code> que revelou o CI-06: se a versão mínima é a 20, o <code>npm test</code> tinha de funcionar da 20 em diante, e não funcionava da 22. Depois o piso subiu para <code>&gt;=20.19.4 &lt;21</code> (e o <code>.nvmrc</code> para <code>20.19.4</code>): <code>npm ci</code> acusou <code>EBADENGINE</code> porque <code>react-native@0.81.5</code> exige <code>&gt;=20.19.4</code> e a máquina local tinha <code>v20.19.1</code>. Quem rodar local precisa de <code>nvm install</code> na versão do <code>.nvmrc</code>."],
+ ["F0-04","✅ Resolver o <code>package.json</code> pendente","cc",0,"<b>Feito 03/09</b> (commit <code>c1e3b65</code>). Não era decisão em aberto e sim bug: o <code>package-lock.json</code> commitado já trazia ~54.0.37 / ~54.0.18 / ^29.5.14, então HEAD tinha manifest e lock discordando — <code>npm ci</code>, que é o que o CI roda, falharia."],
+ ["F0-05","✅ Rodar <code>npx expo-doctor</code> e registrar o baseline","cc",1,"<b>Feito 03/09:</b> 17/17 checks passaram depois de restaurar um <code>package-lock.json</code> não commitado que tinha regredido (<code>@types/jest</code> voltou a <code>^30.0.0</code>, <code>expo</code> a <code>~54.0.34</code>, <code>jest-expo</code> a <code>~54.0.17</code> — mesma classe de bug do F0-04) e rodar <code>npm ci</code> limpo. <code>typecheck</code> e os 121 testes de <code>tests/</code> continuam verdes."],
+ ["F0-06","✅ Criar a branch <code>feat/campanha-10x10</code>","cc",0,"<b>Feito 03/09.</b> Toda a reescrita de conteúdo saiu nela. Em 04/09 a linha paralela de CI/build foi incorporada por merge (<code>ed35d11</code>) e a branch <code>feat/renomeia-capitulos-9-10</code> foi apagada — sobrou uma linha só."],
+]},
+{k:"c", h:"Conteúdo — 10 mundos × 10 fases", note:"O bloco de maior risco. Hoje são 203 fases em 8 mundos × 25 + bônus, e <code>tests/levelComposition.test.cjs</code> trava um sha256 do JSON delas. Quebrar esse hash é intencional aqui — mas exige atualizar seis arquivos de teste e migrar o save de quem já joga.", t:[
+ ["C-01","✅ Confirmar os nomes dos Mundos 9 e 10","voce",0,"<b>Decidido 03/09, revisto 04/09.</b> A campanha fica com <b>Distrito da Reindustrialização</b> (Mundo 9) e <b>Cúpula da Reciclagem Global</b> (Mundo 10) — os nomes que o código recebeu em <code>2295575</code>. A primeira decisão tinha sido <i>Oficina do Reparo</i> e <i>Cidade Circular</i>, e foi por ela que os capítulos 9 e 10 viraram <b>Ferro-Velho Renascido</b> e <b>Metrópole do Ciclo Fechado</b> (<code>9bd1059</code>); os capítulos ficam com os nomes novos, que já estão no jogo e não colidem com nada. Ver C-01a."],
+ ["C-01a","✅ Reconciliar os nomes dos Mundos 9 e 10 com a decisão de C-01","both",0,"<b>Resolvido 04/09: valem os nomes do código.</b> Achado: C-01 decidiu <b>Oficina do Reparo</b> e <b>Cidade Circular</b>, e <code>9bd1059</code> renomeou os capítulos 9 e 10 justamente para liberar esses nomes — mas <code>2295575</code> criou os mundos como <b>Distrito da Reindustrialização</b> e <b>Cúpula da Reciclagem Global</b>. Os nomes liberados nunca foram usados. Decidir entre: renomear os mundos (mexe em 5 títulos de fase e 4 objetivos que citam “Distrito”/“Cúpula”, e obriga a recalcular o hash de C-19), ou aceitar os nomes atuais. <b>Escolhido aceitar</b>: os títulos de fase do Mundo 9 já são de reindustrialização (Pátio das Prensas, Forno de Refundição, Torre de Extrusão) e casariam mal com “oficina de reparo”, e mexer nos títulos obrigaria a recalcular o hash congelado sem ganho de conteúdo. Corrigidos no lugar: C-01, A-21 a A-24, S-09, S-10, os prompts de arte dos dois mundos e o comentário de <code>chapters.ts</code>. Nenhuma linha de <code>src/data/worlds.ts</code> mudou."],
+ ["C-02","✅ Redesenhar a curva de dificuldade para 100 fases","cc",0,"<b>Feito 03/09.</b> <code>WORLD_LEVELS_PER_MAP</code> 25→10 e <code>WORLD_DIFFICULTY_BLOCK_SIZE</code> 5→2. A rampa de 9 a 60 peças agora cabe em 10 fases por mundo, com <code>tileCount</code> múltiplo de 3 travado em teste."],
+ ["C-03","✅ Redefinir os marcos de descanso, loja e guardião","cc",0,"<b>Feito 03/09.</b> Descanso na fase 5 e guardião na 10 nos dez mundos; <code>REST_CHECKPOINT_COIN_REWARDS</code> reajustado para o novo ritmo."],
+ ["C-04","✅ Escrever os 100 títulos de fase","cc",0,"<b>Feito 03/09.</b> 103 títulos únicos (100 canônicas + 3 bônus), no vocabulário de <code>CONTEXT.md</code>."],
+ ["C-05","✅ Escrever os 100 textos de objetivo","cc",0,"<b>Feito 03/09.</b> 103/103 com <code>objectiveText</code> preenchido."],
+ ["C-06","✅ Derivar os <code>starTimeLimits</code> das 100 fases","cc",1,"<b>Feito 03/09.</b> Derivados da curva por <code>WORLD_STAR_TIME_BASE_OFFSET</code> e <code>WORLD_STAR_TIME_SPAN</code>, não à mão."],
+ ["C-07","✅ Definir <code>recommendedPower</code> e <code>mysteryTileCount</code> por fase","cc",1,"<b>Feito 03/09.</b> Os 103 níveis têm <code>recommendedPower</code>; o mistério respeita o teto de 1/6 do tabuleiro."],
+ ["C-08","✅ Decidir o destino do mundo bônus (id 21)","voce",1,"<b>Decidido 03/09:</b> fica como 11º mapa secreto — que já é o comportamento atual (<code>subtitle: 'Mundo secreto'</code>). Não muda código hoje, mas cria C-08a e C-08b na reescrita."],
+ ["C-08a","✅ Reposicionar o bônus de <code>25.1–25.3</code> para <code>10.1–10.3</code>","cc",0,"<b>Feito 03/09.</b> <code>levelStart: 10.1</code> em <code>src/data/worlds.ts</code>, acompanhando o Mundo 1 de 10 fases."],
+ ["C-08b","✅ Trocar o <code>theme: 'sweet'</code> do bônus","cc",1,"<b>Feito 08/09,</b> junto com L-02: bônus agora é <code>theme: 'rosado'</code>. <b>Em aberto:</b> a reavaliação de <code>unlockRule: 'three-stars-world-1'</code> (fica mais fácil com o Mundo 1 em 10 fases) é decisão de balanceamento, não renomeação — não mexida aqui."],
+ ["C-09","✅ Estender <code>CampaignWorldId</code> para 9 e 10","cc",0,"<b>Feito 03/09.</b> <code>src/types/game.ts</code>."],
+ ["C-10","✅ Reescrever <code>WORLDS</code> com 10 mundos","cc",0,"<b>Feito 03/09.</b> Dez mundos, <code>levelStart</code>/<code>levelEnd</code> de 1-10, 11-20 … 91-100. <b>Ressalva:</b> os nomes dos Mundos 9 e 10 saíram diferentes do que C-01 decidiu — ver C-01a."],
+ ["C-11","✅ Reescrever <code>LEVEL_SEEDS</code>","cc",0,"<b>Feito 03/09.</b> Os 10 mundos passaram a ser gerados pelo mesmo mecanismo — manter 3 mundos autorais à mão para 10 fases cada não pagava a manutenção. É a opção “mais sustentável” do enunciado."],
+ ["C-12","✅ Ajustar <code>GENERATED_WORLD_CONFIGS</code> de 25 para 10 títulos","cc",0,"<b>Feito 03/09.</b> Dez entradas, uma por mundo."],
+ ["C-13","✅ Registrar os mundos 9 e 10 em <code>WORLD_MAP_CONFIGS</code>","cc",0,"<b>Feito 03/09.</b> O <code>Record</code> total voltou a fechar no <code>tsc</code>."],
+ ["C-14","✅ Reduzir o mapa do Mundo 1 de 25 para 10 âncoras","cc",0,"<b>Feito 03/09.</b> <code>src/data/worldMapConfigs.ts</code>."],
+ ["C-15","✅ Renomear <code>BOSQUE_*</code> para vocabulário ODS12","cc",1,"<b>Feito 04/09.</b> Eram 107 ocorrências, não 15: <code>BOSQUE_*</code> virou <code>PARQUE_*</code> e os ids de layout <code>bosque-*</code> viraram <code>parque-*</code>, seguindo o nome atual do Mundo 1 (<b>Parque da Coleta Seletiva</b>). <code>assetKey</code>/<code>visualKey</code> <code>forest-*</code> ficaram de fora de propósito — apontam para PNG real, isso é L-09."],
+ ["C-16","✅ Atualizar o comentário das 203 em <code>boardPositions.ts</code>","cc",1,"<b>Feito 03/09.</b> Linhas 16 e 39 passaram a falar em 100 fases canônicas. As sobras em <code>src/types/game.ts</code> e <code>src/data/chapters.ts</code> caíram em 04/09."],
+ ["C-17","✅ Mapear <code>AMBIENT_BY_WORLD_ID</code> para os 10 mundos","cc",0,"<b>Feito 03/09.</b> Mundo 9 reaproveita <code>volcano</code> e o 10, <code>celestial</code> — nenhum mundo toca em silêncio. Travado por <code>tests/worldAmbientAndBackgroundCoverage.test.cjs</code>."],
+ ["C-18","✅ Cobrir os mundos 9 e 10 em <code>getGameBackground</code>","cc",0,"<b>Feito 03/09.</b> Mundo 9 cai no fundo do 2 e o 10 no do 3, em vez de cair no <i>default</i> do Mundo 1."],
+ ["C-19","✅ Recalcular o hash sha256 das fases","cc",0,"<b>Feito 03/09.</b> Asserção mantida e literal recalculado sobre as 103 fases novas — a trava de integridade continua de pé."],
+ ["C-20","✅ Atualizar <code>tests/chapterProgress.test.cjs:80</code>","cc",0,"<b>Feito 03/09.</b>"],
+ ["C-21","✅ Atualizar <code>tests/worldMapConfig.test.cjs:57-73</code>","cc",0,"<b>Feito 03/09.</b> As três asserções sobre 203 passaram a valer sobre 103."],
+ ["C-22","✅ Atualizar <code>tests/chapters.test.cjs:434-436</code>","cc",0,"<b>Feito 03/09.</b>"],
+ ["C-23","✅ Atualizar <code>tests/simulateFullPlaythrough.cjs:44,210</code>","cc",0,"<b>Feito 03/09.</b> A simulação roda as 103 fases e sai 0 — toda fase continua vencível."],
+ ["C-24","✅ Revisar <code>boardLayout</code> e <code>campaignMapLayout</code>","cc",0,"<b>Feito 03/09.</b>"],
+ ["C-25","✅ Escrever a migração de save 203→100","cc",0,"<b>Feito 03/09.</b> Não precisou mapear nem resetar: como os ids <code>wN-001</code>…<code>wN-010</code> são idênticos nos dois esquemas, o save antigo continua valendo e só somem as posições 11–25. <code>detectDroppedCampaignProgress</code> + <code>CampaignResizeNoticeModal</code> avisam o jogador uma única vez. Moedas, chaves e itens nunca são filtrados."],
+ ["C-26","✅ Testar a migração de save","cc",0,"<b>Feito 03/09.</b> <code>tests/progressMigration.test.cjs</code>, 6 casos — incluindo o save de quem zerou os 8 mundos antigos."],
+ ["C-27","✅ Travar em teste a cobertura de fundo e ambiente por mundo","cc",1,"<b>Feito 03/09.</b> <code>tests/worldAmbientAndBackgroundCoverage.test.cjs</code>."],
+ ["C-28","✅ Atualizar o texto do Modo Dev","cc",2,"<b>Feito 03/09.</b> <code>SettingsModal</code> cita 103 fases."],
+ ["C-29","✅ Reescrever o invariante #4 do <code>CLAUDE.md</code>","cc",0,"<b>Feito 03/09.</b> O invariante passou a citar 103 e a dizer explicitamente que o número muda se a campanha for reestruturada de novo — o mecanismo de trava, não."],
+ ["C-30", "✅ Decidir e implementar o destino dos Capítulos", "both", 1, "<b>Feito 18/09/2026.</b> Decisão do responsável: Capítulos como modo extra após as 100 fases principais; bônus não obrigatório e save preservado. Acesso normal validado por testes de campanha/capítulos no PR #240."],
+]},
+{k:"a", h:"Arte", note:"Vinte imagens de mapa dos mundos principais (A-05…A-24, o lote crítico), mais duas do mundo bônus fora dele (A-24a/A-24b) e oito assets globais. É o maior gargalo do projeto e tudo depende do portão A-04. Alvo de peso: <b>≤ 400 KB por PNG</b> — hoje <code>map_world1_scene_bg.png</code> sozinho tem 5,8 MB.", t:[
+ ["A-01","✅ Escrever o art bible","cc",0,"<b>Feito 09/09</b> (commit <code>de7afdc</code>). <code>docs/ART-BIBLE.md</code>. O material já existia aqui no bloco A, mas espalhado dentro de um arquivo de 128 KB que é fila de tarefas, não documento de consulta. Consolidado com o que faltava: a lista do que nunca aparece <b>com o motivo de cada item</b> (é o critério que mais escapa — modelo de imagem puxa fantasia sozinho quando o prompt fala em “mundo”), a distinção entre fruta como resíduo orgânico (legítima) e fruta como tema (barrada), dominante de cor por mundo para os acentos CONAMA continuarem sendo a coisa mais saturada do quadro, e onde cada arquivo entra no código — hoje <b>8 dos 10 mundos não têm arte própria</b>, dividem 4 PNGs. Ressalva no Mundo 6: a cena é trabalho real de catador e tem que ler como oficina digna, nunca como lixão."],
+ ["A-02","✅ Criar <code>assets/map/worlds/</code> e a convenção de nome","cc",0,"<b>Feito 09/09</b> (commit <code>de7afdc</code>). <code>wNN_&lt;slug&gt;_&lt;map|game&gt;.png</code>, com os 22 nomes esperados no <code>README.md</code> da pasta. Os slugs são os mesmos das <code>AmbientKey</code> do L-01/S-11, de propósito: um mundo tem um nome só no código inteiro. O zero à esquerda existe para o <code>w10</code> não vir antes do <code>w02</code> na ordenação da pasta. O mundo bônus 21 entra como <code>w21_jardim_*</code> (A-24a/A-24b), fora do lote crítico. Exigiu o CI-27."],
+ ["A-03","Escolher a ferramenta de geração e travar seed/estilo","voce",0],
+ ["A-04","Gerar e validar a imagem-piloto no aparelho","voce",0,"Mundo 1, fundo de jogo. <b>Portão</b> — nada em lote antes disso."],
+ ["A-05","Mundo 1 · Parque da Coleta Seletiva — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-06","Mundo 1 · Parque da Coleta Seletiva — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Piloto 1080×1920, 364.398 bytes, integrado no Mundo 1. A-04 exige validação no aparelho antes do restante do lote. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-07","Mundo 2 · Vale da Reciclagem — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-08","Mundo 2 · Vale da Reciclagem — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-09","Mundo 3 · Central de Materiais — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-10","Mundo 3 · Central de Materiais — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-11","Mundo 4 · Viveiro Comunitário — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-12","Mundo 4 · Viveiro Comunitário — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-13","Mundo 5 · Usina de Compostagem — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-14","Mundo 5 · Usina de Compostagem — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-15","Mundo 6 · Cooperativa dos Catadores — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-16","Mundo 6 · Cooperativa dos Catadores — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-17","Mundo 7 · Rota da Logística Reversa — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-18","Mundo 7 · Rota da Logística Reversa — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-19","Mundo 8 · Fórum da Economia Circular — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-20","Mundo 8 · Fórum da Economia Circular — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-21","Mundo 9 · Distrito da Reindustrialização — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-22","Mundo 9 · Distrito da Reindustrialização — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-23","Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-24","Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-24a","Mundo bônus 21 · Jardim Renascido — fundo de mapa","both",1,"Fora do lote crítico A-05…A-24: o mundo bônus é conteúdo opcional (destrava com 3 estrelas no Mundo 1). P1 por isso, não P0. Hoje cai no <code>map_bonus_bg.png</code>, que <b>não</b> é exclusivo dele — o capítulo 10 usa o mesmo arquivo, então este par não libera peso nenhum; é arte própria, não faxina.<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-24b","Mundo bônus 21 · Jardim Renascido — fundo de jogo","both",1,"<br><br><b>Entrega Astra low 18/09/2026:</b> Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-25","Ícone do app 1024×1024","both",0,"Hoje 1254×1254, fora do padrão Expo. Símbolo de reciclagem + trinca, sem texto.<br><br><b>Entrega Astra low 18/09/2026:</b> Ícone 1024×1024 substituído com ciclo de reciclagem. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-26","Adaptive icon Android 1024×1024","both",0,"Elemento dentro do círculo de 66%. O <code>backgroundColor</code> hoje é <code>#4B148C</code> — roxo, fora da paleta CONAMA.<br><br><b>Entrega Astra low 18/09/2026:</b> Foreground transparente 1024×1024 dentro da área central; fundo verde CONAMA. Recorte Android ainda a conferir. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-27","Splash screen","both",1,"<code>SplashIntroScreen.tsx</code> tem 537 linhas — conferir o que já é desenhado em código.<br><br><b>Entrega Astra low 18/09/2026:</b> Intro reutiliza nova marca e cores da coleta; mantém botão de pular e logo do responsável. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-28","Selo de marco “Descanso” 320×320","both",1,"Substitui <code>forest_rest_cart.png</code>, que é carrinho de floresta do tema antigo. Proposta: carrinho de catador.<br><br><b>Entrega Astra low 18/09/2026:</b> Carrinho de coleta SVG substitui PNG antigo em RestStopMapMarker. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-29","Selo de marco “Loja” 320×320","both",1,"<br><br><b>Entrega Astra low 18/09/2026:</b> Loja usa carrinho SVG; mesma base no marco de capítulo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-30","Selo de marco “Guardião” 320×320","both",1,"Não existe hoje.<br><br><b>Entrega Astra low 18/09/2026:</b> Selo Guardião SVG integrado ao marco final dos capítulos. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-31","Marcador de portal entre mundos 320×320","both",1,"Hoje é <code>forest-portal-rune</code> — runa é fantasia. Proposta: seta de ciclo.<br><br><b>Entrega Astra low 18/09/2026:</b> Setas de reciclagem substituem runa; chaves de layout atualizadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-32","Nós de fase: bloqueado, atual, completo","both",2,"Avaliar se vira SVG em código, como as peças já são.<br><br><b>Entrega Astra low 18/09/2026:</b> Nós já desenhados em código com estados e labels acessíveis; testes dos estados preservados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["A-33","Comprimir todos os PNGs para ≤ 400 KB","voce",1,"<code>assets/</code> tem ~50 MB hoje. pngquant, oxipng ou TinyPNG."],
+ ["A-34","✅ Remover <code>Identidade visual de TrincaMania.png</code> da raiz","cc",1,"<b>Feito 09/09</b> (commit <code>cd5b008</code>). 6 MB versionados, duplicata byte-idêntica (sha256 <code>aca4253d…</code>) de <code>assets/map/map_world1_scene_bg.png</code>, sem nenhuma referência em código."],
+ ["A-35","✅ Remover os 6 arquivos <code>.png.png</code>","cc",1,"<b>Feito 09/09</b> (commit <code>cd5b008</code>). <code>map_bonus_bg.png.png</code>, <code>map_shop.png.png</code>, <code>map_world2_bg.png.png</code> e os três <code>map_path_pieces_*.png.png</code> — extensão dupla, órfãos, zero referência em <code>src/</code>."],
+ ["A-36","Integrar cada asset entregue no código","both",0,"<code>campaignMapAssets.ts</code> e <code>getGameBackground</code>.<br><br><b>Entrega Astra low 18/09/2026:</b> Piloto, ícones e marcadores integrados; fundos restantes aguardam A-04. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+]},
+{k:"s", h:"Som", note:"MP3 em loop sem emenda audível, 30–60 s, 128 kbps, ≤ 800 KB. Sem melodia forte — o jogo é de concentração.", t:[
+ ["S-01","<code>ambient_parque.mp3</code> — Mundo 1","both",0,"Pássaros distantes, folhas, passos ocasionais.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-02","<code>ambient_vale.mp3</code> — Mundo 2","both",0,"Esteira ao longe, vento de vale, maquinário abafado.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-03","<code>ambient_central.mp3</code> — Mundo 3","both",0,"Galpão amplo com eco, prensa distante, ventilação.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-04","<code>ambient_viveiro.mp3</code> — Mundo 4","both",0,"Regador, insetos, lona ao vento.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-05","<code>ambient_usina.mp3</code> — Mundo 5","both",0,"Zumbido grave de biodigestor, vapor, pá revolvendo.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-06","<code>ambient_cooperativa.mp3</code> — Mundo 6","both",0,"Carrinho de metal, fardos, vozes distantes indistintas.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-07","<code>ambient_rota.mp3</code> — Mundo 7","both",0,"Rodovia distante, caminhão manobrando, engradado.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-08","<code>ambient_forum.mp3</code> — Mundo 8","both",0,"Praça aberta, murmúrio cívico, bandeira ao vento.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-09","<code>ambient_distrito.mp3</code> — Mundo 9","both",0,"Prensa hidráulica ao longe, esteira rolante, zumbido grave de forno.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-10","<code>ambient_cupula.mp3</code> — Mundo 10","both",0,"Murmúrio de plenário, papel manuseado, passos em saguão amplo.<br><br><b>Entrega Astra low 18/09/2026:</b> Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-11","✅ Renomear as <code>AmbientKey</code> de fantasia","cc",1,"<b>Feito 09/09</b> (commit <code>f771981</code>, junto de L-01 — mesmo alvo). <code>beach | celestial | crystal | forest | mountain | snow | stars | volcano</code> → identidade dos mundos (<code>central | cooperativa | forum | parque | rota | usina | vale | viveiro</code>); os <code>ambient_*.mp3</code> ficam com o nome antigo até S-13."],
+ ["S-12","Remover os 8 <code>ambient_*.mp3</code> antigos","cc",1,"<br><br><b>Entrega Astra low 18/09/2026:</b> Remover somente após receber substitutos; as oito trilhas continuam referenciadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-13","Integrar os 10 ambientes em <code>sounds.ts</code>","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Integração depende de dez novos MP3 aprovados; não mapear nomes novos a áudio antigo fingindo entrega. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["S-14","Revisar os SFX de voz","voce",2,"<code>voice_amazing</code>, <code>voice_excellent</code> e afins — conferir se o tom bate com o tema."],
+ ["S-15","✅ Travar em teste que todo mundo tem ambiente","cc",1,"<b>Feito 09/09</b> (commit <code>6aebd00</code>). Quatro testes novos em <code>worldAmbientAndBackgroundCoverage.test.cjs</code> sobre o que o C-27 não pega: chave com <code>source</code> resolvido (não só existente), nenhuma trilha órfã, mundos 1-8 distintos entre si e <code>AmbientKey</code> sem regressão ao vocabulário de fantasia. 184 → 188 testes."],
+]},
+{k:"l", h:"Limpeza ODS12", note:"A regra permanente do <code>CLAUDE.md</code> trata sobra de vocabulário de fantasia como <b>bug de conteúdo</b>. Isto é o que ainda existe hoje, verificado no código.", t:[
+ ["L-01","✅ Renomear a union <code>AmbientKey</code>","cc",1,"<b>Feito 09/09</b> (commit <code>f771981</code>, mesmo commit que S-11). <code>src/utils/sounds.ts</code>: a union, as chaves de <code>ambientSources</code>/<code>AMBIENT_CONFIGS</code> e <code>AMBIENT_BY_WORLD_ID</code> passaram ao vocabulário ODS12. Efeito colateral: a entrada <code>sounds.ts::celestial</code> do livro-razão ODS12 sumiu inteira (as 6 ocorrências eram só a chave) — a guarda baixou de 7 para 6 pendências."],
+ ["L-02","✅ Renomear <code>WorldTheme</code>","cc",1,"<b>Feito 08/09.</b> <code>'forest'|'mountain'|'crystal'|'sweet'</code> → <code>'padrao'|'azulado'|'violeta'|'rosado'</code>: nome pelo acento de cor do quadro do mapa, sem ligação com material/CONAMA nem vocabulário de fantasia. Só decorativo (não persiste em save), 3 arquivos (<code>types/game.ts</code>, <code>data/worlds.ts</code>, <code>screens/LevelSelectScreen.tsx</code>)."],
+ ["L-03","✅ Trocar os <code>identityKey</code> dos mundos 2–8 e bônus","cc",1,"<b>Feito 04/09 (via L-04).</b> Duplicata de escopo: o commit 51e02f8 que fechou o L-04 já trocou os oito <code>identityKey</code> daqui (<code>vales-montanhosos</code>, <code>ruinas-de-cristal</code>, <code>praia-dos-tesouros</code>, <code>vulcao-doce</code>, <code>cidade-das-estrelas</code>, <code>neve-cristalina</code>, <code>reino-celestial</code>, <code>reino-acucarado</code>) pelos nomes ODS12 (<code>vale-da-reciclagem</code>, <code>central-de-materiais</code>, <code>viveiro-comunitario</code>, <code>usina-de-compostagem</code>, <code>cooperativa-dos-catadores</code>, <code>rota-da-logistica-reversa</code>, <code>forum-da-economia-circular</code>, <code>jardim-renascido</code>). Conferido em <code>worldMapConfigs.ts</code>, nada pendente."],
+ ["L-04","✅ Renomear os <code>BOSQUE_*</code> e os <code>identityKey</code> legados","cc",1,"<b>Feito 04/09.</b> Mesmo escopo do C-15, mais os oito <code>identityKey</code> que ainda carregavam o nome de fantasia (<code>vulcao-doce</code>, <code>reino-celestial</code>, <code>praia-dos-tesouros</code>, <code>reino-acucarado</code>…): agora derivam do nome ODS12 do mundo. Nenhum é persistido em save — só identificam o mapa. O livro-razão da guarda caiu de 19 para 14 pendências."],
+ ["L-05","✅ Renomear as chaves <code>forest-*</code> de asset","cc",1,"<b>Feito 09/09</b> (commit <code>f771981</code>). <code>forest-*</code> → <code>parque-*</code> em <code>campaignMapAssets.ts</code>, <code>chapterVisualIdentity.ts</code>, <code>worldMapConfigs.ts</code> e <code>tests/worldMapConfig.test.cjs</code>. <code>forest-portal-rune</code> fica como está — é território da A-31 (<code>humano</code>). Os <code>.png</code> ficam com o nome antigo até L-07."],
+ ["L-06","✅ Renomear <code>ForestRestMapMarker.tsx</code>","cc",1,"<b>Feito 09/09</b> (commit <code>f771981</code>). Arquivo, tipo e função → <code>RestStopMapMarker</code>; o único importador (<code>CampaignMapLandmarkMarker.tsx</code>) e a <code>visualKey</code> <code>forest-rest-cart</code> → <code>parque-rest-cart</code> acompanham. <code>forest_rest_cart.png</code> fica até A-28."],
+ ["L-07","Renomear os 8 <code>assets/map/world1/forest_*.png</code>","cc",2],
+ ["L-08","✅ Renomear <code>map_path_pieces_bonus_reino_acucarado.png</code>","cc",1,"<b>Feito 09/09</b> (commit <code>cd5b008</code>). <b>Divergência do enunciado:</b> a issue pedia renomear, mas o arquivo é órfão (zero referências) e carrega nome banido — renomear só preservaria 2,5 MB de peso morto. <b>Removido</b>, como o livro-razão da guarda ODS12 já previa (“Apagar no bloco L”)."],
+ ["L-09","Renomear os path pieces de bosque e vales montanhosos","cc",2],
+ ["L-10","Revisar <code>assets/map/README_MUNDO_3.txt</code>","cc",2],
+ ["L-11","Remover os 4 <code>PATCH-*.md</code> da raiz","voce",2,"96 KB de docs de patch antigos."],
+ ["L-12","Remover <code>TrincaMania Redesign/patch/</code> aninhado","voce",2,"Diretório com o mesmo nome do pai, dentro do projeto."],
+ ["L-13","✅ Escrever o <code>README.md</code> de verdade","cc",1,"<b>Feito 08/09.</b> Pitch do jogo, as duas trilhas de conteudo, setup local, checklist de antes do PR e uma tabela de ponteiros pros outros docs (CONTEXT/CLAUDE/CONTRIBUTING/ADRs/roadmap) em vez de duplicar o conteudo deles."],
+ ["L-14","Decidir o nome do app","voce",0,"<b>Nota corrigida 09/09:</b> a versão anterior dizia que o <code>app.json</code> trazia <code>TileAdventure-ODS</code> — não traz, e não trazia; <code>grep TileAdventure</code> não acha nada no repositório. O estado real hoje: nome <code>TrincaMania</code>, slug <code>tileclear-ods12</code> (herdado do projeto EAS no CI-28, e o EAS não deixa divergir do <code>projectId</code>), pacote Android <code>br.com.mhvtech.trincamania</code>, pacote npm <code>trincamania</code>. Continua sendo três nomes, mas outros três."],
+ ["L-15","Consolidar os dois manuais de APK","cc",2,"<code>COMO_GERAR_APK.md</code> e <code>ManualParaGerarApk.txt</code>."],
+ ["L-16","✅ Rodar <code>/code-review</code> na limpeza","cc",1,"<b>Feito 09/09</b> (commit <code>2c6e4a1</code>). Revisão dos 4 commits da leva (<code>cd5b008..HEAD</code>) — sem bug de correção: renames rastreados em todo o código, conjuntos de chaves em sincronia, livros-razão só encolheram, typecheck + 188 testes + guardas verdes. Dois achados de baixa severidade (texto que envelheceu com o <code>f771981</code>: o docstring da guarda e um <code>motivo</code> do livro-razão) corrigidos no mesmo commit."],
+]},
+{k:"g", h:"Git e versionamento", note:"Os commits já seguem Conventional Commits na prática. Falta travar isso em ferramenta e ligar a versão ao histórico.", t:[
+ ["G-01","✅ Adotar Conventional Commits formalmente","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). O historico ja seguia a convencao na pratica; isto trava o habito, porque o <code>release-please</code> versiona lendo o log — sem tipo confiavel na mensagem nao da para decidir entre major, minor e patch."],
+ ["G-02","✅ <code>commitlint</code> + config convencional","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <code>commitlint.config.js</code> estendendo <code>config-conventional</code>, com <code>scope-enum</code> nas fatias reais do projeto (campanha, capitulos, dominio, ui, storage, audio, mapa, ci, deps, roadmap, testes) em vez de uma lista generica. Escopo segue <b>opcional</b>: obrigar em todo commit gera escopo inventado, que e pior que nenhum."],
+ ["G-03","✅ Hook <code>commit-msg</code> rodando o commitlint","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <b>Sem husky, de proposito:</b> o husky espera o <code>.git</code> no diretorio de onde roda, e aqui nao esta — o repositorio e <code>TrincaEngSoftware/</code> e o projeto vive dois niveis abaixo. O que o husky faria de util e um <code>git config core.hooksPath</code>, entao <code>scripts/instalar-hooks.js</code> faz essa linha com o calculo de caminho certo, no <code>prepare</code>. Hooks versionados em <code>.githooks/</code>. O que travava era F0-02: hook roda em shell nao-interativo, que nao le o <code>.zshrc</code> onde o nvm vive — o <code>common.sh</code> procura no nvm a versao do <code>.nvmrc</code> antes de desistir. Testado com <code>env -i PATH=/usr/bin:/bin</code>."],
+ ["G-04","✅ <code>lint-staged</code> no <code>pre-commit</code>","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <code>eslint --fix</code> e <code>prettier --write</code> so nos arquivos staged."],
+ ["G-05","✅ Hook <code>pre-push</code> com typecheck","cc",2,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). Barato e evita CI vermelho por erro de tipo."],
+ ["G-06","✅ <code>release-please</code> para versão e CHANGELOG","cc",1,"<b>Feito 04/09.</b> Config em <code>release-please-config.json</code> + <code>.release-please-manifest.json</code>, workflow em <code>.github/workflows/release.yml</code>. Le os Conventional Commits, mantem um PR de release com o CHANGELOG acumulado e, no merge, cria a tag — que e o gatilho que o <code>build.yml</code> ja esperava. <code>include-component-in-tag: false</code> e obrigatorio: o padrao taggearia <code>trincamania-v1.0.0</code> e o <code>on: push: tags: [\"v*\"]</code> do build nao casaria. <code>target-branch: develop</code> porque <code>main</code> nao existe (ver G-09)."],
+ ["G-07","✅ Criar o <code>CHANGELOG.md</code>","cc",1,"<b>Feito 09/09</b> (commit <code>38bde35</code>). O G-06 já apontava <code>changelog-path: CHANGELOG.md</code>, mas o arquivo nunca existiu — sem ele o primeiro PR de release não teria onde prepender. Semente mínima no formato do <code>release-type: node</code>: cabeçalho <code>Changelog</code> + seção <code>1.0.0</code> casando com o <code>.release-please-manifest.json</code>, sem preâmbulo entre o cabeçalho e a primeira versão. Seções nos rótulos PT-BR de <code>changelog-sections</code>."],
+ ["G-08","✅ Versão num lugar só","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <code>app.config.js</code> deriva <code>version</code> do <code>package.json</code>, e o campo saiu do <code>app.json</code>. Sem isso o release-please bumparia o <code>package.json</code> e o APK sairia com a versao anterior — <b>sem quebrar nada</b>, que e o pior tipo de erro. <code>versionCode</code>/<code>buildNumber</code> ficam com o EAS. <b>Correcao 09/09:</b> esta nota afirmava que o <code>app.json</code> ainda publicava <code>TileAdventure-ODS</code>. Nao publicava — <code>grep TileAdventure</code> nao acha nada no repositorio. O nome sempre foi <code>TrincaMania</code>; a divergencia real esta no slug e no pacote, e e o L-14 que decide."],
+ ["G-09","Definir a estratégia de branch","voce",1,"Hoje só existe <code>develop</code>. O CI já espera <code>main</code> também."],
+ ["G-10","Branch protection em <code>main</code> e <code>develop</code>","voce",0,"Exigir PR, checks verdes, sem force-push."],
+ ["G-11","✅ Template de PR","cc",2,"<b>Feito 08/09.</b> <code>.github/PULL_REQUEST_TEMPLATE.md</code>: o que muda, como testar, checklist (typecheck/test, hash de levels.ts, vocabulario ODS12, Conventional Commits)."],
+ ["G-12","✅ Templates de issue: bug, arte, conteúdo","cc",2,"<b>Feito 08/09.</b> <code>.github/ISSUE_TEMPLATE/{bug,arte,conteudo}.yml</code>, formulario estruturado, cada um com a label correspondente ja aplicada."],
+ ["G-13","✅ <code>CODEOWNERS</code>","cc",2,"<b>Feito 08/09.</b> <code>.github/CODEOWNERS</code>: <code>* @VittorNCosta</code> — projeto de uma pessoa so por enquanto (ver SECURITY.md)."],
+ ["G-14","Padronizar as labels","cc",2,"<code>arte</code>, <code>som</code>, <code>conteudo</code>, <code>automacao</code>, <code>devsecops</code>, <code>p0/p1/p2</code>."],
+ ["G-15","✅ Revisar o <code>.gitattributes</code>","cc",2,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <code>*.ttf</code>, <code>*.otf</code>, <code>*.aab</code> e <code>*.keystore</code> marcados como binario."],
+ ["G-16","Decidir sobre Git LFS para os PNGs","voce",2,"Reavaliar depois de A-33 — com tudo ≤ 400 KB pode não valer."],
+ ["G-17","✅ <code>.gitignore</code>: build do EAS, <code>*.aab</code>, <code>coverage/</code>","cc",2,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <b>Divergencia do texto original:</b> pedia ignorar <code>.eas/</code> inteiro, mas CI-23 quer <code>.eas/workflows/</code> versionado — ignora <code>.eas/build-cache/</code> no lugar."],
+ ["G-18","✅ Liberar <code>git push</code> sem prompt no modo <code>auto</code>","cc",1,"<b>Feito 08/09</b> (commit <code>cf38a0f</code>). O <code>defaultMode: \"auto\"</code> mandava todo push para o classificador de permissão, que barrava — e isso esvaziava o CI-26 justamente no ponto dele: o commit de ponto de parada ficava preso na máquina de onde ele estava saindo. <code>permissions.allow</code> com <code>Bash(git push)</code> e <code>Bash(git push:*)</code> em <code>.claude/settings.json</code> (versionado, então a regra viaja para a outra máquina). Force-push fica de fora, no <code>deny</code>; a regra casa por prefixo, então <code>git push origin main --force</code> escapa — é rede contra descuido, não contra intenção."],
+ ["G-19","✅ Classificar todas as tarefas por modelo Codex","cc",1,"<b>Feito 15/09.</b> Luna, Terra ou Sol por escopo/risco em todas as tarefas; execução humana identificada e recomendação Claude preservada. <code>scripts/lib/codex-models.js</code> compartilhado pelo painel, markdown e issues; filtros Codex e coluna gerada com checagem de sincronismo. Lint, typecheck e 188/188 testes passam. Base: <code>4bdac92</code>, conferida no GitHub em 15/09/2026. Alterações locais ainda sem commit; sincronização das issues por delta."],
+ ["G-20","✅ Configurar YOLO como padrão para novas sessões Codex","cc",1,"<b>Feito 15/09.</b> Autorizado explicitamente pelo usuário nesta conversa. <code>approval_policy = 'never'</code> no nível global de <code>~/.codex/config.toml</code>, com <code>sandbox_mode = 'danger-full-access'</code> já existente. Não muda limites administrados da sessão aberta; continuidade por objetivo é iniciada com <code>/goal</code>. Configuração pessoal, fora do Git deste projeto."],
+ ["G-21","Criar ou vincular automaticamente uma issue por PR","cc",1,"<b>Contexto</b><br>Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade.<br><br><b>Critérios de aceite</b><br>- [ ] Ao abrir PR, reutilizar a issue válida já vinculada; se não houver, criar uma tarefa com título, contexto e link do PR.<br>- [ ] Usar chave persistente por número do PR para que edição, synchronize e reexecução não criem duplicatas.<br>- [ ] Adicionar vínculo e labels; exigir rastreabilidade no check de integração, inclusive para PRs automatizados.<br>- [ ] Fechar a issue automática apenas após merge na branch de entrega definida; PR fechado sem merge não representa tarefa concluída.<br>- [ ] Testar PR com issue existente, sem issue, de fork, edição/reabertura e execuções concorrentes.<br>- [ ] Executar automação privilegiada somente com metadados e código confiável da base; nunca executar código do PR com token de escrita.<br><br><b>Dependências e referências</b><br>Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue .<br><br><b>Entrega Astra low 18/09/2026:</b> Workflow de rastreabilidade idempotente em base confiável; confirmar eventos reais após integração. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["G-22", "✅ Reconciliar roadmap e issues sem reabertura indevida", "cc", 1, "<b>Critérios cobertos pelo PR #259; validação e fechamento após integração.</b> O sincronizador conserva corpo/labels humanos, pagina o backlog e bloqueia conflitos. O workflow fecha issues existentes apenas quando o PR integrado usa <code>Closes</code>, <code>Fixes</code> ou <code>Resolves</code>; <code>Refs</code> nunca fecha. Testes cobrem merge, base não padrão, PR fechado sem merge, idempotência, PRs e referências externas."],
+]},
+{k:"ci", h:"CI/CD", note:"O <code>ci.yml</code> atual roda lint, typecheck, test, test:ui e test:playthrough em <b>um job sequencial</b>. Se o lint falha, você não descobre se os testes passariam.", t:[
+ ["CI-01","✅ Quebrar o CI em jobs paralelos","cc",1,"<b>Feito 03/09.</b> Sete jobs no lugar de um sequencial: <code>lint</code>, <code>typecheck</code>, <code>guardas</code>, <code>test</code>, <code>test-ui</code>, <code>playthrough</code> e <code>expo-doctor</code>. Antes, lint quebrado escondia se os testes passariam e cada ida ao CI devolvia um problema de cada vez; agora o PR volta com a lista inteira. O preço é um <code>npm ci</code> por job, barato porque o cache do <code>setup-node</code> e compartilhado e o gargalo real (playthrough, ~1 min) passa a rodar ao lado do resto."],
+ ["CI-02","✅ <code>concurrency</code> com cancelamento de runs antigos","cc",1,"<b>Feito 03/09.</b> Push novo no mesmo PR cancela o run anterior. Em push para <code>main</code>/<code>develop</code> nao cancela — <code>cancel-in-progress</code> so liga quando <code>github.event_name == 'pull_request'</code>, porque ali cada commit e um estado que vale ter verificado por si."],
+ ["CI-03","✅ <code>timeout-minutes</code> em todo job","cc",1,"<b>Feito 03/09.</b> 10 min nos jobs curtos, 15 nos de teste, 20 no playthrough. Sem isso um job travado queima as 6 h de teto padrao do runner."],
+ ["CI-04","✅ <code>permissions: contents: read</code> no topo","cc",0,"<b>Feito 03/09.</b> Declarado no nivel do workflow. Sem a chave o <code>GITHUB_TOKEN</code> herda o escopo padrao do repositorio, que inclui escrita — e nenhum dos sete jobs precisa de mais que leitura."],
+ ["CI-05","✅ Fixar as actions por SHA, não por tag","cc",1,"<b>Feito 03/09, pins atualizados 04/09.</b> <code>actions/checkout</code> em <code>3d3c42e</code> (v7.0.1) e <code>actions/setup-node</code> em <code>8207627</code> (v7.0.0), com a versao no comentario ao lado — e o comentario nao e decoracao: e por ele que o Dependabot (SEC-04) sabe qual versao esta fixada e consegue abrir o bump. Tag e ponteiro mutavel: quem controla o repositorio da action pode reapontar <code>v4</code> para outro commit sem que nada aqui mude."],
+ ["CI-06","✅ Matrix de Node 20 e 22","cc",2,"<b>Feito 03/09</b>, com <code>fail-fast: false</code> — se o 20 quebra e o 22 e cancelado, a matrix perde a graca, porque a pergunta e em qual das duas falha. <b>Achou um bug de verdade:</b> <code>npm test</code> era <code>node --test tests</code>, e passar diretorio so funciona ate o Node 21 — do 22 em diante o runner trata o argumento como arquivo e morre com <code>MODULE_NOT_FOUND</code>. Como <code>engines</code> declara <code>>=20.19.0</code>, o comando estava quebrado em metade das versoes suportadas. Ver CI-06a."],
+ ["CI-06a","✅ Corrigir <code>npm test</code> para qualquer Node >= 20","cc",1,"<b>Feito 03/09.</b> Saiu de CI-06. Agora <code>npm test</code> chama <code>scripts/rodar-testes.js</code>, que le <code>tests/</code> e passa a lista de <code>*.test.cjs</code> explicita ao <code>--test</code>. A alternativa obvia, <code>node --test tests/*.test.cjs</code>, trocaria um problema por outro: depende do shell expandir o glob, o que o cmd e o PowerShell nao fazem — armadilha que o <code>CLAUDE.md</code> ja avisava. Assim quem lista os arquivos e o Node. 128/128 no Node 20 e no 24."],
+ ["CI-07","✅ Rodar <code>npm run format:check</code> no CI","cc",1,"<b>Feito 03/09.</b> Segundo passo do job <code>lint</code>, junto da checagem que ja existia — as duas sao analise estatica barata e falham pelo mesmo motivo: alguem commitou sem passar o prettier."],
+ ["CI-08","✅ Rodar <code>npx expo-doctor</code> no CI","cc",1,"<b>Feito 03/09.</b> Job proprio. Verificado antes de ligar: 18/18 checks passam hoje, entao entra verde em vez de repetir a armadilha de deixar o CI vermelho de saida."],
+ ["CI-09","✅ Cobertura de teste com threshold","cc",1,"<b>Feito 03/09.</b> <code>npm run cobertura</code> (<code>scripts/cobertura.js</code>), job proprio no CI. <b>Nao e <code>jest --coverage</code>, de proposito:</b> o Jest aqui roda 4 smoke tests de componente, e as 128 assercoes de regra de jogo, storage e dominio sao <code>node:test</code> em <code>tests/*.test.cjs</code>, que ele nao coleta — um threshold sobre o Jest mediria 4 arquivos de UI e chamaria isso de cobertura do projeto. O piso usa a cobertura nativa do <code>node:test</code> e segue o idioma dos outros guardas: e o que a suite cobre hoje (85,70% linha / 87,42% ramo / 87,03% funcao), gravado em <code>scripts/cobertura-minima.json</code>, e cair reprova. Baixar exige <code>--atualizar --permitir-queda</code>, para afrouxar a regua aparecer no diff. A conta e nossa porque o Node 20 nao tem <code>--test-coverage-lines</code> — so o 22+ tem — e a matrix roda os dois."],
+ ["CI-09a","✅ Fixar o job de cobertura numa versao de Node","cc",1,"<b>Feito 03/09.</b> Saiu de CI-09. O mesmo codigo e os mesmos 128 testes medem 85,70% de linha no Node 20 e 79,57% no Node 24: seis pontos que nao tem nada a ver com teste, e sim com o que cada V8 instrumenta. Entao o job de cobertura fica fora da matrix, no Node 20 do <code>engines</code>, e o piso grava o <code>nodeMajor</code> em que foi medido — rodar noutra versao devolve a explicacao em vez de um vermelho falso."],
+ ["CI-10","✅ Publicar o relatório de cobertura","cc",2,"<b>Feito 03/09.</b> Vai para o <b>resumo do job</b> (<code>$GITHUB_STEP_SUMMARY</code>), que o GitHub renderiza na pagina do run, e nao para um comentario no PR. Comentar exigiria <code>pull-requests: write</code>, reabrindo justamente o privilegio que CI-04 acabou de fechar, e por um relatorio que ninguem le duas vezes. O resumo nao pede permissao nenhuma. Traz as tres metricas contra o piso e, num <code>&lt;details&gt;</code>, os 10 arquivos de <code>src/</code> menos cobertos — que e a parte acionavel: hoje aponta <code>MatchRule.ts</code> e <code>ShuffleService.ts</code> em 24,56%. Sem a variavel de ambiente o script nao escreve nada, entao rodar local continua limpo."],
+ ["CI-11","✅ Path filters","cc",2,"<b>Feito 03/09.</b> Job <code>mudancas</code> compara com a base e exporta <code>codigo=true|false</code>; os sete jobs de codigo ganham <code>if: needs.mudancas.outputs.codigo == 'true'</code>. <b>Nao</b> foi usado <code>paths:</code> no nivel do workflow, que e a forma obvia e a errada: com ela o workflow nao roda, o check obrigatorio nunca reporta e o PR de documentacao trava sem poder mergear. Job pulado por <code>if:</code>, ao contrario, conta como sucesso. <code>lint</code> fica de fora do gate porque o <code>format:check</code> tambem cobre <code>.md</code>. Na duvida — branch nova, force-push, base fora de alcance — roda tudo. O checkout usa <code>filter: blob:none</code> para pegar o historico sem os 85 MB de PNG."],
+ ["CI-12","✅ Job de validação de peso de asset","cc",2,"<b>Feito 03/09.</b> <code>scripts/valida-assets.js</code> roda no CI e cobre três coisas: teto de 400 KB por arquivo, asset órfão que nada em <code>src/</code> referencia, e extensão duplicada (<code>.png.png</code>, sempre erro de exportação). Reprovar no saldo atual era inviável — 42 arquivos já estouram o teto e 51 são órfãos —, então compara com o livro-razão <code>scripts/assets-baseline.json</code>: falha em arquivo novo acima do limite, em arquivo conhecido que engordou e em entrada que saiu da lista sem o saldo ser atualizado. Assim a dívida só pode encolher. Hoje: 100 arquivos, 84,9 MB."],
+ ["CI-13","✅ Job de guarda ODS12","cc",1,"<b>Feito 03/09.</b> <code>scripts/guarda-ods12.js</code> roda no CI varrendo <code>src/</code> e também o <b>nome</b> dos assets — <code>ambient_celestial.mp3</code> é conteúdo tanto quanto uma string. Grep puro reprovaria o repositório hoje (<code>theme: 'sweet'</code>, <code>identityKey</code> legado, trilha do Mundo 8) e reprovaria ocorrência legítima (\"restos de fruta\" é o que é resíduo orgânico), então compara com o livro-razão <code>scripts/ods12-baseline.json</code>: falha em ocorrência nova e em entrada morta, com a chave em <code>arquivo::termo</code> e não na linha. Restam 19 pendências classificadas, todas com tarefa nos blocos L, S e C-08b."],
+ ["CI-14","Criar o secret <code>EXPO_TOKEN</code>","voce",0,"expo.dev → Access Tokens."],
+ ["CI-15","✅ Migrar <code>eas.json</code> para <code>appVersionSource: \"remote\"</code>","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). Sai de tabela com G-08: com a versao derivada do <code>package.json</code>, <code>versionCode</code> e <code>buildNumber</code> precisam de dono, e o dono e o EAS."],
+ ["CI-16","✅ <code>autoIncrement: true</code> no perfil de produção","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>)."],
+ ["CI-17","✅ Adicionar o perfil <code>development</code> no <code>eas.json</code>","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). Com <code>developmentClient: true</code> e APK de distribuicao interna. O <code>preview</code> tambem ganhou <code>distribution: internal</code>."],
+ ["CI-18","✅ Workflow de build de preview em PR","cc",1,"<b>Feito 03/09.</b> <code>.github/workflows/build.yml</code>, separado do <code>ci.yml</code>: o CI verifica todo push e tem de ser rapido e gratuito, isto gasta minuto de build de terceiro. <b>Divergencia:</b> o texto pedia APK <i>por PR</i>, e saiu APK por PR <b>rotulado</b> com <code>build:preview</code> — buildar todo push de todo PR queimaria a cota do EAS em troca de APKs que ninguem instala. Com o rotulo o build sai quando alguem de fato quer testar no aparelho, e <code>synchronize</code> faz o PR rotulado rebuildar a cada push. Enquanto CI-14 nao existir, o job <code>checagem</code> devolve um aviso e os builds sao pulados: o workflow fica <b>verde e inerte</b> em vez de vermelho."],
+ ["CI-19","✅ Workflow de build de produção em tag","cc",1,"<b>Feito 03/09.</b> Dispara em <code>push</code> de tag <code>v*</code> — a que o release-please cria — e tambem por <code>workflow_dispatch</code> com escolha de perfil. Usa <code>--no-wait</code>: esperar o build custa 15 a 30 min de runner do GitHub olhando uma fila que nao e nossa, e o link no resumo do job resolve. Nao usa <code>expo/expo-github-action</code> — o que ela faz de essencial e exportar o <code>EXPO_TOKEN</code>, que o <code>env:</code> ja faz, e uma action a menos e um terceiro a menos com acesso ao token (CI-05)."],
+ ["CI-20","Configurar EAS Submit para a Play Store","voce",1,"Exige o service account JSON do Google Play."],
+ ["CI-21","<code>--auto-submit</code> no build de produção","cc",2,"<br><br><b>Entrega Astra low 18/09/2026:</b> Auto-submit de produção manual e opt-in; depende de credenciais EAS/Play e publicação aprovada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-22","Configurar EAS Update (OTA)","cc",1,"Correção de JS sem passar pela revisão da loja.<br><br><b>Entrega Astra low 18/09/2026:</b> expo-updates, runtime fingerprint e workflow OTA preparados; falta execução EAS com credenciais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-23","✅ Avaliar EAS Workflows em <code>.eas/workflows/</code>","cc",2,"<b>Feito 08/09.</b> <code>docs/adr/0005-eas-workflows-nao-substitui-o-github-actions.md</code>: decisao de nao adotar por ora. O material oficial da Expo descreve EAS Workflows como complemento ao GitHub Actions, nao substituto — nenhum dos guardas hoje (ODS12, assets, cobertura, orcamento de bundle, gitleaks, CodeQL, dependency-review, SBOM, Scorecard) e job pre-empacotado do EAS, e o unico uso real de EAS hoje (<code>eas build</code>, via <code>disparar-build.js</code>) ja roda direto pelo <code>eas-cli</code> dentro do Actions — migrar trocaria um orquestrador gratuito por outro com quota paga sem ganhar capacidade nova. Reavaliar se surgir dor concreta que o Actions nao resolva bem."],
+ ["CI-24","Canal de update por branch","cc",2,"<code>preview</code> e <code>production</code>.<br><br><b>Entrega Astra low 18/09/2026:</b> Canais preview/production definidos; falta validar atualização instalada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-25","✅ Registrar o estado da sessão a cada turno","cc",1,"<b>Feito 08/09</b> (commit <code>047bc74</code>). Sessão do Claude Code não tem memória entre execuções, e a que estoura o limite de 5h morre no meio da tarefa — sobra só o que estiver em disco. <code>scripts/estado.js</code> escreve <code>.claude/estado.md</code> (branch, divergência com o origin, arquivos não commitados, últimos commits, placar do backlog lido daqui e a fila por prioridade); os hooks <code>Stop</code> e <code>SessionStart</code> de <code>.claude/settings.json</code> regeneram a cada turno e injetam no contexto da sessão seguinte. O que o script não deriva — a intenção — entra por <code>--nota</code>, escrita ao <b>começar</b> a tarefa, não ao terminar. De quebra, o registro dos hooks saiu do <code>settings.local.json</code> (gitignored, então um clone novo ficava sem hook nenhum) para o <code>settings.json</code> versionado."],
+ ["CI-26","✅ Janela de trabalho: parar nos cortes de 16h e 22h","cc",1,"<b>Feito 08/09</b> (commit <code>00d416e</code>). Vittor troca de máquina às 16h e sai da faculdade às 22h; sessão que segue sozinha depois disso produz commit que a outra máquina não vê. <code>scripts/janela.js</code> + hook em <code>PreToolUse</code>/<code>UserPromptSubmit</code>: aviso 20 min antes, corte devolvendo <code>continue: false</code> (interrompe de verdade), 90 min de bloqueio cobrindo o deslocamento, e reabertura automática. No corte faz <code>git add -A</code>, commit de checkpoint e push, os dois com <code>--no-verify</code> — o <code>pre-push</code> roda <code>tsc --noEmit</code> e trabalho pela metade não compila. Saída de emergência é o próprio usuário: um prompt dele renova licença de 45 min, nunca além do próximo corte. Decisão de fase é função pura sobre o relógio de Brasília, com 12 testes em <code>tests/janela.test.cjs</code>. Depende do G-18."],
+ ["CI-27","✅ Ignorar <code>README.md</code> na checagem de órfão de asset","cc",1,"<b>Feito 09/09</b> (commit <code>de7afdc</code>, junto do A-02 — sem isso o A-02 era impossível). Pasta vazia não existe no git, então <code>assets/map/worlds/</code> precisa de arquivo; e como nada em <code>src/</code> referencia texto, o próprio README que documenta a convenção reprovava a validação com <code>asset órfão novo</code>. <code>valida-assets.js</code> passou a tratar <code>README.md</code> como documentação da pasta, não asset. Só <code>README.md</code>, de propósito — liberar <code>.md</code> inteiro abriria a porta para despejar qualquer coisa em <code>assets/</code> chamando de documentação. Efeito colateral: <code>assets/sfx/README.md</code> saiu do livro-razão, que baixou de 44 para 43 órfãos."],
+ ["CI-28","✅ Apontar o <code>app.json</code> para o projeto EAS certo","cc",0,"<b>Feito 09/09</b> (commit <code>f241b78</code>). O <code>extra.eas.projectId</code> apontava para <code>083f0c73-59f4-49b8-badc-a219daf61640</code>, um projeto que não é o que existe hoje no expo.dev. Isso sozinho já anularia o CI-14: <code>eas build --non-interactive</code> resolve o projeto <b>só por esse id</b> — nunca pelo <code>slug</code> nem pelo <code>name</code> — então com o token certo e o id errado a falha vem como <code>project not found</code>, que se lê como problema de permissão e manda depurar o lugar errado. Três campos passaram a descrever o mesmo projeto: <code>projectId</code> <code>42d46466-3a11-41c1-9f2e-bd17829c7356</code>, <code>owner</code> <code>vittorbestys-team</code> e <code>slug</code> <code>tileclear-ods12</code>. O <code>slug</code> teve que mudar porque o EAS recusa build quando o <code>slug</code> do <code>app.json</code> não bate com o do projeto apontado pelo <code>projectId</code> — não é campo cosmético. Isso deixa o app com <b>três nomes diferentes</b> (nome <code>TrincaMania</code>, slug <code>tileclear-ods12</code>, package <code>br.com.mhvtech.trincamania</code>); é dívida do R-02, registrada lá. Quem pegou isso foi o <code>tests/appConfig.test.cjs</code>, que travava <code>slug === 'trinca-mania'</code> sob o título <i>“a identidade publicada é a do jogo atual”</i> — a trava funcionou como devia. Ela não foi apagada: passou a exigir <code>tileclear-ods12</code> e <code>owner</code>, com o porquê no comentário, para a divergência ficar registrada como decisão em vez de virar descuido silencioso."],
+ ["CI-29","Atualizar as instruções dos agentes conforme o projeto atual","cc",1,"<b>Problema e benefício</b><br>O agente de QA ainda afirma que não há Jest, renderer ou Testing Library, embora essas ferramentas e testes de componentes já existam. Instruções antigas podem impedir a validação correta.<br><br><b>Escopo</b><br>Revisar as instruções dos seis agentes existentes, os comandos de verificação e as invariantes contra a branch feat/campanha-10x10. Corrigir a documentação sem alterar gameplay ou introduzir outro runner.<br><br><b>Critérios de aceite</b><br>- [ ] Distinguir testes de domínio com node:test, testes de componentes com Jest/Testing Library e simulação de playthrough.<br>- [ ] Conferir comandos e caminhos com package.json e workflows atuais, incluindo a versão de Node exigida pelo projeto.<br>- [ ] Conferir as regras de campanha, capítulos, progresso e vidas contra o código atual; não copiar a antiga contagem de fases como verdade.<br>- [ ] Substituir instruções de reversão potencialmente destrutivas por comparação em checkout/worktree isolado para validar regressões.<br>- [ ] Remover contradições entre agentes e documentação compartilhada, registrando os arquivos revisados.<br><br><b>Dependências</b><br>Nenhuma. O problema de manifest/lockfile já foi tratado na issue #4; não reabri-lo nesta tarefa.<br><br><b>Fontes</b><br>https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/.claude/agents/qa-engineer.md<br><br><b>Entrega Astra low 18/09/2026:</b> Seis instruções de agentes revisadas contra ferramentas atuais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-30","Compartilhar as regras do projeto entre Claude e Codex","cc",1,"<b>Problema e benefício</b><br>O conhecimento de domínio e o roteamento estão concentrados em CLAUDE.md. Uma sessão Codex iniciada na raiz não dispõe de uma entrada compartilhada equivalente.<br><br><b>Escopo</b><br>Criar AGENTS.md na raiz do repositório, apontando para o aplicativo em TrincaMania Redesign/TrincaMania-ODS12. Centralizar as regras comuns e manter em CLAUDE.md as instruções específicas de Claude, com referência explícita ao conteúdo compartilhado.<br><br><b>Critérios de aceite</b><br>- [ ] Documentar arquitetura, vocabulário, referências de domínio e comandos atuais a executar a partir da pasta correta.<br>- [ ] Preservar as invariantes verificadas em CI-29, sem duplicar regras mutáveis em vários arquivos.<br>- [ ] Documentar quando delegar e exigir escopos de arquivo disjuntos nas edições paralelas.<br>- [ ] Conferir a descoberta das instruções e a resolução dos links tanto da raiz quanto da pasta do aplicativo.<br>- [ ] Preservar os hooks e o registro de estado existentes; não introduzir dependências do aplicativo.<br><br><b>Dependências</b><br>CI-29 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/220).<br><br><b>Fontes</b><br>https://learn.chatgpt.com/docs/agent-configuration/subagents<br>https://github.com/VittorNCosta/TrincaEngSoftware/blob/4bdac920a6c9674076bd7a3a0e5bcc10e6aa5ac2/TrincaMania%20Redesign/TrincaMania-ODS12/CLAUDE.md<br><br><b>Entrega Astra low 18/09/2026:</b> AGENTS.md raiz compartilhado; CLAUDE.md referencia regras comuns e mantém especificidades. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-31","Adicionar três agentes Codex especializados no TrincaMania","cc",2,"<b>Problema e benefício</b><br>Já existem agentes específicos de Claude, mas não equivalentes locais para Codex. O catálogo VoltAgent oferece referências úteis, sem conhecer as invariantes do TrincaMania.<br><br><b>Escopo</b><br>Adaptar react-native-engineer, qa-engineer e code-reviewer para .codex/agents/*.toml na raiz. Aproveitar apenas instruções complementares dos perfis reviewer, typescript-pro e mobile-developer do VoltAgent; preservar o conhecimento do projeto.<br><br><b>Critérios de aceite</b><br>- [ ] Validar sintaxe TOML e os campos name, description e developer_instructions; confirmar descoberta e invocação no Codex instalado.<br>- [ ] Definir implementação, QA e revisão com escopos distintos; configurar code-reviewer como read-only e registrar a precedência das permissões da sessão.<br>- [ ] Omitir model e model_reasoning_effort para herdar a configuração da sessão por padrão; não fixar modelos do catálogo sem necessidade.<br>- [ ] Documentar exemplos de invocação, responsabilidades e prevenção de edições concorrentes no mesmo arquivo.<br>- [ ] Registrar upstream, commit de origem e avisos da licença MIT para conteúdo reutilizado.<br>- [ ] Não importar o catálogo inteiro, instalar ferramentas globalmente ou alterar dependências de runtime.<br><br><b>Dependências</b><br>CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).<br><br><b>Fontes</b><br>https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857<br>https://learn.chatgpt.com/docs/agent-configuration/subagents<br><br><b>Entrega Astra low 18/09/2026:</b> Três perfis especializados, sem troca de modelo; reviewer read-only. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-32","Adicionar duas skills de investigação e verificação","cc",2,"<b>Problema e benefício</b><br>O fluxo pode ganhar consistência na investigação de bugs e na comprovação de conclusão, sem adotar toda a metodologia e os pontos de aprovação do Superpowers.<br><br><b>Escopo</b><br>Criar duas skills locais em .agents/skills na raiz, adaptadas de systematic-debugging e verification-before-completion. Usar nomes trinca-systematic-debugging e trinca-verification-before-completion para evitar colisão com instalações pessoais.<br><br><b>Critérios de aceite</b><br>- [ ] Limitar os gatilhos a investigação de bugs reproduzíveis e verificação de mudanças relevantes; não ativar um fluxo completo para qualquer pergunta.<br>- [ ] Exigir reprodução, hipótese fundamentada, investigação da causa e teste de regressão quando pertinente.<br>- [ ] Selecionar comandos de validação conforme a mudança e o CI atual; distinguir verificação automatizada de validação manual em aparelho.<br>- [ ] Exigir evidências no relatório final, incluindo falhas e verificações não executadas.<br>- [ ] Não adicionar aprovação obrigatória a cada ajuste pequeno já autorizado, TDD para mudanças puramente documentais ou execução automática de outras skills.<br>- [ ] Registrar origem, commit e licença MIT; manter a instalação no escopo do repositório e sem hooks globais.<br><br><b>Dependências</b><br>CI-30 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/221).<br><br><b>Fontes</b><br>https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797<br>https://learn.chatgpt.com/docs/build-skills<br><br><b>Entrega Astra low 18/09/2026:</b> Duas skills locais e origem/licenças documentadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-33","Validar o fluxo Codex em um piloto controlado","cc",2,"<b>Problema e benefício</b><br>Arquivos de agentes e skills válidos não comprovam ganho de qualidade ou adequação ao ambiente. É necessário exercitar o fluxo antes de expandi-lo.<br><br><b>Escopo</b><br>Executar um piloto em branch/worktree isolado: revisão de um diff concluído, reprodução de uma regressão histórica e uma alteração pequena com critério verificável. Documentar resultados e limitações sem modificar configurações globais.<br><br><b>Critérios de aceite</b><br>- [ ] Registrar os três cenários, commits de referência, resultado esperado, agente/skill usado e evidência observada.<br>- [ ] Confirmar que a revisão não altera arquivos e que agentes não editam simultaneamente os mesmos arquivos.<br>- [ ] Confirmar que a regressão é detectada antes da correção e que a alteração pequena passa nas verificações aplicáveis.<br>- [ ] Registrar tempo, intervenções humanas e consumo quando disponível, marcando métricas indisponíveis sem estimá-las.<br>- [ ] Documentar limitações do cliente/ambiente e como desativar ou remover as configurações locais.<br>- [ ] Concluir com recomendação fundamentada de manter, ajustar ou desativar cada componente; não instalar OMX nem ampliar o catálogo nesta tarefa.<br><br><b>Dependências</b><br>CI-31 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/222) e CI-32 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/223).<br><br><b>Fontes</b><br>https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857<br>https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797<br><br><b>Entrega Astra low 18/09/2026:</b> Piloto local isolado realizado; descoberta/invocação dos perfis no cliente requer nova sessão. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-34","Automatizar validação de PR e corrigir checks de entrega","cc",1,"<b>Problema:</b> o PR #225 foi entregue antes de conferir os checks remotos e apresentou falhas de formato, cobertura, auditoria e Scorecard, além de conflito posterior com a base.<br><br><b>Escopo:</b> integrar a base preservando a classificação Codex, corrigir formato e dependências transitivas vulneráveis, cobrir compra/expiração/persistência dos espaços da bandeja, limitar Scorecard à branch padrão e validar PRs destinados a qualquer branch. Adicionar <code>npm run validar:local</code>, <code>npm run pr:validar -- &lt;numero&gt; --watch</code> e instruções do ciclo de correção no AGENTS.md.<br><br><b>Critérios de aceite:</b><br>- [ ] CI e Segurança aprovados no SHA atual do PR, sem conflitos.<br>- [ ] Nenhum piso reduzido, advisory novo aceito ou check relevante desativado.<br>- [ ] Monitor rejeita SHA divergente, conflitos, falha, cancelamento e ausência de workflows; aguarda execução pendente.<br>- [ ] Testes de regressão cobrem decisões do monitor e persistência/expiração dos boosts.<br>- [ ] Roadmap, documentação e issue sincronizados; cinco tarefas CI-29 a CI-33 preservadas.<br><br><b>Entrega:</b> implementação e evidências no PR https://github.com/VittorNCosta/TrincaEngSoftware/pull/225 ; tarefa aberta enquanto aguarda validação e integração. O monitor consulta e aguarda; as correções são executadas pelo agente conforme AGENTS.md, sem merge automático.<br><br><b>Referências:</b><br>https://github.com/ossf/scorecard-action<br>https://github.com/advisories/GHSA-2883-xcg3-v3hh<br>https://github.com/advisories/GHSA-93r5-fhx6-vmg9<br><br><b>Entrega Astra low 18/09/2026:</b> Validação local/PR por SHA, checks aplicáveis e testes de scripts; confirmar CI remoto no PR. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-35","Consolidar e ativar as automações na branch padrão","cc",0,"<b>Contexto</b><br>A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão.<br><br><b>Critérios de aceite</b><br>- [ ] Integrar por PR as automações e seus scripts/configurações dependentes, sem incluir mudanças de campanha inadvertidamente; registrar dependências que impeçam separação.<br>- [ ] Confirmar na develop os workflows e o dependabot.yml, e comprovar execução manual e a primeira execução agendada.<br>- [ ] Ajustar os filtros de PR às branches realmente usadas, inclusive PRs para feat/campanha-10x10 enquanto ela for base de integração.<br>- [ ] Reutilizar G-09 (#114), G-10 (#115) e SEC-03 (#149) para estratégia de branches, proteção e ativação do Dependabot.<br><br><b>Dependências e referências</b><br>Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule .<br><br><b>Entrega Astra low 18/09/2026:</b> Fatia independente preparada em chore/ci35-automacoes-isoladas, sem mudanças da campanha; faltam merge e primeira execução agendada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-36","Migrar ferramentas e CI do Node 20 para LTS suportado","cc",1,"<b>Contexto</b><br>O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines.<br><br><b>Critérios de aceite</b><br>- [ ] Adotar Node 22 LTS como alvo inicial e validar compatibilidade com Expo SDK 54, npm, Jest e EAS.<br>- [ ] Alinhar engines, arquivo de versão, workflows e documentação; atualizar lock somente quando necessário.<br>- [ ] Recalibrar a medição de cobertura por mudança de runtime com comparação documentada, sem ocultar redução real de testes.<br>- [ ] Passar instalação limpa, expo-doctor, typecheck, testes, export e build Android no runtime escolhido.<br><br><b>Dependências e referências</b><br>Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16.<br><br><b>Entrega Astra low 18/09/2026:</b> Node22.23.2 alinhado; instalação limpa/doctor verificados, cobertura com nova metodologia explícita. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-37","Garantir release até build EAS concluído e artefatos verificáveis","cc",1,"<b>Contexto</b><br>Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento.<br><br><b>Critérios de aceite</b><br>- [ ] Encadear explicitamente o build a partir do resultado do release, preferindo workflow reutilizável e o SHA/tag exato; impedir builds duplicados.<br>- [ ] Corrigir a checagem de token que herda working-directory do app antes de checkout e validar o caminho sem EXPO_TOKEN.<br>- [ ] Acompanhar resultado final do EAS com timeout e registrar URL/ID do build; falha ou cancelamento não pode ser reportado como sucesso.<br>- [ ] Vincular release, versão, commit, SBOM e artefato correspondente; testar falha de build e release sem credencial.<br>- [ ] Não publicar automaticamente na Play Store nesta tarefa; manter isso em CI-20/CI-21.<br><br><b>Dependências e referências</b><br>Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: https://github.com/googleapis/release-please-action .<br><br><b>Entrega Astra low 18/09/2026:</b> Release chama build reutilizável, espera EAS e confere artefato; falta build real EXPO_TOKEN. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["CI-38","Ajustar gatilhos e relatórios do E2E Android","cc",1,"<b>Contexto</b><br>O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10x10. O diagnóstico e JUnit só são publicados em caso de falha.<br><br><b>Critérios de aceite</b><br>- [ ] Executar smoke E2E em PR com mudança relevante ao app e suíte completa semanal/manual após integração na develop.<br>- [ ] Remover o gatilho temporário, aplicar cancelamento por PR e registrar duração para controlar custo.<br>- [ ] Publicar JUnit em sucesso e falha, e screenshots/logs em falha com retenção definida.<br>- [ ] Validar PR de documentação sem build desnecessário e PR de código com execução real, sem esconder falhas com retries ilimitados.<br><br><b>Dependências e referências</b><br>Depende de CI-35; reutiliza Maestro existente e Q-02/Q-03/Q-04 (#165–#167).<br><br><b>Entrega Astra low 18/09/2026:</b> Smoke por PR relevante e suíte completa manual/semanal; falta execução remota e caso documentação. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+]},
+{k:"sec", h:"DevSecOps", note:"O último commit do repositório é <code>chore: corrige vulnerabilidades</code> — feito à mão. O objetivo deste fluxo é que isso não volte a ser manual.", t:[
+ ["SEC-01","✅ Habilitar CodeQL para JS/TS","cc",0,"<b>Feito 04/09.</b> Job <code>codeql</code> em <code>.github/workflows/seguranca.yml</code>, linguagem <code>javascript-typescript</code> com o pacote <code>security-and-quality</code>. O <code>security-events: write</code> fica escopado so nesse job; o topo do workflow e <code>contents: read</code>."],
+ ["SEC-02","Habilitar Secret Scanning e Push Protection","voce",0,"Bloqueia o commit de segredo antes de sair da máquina."],
+ ["SEC-03","Habilitar Dependabot alerts e security updates","voce",0],
+ ["SEC-04","✅ <code>dependabot.yml</code> para npm e github-actions","cc",1,"<b>Feito 04/09.</b> <code>.github/dependabot.yml</code> para npm (no subdiretorio do projeto) e github-actions (na raiz), semanal. Agrupa minor e patch; <b>ignora major</b> de expo, react, react-native, jest e typescript — porque foi exatamente um major solto (<code>@types/jest</code> ^30 contra o jest ~29 que o <code>jest-expo ~54</code> fixa) que deixou o develop vermelho. Esses sobem junto com o SDK, por decisao. Prefixo <code>chore(deps)</code>/<code>chore(ci)</code> para passar no commitlint."],
+ ["SEC-05","Avaliar Renovate no lugar do Dependabot","voce",2,"Agrupa PRs e respeita melhor os ranges do Expo."],
+ ["SEC-06","✅ <code>npm audit --audit-level=high</code> no CI","cc",1,"<b>Feito 04/09.</b> Nao entrou como <code>--audit-level=high</code> puro porque nasceria vermelho: 11 advisories abertos (6 high) que chegam pela cadeia do Expo e cuja correcao passa por subir o major. Gate que nasce vermelho alguem desliga. Entao <code>scripts/auditoria.js</code> usa o livro-razao das outras guardas: reprova em advisory novo acima do piso e em entrada morta, chaveado por <code>pacote::id-do-advisory</code> (nao pela versao, que muda a cada install). Registry fora do ar nao reprova — 3 tentativas, teto de 90s, e sai verde avisando."],
+ ["SEC-07","✅ <code>gitleaks</code> no CI","cc",1,"<b>Feito 04/09.</b> Job <code>segredos</code>, com <code>fetch-depth: 0</code> para varrer o historico e nao so o diff. Baixa o binario do gitleaks 8.30.1 da release em vez de usar a action de terceiro — mesma razao ja registrada no CI-05: nao dar acesso a token para action de terceiro."],
+ ["SEC-08","✅ <code>dependency-review</code> em PR","cc",1,"<b>Feito 04/09.</b> Job <code>dependencias</code>, so em PR (a action exige o par base/head). Barra severidade >= high e licenca GPL-2.0/GPL-3.0/AGPL-3.0."],
+ ["SEC-09","✅ Gerar SBOM CycloneDX por release","cc",2,"<b>Feito 08/09.</b> Job <code>sbom</code> novo em <code>.github/workflows/release.yml</code>, depois do <code>release-please</code> e so quando ele de fato cria release (<code>release_created == 'true'</code>). Gera com <code>npx @cyclonedx/cyclonedx-npm@6.0.1</code> a partir do <code>package-lock.json</code> e publica o arquivo no release via <code>gh release upload</code>."],
+ ["SEC-10","✅ OpenSSF Scorecard","cc",2,"<b>Feito 08/09.</b> Job <code>scorecard</code> novo em <code>.github/workflows/seguranca.yml</code>, fora de PR. <code>ossf/scorecard-action@v2.4.4</code> gera o SARIF e publica no registro publico do OpenSSF; <code>github/codeql-action/upload-sarif@v4</code> sobe o mesmo resultado para a aba Security."],
+ ["SEC-11","✅ Auditar <code>android.permissions</code>","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). Continua <code>[]</code>, e agora <code>tests/appConfig.test.cjs</code> reprova se deixar de ser — que era a parte que faltava, porque o risco nao e o valor de hoje, e a lib nova de amanha."],
+ ["SEC-12","✅ Travar a config do <code>expo-audio</code> em teste","cc",1,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). <code>microphonePermission: false</code> e <code>recordAudioAndroid: false</code> travados em teste."],
+ ["SEC-13","✅ Confirmar que não há segredo em <code>app.json</code>/<code>eas.json</code>","cc",0,"<b>Feito 03/09</b> (commit <code>c8311ab</code>). Conferido e travado em teste. O <code>projectId</code> e publico por definicao; o resto esta limpo."],
+ ["SEC-14","✅ Escrever o <code>SECURITY.md</code>","cc",2,"<b>Feito 04/09.</b> <code>.github/SECURITY.md</code>. Aponta para o <b>private vulnerability reporting</b> do GitHub em vez de um e-mail — o repositorio e publico e o endereco seria pessoal. Traz a tabela das verificacoes automaticas e o que cada uma cobre."],
+ ["SEC-15","Rodar <code>/security-review</code> antes do release","cc",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Revisão manual registrada; skill /security-review indisponível. Não declarar execução da skill. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["SEC-16","Proteger o keystore Android","voce",0,"O <code>.gitignore</code> já barra <code>*.jks</code>/<code>*.p12</code>/<code>*.key</code>. Guardar no EAS credentials, nunca no repo."],
+ ["SEC-17","Revisar os dados coletados (LGPD)","voce",1,"Hoje é tudo AsyncStorage local. Se entrar analytics, a política muda."],
+ ["SEC-20","Adicionar análise de segurança do APK com MobSF","cc",1,"<b>Contexto</b><br>CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Android gerado.<br><br><b>Critérios de aceite</b><br>- [ ] Executar MobSF em ambiente controlado sobre APK de preview/release por tag ou execução manual, com versão/imagem fixada.<br>- [ ] Publicar relatório associado ao hash do APK e verificar permissões, componentes exportados, debug, backup e configuração de rede.<br>- [ ] Classificar achados com base no contexto; estabelecer política explícita para bloquear novos achados altos/críticos confirmados e exceções com prazo.<br>- [ ] Não enviar APKs, credenciais ou relatórios sensíveis para um serviço público de análise.<br>- [ ] Validar relatório normal, achado conhecido em fixture segura e indisponibilidade do scanner sem falso verde.<br><br><b>Dependências e referências</b><br>Depende de build verificável (CI-37); complementa SEC-11 (#157). Fonte: https://github.com/MobSF/Mobile-Security-Framework-MobSF .<br><br><b>Entrega Astra low 18/09/2026:</b> MobSF isolado e fixado por digest, gate+fixtures; falta APK verificável/execução real. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["SEC-21","Montar validação dinâmica de segurança mobile baseada no MASVS","cc",2,"<b>Contexto</b><br>Não foi identificado backend próprio; o alvo atual é Android com armazenamento local. DAST web com ZAP não cobre sozinho essa superfície.<br><br><b>Critérios de aceite</b><br>- [ ] Preparar emulador/aparelho de teste isolado e roteiro reproduzível segundo OWASP MASVS/MASTG para storage, logs, backup e tráfego.<br>- [ ] Verificar o comportamento real de permissões, ausência de dados sensíveis em logs e conexões inesperadas, com evidências sanitizadas.<br>- [ ] Automatizar os casos viáveis em job manual/semanal e documentar os casos que ainda exigem inspeção humana.<br>- [ ] Não classificar Maestro funcional como DAST de segurança nem MobSF estático como análise dinâmica.<br>- [ ] Registrar DAST HTTP/API como condicional a uma futura URL de homologação e backend; não criar servidor apenas para executar scanner.<br><br><b>Dependências e referências</b><br>Após SEC-20; alinhar com SEC-17 (#163) e O-10 (#217). Fonte: https://mas.owasp.org/MASTG/tests/ .<br><br><b>Entrega Astra low 18/09/2026:</b> Roteiro MASVS e job parcial; falta runner Android isolado, tráfego/logs/backup reais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+]},
+{k:"q", h:"Qualidade e DX", note:"Já existem 19 arquivos de teste. Falta cobertura de ponta a ponta e quebrar os três arquivos que passaram do tamanho gerenciável.", t:[
+ ["Q-01","✅ Montar E2E com Maestro","cc",1,"<b>Feito 08/09.</b> <code>.maestro/01-entrar-numa-fase.yaml</code> e <code>02-configuracao-sobrevive-ao-reinicio.yaml</code>: YAML, fora do build, roda em CI. Melhor custo/benefício que Detox aqui."],
+ ["Q-02", "✅ Fluxo E2E: abrir, escolher fase, jogar e vencer", "cc", 1, "<b>Feito 18/09/2026.</b> PR #240 integrado; vitória e desbloqueio da fase seguinte persistem após reinício. JUnit 4/4 aprovado: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35354539043."],
+ ["Q-03", "✅ Fluxo E2E: comprar na loja", "cc", 2, "<b>Feito 18/09/2026.</b> PR #240 integrado; compra reduz 45 moedas, acrescenta uma unidade ao inventário e ambos persistem após reinício. JUnit aprovado: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35354539043."],
+ ["Q-04", "✅ Fluxo E2E: perder vida e esperar a recarga", "cc", 2, "<b>Feito 18/09/2026.</b> Perde vida, reinicia mantendo quatro vidas e recarrega para cinco após o intervalo real. JUnit e capturas: https://github.com/VittorNCosta/TrincaEngSoftware/actions/runs/35352904452 (34min32s)."],
+ ["Q-05","✅ Rodar o Maestro no CI","cc",2,"<b>Feito 08/09.</b> <code>.github/workflows/e2e.yml</code>: prebuild + <code>assembleRelease</code> + emulador Android (<code>reactivecircus/android-emulator-runner</code>) em push na branch, <code>workflow_dispatch</code> e cron semanal. Maestro baixado com sha256 fixado, sem action de terceiro. Recolhe diagnóstico (captura/hierarquia) em falha."],
+ ["Q-06","✅ Teste de acessibilidade","cc",1,"<b>Feito 08/09.</b> <code>tests/touchTargets.test.cjs</code> novo: trava <code>TILE_SIZE</code> (peça do tabuleiro) e <code>levelNodeSize</code>/<code>minimumTouchSize</code> de todo mundo <code>segmented</code> em ≥44px, e recalcula o alvo de toque de todo nó/marco do Mundo 1 nas três larguras alvo. Achado no caminho: <code>frames.touch</code> (a caixa expandida que <code>getCampaignMapEntityFrames</code> calcula) não é consumida por nenhum renderer hoje — o alvo real em tela é <code>levelNodeSize</code>, porque <code>transform: scale</code> não encolhe área de toque no React Native. Rótulo de acessibilidade já tinha cobertura em <code>BoardTile.test.tsx</code>/<code>mapLevelNode.test.tsx</code>."],
+ ["Q-07","Quebrar <code>GameScreen.tsx</code>","cc",1,"3166 linhas. O <code>CLAUDE.md</code> já avisa para não deixar crescer.<br><br><b>Entrega Astra low 18/09/2026:</b> Estilos, tutorial e montagem do tabuleiro extraídos em módulos; seeds reais registrados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["Q-08","Quebrar <code>LevelSelectScreen.tsx</code>","cc",2,"1879 linhas.<br><br><b>Entrega Astra low 18/09/2026:</b> Estilos e geometria/apresentação do mapa separados; acesso Dev e pós-campanha testados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["Q-09","Quebrar <code>App.tsx</code>","cc",2,"1169 linhas.<br><br><b>Entrega Astra low 18/09/2026:</b> Fila de persistência extraída para hook, preservando geração e serialização. Outros handlers continuam em App. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["Q-10","✅ Orçamento de tamanho de bundle no CI","cc",2,"<b>Feito 08/09.</b> Novo job <code>orcamento-bundle</code> em <code>ci.yml</code>: roda <code>npx expo export --platform android</code> (o mesmo artefato que o build de produção embarca, so local, sem consumir cota do EAS nem exigir <code>EXPO_TOKEN</code>) e mede o <code>.hbc</code> resultante contra um teto em <code>scripts/bundle-orcamento.json</code>, mesmo idioma de <code>cobertura</code>/assets/ODS12: só sobe de propósito (<code>--atualizar --permitir-alta</code>). Achado no caminho: o bundle não é 100% reprodutível byte a byte — cinco execuções seguidas sobre o mesmo código variaram 2 bytes, porque o Metro não garante ordem estável de módulo — então o teto tem 1% de folga sobre o medido para não reprovar PR ao acaso. Hoje: ~2,50 MB."],
+ ["Q-11","Perfilar performance em aparelho de entrada","voce",1,"Depois da arte nova — 20 PNGs mudam o consumo de memória."],
+ ["Q-12","✅ Escrever o ADR da mudança 203 → 100","cc",1,"<b>Feito 08/09.</b> <code>docs/adr/0004-campanha-vira-10-mundos-de-10-fases.md</code>: por que 10×10 em vez de 8×25, opções consideradas (manter 203 fixas) e consequências (hash quebrado de propósito, migração de save foi não-evento, gap de arte/som dos mundos 9/10, destino dos Capítulos foi resolvido no C-30 em 18/09/2026)."],
+ ["Q-13","Resolver o gap do Modo Dev","cc",2,"Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa.<br><br><b>Entrega Astra low 18/09/2026:</b> Override efêmero reversível, sem fabricar progresso; teste prova ausência de escrita no toggle. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["Q-14","✅ Atualizar o <code>CONTEXT.md</code> com o vocabulário dos 10 mundos","cc",1,"<b>Feito 08/09.</b> Seção <code>## Mundos</code> nova: os 10 nomes ODS12 + bônus, o que cada um representa na cadeia da reciclagem e o nome de fantasia a evitar (mundos 1–8 e bônus só, 9 e 10 nasceram já no tema)."],
+ ["Q-15","✅ Corrigir a faixa de dificuldade do primeiro mapa dos capítulos 4 e 7","cc",1,"<b>Feito 03/09.</b> Defeito real em produção, achado ao prototipar a curva do bloco C. <code>Math.floor(score * 5)</code> em <code>src/data/chapters.ts</code> rotulava <code>ch04-001</code> como <i>easy</i> (devia ser <i>normal</i>) e <code>ch07-001</code> como <i>normal</i> (devia ser <i>hard</i>). Não era regra de negócio: <code>(n-1)/9*0,6</code> cai <i>abaixo</i> da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o <code>floor</code> derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma <code>BORDA_DE_FAIXA = 1e-9</code> documentada e teste de regressão fixando as 10 faixas de abertura."],
+ ["Q-16","Medir cobertura de produção separada por domínio e interface","cc",1,"<b>Contexto</b><br>O piso atual usa o total do node:test, que inclui arquivos de testes e não representa cobertura completa de src/. A suíte Jest de componentes é separada.<br><br><b>Critérios de aceite</b><br>- [ ] Excluir testes, fixtures e gerados das métricas de produção; incluir arquivos relevantes não exercitados na medição.<br>- [ ] Publicar relatórios separados de domínio/storage e componentes, com linhas, branches e funções e artefato legível.<br>- [ ] Estabelecer baseline documentado para a medição correta e exigir que novo código crítico tenha testes, sem comparar diretamente percentuais de metodologias distintas.<br>- [ ] Provar que um ramo de produção não testado reduz a métrica e que adicionar apenas código de teste não a infla.<br>- [ ] Cobrir especificamente concorrência, idempotência e recuperação de persistência conforme invariantes do projeto.<br><br><b>Dependências e referências</b><br>Coordenar com CI-34 (#226) e CI-36; complementa #131 e #132.<br><br><b>Entrega Astra low 18/09/2026:</b> c8 com sourcemaps mede todas fontes .ts; Jest mede .tsx/App, inclusive não exercitados; baseline antiga preservada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["Q-17","Testar recuperação e migração de progresso no Android instalado","cc",1,"<b>Contexto</b><br>Existem testes unitários de migração, mas os dois fluxos Maestro atuais não comprovam recuperação do save em cenário real de atualização/interrupção.<br><br><b>Critérios de aceite</b><br>- [ ] Adicionar fluxo determinístico que obtenha progresso, encerre/reabra o app e valide fases, moedas e vidas persistidas.<br>- [ ] Instalar versão nova sobre fixture de save antigo e confirmar preservação dos dados e aviso de migração sem repetição indevida.<br>- [ ] Cobrir interrupção durante gravação e reinício sem recompensas duplicadas ou perda de progresso já confirmado.<br>- [ ] Usar dados e build de teste isolados, sem contaminar saves reais nem liberar Modo Dev no aplicativo de produção.<br>- [ ] Publicar evidência e diagnóstico em CI; reutilizar os fluxos de vitória/loja/vidas quando forem implementados.<br><br><b>Dependências e referências</b><br>Complementa C-26 (#34) e Q-02/Q-03/Q-04 (#165–#167); coordenar com Q-13 (#176).<br><br><b>Entrega Astra low 18/09/2026:</b> Persistência pós-reinício preparada; falta instalar APK legado, upgrade e interrupção de gravação no aparelho. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["Q-18","Adicionar regressão visual e acessibilidade das jornadas principais","cc",2,"<b>Contexto</b><br>O teste de acessibilidade existente não substitui verificação de foco/leitor de tela nem comparação das telas renderizadas.<br><br><b>Critérios de aceite</b><br>- [ ] Cobrir mapa, partida, resultado e loja com estado determinístico, animações controladas e dimensões de aparelho fixas.<br>- [ ] Criar snapshots visuais com tolerância documentada, diff anexado e atualização de baseline somente após revisão.<br>- [ ] Verificar labels, ordem de foco, fontes ampliadas e alvos de toque; incluir roteiro TalkBack para os casos não automatizáveis.<br>- [ ] Comprovar detecção de regressão visual proposital e ausência de instabilidade por conteúdo aleatório.<br>- [ ] Manter as verificações existentes de acessibilidade; não depender apenas de snapshots para validar comportamento.<br><br><b>Dependências e referências</b><br>Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.<br><br><b>Entrega Astra low 18/09/2026:</b> Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+]},
+{k:"o", h:"Observabilidade e diagnóstico", note:"O CI já cobre tudo que dá para saber <b>antes</b> de o app rodar: lint, formato, tipo, 188 testes, piso de cobertura, orçamento de bundle, guardas de conteúdo, CodeQL, gitleaks, SBOM, Scorecard. O que não existe é o outro lado — <b>o que acontece no aparelho, na mão do jogador</b>. Hoje, se o jogo quebrar num build de release, não sobra nada: nenhum log, nenhum stack, nenhuma tela de erro, nada para pedir a quem reportou. Este bloco fecha o buraco de dentro para fora: primeiro o que funciona offline e sem terceiro (O-01…O-06), depois o relato remoto (O-07…O-10).", t:[
+ ["O-01","Logger estruturado em <code>src/utils/log.ts</code>","cc",0,"Nível (<code>debug</code>/<code>info</code>/<code>warn</code>/<code>error</code>) e namespace por módulo, silencioso em release menos <code>warn</code> e <code>error</code>. Sem dependência nova: é uma função e um <code>switch</code>. Toda a graça está em existir <b>um</b> ponto por onde o erro passa — sem isso o O-03, o O-04 e o O-09 não têm onde se plugar. Substitui os <code>console.log</code> espalhados hoje. É a base do bloco: nada aqui anda antes dela.<br><br><b>Entrega Astra low 18/09/2026:</b> Logger com buffer limitado, níveis, contexto e redação de dados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["O-02","Error boundary global com tela de erro","cc",0,"<code>App.tsx</code> envolvido num boundary: stack visível em <code>__DEV__</code>, e em release uma tela sóbria com botão de copiar o relatório. Regra dura — a tela de erro <b>não escreve no storage</b>. O invariante 1 diz que progresso só passa por <code>commitProgress</code>, e um boundary que tenta “salvar antes de morrer” é exatamente o caminho por onde save de jogador já foi apagado. Hoje um erro de render dá tela branca, sem nada escrito.<br><br><b>Entrega Astra low 18/09/2026:</b> ErrorBoundary com diagnóstico/copiar/compartilhar, sem escrita no save. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["O-03","Capturar erro não tratado e promise rejeitada","cc",0,"<code>ErrorUtils.setGlobalHandler</code> mais o handler de <code>unhandledrejection</code>. O boundary do O-02 só pega o que acontece dentro do ciclo de render; um <code>throw</code> dentro de <code>setTimeout</code>, de listener de áudio ou de promise de storage passa por fora e some — o app fecha e não fica rastro. Depende do O-01.<br><br><b>Entrega Astra low 18/09/2026:</b> Captura ErrorUtils/browser/Hermes e encaminhamento remoto opcional deduplicado. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["O-04","Tela de Diagnóstico com os últimos logs","cc",1,"Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste interno do R-13, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01.<br><br><b>Entrega Astra low 18/09/2026:</b> Diagnóstico acessível nas Configurações; exportação somente por ação do usuário. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["O-05","Transformar os invariantes do <code>CLAUDE.md</code> em assert de runtime","cc",0,"Os sete invariantes que já quebraram (<code>commitProgress</code>, <code>mutateLives</code>, id de capítulo no storage da campanha, <code>tileCount</code> múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e <b>loga</b>, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01.<br><br><b>Entrega Astra low 18/09/2026:</b> Logs para quantidade de peças, contagem canônica e ids de capítulo no save da campanha antes da normalização, na leitura e escrita. Invariantes arquiteturais/concorrência seguem em testes; conversão completa não alegada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["O-06","Proibir <code>console.*</code> fora do logger","cc",2,"Regra <code>no-console</code> do ESLint com exceção só em <code>src/utils/log.ts</code>. Sem isso o O-01 vira <i>mais um</i> caminho em vez do único caminho, e em seis meses metade do código volta para o <code>console.log</code> — que não aparece em release e não entra no buffer do O-04. Entra no job de lint que o CI-07 já roda, então não custa workflow novo. Depende do O-01."],
+ ["O-07","Criar a conta no Sentry e gerar o DSN","voce",1,"O free tier cobre com folga o volume deste projeto. Precisa de você porque envolve criar conta e aceitar termos. O DSN não é segredo forte — ele vai embutido no app, qualquer um que abra o APK acha — mas entra como secret do mesmo jeito, para não ficar chumbado no repositório e para trocar sem recompilar. Bloqueia o O-08."],
+ ["O-08","Integrar o Sentry com upload de sourcemap","cc",1,"<code>@sentry/react-native</code>, DSN por variável de ambiente, e o upload de sourcemap no build do EAS. O sourcemap é a parte que costuma ser esquecida e é a que decide se serve para alguma coisa: sem ele o stack que chega é bundle minificado, ou seja, ilegível. Depende do O-07 e do CI-14.<br><br><b>Entrega Astra low 18/09/2026:</b> SDK opcional, filtragem de eventos e upload sourcemaps preparados; falta validar evento simbolicado com DSN/credenciais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["O-09","Anexar contexto de domínio a todo erro","cc",1,"Erro sem contexto é <code>TypeError: undefined</code> numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01.<br><br><b>Entrega Astra low 18/09/2026:</b> Tela, mundo, fase, retry e seed real no diagnóstico; sem contexto livre enviado ao Sentry. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["O-10","Revisar o que sai para o Sentry à luz da LGPD","voce",1,"Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do <i>Data safety form</i> do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário."],
+]},
+{k:"r", h:"Release e publicação", note:"Quase tudo aqui é conta, formulário e captura de tela — trabalho seu, não de código. Vale começar cedo: a conta do Play Console e a política de privacidade travam a submissão.", t:[
+ ["R-01","Criar ou confirmar a conta Google Play Console","voce",0,"US$ 25, uma vez."],
+ ["R-02","Definir o nome final do app","voce",0,"Ver L-14 — hoje há três nomes divergentes."],
+ ["R-03","Gerar e guardar o keystore de produção","voce",0,"Via EAS credentials."],
+ ["R-04","Escrever a ficha da loja","both",0,"Título, descrição curta e longa, com o enquadramento ODS 12.<br><br><b>Entrega Astra low 18/09/2026:</b> Ficha pt-BR em docs/release/ficha-google-play.md. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["R-05","Capturar 8 screenshots de telefone","voce",0,"Mínimo 2, ideal 8."],
+ ["R-06","Feature graphic 1024×500","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Feature graphic PNG 1024×500 em docs/release/assets. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["R-07","Ícone da loja 512×512","both",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Ícone da loja PNG RGB 512×512 em docs/release/assets. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["R-08","Vídeo de preview","voce",2,"Opcional."],
+ ["R-09","✅ Hospedar a política de privacidade","both",0,"<b>Feito 18/09/2026.</b> https://vittorncosta.github.io/TrincaEngSoftware/ — HTTP 200 e contato conferidos; branch gh-pages em 792ed88."],
+ ["R-10","Responder o questionário de classificação etária","voce",0],
+ ["R-11","Preencher o Data safety form","voce",0,"Conferir dados locais, Expo Update e eventual Sentry conforme build real e revisão O-10; não declarar ausência de coleta sem verificação."],
+ ["R-12","Declarar o público-alvo","voce",0,"Jogo educativo atrai criança — abaixo de 13 anos entram as regras de Famílias."],
+ ["R-13","Rodar teste interno","voce",1,"Até 100 testadores."],
+ ["R-14","Rodar teste fechado e coletar feedback","voce",1],
+ ["R-15","Jogar as 100 fases manualmente","voce",0,"O <code>test:playthrough</code> simula, mas não substitui jogar."],
+ ["R-16","Rodar <code>/security-review</code>","cc",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Revisão manual registrada; skill /security-review indisponível e build release ainda não validado. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["R-17","Marcar a tag <code>v1.0.0</code> e publicar o release","cc",0,"<br><br><b>Entrega Astra low 18/09/2026:</b> Não publicar v1.0.0 antes dos aceites de arte/áudio, testes Android, segurança, credenciais e aprovação de release. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites."],
+ ["R-18","Publicar em produção","voce",0],
+]},
+];
+
+const PROMPTS = [
+ [1,"Parque da Coleta Seletiva","w01_parque","a sunny urban public park with a selective-collection ecopoint;\nfive color-coded recycling bins (red, blue, green, yellow, brown) under a\nwooden shelter, trimmed grass, paved walking path, park benches, leafy trees,\nmorning light, hopeful and inviting mood."],
+ [2,"Vale da Reciclagem","w02_vale","a green valley with a recycling facility nested in the hillside;\nconveyor belts running between low industrial sheds, stacked color-sorted bales,\nwinding road, distant hills, mid-morning haze, industrious but clean mood."],
+ [3,"Central de Materiais","w03_central","interior of a material recovery facility; tall stacks of compressed\nbales sorted by color, overhead skylights casting light shafts, sorting tables,\nforklift silhouette, industrial but orderly, cool neutral palette with\ncolor-coded accents."],
+ [4,"Viveiro Comunitário","w04_viveiro","a community plant nursery built from reused materials; seedlings\ngrowing in cut plastic bottles and tin cans on wooden shelves, a shade cloth\noverhead, raised beds made from pallets, watering cans, warm afternoon light,\ngreen and terracotta palette, nurturing mood."],
+ [5,"Usina de Compostagem","w05_usina","an industrial composting yard; long dark compost windrows with\ngentle steam rising, a biodigester tank, turning machinery, wood chip piles,\nearthy brown and moss green palette, soft overcast light, warm organic mood."],
+ [6,"Cooperativa dos Catadores","w06_cooperativa","a waste-picker cooperative yard; hand carts and pushcarts parked\nin rows, color-sorted material bales, a corrugated metal workshop with open\ndoors, hanging work aprons, hand-painted signage shapes (no readable text),\nwarm late-afternoon light, dignified community-work mood, silhouettes only."],
+ [7,"Rota da Logística Reversa","w07_rota","a reverse-logistics route; a highway curving toward a distribution\nhub, delivery trucks carrying stacked returnable crates, roadside collection\npoints with color-coded containers, overpass, dusk sky with long shadows,\nblue and amber palette, motion and flow mood."],
+ [8,"Fórum da Economia Circular","w08_forum","a civic plaza built for public debate about circular economy; a\ncircular amphitheater of stone steps, tall banner poles with blank colored\nflags, a large circular arrow motif inlaid in the pavement, planted trees in\nreused containers, clear midday light, blue and stone palette, civic mood."],
+ [9,"Distrito da Reindustrialização","w09_distrito","an industrial remanufacturing district; hydraulic baling\npresses and conveyor lines, colour-sorted bales stacked high, the orange glow\nof a re-melting furnace, extrusion towers venting steam, gantry cranes,\nwarehouse skylights, steel and amber palette, purposeful working mood."],
+ [10,"Cúpula da Reciclagem Global","w10_cupula","a global recycling summit; a great domed assembly hall,\ntiered delegate seating, a projected world map and target dashboards on wide\nscreens, daylight through the glass dome, a large circular flow motif in the\nfloor mosaic, full CONAMA color accents, formal and hopeful climax mood."],
+];
+
+const FLOW = [
+ ["Agora","Fundação","F0 inteiro. Instalar <code>gh</code>, resolver o PATH do node, criar a branch."],
+ ["Paralelo A","Conteúdo 10×10","C-01 a C-18 — redesenho da curva, reescrita de <code>levels.ts</code> e <code>worlds.ts</code>, registro dos mundos 9 e 10."],
+ ["Paralelo B","Automação","G, CI.1 e SEC. Escopo de arquivo disjunto do fluxo de conteúdo — dá para correr junto sem conflito."],
+ ["Paralelo C","Art bible e piloto","A-01 a A-04. Termina no portão: uma imagem validada no aparelho."],
+ ["Depois de A","Testes e migração","C-19 a C-30. Nenhum build público antes de C-25 e C-26."],
+ ["Depois de C","Produção em lote","As 20 imagens e as 10 trilhas, depois a integração no código."],
+ ["Então","Limpeza e qualidade","L inteiro, depois Q — E2E e a quebra dos arquivos grandes."],
+ ["Fim","Build e loja","CI.2 (EAS build, submit, OTA) e por último R."],
+];
+
+const RISKS = [
+ ["Perda silenciosa de progresso na migração 203→100","alto","C-25 e C-26 antes de qualquer build público. <code>normalizeProgress</code> descarta id desconhecido sem avisar."],
+ ["As 20 imagens saírem inconsistentes entre si","alto","Bloco de estilo compartilhado, mais o portão A-04 antes de gerar em lote."],
+ ["O hash congelado ser “consertado” por engano","médio","C-19 manda recalcular, não deletar a asserção."],
+ ["<s>Colisão de nome entre Mundo 9/10 e Capítulo 9/10</s>","resolvido","Fechado em 03/09 por C-01: os capítulos foram renomeados, a campanha ficou com os nomes propostos."],
+ ["Peso do app — <code>assets/</code> tem ~50 MB hoje","médio","A-33 comprime e CI-12 impede a regressão."],
+ ["Hooks de git quebrarem por node fora do PATH","baixo","F0-02 antes de G-03."],
+];
+
+/* ---------- render ---------- */
+const KEY = "trinca-roadmap-v1";
+let done = {};
+try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { done = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
+
+const WHO = { cc: "Agente", voce: "Você", both: "Agente + Você" };
+const { CODEX_MODEL_INFO, recomendarModeloCodex } = CodexModels;
+const filters = { stream: null, who: null, prio: null, model: null, open: false };
+
+const esc = (s) => s;
+const blocksEl = document.getElementById("blocks");
+
+BLOCKS.forEach((b) => {
+  const st = S[b.k];
+  const sec = document.createElement("section");
+  sec.className = "block";
+  sec.id = "b-" + b.k;
+  sec.dataset.stream = b.k;
+  sec.style.setProperty("--st", st.c);
+  sec.innerHTML =
+    '<div class="bhead"><span class="bcode">' + st.code + '</span><h2>' + b.h + '</h2>' +
+    '<span class="bcount" data-count>' + b.t.length + ' tarefas</span></div>' +
+    (b.note ? '<p class="bnote">' + b.note + '</p>' : '') +
+    '<div class="tasks"></div>';
+  const list = sec.querySelector(".tasks");
+  b.t.forEach(([id, title, who, prio, det]) => {
+    const codex = recomendarModeloCodex({ id, bloco: b.k, quem: who, prioridade: prio });
+    const model = codex.modelo ? CODEX_MODEL_INFO[codex.modelo] : null;
+    const row = document.createElement("div");
+    row.className = "task";
+    row.dataset.stream = b.k; row.dataset.who = who; row.dataset.prio = prio; row.dataset.id = id;
+    row.dataset.model = codex.modelo || "manual";
+    row.innerHTML =
+      '<input type="checkbox" aria-label="Concluir ' + id + '">' +
+      '<span class="tid">' + id + '</span>' +
+      '<div class="tbody"><div class="tt">' + esc(title) + '</div>' +
+      (det ? '<div class="td">' + det + '</div>' : '') + '</div>' +
+      '<div class="tmeta"><span class="tag who-' + who + '">' + WHO[who] + '</span>' +
+      '<span class="tag" title="' + codex.motivo + (model ? ' Modelo: ' + model.id : '') + '">Codex: ' + (model ? codex.modelo : 'manual') + '</span>' +
+      '<span class="tag p' + prio + '">P' + prio + '</span></div>';
+    const cb = row.querySelector("input");
+    if (title.startsWith('✅') && done[id] === undefined) done[id] = 1;
+    cb.checked = !!done[id];
+    if (cb.checked) row.classList.add("done");
+    cb.addEventListener("change", () => {
+      if (cb.checked) done[id] = 1; else delete done[id];
+      row.classList.toggle("done", cb.checked);
+      save(); refresh();
+    });
+    list.appendChild(row);
+  });
+  blocksEl.appendChild(sec);
+});
+
+/* stream chips + sortbar */
+const rowStream = document.getElementById("rowStream");
+const sortbar = document.getElementById("sortbar");
+const total = BLOCKS.reduce((n, b) => n + b.t.length, 0);
+BLOCKS.forEach((b) => {
+  const st = S[b.k];
+  const btn = document.createElement("button");
+  btn.className = "chip"; btn.dataset.f = "stream"; btn.dataset.v = b.k;
+  btn.setAttribute("aria-pressed", "false");
+  btn.innerHTML = '<span class="dot" style="background:' + st.c + '"></span>' + st.n +
+                  ' <span class="ct">' + b.t.length + '</span>';
+  rowStream.appendChild(btn);
+
+  const seg = document.createElement("i");
+  seg.style.background = st.c;
+  seg.style.flexGrow = String(b.t.length);
+  seg.title = st.n + " — " + b.t.length + " tarefas";
+  sortbar.appendChild(seg);
+});
+
+/* counts on meta chips */
+const count = (fn) => BLOCKS.reduce((n, b) => n + b.t.filter(fn).length, 0);
+document.getElementById("cWhoCc").textContent = count((t) => t[2] === "cc");
+document.getElementById("cWhoVoce").textContent = count((t) => t[2] === "voce");
+document.getElementById("cWhoBoth").textContent = count((t) => t[2] === "both");
+document.getElementById("cP0").textContent = count((t) => t[3] === 0);
+document.getElementById("cP1").textContent = count((t) => t[3] === 1);
+document.getElementById("cP2").textContent = count((t) => t[3] === 2);
+document.getElementById("statTotal").textContent = total;
+
+/* filtering */
+document.querySelectorAll(".chip").forEach((c) => {
+  c.addEventListener("click", () => {
+    const f = c.dataset.f, v = c.dataset.v;
+    if (f === "open") filters.open = !filters.open;
+    else filters[f] = filters[f] === v ? null : v;
+    document.querySelectorAll('.chip[data-f="' + f + '"]').forEach((o) => {
+      const on = f === "open" ? filters.open : filters[f] === o.dataset.v;
+      o.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    refresh();
+  });
+});
+document.getElementById("clearBtn").addEventListener("click", () => {
+  filters.stream = filters.who = filters.prio = filters.model = null; filters.open = false;
+  document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", "false"));
+  refresh();
+});
+
+function refresh() {
+  document.querySelectorAll(".block").forEach((sec) => {
+    let shown = 0;
+    sec.querySelectorAll(".task").forEach((row) => {
+      const isDone = !!done[row.dataset.id];
+      const ok =
+        (!filters.stream || row.dataset.stream === filters.stream) &&
+        (!filters.who || row.dataset.who === filters.who) &&
+        (!filters.prio || row.dataset.prio === filters.prio) &&
+        (!filters.model || row.dataset.model === filters.model) &&
+        (!filters.open || !isDone);
+      row.classList.toggle("hidden", !ok);
+      if (ok) shown++;
+    });
+    sec.hidden = shown === 0;
+    const c = sec.querySelector("[data-count]");
+    if (c) c.textContent = shown + (shown === 1 ? " tarefa" : " tarefas");
+  });
+  const nDone = Object.keys(done).length;
+  document.getElementById("statDone").textContent = nDone;
+  document.getElementById("pctDone").textContent = Math.round((nDone / total) * 100) + "% concluído";
+}
+refresh();
+
+/* prompts */
+const pgrid = document.getElementById("pgrid");
+PROMPTS.forEach(([n, name, slug, scene]) => {
+  const card = document.createElement("div");
+  card.className = "pcard";
+  const pid = "p" + n;
+  card.innerHTML =
+    '<header><span class="pw">Mundo ' + n + '</span><h3>' + name + '</h3></header>' +
+    '<div class="files"><span>' + slug + '_map.png</span><span>' + slug + '_game.png</span><span>1080 × 1920</span></div>' +
+    '<pre id="' + pid + '">SCENE: ' + scene + '</pre>' +
+    '<button class="copy" data-t="' + pid + '">Copiar cena</button>';
+  pgrid.appendChild(card);
+});
+
+document.querySelectorAll(".copy").forEach((b) => {
+  b.addEventListener("click", async () => {
+    const el = document.getElementById(b.dataset.t);
+    const txt = el.textContent;
+    const label = b.textContent;
+    let ok = false;
+    try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {
+      try {
+        const r = document.createRange(); r.selectNodeContents(el);
+        const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        ok = document.execCommand("copy");
+      } catch (e2) { ok = false; }
+    }
+    b.textContent = ok ? "Copiado" : "Selecione e copie";
+    setTimeout(() => { b.textContent = label; }, 1800);
+  });
+});
+
+/* flow */
+const flowEl = document.getElementById("flow");
+FLOW.forEach(([ph, title, body]) => {
+  const d = document.createElement("div");
+  d.className = "step";
+  d.innerHTML = '<div class="ph">' + ph + '</div><div class="sb"><b>' + title + '</b><em>' + body + '</em></div>';
+  flowEl.appendChild(d);
+});
+
+/* risks */
+const risksEl = document.getElementById("risks");
+RISKS.forEach(([r, sev, mit]) => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = '<td>' + r + '</td><td class="sev" data-s="' + sev + '">' + sev + '</td><td>' + mit + '</td>';
+  risksEl.appendChild(tr);
+});
+</script>

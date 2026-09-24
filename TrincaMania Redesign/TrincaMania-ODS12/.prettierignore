@@ -9,3 +9,14 @@ package-lock.json
 
 # Pasta de terceiros (não é código do jogo, desatada do git).
 agency-agents-main
+
+# Fonte de dados do roadmap, publicada como Artifact. O `scripts/gerar-issues-roadmap.js`
+# lê o array `BLOCKS` recortando o texto do arquivo; reformatar o <script>
+# embutido quebraria esse recorte em silêncio.
+docs/roadmap/roadmap.html
+
+# Gerado por scripts/gerar-issues-roadmap.js.
+scripts/criar-issues-roadmap.sh
+
+coverage
+.eas

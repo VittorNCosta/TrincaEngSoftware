@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import { CoinPile } from './CoinPile';
 import { GameIcon } from './GameIcon';
@@ -22,15 +29,50 @@ const COIN_TARGET_POP_DELAY_MS = 660;
 const COIN_COUNT_DELAY_MS = 560;
 
 const COIN_PARTICLES = [
-  { delay: 0, midLift: 112, rotate: -28, scale: 0.88, startX: -42, startY: -12 },
-  { delay: 20, midLift: 136, rotate: 24, scale: 0.96, startX: -26, startY: -34 },
+  {
+    delay: 0,
+    midLift: 112,
+    rotate: -28,
+    scale: 0.88,
+    startX: -42,
+    startY: -12,
+  },
+  {
+    delay: 20,
+    midLift: 136,
+    rotate: 24,
+    scale: 0.96,
+    startX: -26,
+    startY: -34,
+  },
   { delay: 40, midLift: 96, rotate: -16, scale: 0.84, startX: -10, startY: 4 },
   { delay: 60, midLift: 124, rotate: 32, scale: 1, startX: 10, startY: -28 },
   { delay: 80, midLift: 108, rotate: -36, scale: 0.9, startX: 28, startY: 8 },
-  { delay: 100, midLift: 146, rotate: 18, scale: 0.86, startX: 46, startY: -16 },
-  { delay: 120, midLift: 116, rotate: -22, scale: 0.98, startX: -54, startY: 16 },
+  {
+    delay: 100,
+    midLift: 146,
+    rotate: 18,
+    scale: 0.86,
+    startX: 46,
+    startY: -16,
+  },
+  {
+    delay: 120,
+    midLift: 116,
+    rotate: -22,
+    scale: 0.98,
+    startX: -54,
+    startY: 16,
+  },
   { delay: 140, midLift: 132, rotate: 34, scale: 0.9, startX: 52, startY: 18 },
-  { delay: 160, midLift: 104, rotate: -10, scale: 0.82, startX: -18, startY: 28 },
+  {
+    delay: 160,
+    midLift: 104,
+    rotate: -10,
+    scale: 0.82,
+    startX: -18,
+    startY: 28,
+  },
   { delay: 180, midLift: 140, rotate: 40, scale: 0.94, startX: 18, startY: 30 },
 ];
 
@@ -53,7 +95,9 @@ export function RewardCollectOverlay({
   onComplete,
 }: RewardCollectOverlayProps) {
   const { height, width } = useWindowDimensions();
-  const coinAnims = useRef(COIN_PARTICLES.map(() => new Animated.Value(0))).current;
+  const coinAnims = useRef(
+    COIN_PARTICLES.map(() => new Animated.Value(0)),
+  ).current;
   const burst = useRef(new Animated.Value(0)).current;
   const targetPop = useRef(new Animated.Value(0)).current;
   const countAnim = useRef(new Animated.Value(0)).current;
@@ -140,13 +184,23 @@ export function RewardCollectOverlay({
       animation.stop();
       countAnimation.stop();
     };
-  }, [animationKey, burst, coinAmount, coinAnims, countAnim, targetPop, visible]);
+  }, [
+    animationKey,
+    burst,
+    coinAmount,
+    coinAnims,
+    countAnim,
+    targetPop,
+    visible,
+  ]);
 
   if (!visible || coinAmount <= 0) {
     return null;
   }
 
-  const targetCenterX = coinTarget ? coinTarget.x + coinTarget.width / 2 : width - 54;
+  const targetCenterX = coinTarget
+    ? coinTarget.x + coinTarget.width / 2
+    : width - 54;
   const targetCenterY = coinTarget ? coinTarget.y + coinTarget.height / 2 : 60;
   const originX = width / 2;
   const originY = Math.min(height - 128, Math.max(220, height * 0.6));
@@ -184,7 +238,10 @@ export function RewardCollectOverlay({
           },
         ]}
       />
-      <View pointerEvents="none" style={[styles.pile, { left: originX - 66, top: originY - 50 }]}>
+      <View
+        pointerEvents="none"
+        style={[styles.pile, { left: originX - 66, top: originY - 50 }]}
+      >
         <CoinPile animationKey={animationKey} />
       </View>
 
@@ -260,7 +317,12 @@ export function RewardCollectOverlay({
                 left: originX - 13,
                 opacity,
                 top: originY - 13,
-                transform: [{ translateX }, { translateY }, { rotate }, { scale }],
+                transform: [
+                  { translateX },
+                  { translateY },
+                  { rotate },
+                  { scale },
+                ],
               },
             ]}
           >

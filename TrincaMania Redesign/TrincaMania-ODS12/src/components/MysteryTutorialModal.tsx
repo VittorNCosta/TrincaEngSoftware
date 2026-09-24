@@ -9,10 +9,21 @@ type MysteryTutorialModalProps = {
   onClose: () => void;
 };
 
-export function MysteryTutorialModal({ visible, onClose }: MysteryTutorialModalProps) {
+export function MysteryTutorialModal({
+  visible,
+  onClose,
+}: MysteryTutorialModalProps) {
   return (
-    <Modal animationType="fade" statusBarTranslucent transparent visible={visible}>
-      <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={styles.overlay}>
+    <Modal
+      animationType="fade"
+      statusBarTranslucent
+      transparent
+      visible={visible}
+    >
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.overlay}
+      >
         <View style={styles.card}>
           <View style={styles.tilePreview}>
             <View style={styles.tileFace}>
@@ -23,7 +34,9 @@ export function MysteryTutorialModal({ visible, onClose }: MysteryTutorialModalP
 
           <Text style={styles.title}>Pilha Misteriosa</Text>
           <Text style={styles.description}>
-            {'Peças com ? escondem o símbolo real. Elas revelam quando ficam livres.'}
+            {
+              'Peças com ? escondem o símbolo real. Elas revelam quando ficam livres.'
+            }
           </Text>
 
           <PrimaryButton title="Entendi" onPress={onClose} />

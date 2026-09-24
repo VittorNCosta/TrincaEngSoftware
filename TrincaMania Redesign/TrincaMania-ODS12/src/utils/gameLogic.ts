@@ -6,7 +6,13 @@
  * mora em `src/domain/recycling`, e aqui só mantemos a assinatura que a
  * apresentação já conhece. Código novo deve importar do domínio direto.
  */
-import { MoveHistoryItem, MoveResult, PowerUpType, Tile, TileKind } from '../types/game';
+import {
+  MoveHistoryItem,
+  MoveResult,
+  PowerUpType,
+  Tile,
+  TileKind,
+} from '../types/game';
 import { activeMatchRule } from '../domain/recycling/policies/MatchRuleRegistry';
 import {
   removeCompletedTripleOfKind,
@@ -77,7 +83,8 @@ export const insertTileGroupedInTray = insertTileGroupedInTrayFromDomain;
 export const removeCompletedTriple = (tray: Tile[], kind: TileKind) =>
   removeCompletedTripleOfKind(tray, kind, activeMatchRule);
 
-export const undoLastMove = (history: MoveHistoryItem[]) => history[history.length - 1];
+export const undoLastMove = (history: MoveHistoryItem[]) =>
+  history[history.length - 1];
 
 export const getUndoableMove = (history: MoveHistoryItem[]) => {
   const previousMove = undoLastMove(history);
@@ -85,8 +92,11 @@ export const getUndoableMove = (history: MoveHistoryItem[]) => {
   return previousMove && !previousMove.formedTriple ? previousMove : undefined;
 };
 
-export const formatQuantity = (quantity: number, singular: string, plural: string) =>
-  `${quantity} ${quantity === 1 ? singular : plural}`;
+export const formatQuantity = (
+  quantity: number,
+  singular: string,
+  plural: string,
+) => `${quantity} ${quantity === 1 ? singular : plural}`;
 
 export const formatSeconds = (totalSeconds: number) => {
   const safeSeconds = Math.max(0, Math.floor(totalSeconds));

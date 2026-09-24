@@ -52,7 +52,7 @@ const finitePositive = (value: number, fallback: number) =>
  * no inicio da rodada permanece valido ate o fim, sem saltar depois de uma trinca.
  */
 export const getBoardBounds = (
-  tiles: ReadonlyArray<Pick<Tile, 'x' | 'y'>>,
+  tiles: readonly Pick<Tile, 'x' | 'y'>[],
   tileSize = TILE_SIZE,
 ): BoardBounds => {
   const safeTileSize = finitePositive(tileSize, TILE_SIZE);
@@ -73,8 +73,12 @@ export const getBoardBounds = (
 
   const left = Math.min(...positionedTiles.map((tile) => tile.x));
   const top = Math.min(...positionedTiles.map((tile) => tile.y));
-  const right = Math.max(...positionedTiles.map((tile) => tile.x + safeTileSize));
-  const bottom = Math.max(...positionedTiles.map((tile) => tile.y + safeTileSize));
+  const right = Math.max(
+    ...positionedTiles.map((tile) => tile.x + safeTileSize),
+  );
+  const bottom = Math.max(
+    ...positionedTiles.map((tile) => tile.y + safeTileSize),
+  );
 
   return {
     bottom,
@@ -98,18 +102,27 @@ export const fitBoardToViewport = (
 ): BoardFrame => {
   const viewportWidth = finiteNonNegative(viewport.width, 0);
   const viewportHeight = finiteNonNegative(viewport.height, 0);
-  const safeMargin = finiteNonNegative(options.safeMargin ?? BOARD_SAFE_MARGIN, BOARD_SAFE_MARGIN);
+  const safeMargin = finiteNonNegative(
+    options.safeMargin ?? BOARD_SAFE_MARGIN,
+    BOARD_SAFE_MARGIN,
+  );
   const minScale = finitePositive(
     options.minScale ?? BOARD_MIN_PREFERRED_SCALE,
     BOARD_MIN_PREFERRED_SCALE,
   );
-  const configuredMaxScale = finitePositive(options.maxScale ?? BOARD_MAX_SCALE, BOARD_MAX_SCALE);
+  const configuredMaxScale = finitePositive(
+    options.maxScale ?? BOARD_MAX_SCALE,
+    BOARD_MAX_SCALE,
+  );
   const maxScale = Math.max(minScale, configuredMaxScale);
   const boundsWidth = finitePositive(bounds.width, BOARD_WIDTH);
   const boundsHeight = finitePositive(bounds.height, BOARD_HEIGHT);
   const usableWidth = Math.max(0, viewportWidth - safeMargin * 2);
   const usableHeight = Math.max(0, viewportHeight - safeMargin * 2);
-  const fitScale = Math.min(usableWidth / boundsWidth, usableHeight / boundsHeight);
+  const fitScale = Math.min(
+    usableWidth / boundsWidth,
+    usableHeight / boundsHeight,
+  );
   const scale = Math.max(0, Math.min(fitScale, maxScale));
   const width = boundsWidth * scale;
   const height = boundsHeight * scale;

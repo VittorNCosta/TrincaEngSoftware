@@ -1,18 +1,9 @@
+import { RecyclingMarkerArt } from './RecyclingMarkerArt';
 import { useEffect, useRef } from 'react';
-import {
-  Animated,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  type ImageSourcePropType,
-  View,
-} from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
 import { colors, radii, shadows } from '../styles/theme';
-
-const shopImage = require('../../assets/map/map_shop.png') as ImageSourcePropType;
 
 type ShopMapMarkerProps = {
   afterLevelLabel: string;
@@ -31,7 +22,11 @@ export function ShopMapMarker({
   selected,
   onPress,
 }: ShopMapMarkerProps) {
-  const label = comingSoon ? 'Em breve' : locked ? `Bloq. ${afterLevelLabel}` : 'Descanso';
+  const label = comingSoon
+    ? 'Em breve'
+    : locked
+      ? `Bloq. ${afterLevelLabel}`
+      : 'Descanso';
   const isOpen = !locked && !comingSoon;
   const swing = useRef(new Animated.Value(0)).current;
 
@@ -80,7 +75,10 @@ export function ShopMapMarker({
       accessibilityRole="button"
       accessibilityState={{ selected }}
       onPress={onPress}
-      style={({ pressed }) => [styles.pressable, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [
+        styles.pressable,
+        pressed ? styles.pressed : null,
+      ]}
     >
       <View style={styles.shadow} />
       {selected ? <View style={styles.selectedAura} /> : null}
@@ -92,7 +90,11 @@ export function ShopMapMarker({
               style={[
                 styles.stripe,
                 index % 2 === 0 ? styles.stripeA : styles.stripeB,
-                isOpen ? null : index % 2 === 0 ? styles.stripeClosedA : styles.stripeClosedB,
+                isOpen
+                  ? null
+                  : index % 2 === 0
+                    ? styles.stripeClosedA
+                    : styles.stripeClosedB,
               ]}
             />
           ))}
@@ -110,9 +112,9 @@ export function ShopMapMarker({
               <Text style={styles.shopText}>{locked ? 'Bloq.' : 'Novo'}</Text>
             </View>
           ) : (
-            <Image
-              resizeMode="contain"
-              source={shopImage}
+            <RecyclingMarkerArt
+              kind="shop"
+
               style={[styles.shopImage, locked ? styles.shopImageLocked : null]}
             />
           )}
@@ -133,7 +135,11 @@ export function ShopMapMarker({
         </View>
       ) : null}
       <View
-        style={[styles.label, locked ? styles.lockedLabel : null, comingSoon ? styles.soonLabel : null]}
+        style={[
+          styles.label,
+          locked ? styles.lockedLabel : null,
+          comingSoon ? styles.soonLabel : null,
+        ]}
       >
         <Text numberOfLines={1} style={styles.labelText}>
           {label}

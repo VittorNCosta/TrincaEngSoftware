@@ -45,7 +45,7 @@ export const mixSeed = (seed: number, salt: number): number => {
  * mesma semente.
  */
 export const createSeededRandom = (seed: number): (() => number) => {
-  let state = (seed >>> 0) || 0x9e3779b9;
+  let state = seed >>> 0 || 0x9e3779b9;
 
   return () => {
     state = (state + 0x6d2b79f5) >>> 0;

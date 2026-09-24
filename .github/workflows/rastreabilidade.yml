@@ -29,6 +29,8 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22.23.2
+      - name: Testar fechamento explícito de issues
+        run: node --test .github/scripts/tests/rastrear-pr.test.cjs
       - run: node .github/scripts/rastrear-pr.js
         env:
           PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}

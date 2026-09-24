@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# Typecheck antes do push.
+#
+# Fica no pre-push, e não no pre-commit, de propósito: `tsc --noEmit` custa
+# alguns segundos e o commit precisa ser barato. Aqui o custo se paga — evita
+# descobrir o erro de tipo só quando o CI ficar vermelho.
+#
+# A suíte de teste NÃO roda aqui. É o CI que a roda, em jobs paralelos; repetir
+# tudo no push transformaria cada envio numa espera de minutos.
+
+. "$(dirname -- "$0")/common.sh"
+
+npm run --silent typecheck

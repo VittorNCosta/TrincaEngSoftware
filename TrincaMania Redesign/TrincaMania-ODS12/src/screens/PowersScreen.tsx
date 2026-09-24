@@ -21,12 +21,17 @@ type PowersScreenProps = {
 export function PowersScreen({ progress }: PowersScreenProps) {
   const currentWorldId = getCurrentWorldId(progress);
   const totalPowerUps =
-    progress.itemCounts.hint + progress.itemCounts.shuffle + progress.itemCounts.undo;
+    progress.itemCounts.hint +
+    progress.itemCounts.shuffle +
+    progress.itemCounts.undo;
 
   return (
     <ScreenShell scroll={false}>
       <TabScene worldId={currentWorldId}>
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.topBar}>
             <View style={styles.titleBlock}>
               <Text style={styles.sectionKicker}>Poderes</Text>
@@ -83,7 +88,8 @@ export function PowersScreen({ progress }: PowersScreenProps) {
             <View style={styles.noteCopy}>
               <Text style={styles.noteTitle}>Onde comprar</Text>
               <Text numberOfLines={3} style={styles.noteText}>
-                A Loja abre dentro da fase — toque no carrinho ao lado das moedas.
+                A Loja abre dentro da fase — toque no carrinho ao lado das
+                moedas.
               </Text>
             </View>
           </View>

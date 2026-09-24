@@ -65,7 +65,11 @@ const WORLD_PARTICLES: ParticleConfig[] = [
   { color: '#FFF8D8', dx: 0, dy: 56, rotate: 0, size: 6 },
 ];
 
-export function ChestGlow({ opacity, scale, variant = 'common' }: ChestGlowProps) {
+export function ChestGlow({
+  opacity,
+  scale,
+  variant = 'common',
+}: ChestGlowProps) {
   return (
     <Animated.View
       pointerEvents="none"
@@ -81,7 +85,10 @@ export function ChestGlow({ opacity, scale, variant = 'common' }: ChestGlowProps
   );
 }
 
-export function RewardBurst({ progress, variant = 'common' }: RewardBurstProps) {
+export function RewardBurst({
+  progress,
+  variant = 'common',
+}: RewardBurstProps) {
   const particles = variant === 'world' ? WORLD_PARTICLES : COMMON_PARTICLES;
 
   return (
@@ -139,7 +146,12 @@ export function ChestArt({
   const frameWidth = Math.round(size * 1.52);
   const glowOpacity = openProgress.interpolate({
     inputRange: [0, 0.5, 0.72, 1],
-    outputRange: [0.16, 0.22, variant === 'world' ? 0.46 : 0.34, variant === 'world' ? 0.28 : 0.2],
+    outputRange: [
+      0.16,
+      0.22,
+      variant === 'world' ? 0.46 : 0.34,
+      variant === 'world' ? 0.28 : 0.2,
+    ],
   });
   const glowScale = openProgress.interpolate({
     inputRange: [0, 0.72, 1],
@@ -185,7 +197,10 @@ export function ChestArt({
             height: Math.max(9, size * 0.12),
             opacity: lidLightOpacity,
             top: size * 0.35,
-            transform: [{ translateY: lidLightLift }, { scaleX: lidLightScale }],
+            transform: [
+              { translateY: lidLightLift },
+              { scaleX: lidLightScale },
+            ],
             width: frameWidth * 0.5,
           },
         ]}

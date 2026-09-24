@@ -19,10 +19,14 @@ export const SameMaterialMatchRule: MatchRule = {
     return ['residuo', 'residuo', 'residuo'];
   },
 
-  findCompletedTriple<TTile extends MatchableTile>(tray: TTile[]): TTile[] | undefined {
+  findCompletedTriple<TTile extends MatchableTile>(
+    tray: TTile[],
+  ): TTile[] | undefined {
     for (const [, materialTiles] of groupByMaterial(tray)) {
       if (materialTiles.length >= 3) {
-        const tripleIds = new Set(materialTiles.slice(0, 3).map((tile) => tile.id));
+        const tripleIds = new Set(
+          materialTiles.slice(0, 3).map((tile) => tile.id),
+        );
 
         return tray.filter((tile) => tripleIds.has(tile.id));
       }
@@ -31,7 +35,9 @@ export const SameMaterialMatchRule: MatchRule = {
     return undefined;
   },
 
-  selectTripleFrom<TTile extends MatchableTile>(candidates: TTile[]): TTile[] | undefined {
+  selectTripleFrom<TTile extends MatchableTile>(
+    candidates: TTile[],
+  ): TTile[] | undefined {
     for (const [, materialTiles] of groupByMaterial(candidates)) {
       if (materialTiles.length >= 3) {
         return materialTiles.slice(0, 3);

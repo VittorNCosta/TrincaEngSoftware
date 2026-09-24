@@ -88,7 +88,11 @@ test('persistencia mantém três estrelas anteriores após vitória lenta de uma
     level,
     previousBestStars: 3,
   });
-  const completion = applyLevelCompletion(previousProgress, levelId, displayed.earnedStars);
+  const completion = applyLevelCompletion(
+    previousProgress,
+    levelId,
+    displayed.earnedStars,
+  );
 
   assert.equal(displayed.earnedStars, 1);
   assert.equal(completion.starsEarned, displayed.earnedStars);

@@ -1,0 +1,9 @@
+# Commits que só mexem em formatação. O `git blame` os ignora com
+#
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# (o GitHub lê este arquivo sozinho). Sem isso, um commit de estilo aparece
+# como autor de linhas que ele apenas re-quebrou.
+
+# style: aplica prettier em todo o repositorio
+19b656d6e5a6bbc7f2bf90622249b4e1d1725873

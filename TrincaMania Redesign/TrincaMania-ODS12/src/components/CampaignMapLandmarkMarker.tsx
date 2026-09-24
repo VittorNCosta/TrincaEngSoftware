@@ -1,4 +1,4 @@
-import { ForestRestMapMarker } from './ForestRestMapMarker';
+import { RestStopMapMarker } from './RestStopMapMarker';
 import { WorldPortalMapMarker } from './WorldPortalMapMarker';
 import type { CampaignMapLandmarkKind } from '../types/campaignMap';
 
@@ -21,13 +21,13 @@ export function CampaignMapLandmarkMarker({
   worldLabel,
   onPress,
 }: CampaignMapLandmarkMarkerProps) {
-  if ((kind === 'rest' || kind === 'shop') && visualKey === 'forest-rest-cart') {
+  if ((kind === 'rest' || kind === 'shop') && visualKey === 'collection-cart') {
     if (!afterLevelLabel) {
       return null;
     }
 
     return (
-      <ForestRestMapMarker
+      <RestStopMapMarker
         afterLevelLabel={afterLevelLabel}
         locked={locked}
         selected={selected}
@@ -36,7 +36,7 @@ export function CampaignMapLandmarkMarker({
     );
   }
 
-  if (kind === 'portal' && visualKey === 'forest-portal-rune') {
+  if (kind === 'portal' && visualKey === 'recycling-cycle') {
     if (!worldLabel) {
       return null;
     }
