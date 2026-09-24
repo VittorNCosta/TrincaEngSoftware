@@ -54,10 +54,11 @@ updates:
       - dependency-name: eslint-config-expo
       - dependency-name: react-native-safe-area-context
       - dependency-name: react-native-svg
-      # Expo SDK 54 requer @sentry/react-native ~7.2.0; a PR #280 com 8.27.0
-      # falhou no expo-doctor. Reavaliar junto com a migracao do SDK.
+      # Expo SDK 54 requer @sentry/react-native ~7.2.0; as PRs #280 (8.27.0)
+      # e #295 (7.13.0) falharam no expo-doctor. Permitir apenas patches 7.2.x
+      # ate a migracao coordenada do SDK (#285).
       - dependency-name: "@sentry/react-native"
-        update-types: [version-update:semver-major]
+        update-types: [version-update:semver-major, version-update:semver-minor]
       # eslint-config-expo 10 ainda usa APIs removidas no ESLint 10.
       - dependency-name: eslint
         update-types: [version-update:semver-major]
