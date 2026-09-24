@@ -1,5 +1,9 @@
 # TrincaMania — instruções compartilhadas
 
+@RTK.md
+
+Leia e siga [RTK.md](RTK.md) antes de executar comandos neste repositório. Antes de alterar o aplicativo, leia também `CLAUDE.md` e `CONTEXT.md` na pasta do aplicativo. O RTK é opcional; se não estiver instalado, use os comandos originais conforme o próprio guia.
+
 O aplicativo fica em `TrincaMania Redesign/TrincaMania-ODS12`. Caminhos de código abaixo são relativos a essa pasta; execute os comandos nela. Use Node `>=22.13.0 <23`, conforme `package.json`. Leia também os ADRs em `docs/adr/`.
 
 Delegue quando autorizado e houver subtarefa independente útil. Defina dono e arquivos permitidos antes de trabalho paralelo; escopos de edição devem ser disjuntos. Revisão é somente leitura. Herde modelo/esforço da sessão e respeite o limite de agentes autorizado. Perfis e exemplos: [guia local](TrincaMania%20Redesign/TrincaMania-ODS12/docs/AGENTES-CODEX.md).
@@ -127,7 +131,6 @@ ser registrado no roadmap e nas issues, seguindo o mecanismo existente.
 Roadmap define escopo e prioridade; merge validado comprova conclusão. Antes de reconciliar, proponha alteração revisável em `docs/roadmap/roadmap.html` e `docs/ROADMAP-JOGO-COMPLETO.md` com a evidência de conclusão. Issue fechada com roadmap pendente é conflito a investigar, nunca razão automática para reabrir. PR abandonado não conclui tarefa. Issues automáticas sem ID de roadmap ficam fora do sincronizador.
 
 Registre trabalho novo nos dois espelhos e regenere `scripts/criar-issues-roadmap.sh` com `node scripts/gerar-issues-roadmap.js`; não execute o script de criação inicial sobre backlog existente. `node scripts/sincronizar-issues.js` apenas relata; escrita requer autorização da sessão e integração confiável da alteração. Não publique comentários ou mensagens por inferência.
-
 
 # Instruções para agentes
 
