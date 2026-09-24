@@ -1,5 +1,11 @@
 # Entrega das issues Terra e Sol — 18/09/2026
 
+## Atualização de 24/09/2026
+
+Após a integração das PRs [#225](https://github.com/VittorNCosta/TrincaEngSoftware/pull/225), [#240](https://github.com/VittorNCosta/TrincaEngSoftware/pull/240), [#259](https://github.com/VittorNCosta/TrincaEngSoftware/pull/259) e [#278](https://github.com/VittorNCosta/TrincaEngSoftware/pull/278), os critérios de CI-34 (#226), G-21 (#227), G-22 (#228) e Q-16 (#235) foram reavaliados. Os checks das PRs integradas e a validação local passaram. As conclusões comprovadas foram registradas nos espelhos HTML e Markdown do roadmap nesta PR. A tabela abaixo conserva o retrato histórico de 18/09/2026.
+
+A reconciliação em modo de leitura de `scripts/sincronizar-issues.js` ainda aponta 13 conflitos preexistentes entre roadmap e GitHub; por isso nenhuma escrita em lote foi aplicada às issues. Cada fechamento desta entrega depende do merge da PR de reconciliação.
+
 Escopo autorizado: 85 issues abertas marcadas Terra/Sol, executadas com Astra low. No máximo quatro agentes ativos nesta sessão; configuração futura limita cinco no total.
 
 Este registro distingue implementação revisável de aceite concluído. Código preparado não equivale a merge nem a validação no aparelho. Os critérios externos continuam pendentes; não há release de produção nesta entrega.
