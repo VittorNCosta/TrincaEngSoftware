@@ -39,7 +39,8 @@ reabrindo o app com cada escala. As asserções verificam que textos e ações
 continuam disponíveis; as capturas ficam separadas por escala e jornada para
 revisão de cortes e sobreposições. Essas capturas não são comparadas à baseline
 de fonte 1.0.
-Os grupos de concorrência são separados. PRs usam smoke com comparação visual.
+Os grupos de concorrência são separados. PRs percorrem as cinco jornadas e
+comparam todas as nove telas, incluindo resultado, loja e abas.
 
 Os subfluxos de vitória/derrota são gerados com o solver existente, que verifica
 cada jogada pela regra de domínio. O gerador também exige que as três primeiras

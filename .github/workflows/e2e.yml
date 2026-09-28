@@ -127,7 +127,7 @@ jobs:
           # O CLI pergunta sobre telemetria na primeira execucao; num runner sem
           # terminal isso pendura o passo ate o teto de tempo.
           MAESTRO_CLI_NO_ANALYTICS: "true"
-          MAESTRO_FLOW: ${{ github.event_name == 'pull_request' && '.maestro/01-entrar-numa-fase.yaml' || inputs.suite == 'lives' && '.maestro/manual/05-perder-vida-recarregar.yaml' || '.maestro' }}
+          MAESTRO_FLOW: ${{ inputs.suite == 'lives' && '.maestro/manual/05-perder-vida-recarregar.yaml' || '.maestro' }}
           MAESTRO_CALIBRATE: ${{ inputs.suite == 'baseline' }}
           MAESTRO_ACCESSIBILITY: ${{ inputs.suite == 'accessibility' }}
         with:
@@ -159,7 +159,7 @@ jobs:
       - name: Comparar capturas com baseline revisada
         if: success() && inputs.suite != 'lives' && inputs.suite != 'accessibility'
         env:
-          VISUAL_SUITE: ${{ github.event_name == 'pull_request' && 'smoke' || inputs.suite == 'baseline' && 'calibration' || 'full' }}
+          VISUAL_SUITE: ${{ inputs.suite == 'baseline' && 'calibration' || 'full' }}
         run: npm run test:visual -- "$VISUAL_SUITE" ../../maestro-artifacts tests/visual/android-api34-320x640-font1 ../../visual-diffs
 
       # Falhou: o Maestro grava captura de tela e hierarquia de views de cada

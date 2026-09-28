@@ -26,6 +26,14 @@ name: Navegar pelas abas e conferir textos e ações principais
 - takeScreenshot: artifacts/recompensas
 - tapOn: 'Abrir configurações'
 - assertVisible: 'Som: Ligado'
+- scrollUntilVisible:
+    element:
+      text: 'Resetar progresso'
+    direction: DOWN
+- scrollUntilVisible:
+    element:
+      text: 'Som: Ligado'
+    direction: UP
 - takeScreenshot: artifacts/configuracoes
 - tapOn: 'Fechar configurações'
 - tapOn:
