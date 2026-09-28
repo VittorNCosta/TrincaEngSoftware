@@ -28,7 +28,7 @@ O fluxo `manual/05` é separado da suíte normal para não gastar 30 minutos em 
 ```sh
 maestro test .maestro/manual/05-perder-vida-recarregar.yaml
 # Ou no GitHub Actions, na branch que contém esta versão do workflow:
-gh workflow run e2e.yml --ref feat/issues-terra-sol-astra -f suite=lives
+gh workflow run e2e.yml --ref test/q18-visual-regression -f suite=lives
 ```
 
 O input `suite=full` executa as cinco jornadas comuns. `suite=lives` executa
@@ -59,7 +59,7 @@ A descoberta de subfluxos fica restrita em `config.yaml`, conforme a
 
 Os caminhos do solver e o TypeScript são verificáveis localmente; a execução
 Android acontece no GitHub Actions. Conferir o JUnit da execução correspondente
-ao SHA do PR #240 para cada jornada. O workflow publica capturas explícitas
+ao SHA do PR #302 para cada jornada. O workflow publica capturas explícitas
 em sucesso/falha e diagnóstico completo quando falha. Capturas são evidências
 de execução, não aprovação automática de arte ou baseline visual.
 
@@ -72,8 +72,9 @@ um APK antigo assinado com a mesma chave e package `.e2e`; reinstalar com
 Q-18 (#237) usa emulador API 34 com viewport 320×640, densidade 160 dpi e escala
 de fonte 1.0. O APK E2E fixa a semente do tabuleiro e pausa apenas animações
 cosméticas nas capturas (pulso de peça/nó, oscilação de marcador e confete).
-A comparação ignora só os 24 pixels superiores do relógio do sistema; o diff
-mostra a máscara em azul. O restante da tela continua sujeito a comparação.
+A comparação ignora os 24 pixels superiores do relógio do sistema e apenas os
+dígitos variáveis do cronômetro na vitória e do saldo na loja. O diff mostra
+as máscaras em azul. O restante da tela continua sujeito a comparação exata.
 
 Para criar ou revisar uma baseline, rode `suite=baseline` na branch com o código
 que será testado, revise as cinco capturas de cada tela e calibre a tolerância
@@ -85,9 +86,8 @@ proposital de cor/posição precisa falhar no comparador.
 
 O gate `npm run test:visual -- smoke|full|calibration capturas baseline diffs`
 exige o número previsto de capturas de cada jornada e gera
-`diff.png`/`report.json` por tela. Na primeira coleta, `suite=baseline` termina
-com falha pela ausência das imagens aprovadas; as capturas ainda são publicadas.
-Depois do versionamento, rodar `suite=baseline` de novo prova as cinco repetições.
+`diff.png`/`report.json` por tela. A baseline Android está versionada; rodar
+`suite=baseline` prova a repetibilidade das cinco capturas independentes.
 Os artefatos do workflow preservam capturas e diffs em sucesso e falha. A suíte
 visual do CI cobre o viewport fixo acima; para reproduzir no Galaxy S25 Ultra,
 instale o APK E2E e execute os mesmos fluxos Maestro com o telefone conectado.

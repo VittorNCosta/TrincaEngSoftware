@@ -84,7 +84,7 @@ function RewardCard({
               disabled ? styles.rewardActionPillDisabled : null,
             ]}
           >
-            <Text numberOfLines={1} style={styles.rewardActionText}>
+            <Text numberOfLines={2} style={styles.rewardActionText}>
               {actionLabel}
             </Text>
           </View>
@@ -460,7 +460,8 @@ const styles = StyleSheet.create({
     borderColor: '#C7FFD9',
     borderRadius: radii.pill,
     borderWidth: 2,
-    maxWidth: 78,
+    maxWidth: 84,
+    minWidth: 0,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
@@ -472,6 +473,7 @@ const styles = StyleSheet.create({
     color: colors.inkOnDark,
     fontSize: 9,
     fontWeight: '900',
+    textAlign: 'center',
     textTransform: 'uppercase',
   },
   rewardCard: {

@@ -16,7 +16,10 @@
     "vitoria": {
       "channelDelta": 0,
       "maxChangedRatio": 0,
-      "ignoreRects": [[0, 0, 320, 24]]
+      "ignoreRects": [
+        [0, 0, 320, 24],
+        [99, 302, 37, 18]
+      ]
     },
     "progresso-reaberto": {
       "channelDelta": 0,
@@ -26,7 +29,10 @@
     "compra": {
       "channelDelta": 0,
       "maxChangedRatio": 0,
-      "ignoreRects": [[0, 0, 320, 24]]
+      "ignoreRects": [
+        [0, 0, 320, 24],
+        [258, 101, 28, 19]
+      ]
     },
     "recompensas": {
       "channelDelta": 0,

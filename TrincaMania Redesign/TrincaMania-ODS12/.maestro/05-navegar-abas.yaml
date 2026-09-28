@@ -12,11 +12,14 @@ name: Navegar pelas abas e conferir textos e ações principais
     optional: true
 - extendedWaitUntil:
     visible:
-      id: 'tutorial-pular|nav-map'
+      id: 'tutorial-modal'
     timeout: 40000
+- scrollUntilVisible:
+    element:
+      id: 'tutorial-pular'
+    direction: DOWN
 - tapOn:
     id: 'tutorial-pular'
-    optional: true
 - assertVisible:
     id: 'nav-map'
 - tapOn:

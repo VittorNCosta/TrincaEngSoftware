@@ -125,9 +125,7 @@ export function ShopScreen({
           >
             Ponto de descanso
           </Text>
-          <Text numberOfLines={2} style={styles.subtitle}>
-            Poderes para continuar a jornada
-          </Text>
+          <Text style={styles.subtitle}>Poderes para avançar na coleta</Text>
         </View>
         <View style={styles.coinBadge}>
           <GameIcon name="coin" size={24} tone="gold" />

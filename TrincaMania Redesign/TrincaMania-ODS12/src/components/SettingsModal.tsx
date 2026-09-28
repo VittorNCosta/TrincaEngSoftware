@@ -171,9 +171,11 @@ export function SettingsModal({
         <View style={styles.panel}>
           <View pointerEvents="none" style={styles.panelGlow} />
           <View style={styles.header}>
-            <GameIcon name="settings" size={42} tone="gold" />
             <View style={styles.headerCopy}>
-              <Text style={styles.kicker}>Trinca Mania</Text>
+              <View style={styles.headerKickerRow}>
+                <GameIcon name="settings" size={32} tone="gold" />
+                <Text style={styles.kicker}>Trinca Mania</Text>
+              </View>
               <Text style={styles.title}>Configurações</Text>
             </View>
             <Pressable
@@ -450,6 +452,11 @@ const styles = StyleSheet.create({
   headerCopy: {
     flex: 1,
     minWidth: 0,
+  },
+  headerKickerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.xs,
   },
   kicker: {
     color: '#FFE9A8',
