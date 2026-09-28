@@ -34,6 +34,11 @@ gh workflow run e2e.yml --ref feat/issues-terra-sol-astra -f suite=lives
 O input `suite=full` executa as cinco jornadas comuns. `suite=lives` executa
 apenas perda, reinício e recarga real. `suite=baseline` executa as cinco jornadas
 cinco vezes no mesmo APK e publica as capturas para revisão e calibração.
+`suite=accessibility` repete vitória, compra e navegação com fontes 1.3 e 2.0,
+reabrindo o app com cada escala. As asserções verificam que textos e ações
+continuam disponíveis; as capturas ficam separadas por escala e jornada para
+revisão de cortes e sobreposições. Essas capturas não são comparadas à baseline
+de fonte 1.0.
 Os grupos de concorrência são separados. PRs usam smoke com comparação visual.
 
 Os subfluxos de vitória/derrota são gerados com o solver existente, que verifica
@@ -122,7 +127,9 @@ O codec `pngjs` é dependência apenas de desenvolvimento, sem import no aplicat
 2. Concluir uma trinca e uma compra; conferir anúncio de resultado, saldo e
    estoque sem repetir informações a cada frame de animação.
 3. Repetir com fonte 1.3 e 2.0; nenhum objetivo/preço/ação pode ser cortado ou
-   ficar inacessível. Verificar alvos de pelo menos 48dp e rolagem com TalkBack.
+   ficar inacessível. Executar também `suite=accessibility` para conferir as
+   jornadas sem leitor de tela. Verificar alvos de pelo menos 48dp e rolagem
+   com TalkBack.
 4. Registrar aparelho, versão, escala, percurso, resultado e captura sanitizada.
    Esses passos não foram executados nesta sessão; mantêm-se os testes de
    acessibilidade existentes além das futuras comparações de imagem.

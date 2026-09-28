@@ -27,6 +27,7 @@ on:
           - full
           - lives
           - baseline
+          - accessibility
   schedule:
     # Segunda de manha, antes de alguem comecar a semana em cima de um app que
     # parou de abrir na sexta.
@@ -128,6 +129,7 @@ jobs:
           MAESTRO_CLI_NO_ANALYTICS: "true"
           MAESTRO_FLOW: ${{ github.event_name == 'pull_request' && '.maestro/01-entrar-numa-fase.yaml' || inputs.suite == 'lives' && '.maestro/manual/05-perder-vida-recarregar.yaml' || '.maestro' }}
           MAESTRO_CALIBRATE: ${{ inputs.suite == 'baseline' }}
+          MAESTRO_ACCESSIBILITY: ${{ inputs.suite == 'accessibility' }}
         with:
           api-level: 34
           target: google_apis
@@ -152,10 +154,10 @@ jobs:
             adb shell settings put system font_scale 1.0
             adb shell wm size
             adb shell wm density
-            if [ "$MAESTRO_CALIBRATE" = "true" ]; then for repetition in 1 2 3 4 5; do maestro test -e APP_ID="$APP_ID" --test-output-dir "../../maestro-artifacts/repeat-$repetition" --format junit --output "../../maestro-resultado-$repetition.xml" "$MAESTRO_FLOW" || exit 1; done; else maestro test -e APP_ID="$APP_ID" --test-output-dir ../../maestro-artifacts --format junit --output ../../maestro-resultado.xml "$MAESTRO_FLOW"; fi
+            if [ "$MAESTRO_ACCESSIBILITY" = "true" ]; then for font in 1.3 2.0; do adb shell settings put system font_scale "$font"; for flow in 03-vencer-fase 04-comprar-na-loja 05-navegar-abas; do maestro test -e APP_ID="$APP_ID" --test-output-dir "../../maestro-artifacts/font-$font/$flow" --format junit --output "../../maestro-resultado-font-$font-$flow.xml" ".maestro/$flow.yaml" || exit 1; done; done; elif [ "$MAESTRO_CALIBRATE" = "true" ]; then for repetition in 1 2 3 4 5; do maestro test -e APP_ID="$APP_ID" --test-output-dir "../../maestro-artifacts/repeat-$repetition" --format junit --output "../../maestro-resultado-$repetition.xml" "$MAESTRO_FLOW" || exit 1; done; else maestro test -e APP_ID="$APP_ID" --test-output-dir ../../maestro-artifacts --format junit --output ../../maestro-resultado.xml "$MAESTRO_FLOW"; fi
 
       - name: Comparar capturas com baseline revisada
-        if: success() && inputs.suite != 'lives'
+        if: success() && inputs.suite != 'lives' && inputs.suite != 'accessibility'
         env:
           VISUAL_SUITE: ${{ github.event_name == 'pull_request' && 'smoke' || inputs.suite == 'baseline' && 'calibration' || 'full' }}
         run: npm run test:visual -- "$VISUAL_SUITE" ../../maestro-artifacts tests/visual/android-api34-320x640-font1 ../../visual-diffs
