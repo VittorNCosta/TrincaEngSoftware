@@ -42,6 +42,7 @@ name: Ganhar moedas em partidas reais, comprar e preservar inventário
 - assertVisible:
     id: shop-coins
     text: ${String(output.coinsBefore - 45)}
+- waitForAnimationToEnd
 - takeScreenshot: artifacts/compra
 - stopApp
 - launchApp

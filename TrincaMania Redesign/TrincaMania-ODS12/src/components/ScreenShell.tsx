@@ -11,7 +11,7 @@ type ScreenShellProps = {
 
 function BackgroundPanels() {
   return (
-    <View pointerEvents="none" style={StyleSheet.absoluteFillObject}>
+    <View pointerEvents="none" style={styles.backgroundPanels}>
       <View style={styles.canopyPanel} />
       <View style={styles.trailPanel} />
       <View style={styles.deepPanel} />
@@ -50,6 +50,11 @@ export function ScreenShell({ children, scroll = true }: ScreenShellProps) {
 }
 
 const styles = StyleSheet.create({
+  backgroundPanels: {
+    ...StyleSheet.absoluteFillObject,
+    // As abas vizinhas ficam montadas; a decoração deve ficar nesta página.
+    overflow: 'hidden',
+  },
   canopyPanel: {
     backgroundColor: colors.backgroundAlt,
     height: 250,

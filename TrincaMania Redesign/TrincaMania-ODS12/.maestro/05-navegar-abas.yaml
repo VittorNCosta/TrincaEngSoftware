@@ -1,0 +1,48 @@
+appId: br.com.mhvtech.trincamania.e2e
+name: Navegar pelas abas e conferir textos e ações principais
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: 'splash-skip|tutorial-pular|nav-map'
+    timeout: 40000
+- tapOn:
+    id: 'splash-skip'
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: 'tutorial-pular|nav-map'
+    timeout: 40000
+- tapOn:
+    id: 'tutorial-pular'
+    optional: true
+- assertVisible:
+    id: 'nav-map'
+- tapOn:
+    id: 'nav-rewards'
+- assertVisible: 'Próximos prêmios'
+- assertVisible: 'Baú Comum'
+- takeScreenshot: artifacts/recompensas
+- tapOn: 'Abrir configurações'
+- assertVisible: 'Som: Ligado'
+- takeScreenshot: artifacts/configuracoes
+- tapOn: 'Fechar configurações'
+- tapOn:
+    id: 'nav-powers'
+- assertVisible: 'Seu inventário'
+- takeScreenshot: artifacts/poderes
+- scrollUntilVisible:
+    element:
+      text: '(?i)Onde comprar'
+    direction: DOWN
+- assertVisible: '(?i)Onde comprar'
+- tapOn:
+    id: 'nav-profile'
+- assertVisible: 'Trinca Mania'
+- assertVisible: 'Perfil completo em breve.'
+- takeScreenshot: artifacts/perfil
+- tapOn:
+    id: 'nav-map'
+- assertVisible:
+    id: 'map-level-w1-001'

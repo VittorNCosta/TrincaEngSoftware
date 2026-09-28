@@ -43,6 +43,10 @@ name: Abrir o app do zero e entrar na primeira fase
     direction: DOWN
     timeout: 30000
 
+- assertVisible:
+    id: 'nav-map'
+- assertVisible:
+    id: 'map-level-w1-001'
 - takeScreenshot: artifacts/mapa
 
 - tapOn:
@@ -70,4 +74,5 @@ name: Abrir o app do zero e entrar na primeira fase
       id: 'game-board'
     timeout: 30000
 
+- assertVisible: '9 peças'
 - takeScreenshot: artifacts/partida

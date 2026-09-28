@@ -20,9 +20,10 @@ maestro test -e APP_ID=br.com.mhvtech.trincamania.e2e .maestro
 | 02        | Preferência de som sobrevive a encerramento do processo                                                                                    |
 | 03        | Vitória por toques reais; fase seguinte desbloqueada após reabrir                                                                          |
 | 04        | Cinco vitórias geram pelo menos 50 moedas; compra de Voltar desconta exatamente 45 e acrescenta 1 ao estoque; ambos sobrevivem ao reinício |
+| 05        | Navegação por recompensas, configurações, poderes e perfil com labels obrigatórios e capturas                                              |
 | manual/05 | Derrota real desconta uma vida, reinício preserva 4/5 e recarga real devolve 5/5 após 30 minutos                                           |
 
-O fluxo 05 é manual, fora da suíte normal para não gastar 30 minutos em cada PR:
+O fluxo `manual/05` é separado da suíte normal para não gastar 30 minutos em cada PR:
 
 ```sh
 maestro test .maestro/manual/05-perder-vida-recarregar.yaml
@@ -30,9 +31,10 @@ maestro test .maestro/manual/05-perder-vida-recarregar.yaml
 gh workflow run e2e.yml --ref feat/issues-terra-sol-astra -f suite=lives
 ```
 
-O input `suite=full` executa as quatro jornadas comuns. `suite=lives` executa
-apenas perda, reinício e recarga real; os grupos de concorrência são separados.
-PRs continuam usando somente smoke.
+O input `suite=full` executa as cinco jornadas comuns. `suite=lives` executa
+apenas perda, reinício e recarga real. `suite=baseline` executa as cinco jornadas
+cinco vezes no mesmo APK e publica as capturas para revisão e calibração.
+Os grupos de concorrência são separados. PRs usam smoke com comparação visual.
 
 Os subfluxos de vitória/derrota são gerados com o solver existente, que verifica
 cada jogada pela regra de domínio. O gerador também exige que as três primeiras
@@ -61,13 +63,28 @@ upgrade in-place e interrupção controlada da gravação. Esse ensaio precisa d
 um APK antigo assinado com a mesma chave e package `.e2e`; reinstalar com
 `clearState` não prova migração e foi deliberadamente evitado como substituto.
 
-Q-18 (#237): screenshots de vitória, progresso reaberto e loja já estão nos
-fluxos, mas **não são baseline de regressão visual**. Gerar baseline real após
-execução em emulador fixo (Pixel 2, API 35, 1080×1920, escala de fonte 1.0),
-revisar imagens e somente então versionar baseline. Repetir cinco vezes antes
-de definir tolerância, mascarando apenas relógios/partículas justificadas.
-Uma mudança proposital de cor/posição deve produzir diff e falhar o job antes
-de habilitar o bloqueio. Não aprovar baseline automaticamente por CI verde.
+Q-18 (#237) usa emulador API 34 com viewport 320×640, densidade 160 dpi e escala
+de fonte 1.0. O APK E2E fixa a semente do tabuleiro e pausa apenas animações
+cosméticas nas capturas (pulso de peça/nó, oscilação de marcador e confete).
+A comparação ignora só os 24 pixels superiores do relógio do sistema; o diff
+mostra a máscara em azul. O restante da tela continua sujeito a comparação.
+
+Para criar ou revisar uma baseline, rode `suite=baseline` na branch com o código
+que será testado, revise as cinco capturas de cada tela e calibre a tolerância
+pela maior variação legítima. Copie apenas capturas aprovadas para
+`tests/visual/android-api34-320x640-font1/` e ajuste `config.json` no mesmo PR.
+O job comum nunca atualiza a baseline. Se uma mudança for intencional, anexe
+captura e diff na revisão antes de substituir a imagem versionada. Uma mudança
+proposital de cor/posição precisa falhar no comparador.
+
+O gate `npm run test:visual -- smoke|full|calibration capturas baseline diffs`
+exige o número previsto de capturas de cada jornada e gera
+`diff.png`/`report.json` por tela. Na primeira coleta, `suite=baseline` termina
+com falha pela ausência das imagens aprovadas; as capturas ainda são publicadas.
+Depois do versionamento, rodar `suite=baseline` de novo prova as cinco repetições.
+Os artefatos do workflow preservam capturas e diffs em sucesso e falha. A suíte
+visual do CI cobre o viewport fixo acima; para reproduzir no Galaxy S25 Ultra,
+instale o APK E2E e execute os mesmos fluxos Maestro com o telefone conectado.
 
 ## Comparador visual local
 
@@ -82,7 +99,7 @@ Os dois últimos argumentos são obrigatórios: diferença máxima por canal RGB
 `0 0` exige identidade; por exemplo, `3 0.001` tolera diferenças de até 3 unidades
 por canal e até 0,1% de pixels acima desse limite. Esse exemplo não é um piso
 aprovado para Android: calibrar após as cinco repetições e revisão descritas acima.
-A comparação é por bytes RGBA, sem correção gamma, redimensionamento, máscara ou
+A comparação é por bytes RGBA, sem correção gamma, redimensionamento ou
 supressão automática de antialiasing. Use o mesmo aparelho/configuração de captura.
 
 A saída contém `diff.png` (mudanças em vermelho, contexto cinza) e `report.json`
