@@ -29,4 +29,13 @@ module.exports = defineConfig([
       globals: globals.node,
     },
   },
+  {
+    // O aplicativo envia diagnósticos pelo logger, que mantém o buffer local.
+    files: ['App.tsx', 'index.ts', 'src/**/*.{ts,tsx,js,jsx}'],
+    rules: { 'no-console': 'error' },
+  },
+  {
+    files: ['src/utils/log.ts'],
+    rules: { 'no-console': 'off' },
+  },
 ]);
