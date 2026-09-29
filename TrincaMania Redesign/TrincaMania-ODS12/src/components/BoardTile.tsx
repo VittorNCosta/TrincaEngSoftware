@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { TileIcon } from './TileIcon';
+import { IS_E2E_BUILD } from '../testing/e2eProfile';
 import { radii } from '../styles/theme';
 import { Tile } from '../types/game';
 import { WindowTarget } from '../types/ui';
@@ -56,7 +57,7 @@ function BoardTileBase({
   );
 
   useEffect(() => {
-    if (!highlighted || blocked) {
+    if (!highlighted || blocked || IS_E2E_BUILD) {
       scale.stopAnimation();
       scale.setValue(1);
       return undefined;

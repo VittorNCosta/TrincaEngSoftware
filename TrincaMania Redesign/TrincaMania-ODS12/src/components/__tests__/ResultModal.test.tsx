@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import { fireEvent, render, within } from '@testing-library/react-native';
 
 import { ResultModal } from '../ResultModal';
 import { LEVELS } from '../../data/levels';
@@ -9,11 +9,8 @@ import {
   WorldChestOpenResult,
 } from '../../types/game';
 
-// ResultModal tem a maior superfície de props dos 4 componentes-alvo (baú
-// comum, baú de mundo, recorde, progresso de capítulo...). Este é
-// deliberadamente um smoke test mais simples que os outros três: só garante
-// que a tela de vitória renderiza sem lançar exceção com o mínimo de props
-// obrigatórias, sem cobrir baús/animações/interação.
+// A geometria real em telas pequenas é verificada nas capturas Android.
+// Aqui protegemos a separação entre recompensas roláveis e ações/anúncio.
 const noopProgress: ProgressState = {
   bonusWorldAchievementShown: false,
   chestProgressLevelIds: [],
@@ -42,6 +39,38 @@ const livesState: LivesState = {
 };
 
 describe('ResultModal', () => {
+  it('mantém o anúncio e as ações fora da área de recompensas que pode rolar', () => {
+    const onNextLevel = jest.fn();
+    const onBackToLevels = jest.fn();
+    const { getByText, getByTestId } = render(
+      <ResultModal
+        activeTrayCapacity={7}
+        availableCoins={0}
+        keys={0}
+        level={LEVELS[0]}
+        livesState={livesState}
+        status="won"
+        timeUntilNextLifeMs={0}
+        unlockedLevelTitle="Trilha da coleta seletiva"
+        onBackToLevels={onBackToLevels}
+        onNextLevel={onNextLevel}
+        onOpenWorldChest={onOpenWorldChest}
+        onRetry={() => {}}
+      />,
+    );
+
+    const announcement = 'Nova fase desbloqueada! Trilha da coleta seletiva';
+    const rewards = getByTestId('result-rewards-scroll');
+    expect(getByText(announcement)).toBeTruthy();
+    expect(within(rewards).queryByText(announcement)).toBeNull();
+    expect(within(rewards).queryByText('Próxima fase')).toBeNull();
+    expect(rewards.props.showsVerticalScrollIndicator).toBe(true);
+    fireEvent.press(getByText('Próxima fase'));
+    fireEvent.press(getByText('Mapa'));
+    expect(onNextLevel).toHaveBeenCalledTimes(1);
+    expect(onBackToLevels).toHaveBeenCalledTimes(1);
+  });
+
   it('renderiza a tela de vitória sem lançar exceção', () => {
     const status: GameStatus = 'won';
 

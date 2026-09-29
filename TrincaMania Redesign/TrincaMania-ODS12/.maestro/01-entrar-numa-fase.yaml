@@ -19,17 +19,17 @@ name: Abrir o app do zero e entrar na primeira fase
     optional: true
 - extendedWaitUntil:
     visible:
-      id: 'tutorial-pular|nav-map'
+      id: 'tutorial-modal'
     timeout: 40000
 
-# Save em branco abre o guia da campanha por cima do mapa
-# (`setIsTutorialVisible(!tutorialSeen)` no App.tsx) — nada atrás dele é
-# tocável enquanto estiver aberto. `optional` porque o guia só aparece uma vez
-# na vida do save: numa reexecução sem `clearState` ele não vem, e isso não é
-# falha.
+# Save em branco abre o guia da campanha por cima do mapa. Com fonte 2.0,
+# o botão Pular fica abaixo da dobra e precisa ser alcançado por rolagem.
+- scrollUntilVisible:
+    element:
+      id: 'tutorial-pular'
+    direction: DOWN
 - tapOn:
     id: 'tutorial-pular'
-    optional: true
 
 # O mapa é mais alto que a tela e a fase 1 fica no pé dele; a `ScrollView` usa
 # `removeClippedSubviews`, então nó fora da viewport nem existe na hierarquia
@@ -43,6 +43,10 @@ name: Abrir o app do zero e entrar na primeira fase
     direction: DOWN
     timeout: 30000
 
+- assertVisible:
+    id: 'nav-map'
+- assertVisible:
+    id: 'map-level-w1-001'
 - takeScreenshot: artifacts/mapa
 
 - tapOn:
@@ -70,4 +74,5 @@ name: Abrir o app do zero e entrar na primeira fase
       id: 'game-board'
     timeout: 30000
 
+- assertVisible: '9 peças'
 - takeScreenshot: artifacts/partida

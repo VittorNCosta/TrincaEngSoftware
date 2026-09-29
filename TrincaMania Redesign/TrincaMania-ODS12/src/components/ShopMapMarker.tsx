@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
+import { IS_E2E_BUILD } from '../testing/e2eProfile';
 import { colors, radii, shadows } from '../styles/theme';
 
 type ShopMapMarkerProps = {
@@ -31,7 +32,7 @@ export function ShopMapMarker({
   const swing = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen || IS_E2E_BUILD) {
       swing.stopAnimation();
       swing.setValue(0);
       return undefined;

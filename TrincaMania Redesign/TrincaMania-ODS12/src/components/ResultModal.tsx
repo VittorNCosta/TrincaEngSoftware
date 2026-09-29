@@ -477,8 +477,9 @@ export function ResultModal({
             <ScrollView
               bounces={false}
               contentContainerStyle={styles.resultBodyContent}
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator
               style={styles.resultBody}
+              testID="result-rewards-scroll"
             >
               {isWon ? (
                 <View
@@ -700,9 +701,6 @@ export function ResultModal({
                       )}
                     </View>
                   ) : null}
-                  {unlockText ? (
-                    <Text style={styles.unlockText}>{unlockText}</Text>
-                  ) : null}
                 </View>
               ) : (
                 <View style={styles.losePanel}>
@@ -768,6 +766,9 @@ export function ResultModal({
             </ScrollView>
 
             <View style={styles.actions}>
+              {isWon && unlockText ? (
+                <Text style={styles.unlockText}>{unlockText}</Text>
+              ) : null}
               {isWon ? (
                 <PrimaryButton title={nextActionTitle} onPress={onNextLevel} />
               ) : (
@@ -813,6 +814,7 @@ export function ResultModal({
 
 const styles = StyleSheet.create({
   actions: {
+    flexShrink: 0,
     gap: 5,
     width: '100%',
   },
@@ -1226,6 +1228,7 @@ const styles = StyleSheet.create({
   resultBody: {
     alignSelf: 'stretch',
     flexShrink: 1,
+    minHeight: 0,
     width: '100%',
   },
   resultBodyContent: {
@@ -1277,7 +1280,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   unlockText: {
-    color: colors.successDark,
+    color: '#D8FFE9',
     fontSize: fontSizes.sm,
     fontWeight: '900',
     textAlign: 'center',

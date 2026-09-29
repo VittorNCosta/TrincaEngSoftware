@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Dimensions, Easing, StyleSheet, View } from 'react-native';
+import { IS_E2E_BUILD } from '../testing/e2eProfile';
+import { createSeededRandom } from '../utils/deterministicRandom';
 
 type ConfettiRainProps = {
   count?: number;
@@ -25,26 +27,29 @@ export function ConfettiRain({
   visible = true,
 }: ConfettiRainProps) {
   const window = useRef(Dimensions.get('window')).current;
-  const pieces = useMemo(
-    () =>
-      Array.from({ length: count }).map((_, index) => ({
-        color: COLORS[index % COLORS.length],
-        delay: Math.round(Math.random() * 2000),
-        drift: Math.round((Math.random() - 0.5) * 90),
-        duration: 2400 + Math.round(Math.random() * 1700),
-        height: 8 + Math.round(Math.random() * 12),
-        left: Math.round(Math.random() * Math.max(1, window.width - 16)),
-        spin: Math.random() > 0.5 ? 1 : -1,
-        width: 6 + Math.round(Math.random() * 5),
-      })),
-    [count, window.width],
-  );
+  const pieces = useMemo(() => {
+    const random = IS_E2E_BUILD ? createSeededRandom(0xc0ffee) : Math.random;
+    return Array.from({ length: count }).map((_, index) => ({
+      color: COLORS[index % COLORS.length],
+      delay: Math.round(random() * 2000),
+      drift: Math.round((random() - 0.5) * 90),
+      duration: 2400 + Math.round(random() * 1700),
+      height: 8 + Math.round(random() * 12),
+      left: Math.round(random() * Math.max(1, window.width - 16)),
+      spin: random() > 0.5 ? 1 : -1,
+      width: 6 + Math.round(random() * 5),
+    }));
+  }, [count, window.width]);
   const progressValues = useMemo(
     () => pieces.map(() => new Animated.Value(0)),
     [pieces],
   );
 
   useEffect(() => {
+    if (IS_E2E_BUILD && visible) {
+      progressValues.forEach((value) => value.setValue(0.15));
+      return undefined;
+    }
     if (!visible) {
       progressValues.forEach((value) => {
         value.stopAnimation();

@@ -1299,7 +1299,7 @@ mk done --title 'L-04 · Renomear os `BOSQUE_*` e os `identityKey` legados' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk done --title 'L-05 · Renomear as chaves `forest-*` de asset' \
-  --body '**Feito 09/09** (commit `f771981`). `forest-*` → `parque-*` em `campaignMapAssets.ts`, `chapterVisualIdentity.ts`, `worldMapConfigs.ts` e `tests/worldMapConfig.test.cjs`. `forest-portal-rune` fica como está — é território da A-31 (`humano`). Os `.png` ficam com o nome antigo até L-07.
+  --body '**Feito 09/09** (commit `f771981`). `forest-*` → `parque-*` em `campaignMapAssets.ts`, `chapterVisualIdentity.ts`, `worldMapConfigs.ts` e `tests/worldMapConfig.test.cjs`. `forest-portal-rune` fica como está — é território da A-31 (`humano`). Os nomes dos PNGs foram tratados depois em L-07.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1322,8 +1322,8 @@ mk done --title 'L-06 · Renomear `ForestRestMapMarker.tsx`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
-mk open --title 'L-07 · Renomear os 8 `assets/map/world1/forest_*.png`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-07 · Renomear os 8 `assets/map/world1/forest_*.png`' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): oito PNGs viraram `park_*.png`, com referências e teste atualizados; renames binários R100, sem troca da arte.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1346,8 +1346,8 @@ mk done --title 'L-08 · Renomear `map_path_pieces_bonus_reino_acucarado.png`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
-mk open --title 'L-09 · Renomear os path pieces de bosque e vales montanhosos' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-09 · Renomear os path pieces de bosque e vales montanhosos' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): quatro PNGs, incluindo variantes RGB, receberam nomes `parque_da_coleta_seletiva` e `vale_da_reciclagem`; renames R100.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1358,8 +1358,8 @@ mk open --title 'L-09 · Renomear os path pieces de bosque e vales montanhosos' 
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
-mk open --title 'L-10 · Revisar `assets/map/README_MUNDO_3.txt`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-10 · Revisar `assets/map/README_MUNDO_3.txt`' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): documentação usa Central de Materiais, remove caminho local fixo e identifica os nomes legados dos assets.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1415,8 +1415,8 @@ mk open --title 'L-14 · Decidir o nome do app' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P0,humano' --milestone 'Limpeza ODS12'
-mk open --title 'L-15 · Consolidar os dois manuais de APK' \
-  --body '`COMO_GERAR_APK.md` e `ManualParaGerarApk.txt`.
+mk done --title 'L-15 · Consolidar os dois manuais de APK' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): o guia `COMO_GERAR_APK.md` foi atualizado e `ManualParaGerarApk.txt` foi removido.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -2648,7 +2648,7 @@ Existem testes unitários de migração, mas os dois fluxos Maestro atuais não 
 - [ ] Adicionar fluxo determinístico que obtenha progresso, encerre/reabra o app e valide fases, moedas e vidas persistidas.
 - [ ] Instalar versão nova sobre fixture de save antigo e confirmar preservação dos dados e aviso de migração sem repetição indevida.
 - [ ] Cobrir interrupção durante gravação e reinício sem recompensas duplicadas ou perda de progresso já confirmado.
-- [ ] Usar dados e build de teste isolados, sem contaminar saves reais nem liberar Modo Dev no aplicativo de demonstração.
+- [ ] Usar dados e build de teste isolados, sem contaminar saves reais nem liberar Modo Dev no aplicativo de produção.
 - [ ] Publicar evidência e diagnóstico em CI; reutilizar os fluxos de vitória/loja/vidas quando forem implementados.
 
 **Dependências e referências**
@@ -2679,7 +2679,9 @@ O teste de acessibilidade existente não substitui verificação de foco/leitor 
 **Dependências e referências**
 Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.
 
-**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Ver docs/ENTREGA-TERRA-SOL.md.
+
+**Validação em andamento 28/09/2026:** PR #302 executa cinco jornadas no APK Android isolado, compara nove telas no PR e repete capturas/fontes ampliadas sob demanda. Baseline versionada; calibração de repetibilidade, TalkBack físico e merge pendentes. Manter Q-18 aberta até os aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2825,4 +2827,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 209 issues (121 já criadas fechadas) =="
+echo "== pronto: 209 issues (125 já criadas fechadas) =="

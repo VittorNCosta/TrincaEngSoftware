@@ -2,16 +2,6 @@
   "_leia": "Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= high e em entrada que nao existe mais. A chave e pacote::GHSA quando ha URL de advisory do GitHub; caso contrario, pacote::source.",
   "piso": "high",
   "entradas": {
-    "image-size::GHSA-w3rx-r6r6-pgpr": {
-      "severidade": "high",
-      "titulo": "image-size: ICNS parser allows denial of service through an infinite loop",
-      "url": "https://github.com/advisories/GHSA-w3rx-r6r6-pgpr"
-    },
-    "image-size::GHSA-5p2g-fcmc-qvqq": {
-      "severidade": "high",
-      "titulo": "image-size: JXL and HEIF parsers allow denial of service through infinite loops",
-      "url": "https://github.com/advisories/GHSA-5p2g-fcmc-qvqq"
-    },
     "postcss::GHSA-qx2v-qp2m-jg93": {
       "severidade": "moderate",
       "titulo": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",

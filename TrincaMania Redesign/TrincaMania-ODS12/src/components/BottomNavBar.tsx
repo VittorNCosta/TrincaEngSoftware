@@ -13,7 +13,7 @@ type NavItem = {
 
 export const MAIN_TAB_ITEMS: NavItem[] = [
   { iconName: 'nav-map', key: 'map', label: 'Mapa' },
-  { iconName: 'nav-rewards', key: 'rewards', label: 'Recompensas' },
+  { iconName: 'nav-rewards', key: 'rewards', label: 'Prêmios' },
   { iconName: 'nav-powers', key: 'powers', label: 'Poderes' },
   { iconName: 'nav-profile', key: 'profile', label: 'Perfil' },
 ];
@@ -62,6 +62,7 @@ export function BottomNavBar({ activeIndex, onSelect }: BottomNavBarProps) {
               variant="plain"
             />
             <Text
+              maxFontSizeMultiplier={1.4}
               numberOfLines={1}
               style={[styles.label, isActive ? styles.labelActive : null]}
             >
