@@ -1,14 +1,14 @@
 # O app instalado, num Android de verdade, tocado por fora.
 #
-# Separado do ci.yml pelo mesmo motivo do build.yml: o CI verifica todo push e
+# Separado do ci.yml pelo mesmo motivo do build.yml: o CI verifica PRs e
 # tem de ser rapido; isto monta o APK nativo e sobe um emulador, o que leva
 # dezenas de minutos de runner. Roda sob demanda e uma vez por semana — o
 # suficiente para pegar "o app parou de abrir", que e a unica classe de defeito
 # que nenhuma das outras duas camadas de teste enxerga.
 #
 # Nao usa segredo nenhum: `assembleRelease` num projeto Expo sai assinado com o
-# keystore de debug, que instala em emulador. Nao e o APK de loja — esse e o do
-# build.yml, que vai pelo EAS.
+# keystore de debug, que instala em emulador. O APK de demonstracao sai do
+# build.yml, que usa o perfil preview do EAS.
 name: E2E Android
 
 on:
@@ -33,6 +33,7 @@ on:
     - cron: "0 9 * * 1"
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -44,7 +45,11 @@ defaults:
     working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
 
 jobs:
+  orcamento:
+    uses: ./.github/workflows/orcamento-actions.yml
+
   fluxos:
+    needs: orcamento
     name: Fluxos no emulador
     runs-on: ubuntu-latest
     # Build nativo do zero (~15min) + emulador (~5min) + fluxos. O teto e

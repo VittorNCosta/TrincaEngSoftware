@@ -35,10 +35,9 @@
  *
  *     npm run auditoria -- --atualizar
  *
- * A chave é `pacote::id-do-advisory`, não a versão: versão muda a cada
- * `npm install` e transformaria a guarda numa fonte de falha aleatória. O id
- * do advisory é estável e é o que identifica a vulnerabilidade de fato — CVE
- * novo no mesmo pacote entra como entrada nova e reprova, que é o que se quer.
+ * A chave é `pacote::GHSA` quando o advisory tem URL do GitHub. O `source`
+ * numérico do npm mudou para advisories existentes; a URL GHSA identifica a
+ * vulnerabilidade sem confundir renumeração com uma dívida nova.
  */
 const { spawnSync } = require('node:child_process');
 const fs = require('node:fs');
@@ -207,7 +206,11 @@ const coletarAdvisories = (relatorio) => {
         continue;
       }
 
-      const chave = `${via.name ?? registro.name}::${via.source}`;
+      const ghsa =
+        /^https:\/\/github\.com\/advisories\/(GHSA-[a-z0-9-]+)\/?$/i.exec(
+          via.url ?? '',
+        )?.[1];
+      const chave = `${via.name ?? registro.name}::${ghsa ?? via.source}`;
 
       if (!porChave.has(chave)) {
         porChave.set(chave, {
@@ -245,7 +248,7 @@ const escreverBaseline = (advisories) => {
   }
 
   const conteudo = {
-    _leia: `Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= ${PISO} e em entrada que nao existe mais. A chave e pacote::id-do-advisory.`,
+    _leia: `Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= ${PISO} e em entrada que nao existe mais. A chave e pacote::GHSA quando ha URL de advisory do GitHub; caso contrario, pacote::source.`,
     piso: PISO,
     entradas,
   };
@@ -329,4 +332,8 @@ const main = () => {
   console.log('✔ nenhuma vulnerabilidade nova acima do piso.');
 };
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = { coletarAdvisories };

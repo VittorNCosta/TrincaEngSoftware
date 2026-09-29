@@ -10,7 +10,7 @@ name: Seguranca
 
 on:
   push:
-    branches: ["**"]
+    branches: [develop, main]
   pull_request:
     branches: ["**"]
   # Segunda-feira, 06:00 UTC (03:00 em Sao Paulo). Pega o advisory que foi
@@ -20,6 +20,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -27,8 +28,12 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  orcamento:
+    uses: ./.github/workflows/orcamento-actions.yml
+
   auditoria:
     name: Vulnerabilidade em dependencia
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -49,6 +54,7 @@ jobs:
 
   segredos:
     name: Segredo vazado
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -82,6 +88,7 @@ jobs:
 
   dependencias:
     name: Revisao de dependencia
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # So faz sentido em PR: a action compara o manifesto antes e depois da
@@ -101,9 +108,11 @@ jobs:
 
   codeql:
     name: CodeQL
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
+      actions: read
       contents: read
       # Escrita so aqui, e so nisto: e o que permite publicar o alerta na aba
       # Security. Nenhum outro job do repositorio pede mais que leitura.
@@ -128,6 +137,7 @@ jobs:
 
   scorecard:
     name: OpenSSF Scorecard
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # So faz sentido fora de PR: o Scorecard avalia a postura de seguranca do
@@ -139,6 +149,7 @@ jobs:
     # trabalho continuam cobertas por audit, gitleaks e CodeQL.
     if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     permissions:
+      actions: read
       # `security-events: write` publica o SARIF na aba Security. `id-token:
       # write` assina o resultado (Sigstore) para publicacao no registro
       # publico de badges do OpenSSF — nenhuma das duas escritas sai deste job.
