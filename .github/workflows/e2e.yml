@@ -3,8 +3,7 @@
 # Separado do ci.yml pelo mesmo motivo do build.yml: o CI verifica todo push e
 # tem de ser rapido; isto monta o APK nativo e sobe um emulador, o que leva
 # dezenas de minutos de runner. Roda sob demanda e uma vez por semana — o
-# suficiente para pegar "o app parou de abrir", que e a unica classe de defeito
-# que nenhuma das outras duas camadas de teste enxerga.
+# suficiente para exercitar o app instalado e comparar telas renderizadas.
 #
 # Nao usa segredo nenhum: `assembleRelease` num projeto Expo sai assinado com o
 # keystore de debug, que instala em emulador. Nao e o APK de loja — esse e o do
@@ -21,12 +20,14 @@ on:
   workflow_dispatch:
     inputs:
       suite:
-        description: "Jornadas comuns ou perda/recarga real de vida (30 minutos)"
+        description: "Jornadas, perda/recarga de vida ou cinco capturas para calibrar baseline"
         type: choice
         default: full
         options:
           - full
           - lives
+          - baseline
+          - accessibility
   schedule:
     # Segunda de manha, antes de alguem comecar a semana em cima de um app que
     # parou de abrir na sexta.
@@ -54,7 +55,8 @@ jobs:
       EXPO_PUBLIC_E2E: "true"
       APP_ID: br.com.mhvtech.trincamania.e2e
       SENTRY_DISABLE_AUTO_UPLOAD: "true"
-    timeout-minutes: 60
+    # Calibracao repete cinco vezes o fluxo completo no mesmo APK (~2 horas).
+    timeout-minutes: 180
     steps:
       - name: Registrar início
         working-directory: .
@@ -125,7 +127,7 @@ jobs:
           # O CLI pergunta sobre telemetria na primeira execucao; num runner sem
           # terminal isso pendura o passo ate o teto de tempo.
           MAESTRO_CLI_NO_ANALYTICS: "true"
-          MAESTRO_FLOW: ${{ github.event_name == 'pull_request' && '.maestro/01-entrar-numa-fase.yaml' || inputs.suite == 'lives' && '.maestro/manual/05-perder-vida-recarregar.yaml' || '.maestro' }}
+          MAESTRO_SUITE: ${{ inputs.suite || 'full' }}
         with:
           api-level: 34
           target: google_apis
@@ -135,17 +137,22 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
           disable-animations: true
           working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
-          # Cada linha do `script` vira um `sh -c` proprio, entao continuacao
-          # com barra invertida nao funciona: a linha seguinte roda sozinha e a
-          # barra sobra como argumento — foi assim que o `\` virou caminho de
-          # fluxo na primeira execucao. Por isso o `maestro test` cabe numa
-          # linha so.
-          #
-          # Os dois caminhos de saida sobem dois niveis de proposito: caem na
-          # raiz do checkout, que e onde o upload-artifact procura.
+          # Cada linha vira um `sh -c` proprio. O script de jornadas coordena
+          # os reinicios e guarda os artefatos na raiz do checkout.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
-            maestro test -e APP_ID="$APP_ID" --test-output-dir ../../maestro-artifacts --format junit --output ../../maestro-resultado.xml "$MAESTRO_FLOW"
+            adb shell wm size 320x640
+            adb shell wm density 160
+            adb shell settings put system font_scale 1.0
+            adb shell wm size
+            adb shell wm density
+            bash scripts/rodar-fluxos-maestro.sh
+
+      - name: Comparar capturas com baseline revisada
+        if: success() && inputs.suite != 'lives' && inputs.suite != 'accessibility'
+        env:
+          VISUAL_SUITE: ${{ inputs.suite == 'baseline' && 'calibration' || 'full' }}
+        run: npm run test:visual -- "$VISUAL_SUITE" ../../maestro-artifacts tests/visual/android-api34-320x640-font1 ../../visual-diffs
 
       # Falhou: o Maestro grava captura de tela e hierarquia de views de cada
       # passo. Sem isso, "nao achou o botao" num runner sem tela e indepuravel.
@@ -178,7 +185,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: maestro-junit
-          path: maestro-resultado.xml
+          path: maestro-resultado*.xml
           retention-days: 14
           if-no-files-found: warn
       - name: Guardar capturas para revisão visual
@@ -189,6 +196,14 @@ jobs:
           path: maestro-artifacts/**/takeScreenshot/**/*.png
           retention-days: 7
           if-no-files-found: warn
+      - name: Guardar diferenças visuais
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: visual-diffs
+          path: visual-diffs/**
+          retention-days: 14
+          if-no-files-found: ignore
       - name: Registrar duração
         if: always()
         run: echo "E2E Android levou $(( $(date +%s) - E2E_STARTED )) segundos ($GITHUB_EVENT_NAME)." >> "$GITHUB_STEP_SUMMARY"

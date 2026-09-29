@@ -5,8 +5,10 @@ import {
   Linking,
   Modal,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -66,11 +68,11 @@ function SettingsAction({
         tone={active ? tone : 'neutral'}
       />
       <View style={styles.actionCopy}>
-        <Text numberOfLines={1} style={styles.actionLabel}>
+        <Text numberOfLines={2} style={styles.actionLabel}>
           {label}
         </Text>
         {status ? (
-          <Text numberOfLines={1} style={styles.actionStatus}>
+          <Text numberOfLines={2} style={styles.actionStatus}>
             {status}
           </Text>
         ) : null}
@@ -131,6 +133,7 @@ export function SettingsModal({
   onUnlockAllForDevMode,
 }: SettingsModalProps) {
   const [diagnosticsVisible, setDiagnosticsVisible] = useState(false);
+  const largeText = useWindowDimensions().fontScale >= 1.6;
   const silentModeActive = !settings.soundEnabled && !settings.hapticsEnabled;
   const handleResetProgress = () =>
     confirmAction(
@@ -170,10 +173,16 @@ export function SettingsModal({
         <View style={styles.panel}>
           <View pointerEvents="none" style={styles.panelGlow} />
           <View style={styles.header}>
-            <GameIcon name="settings" size={42} tone="gold" />
             <View style={styles.headerCopy}>
-              <Text style={styles.kicker}>TileClear - ODS12</Text>
-              <Text style={styles.title}>Configurações</Text>
+              <View style={styles.headerKickerRow}>
+                <GameIcon name="settings" size={32} tone="gold" />
+                <Text style={styles.kicker}>TileClear - ODS12</Text>
+              </View>
+              <Text
+                style={[styles.title, largeText ? styles.titleLargeText : null]}
+              >
+                Configurações
+              </Text>
             </View>
             <Pressable
               accessibilityLabel="Fechar configurações"
@@ -189,92 +198,97 @@ export function SettingsModal({
             </Pressable>
           </View>
 
-          {diagnosticsVisible ? <DiagnosticReport /> : null}
-          <Pressable
-            accessibilityRole="button"
-            style={styles.devButton}
-            onPress={() => setDiagnosticsVisible((value) => !value)}
+          <ScrollView
+            contentContainerStyle={styles.panelContent}
+            style={styles.panelScroll}
           >
-            <Text style={styles.devButtonText}>
-              {diagnosticsVisible ? 'Ocultar diagnóstico' : 'Diagnóstico'}
-            </Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="link"
-            accessibilityLabel="Política de privacidade, abre no navegador"
-            style={styles.devButton}
-            onPress={() => {
-              Linking.openURL(
-                'https://vittorncosta.github.io/TrincaEngSoftware/',
-              ).catch(() =>
-                Alert.alert(
-                  'Não foi possível abrir',
-                  'Tente novamente quando houver conexão.',
-                ),
-              );
-            }}
-          >
-            <Text style={styles.devButtonText}>Política de privacidade</Text>
-          </Pressable>
-          {!diagnosticsVisible ? (
-            <View style={styles.actionList}>
-              <SettingsAction
-                active={settings.soundEnabled}
-                iconName={settings.soundEnabled ? 'sound-on' : 'sound-off'}
-                label={`Som: ${settings.soundEnabled ? 'Ligado' : 'Desligado'}`}
-                status="Efeitos sonoros"
-                tone="gold"
-                onPress={onToggleSound}
-              />
-              <SettingsAction
-                active={settings.hapticsEnabled}
-                iconName={
-                  settings.hapticsEnabled ? 'vibration-on' : 'vibration-off'
-                }
-                label={`Vibração: ${settings.hapticsEnabled ? 'Ligada' : 'Desligada'}`}
-                status="Resposta ao toque"
-                tone="green"
-                onPress={onToggleHaptics}
-              />
-              <SettingsAction
-                active={silentModeActive}
-                iconName="moon"
-                label="Modo silencioso"
-                status={silentModeActive ? 'Ativo' : 'Som e vibração off'}
-                tone="purple"
-                onPress={onEnableSilentMode}
-              />
-            </View>
-          ) : null}
-          <View style={styles.advancedPanel}>
-            <Text style={styles.advancedTitle}>Opções avançadas</Text>
+            {diagnosticsVisible ? <DiagnosticReport /> : null}
             <Pressable
               accessibilityRole="button"
-              onPress={handleResetProgress}
-              style={({ pressed }) => [
-                styles.resetButton,
-                pressed ? styles.pressed : null,
-              ]}
+              style={styles.devButton}
+              onPress={() => setDiagnosticsVisible((value) => !value)}
             >
-              <Text style={styles.resetButtonText}>Resetar progresso</Text>
+              <Text style={styles.devButtonText}>
+                {diagnosticsVisible ? 'Ocultar diagnóstico' : 'Diagnóstico'}
+              </Text>
             </Pressable>
-            {__DEV__ ? (
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel="Política de privacidade, abre no navegador"
+              style={styles.devButton}
+              onPress={() => {
+                Linking.openURL(
+                  'https://vittorncosta.github.io/TrincaEngSoftware/',
+                ).catch(() =>
+                  Alert.alert(
+                    'Não foi possível abrir',
+                    'Tente novamente quando houver conexão.',
+                  ),
+                );
+              }}
+            >
+              <Text style={styles.devButtonText}>Política de privacidade</Text>
+            </Pressable>
+            {!diagnosticsVisible ? (
+              <View style={styles.actionList}>
+                <SettingsAction
+                  active={settings.soundEnabled}
+                  iconName={settings.soundEnabled ? 'sound-on' : 'sound-off'}
+                  label={`Som: ${settings.soundEnabled ? 'Ligado' : 'Desligado'}`}
+                  status="Efeitos sonoros"
+                  tone="gold"
+                  onPress={onToggleSound}
+                />
+                <SettingsAction
+                  active={settings.hapticsEnabled}
+                  iconName={
+                    settings.hapticsEnabled ? 'vibration-on' : 'vibration-off'
+                  }
+                  label={`Vibração: ${settings.hapticsEnabled ? 'Ligada' : 'Desligada'}`}
+                  status="Resposta ao toque"
+                  tone="green"
+                  onPress={onToggleHaptics}
+                />
+                <SettingsAction
+                  active={silentModeActive}
+                  iconName="moon"
+                  label="Modo silencioso"
+                  status={silentModeActive ? 'Ativo' : 'Som e vibração off'}
+                  tone="purple"
+                  onPress={onEnableSilentMode}
+                />
+              </View>
+            ) : null}
+            <View style={styles.advancedPanel}>
+              <Text style={styles.advancedTitle}>Opções avançadas</Text>
               <Pressable
                 accessibilityRole="button"
-                onPress={handleUnlockAllForDevMode}
+                onPress={handleResetProgress}
                 style={({ pressed }) => [
-                  styles.devButton,
+                  styles.resetButton,
                   pressed ? styles.pressed : null,
                 ]}
               >
-                <Text style={styles.devButtonText}>
-                  {devMode
-                    ? 'Modo dev: desativar'
-                    : 'Modo dev: liberar todas as fases'}
-                </Text>
+                <Text style={styles.resetButtonText}>Resetar progresso</Text>
               </Pressable>
-            ) : null}
-          </View>
+              {__DEV__ ? (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={handleUnlockAllForDevMode}
+                  style={({ pressed }) => [
+                    styles.devButton,
+                    pressed ? styles.pressed : null,
+                  ]}
+                >
+                  <Text style={styles.devButtonText}>
+                    {devMode
+                      ? 'Modo dev: desativar'
+                      : 'Modo dev: liberar todas as fases'}
+                  </Text>
+                </Pressable>
+              ) : null}
+            </View>
+          </ScrollView>
 
           <Pressable
             accessibilityRole="button"
@@ -408,6 +422,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     minHeight: 48,
     justifyContent: 'center',
+    maxWidth: '100%',
     paddingHorizontal: spacing.sm,
   },
   devButtonText: {
@@ -444,6 +459,11 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  headerKickerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
   kicker: {
     color: '#FFE9A8',
     fontSize: fontSizes.xs,
@@ -465,6 +485,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     borderWidth: 3,
     gap: spacing.md,
+    maxHeight: '100%',
     maxWidth: 360,
     overflow: 'hidden',
     padding: spacing.md,
@@ -480,6 +501,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 80,
     top: -70,
+  },
+  panelContent: {
+    gap: spacing.md,
+  },
+  panelScroll: {
+    flexShrink: 1,
+    minHeight: 0,
   },
   pressed: {
     opacity: 0.92,
@@ -509,5 +537,8 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.28)',
     textShadowOffset: { height: 2, width: 0 },
     textShadowRadius: 2,
+  },
+  titleLargeText: {
+    maxWidth: 180,
   },
 });

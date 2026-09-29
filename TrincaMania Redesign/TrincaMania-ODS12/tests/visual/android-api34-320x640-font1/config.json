@@ -1,0 +1,58 @@
+{
+  "profile": "android-api34-320x640-font1",
+  "width": 320,
+  "height": 640,
+  "screens": {
+    "mapa": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [[0, 0, 320, 24]]
+    },
+    "partida": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [[0, 0, 320, 24]]
+    },
+    "vitoria": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [
+        [0, 0, 320, 24],
+        [99, 302, 37, 18]
+      ]
+    },
+    "progresso-reaberto": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [[0, 0, 320, 24]]
+    },
+    "compra": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [
+        [0, 0, 320, 24],
+        [258, 101, 28, 19]
+      ]
+    },
+    "recompensas": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [[0, 0, 320, 24]]
+    },
+    "configuracoes": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [[0, 0, 320, 24]]
+    },
+    "poderes": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [[0, 0, 320, 24]]
+    },
+    "perfil": {
+      "channelDelta": 0,
+      "maxChangedRatio": 0,
+      "ignoreRects": [[0, 0, 320, 24]]
+    }
+  }
+}

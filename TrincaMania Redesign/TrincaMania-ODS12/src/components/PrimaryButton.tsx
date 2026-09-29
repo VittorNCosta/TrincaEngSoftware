@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     ...shadows.button,
   },
   compact: {
-    minHeight: 46,
+    minHeight: 48,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },

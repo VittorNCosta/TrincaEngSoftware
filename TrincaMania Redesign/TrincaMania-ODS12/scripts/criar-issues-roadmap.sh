@@ -83,7 +83,7 @@ mk open --title 'F0-02 · Expor `node` no PATH não-interativo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P0,humano' --milestone 'Fundação'
 mk done --title 'F0-03 · Fixar a versão de Node do projeto' \
-  --body '**Feito 03/09**, em duas etapas. O commit `c8311ab` pôs `.nvmrc` em `20` e `engines: node >=20.19.0` — e foi o `engines` que revelou o CI-06: se a versão mínima é a 20, o `npm test` tinha de funcionar da 20 em diante, e não funcionava da 22. Depois o piso subiu para `>=20.19.4 <21` (e o `.nvmrc` para `20.19.4`): `npm ci` acusou `EBADENGINE` porque `react-native@0.81.5` exige `>=20.19.4` e a máquina local tinha `v20.19.1`. Quem rodar local precisa de `nvm install` na versão do `.nvmrc`.
+  --body '**Feito 03/09**, em duas etapas. O commit `c8311ab` pôs `.nvmrc` em `20` e `engines: node &gt;=20.19.0` — e foi o `engines` que revelou o CI-06: se a versão mínima é a 20, o `npm test` tinha de funcionar da 20 em diante, e não funcionava da 22. Depois o piso subiu para `&gt;=20.19.4 &lt;21` (e o `.nvmrc` para `20.19.4`): `npm ci` acusou `EBADENGINE` porque `react-native@0.81.5` exige `&gt;=20.19.4` e a máquina local tinha `v20.19.1`. Quem rodar local precisa de `nvm install` na versão do `.nvmrc`.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -133,7 +133,7 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
 
 # --- Conteúdo 10×10 ---
 mk done --title 'C-01 · Confirmar os nomes dos Mundos 9 e 10' \
-  --body '**Decidido 03/09, revisto 04/09.** A campanha fica com **Distrito da Reindustrialização** (Mundo 9) e **Cúpula da Reciclagem Global** (Mundo 10) — os nomes que o código recebeu em `2295575`. A primeira decisão tinha sido Oficina do Reparo e Cidade Circular, e foi por ela que os capítulos 9 e 10 viraram **Ferro-Velho Renascido** e **Metrópole do Ciclo Fechado** (`9bd1059`); os capítulos ficam com os nomes novos, que já estão no jogo e não colidem com nada. Ver C-01a.
+  --body '**Decidido 03/09, revisto 04/09.** A campanha fica com **Distrito da Reindustrialização** (Mundo 9) e **Cúpula da Reciclagem Global** (Mundo 10) — os nomes que o código recebeu em `2295575`. A primeira decisão tinha sido *Oficina do Reparo* e *Cidade Circular*, e foi por ela que os capítulos 9 e 10 viraram **Ferro-Velho Renascido** e **Metrópole do Ciclo Fechado** (`9bd1059`); os capítulos ficam com os nomes novos, que já estão no jogo e não colidem com nada. Ver C-01a.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -371,7 +371,7 @@ mk done --title 'C-17 · Mapear `AMBIENT_BY_WORLD_ID` para os 10 mundos' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-terra' --milestone 'Conteúdo 10×10'
 mk done --title 'C-18 · Cobrir os mundos 9 e 10 em `getGameBackground`' \
-  --body '**Feito 03/09.** Mundo 9 cai no fundo do 2 e o 10 no do 3, em vez de cair no default do Mundo 1.
+  --body '**Feito 03/09.** Mundo 9 cai no fundo do 2 e o 10 no do 3, em vez de cair no *default* do Mundo 1.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
@@ -541,7 +541,7 @@ mk done --title 'A-01 · Escrever o art bible' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk done --title 'A-02 · Criar `assets/map/worlds/` e a convenção de nome' \
-  --body '**Feito 09/09** (commit `de7afdc`). `wNN_<slug>_<map|game>.png`, com os 22 nomes esperados no `README.md` da pasta. Os slugs são os mesmos das `AmbientKey` do L-01/S-11, de propósito: um mundo tem um nome só no código inteiro. O zero à esquerda existe para o `w10` não vir antes do `w02` na ordenação da pasta. O mundo bônus 21 entra como `w21_jardim_*` (A-24a/A-24b), fora do lote crítico. Exigiu o CI-27.
+  --body '**Feito 09/09** (commit `de7afdc`). `wNN_&lt;slug&gt;_&lt;map|game&gt;.png`, com os 22 nomes esperados no `README.md` da pasta. Os slugs são os mesmos das `AmbientKey` do L-01/S-11, de propósito: um mundo tem um nome só no código inteiro. O zero à esquerda existe para o `w10` não vir antes do `w02` na ordenação da pasta. O mundo bônus 21 entra como `w21_jardim_*` (A-24a/A-24b), fora do lote crítico. Exigiu o CI-27.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -1299,7 +1299,7 @@ mk done --title 'L-04 · Renomear os `BOSQUE_*` e os `identityKey` legados' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk done --title 'L-05 · Renomear as chaves `forest-*` de asset' \
-  --body '**Feito 09/09** (commit `f771981`). `forest-*` → `parque-*` em `campaignMapAssets.ts`, `chapterVisualIdentity.ts`, `worldMapConfigs.ts` e `tests/worldMapConfig.test.cjs`. `forest-portal-rune` fica como está — é território da A-31 (`humano`). Os `.png` ficam com o nome antigo até L-07.
+  --body '**Feito 09/09** (commit `f771981`). `forest-*` → `parque-*` em `campaignMapAssets.ts`, `chapterVisualIdentity.ts`, `worldMapConfigs.ts` e `tests/worldMapConfig.test.cjs`. `forest-portal-rune` fica como está — é território da A-31 (`humano`). Os nomes dos PNGs foram tratados depois em L-07.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1322,8 +1322,8 @@ mk done --title 'L-06 · Renomear `ForestRestMapMarker.tsx`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
-mk open --title 'L-07 · Renomear os 8 `assets/map/world1/forest_*.png`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-07 · Renomear os 8 `assets/map/world1/forest_*.png`' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): oito PNGs viraram `park_*.png`, com referências e teste atualizados; renames binários R100, sem troca da arte.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1346,8 +1346,8 @@ mk done --title 'L-08 · Renomear `map_path_pieces_bonus_reino_acucarado.png`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
-mk open --title 'L-09 · Renomear os path pieces de bosque e vales montanhosos' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-09 · Renomear os path pieces de bosque e vales montanhosos' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): quatro PNGs, incluindo variantes RGB, receberam nomes `parque_da_coleta_seletiva` e `vale_da_reciclagem`; renames R100.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1358,8 +1358,8 @@ mk open --title 'L-09 · Renomear os path pieces de bosque e vales montanhosos' 
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
-mk open --title 'L-10 · Revisar `assets/map/README_MUNDO_3.txt`' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'L-10 · Revisar `assets/map/README_MUNDO_3.txt`' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): documentação usa Central de Materiais, remove caminho local fixo e identifica os nomes legados dos assets.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1415,8 +1415,8 @@ mk open --title 'L-14 · Decidir o nome do app' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P0,humano' --milestone 'Limpeza ODS12'
-mk open --title 'L-15 · Consolidar os dois manuais de APK' \
-  --body '`COMO_GERAR_APK.md` e `ManualParaGerarApk.txt`.
+mk done --title 'L-15 · Consolidar os dois manuais de APK' \
+  --body '**Feito 23/09** no &lt;a href='\''https://github.com/VittorNCosta/TrincaEngSoftware/pull/270'\''&gt;PR #270&lt;/a&gt; (merge `99f9dce`): o guia `COMO_GERAR_APK.md` foi atualizado e `ManualParaGerarApk.txt` foi removido.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1678,22 +1678,8 @@ mk done --title 'G-20 · Configurar YOLO como padrão para novas sessões Codex'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
-mk open --title 'G-21 · Criar ou vincular automaticamente uma issue por PR' \
-  --body '**Contexto**
-Decisão do usuário: issue por PR. Hoje a regra do CLAUDE.md depende de execução manual; não existe workflow de rastreabilidade.
-
-**Critérios de aceite**
-- [ ] Ao abrir PR, reutilizar a issue válida já vinculada; se não houver, criar uma tarefa com título, contexto e link do PR.
-- [ ] Usar chave persistente por número do PR para que edição, synchronize e reexecução não criem duplicatas.
-- [ ] Adicionar vínculo e labels; exigir rastreabilidade no check de integração, inclusive para PRs automatizados.
-- [ ] Fechar a issue automática apenas após merge na branch de entrega definida; PR fechado sem merge não representa tarefa concluída.
-- [ ] Testar PR com issue existente, sem issue, de fork, edição/reabertura e execuções concorrentes.
-- [ ] Executar automação privilegiada somente com metadados e código confiável da base; nunca executar código do PR com token de escrita.
-
-**Dependências e referências**
-Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue .
-
-**Entrega Astra low 18/09/2026:** Workflow de rastreabilidade idempotente em base confiável; confirmar eventos reais após integração. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'G-21 · Criar ou vincular automaticamente uma issue por PR' \
+  --body '**Feito 24/09.** Automações integradas nas PRs #240 e #259; PRs #266 e #278 comprovaram criação e vínculo de issues. Testes de merge, fork, edição e idempotência passaram.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1705,7 +1691,7 @@ Coordenar com G-22, CI-35 e G-10 (#115). Referências: https://docs.github.com/e
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Git e versionamento'
 mk done --title 'G-22 · Reconciliar roadmap e issues sem reabertura indevida' \
-  --body '**Critérios cobertos pelo PR #259; validação e fechamento após integração.** O sincronizador conserva corpo/labels humanos, pagina o backlog e bloqueia conflitos. O workflow fecha issues existentes apenas quando o PR integrado usa `Closes`, `Fixes` ou `Resolves`; `Refs` nunca fecha. Testes cobrem merge, base não padrão, PR fechado sem merge, idempotência, PRs e referências externas.
+  --body '**Feito 24/09.** PR #259 integrada; validação de roadmap no CI e testes de sincronização passaram. Conclusões comprovadas são atualizadas nos dois espelhos por esta PR antes da reconciliação de escrita.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1779,7 +1765,7 @@ mk done --title 'CI-05 · Fixar as actions por SHA, não por tag' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-06 · Matrix de Node 20 e 22' \
-  --body '**Feito 03/09**, com `fail-fast: false` — se o 20 quebra e o 22 e cancelado, a matrix perde a graca, porque a pergunta e em qual das duas falha. **Achou um bug de verdade:** `npm test` era `node --test tests`, e passar diretorio so funciona ate o Node 21 — do 22 em diante o runner trata o argumento como arquivo e morre com `MODULE_NOT_FOUND`. Como `engines` declara `>=20.19.0`, o comando estava quebrado em metade das versoes suportadas. Ver CI-06a.
+  --body '**Feito 03/09**, com `fail-fast: false` — se o 20 quebra e o 22 e cancelado, a matrix perde a graca, porque a pergunta e em qual das duas falha. **Achou um bug de verdade:** `npm test` era `node --test tests`, e passar diretorio so funciona ate o Node 21 — do 22 em diante o runner trata o argumento como arquivo e morre com `MODULE_NOT_FOUND`. Como `engines` declara `&gt;=20.19.0`, o comando estava quebrado em metade das versoes suportadas. Ver CI-06a.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1790,7 +1776,7 @@ mk done --title 'CI-06 · Matrix de Node 20 e 22' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
-mk done --title 'CI-06a · Corrigir `npm test` para qualquer Node >= 20' \
+mk done --title 'CI-06a · Corrigir `npm test` para qualquer Node &gt;= 20' \
   --body '**Feito 03/09.** Saiu de CI-06. Agora `npm test` chama `scripts/rodar-testes.js`, que le `tests/` e passa a lista de `*.test.cjs` explicita ao `--test`. A alternativa obvia, `node --test tests/*.test.cjs`, trocaria um problema por outro: depende do shell expandir o glob, o que o cmd e o PowerShell nao fazem — armadilha que o `CLAUDE.md` ja avisava. Assim quem lista os arquivos e o Node. 128/128 no Node 20 e no 24.
 
 **Responsável:** Claude Code
@@ -1851,7 +1837,7 @@ mk done --title 'CI-09a · Fixar o job de cobertura numa versao de Node' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-10 · Publicar o relatório de cobertura' \
-  --body '**Feito 03/09.** Vai para o **resumo do job** (`$GITHUB_STEP_SUMMARY`), que o GitHub renderiza na pagina do run, e nao para um comentario no PR. Comentar exigiria `pull-requests: write`, reabrindo justamente o privilegio que CI-04 acabou de fechar, e por um relatorio que ninguem le duas vezes. O resumo nao pede permissao nenhuma. Traz as tres metricas contra o piso e, num `<details>`, os 10 arquivos de `src/` menos cobertos — que e a parte acionavel: hoje aponta `MatchRule.ts` e `ShuffleService.ts` em 24,56%. Sem a variavel de ambiente o script nao escreve nada, entao rodar local continua limpo.
+  --body '**Feito 03/09.** Vai para o **resumo do job** (`$GITHUB_STEP_SUMMARY`), que o GitHub renderiza na pagina do run, e nao para um comentario no PR. Comentar exigiria `pull-requests: write`, reabrindo justamente o privilegio que CI-04 acabou de fechar, e por um relatorio que ninguem le duas vezes. O resumo nao pede permissao nenhuma. Traz as tres metricas contra o piso e, num `&lt;details&gt;`, os 10 arquivos de `src/` menos cobertos — que e a parte acionavel: hoje aponta `MatchRule.ts` e `ShuffleService.ts` em 24,56%. Sem a variavel de ambiente o script nao escreve nada, entao rodar local continua limpo.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1946,7 +1932,7 @@ mk done --title 'CI-17 · Adicionar o perfil `development` no `eas.json`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-18 · Workflow de build de preview em PR' \
-  --body '**Feito 03/09.** `.github/workflows/build.yml`, separado do `ci.yml`: o CI verifica todo push e tem de ser rapido e gratuito, isto gasta minuto de build de terceiro. **Divergencia:** o texto pedia APK por PR, e saiu APK por PR **rotulado** com `build:preview` — buildar todo push de todo PR queimaria a cota do EAS em troca de APKs que ninguem instala. Com o rotulo o build sai quando alguem de fato quer testar no aparelho, e `synchronize` faz o PR rotulado rebuildar a cada push. Enquanto CI-14 nao existir, o job `checagem` devolve um aviso e os builds sao pulados: o workflow fica **verde e inerte** em vez de vermelho.
+  --body '**Feito 03/09.** `.github/workflows/build.yml`, separado do `ci.yml`: o CI verifica todo push e tem de ser rapido e gratuito, isto gasta minuto de build de terceiro. **Divergencia:** o texto pedia APK *por PR*, e saiu APK por PR **rotulado** com `build:preview` — buildar todo push de todo PR queimaria a cota do EAS em troca de APKs que ninguem instala. Com o rotulo o build sai quando alguem de fato quer testar no aparelho, e `synchronize` faz o PR rotulado rebuildar a cada push. Enquanto CI-14 nao existir, o job `checagem` devolve um aviso e os builds sao pulados: o workflow fica **verde e inerte** em vez de vermelho.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2071,7 +2057,7 @@ mk done --title 'CI-27 · Ignorar `README.md` na checagem de órfão de asset' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'CI/CD'
 mk done --title 'CI-28 · Apontar o `app.json` para o projeto EAS certo' \
-  --body '**Feito 09/09** (commit `f241b78`). O `extra.eas.projectId` apontava para `083f0c73-59f4-49b8-badc-a219daf61640`, um projeto que não é o que existe hoje no expo.dev. Isso sozinho já anularia o CI-14: `eas build --non-interactive` resolve o projeto **só por esse id** — nunca pelo `slug` nem pelo `name` — então com o token certo e o id errado a falha vem como `project not found`, que se lê como problema de permissão e manda depurar o lugar errado. Três campos passaram a descrever o mesmo projeto: `projectId` `42d46466-3a11-41c1-9f2e-bd17829c7356`, `owner` `vittorbestys-team` e `slug` `tileclear-ods12`. O `slug` teve que mudar porque o EAS recusa build quando o `slug` do `app.json` não bate com o do projeto apontado pelo `projectId` — não é campo cosmético. Isso deixa o app com **três nomes diferentes** (nome `TrincaMania`, slug `tileclear-ods12`, package `br.com.mhvtech.trincamania`); é dívida do R-02, registrada lá. Quem pegou isso foi o `tests/appConfig.test.cjs`, que travava `slug === '\''trinca-mania'\''` sob o título “a identidade publicada é a do jogo atual” — a trava funcionou como devia. Ela não foi apagada: passou a exigir `tileclear-ods12` e `owner`, com o porquê no comentário, para a divergência ficar registrada como decisão em vez de virar descuido silencioso.
+  --body '**Feito 09/09** (commit `f241b78`). O `extra.eas.projectId` apontava para `083f0c73-59f4-49b8-badc-a219daf61640`, um projeto que não é o que existe hoje no expo.dev. Isso sozinho já anularia o CI-14: `eas build --non-interactive` resolve o projeto **só por esse id** — nunca pelo `slug` nem pelo `name` — então com o token certo e o id errado a falha vem como `project not found`, que se lê como problema de permissão e manda depurar o lugar errado. Três campos passaram a descrever o mesmo projeto: `projectId` `42d46466-3a11-41c1-9f2e-bd17829c7356`, `owner` `vittorbestys-team` e `slug` `tileclear-ods12`. O `slug` teve que mudar porque o EAS recusa build quando o `slug` do `app.json` não bate com o do projeto apontado pelo `projectId` — não é campo cosmético. Isso deixa o app com **três nomes diferentes** (nome `TrincaMania`, slug `tileclear-ods12`, package `br.com.mhvtech.trincamania`); é dívida do R-02, registrada lá. Quem pegou isso foi o `tests/appConfig.test.cjs`, que travava `slug === '\''trinca-mania'\''` sob o título *“a identidade publicada é a do jogo atual”* — a trava funcionou como devia. Ela não foi apagada: passou a exigir `tileclear-ods12` e `owner`, com o porquê no comentário, para a divergência ficar registrada como decisão em vez de virar descuido silencioso.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2244,26 +2230,8 @@ https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a779
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
-mk open --title 'CI-34 · Automatizar validação de PR e corrigir checks de entrega' \
-  --body '**Problema:** o PR #225 foi entregue antes de conferir os checks remotos e apresentou falhas de formato, cobertura, auditoria e Scorecard, além de conflito posterior com a base.
-
-**Escopo:** integrar a base preservando a classificação Codex, corrigir formato e dependências transitivas vulneráveis, cobrir compra/expiração/persistência dos espaços da bandeja, limitar Scorecard à branch padrão e validar PRs destinados a qualquer branch. Adicionar `npm run validar:local`, `npm run pr:validar -- <numero> --watch` e instruções do ciclo de correção no AGENTS.md.
-
-**Critérios de aceite:**
-- [ ] CI e Segurança aprovados no SHA atual do PR, sem conflitos.
-- [ ] Nenhum piso reduzido, advisory novo aceito ou check relevante desativado.
-- [ ] Monitor rejeita SHA divergente, conflitos, falha, cancelamento e ausência de workflows; aguarda execução pendente.
-- [ ] Testes de regressão cobrem decisões do monitor e persistência/expiração dos boosts.
-- [ ] Roadmap, documentação e issue sincronizados; cinco tarefas CI-29 a CI-33 preservadas.
-
-**Entrega:** implementação e evidências no PR https://github.com/VittorNCosta/TrincaEngSoftware/pull/225 ; tarefa aberta enquanto aguarda validação e integração. O monitor consulta e aguarda; as correções são executadas pelo agente conforme AGENTS.md, sem merge automático.
-
-**Referências:**
-https://github.com/ossf/scorecard-action
-https://github.com/advisories/GHSA-2883-xcg3-v3hh
-https://github.com/advisories/GHSA-93r5-fhx6-vmg9
-
-**Entrega Astra low 18/09/2026:** Validação local/PR por SHA, checks aplicáveis e testes de scripts; confirmar CI remoto no PR. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'CI-34 · Automatizar validação de PR e corrigir checks de entrega' \
+  --body '**Feito 24/09.** PR #225 integrado; CI e Segurança aprovados no SHA final, monitor por SHA e regressões preservados. Ver checks da PR #225.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2347,20 +2315,8 @@ Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: htt
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
-mk open --title 'CI-38 · Ajustar gatilhos e relatórios do E2E Android' \
-  --body '**Contexto**
-O E2E ainda tem um gatilho de push temporário específico para feat/campanha-10x10. O diagnóstico e JUnit só são publicados em caso de falha.
-
-**Critérios de aceite**
-- [ ] Executar smoke E2E em PR com mudança relevante ao app e suíte completa semanal/manual após integração na develop.
-- [ ] Remover o gatilho temporário, aplicar cancelamento por PR e registrar duração para controlar custo.
-- [ ] Publicar JUnit em sucesso e falha, e screenshots/logs em falha com retenção definida.
-- [ ] Validar PR de documentação sem build desnecessário e PR de código com execução real, sem esconder falhas com retries ilimitados.
-
-**Dependências e referências**
-Depende de CI-35; reutiliza Maestro existente e Q-02/Q-03/Q-04 (#165–#167).
-
-**Entrega Astra low 18/09/2026:** Smoke por PR relevante e suíte completa manual/semanal; falta execução remota e caso documentação. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'CI-38 · Ajustar gatilhos e relatórios do E2E Android' \
+  --body '**Feito 24/09.** PR #278 executou smoke Android (run #36027719768); run manual #36028204534 em develop concluiu os quatro fluxos, com JUnit e capturas. PR documental #291 não disparou E2E. Filtros, cancelamento por PR, duração e retenção foram confirmados.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2455,7 +2411,7 @@ mk done --title 'SEC-07 · `gitleaks` no CI' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-08 · `dependency-review` em PR' \
-  --body '**Feito 04/09.** Job `dependencias`, so em PR (a action exige o par base/head). Barra severidade >= high e licenca GPL-2.0/GPL-3.0/AGPL-3.0.
+  --body '**Feito 04/09.** Job `dependencias`, so em PR (a action exige o par base/head). Barra severidade &gt;= high e licenca GPL-2.0/GPL-3.0/AGPL-3.0.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2802,7 +2758,7 @@ mk done --title 'Q-14 · Atualizar o `CONTEXT.md` com o vocabulário dos 10 mund
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk done --title 'Q-15 · Corrigir a faixa de dificuldade do primeiro mapa dos capítulos 4 e 7' \
-  --body '**Feito 03/09.** Defeito real em produção, achado ao prototipar a curva do bloco C. `Math.floor(score * 5)` em `src/data/chapters.ts` rotulava `ch04-001` como easy (devia ser normal) e `ch07-001` como normal (devia ser hard). Não era regra de negócio: `(n-1)/9*0,6` cai abaixo da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o `floor` derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma `BORDA_DE_FAIXA = 1e-9` documentada e teste de regressão fixando as 10 faixas de abertura.
+  --body '**Feito 03/09.** Defeito real em produção, achado ao prototipar a curva do bloco C. `Math.floor(score * 5)` em `src/data/chapters.ts` rotulava `ch04-001` como *easy* (devia ser *normal*) e `ch07-001` como *normal* (devia ser *hard*). Não era regra de negócio: `(n-1)/9*0,6` cai *abaixo* da fronteira em binário — 0.9999999999999999 e 1.9999999999999998 — e o `floor` derruba uma faixa inteira. 2 mapas em 1000. A carga de peças sempre esteve correta; errado era só o rótulo que o jogador lê. Corrigido com uma `BORDA_DE_FAIXA = 1e-9` documentada e teste de regressão fixando as 10 faixas de abertura.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2813,21 +2769,8 @@ mk done --title 'Q-15 · Corrigir a faixa de dificuldade do primeiro mapa dos ca
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
-mk open --title 'Q-16 · Medir cobertura de produção separada por domínio e interface' \
-  --body '**Contexto**
-O piso atual usa o total do node:test, que inclui arquivos de testes e não representa cobertura completa de src/. A suíte Jest de componentes é separada.
-
-**Critérios de aceite**
-- [ ] Excluir testes, fixtures e gerados das métricas de produção; incluir arquivos relevantes não exercitados na medição.
-- [ ] Publicar relatórios separados de domínio/storage e componentes, com linhas, branches e funções e artefato legível.
-- [ ] Estabelecer baseline documentado para a medição correta e exigir que novo código crítico tenha testes, sem comparar diretamente percentuais de metodologias distintas.
-- [ ] Provar que um ramo de produção não testado reduz a métrica e que adicionar apenas código de teste não a infla.
-- [ ] Cobrir especificamente concorrência, idempotência e recuperação de persistência conforme invariantes do projeto.
-
-**Dependências e referências**
-Coordenar com CI-34 (#226) e CI-36; complementa #131 e #132.
-
-**Entrega Astra low 18/09/2026:** c8 com sourcemaps mede todas fontes .ts; Jest mede .tsx/App, inclusive não exercitados; baseline antiga preservada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'Q-16 · Medir cobertura de produção separada por domínio e interface' \
+  --body '**Feito 24/09.** Medição separada de produção em c8 e Jest integrada pela PR #240. Baselines e prova de denominador em docs/ci-entrega.md; CI publica relatórios e testes de persistência cobrem concorrência, idempotência e recuperação.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2961,7 +2904,7 @@ mk open --title 'O-05 · Transformar os invariantes do `CLAUDE.md` em assert de 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-06 · Proibir `console.*` fora do logger' \
-  --body 'Regra `no-console` do ESLint com exceção só em `src/utils/log.ts`. Sem isso o O-01 vira mais um caminho em vez do único caminho, e em seis meses metade do código volta para o `console.log` — que não aparece em release e não entra no buffer do O-04. Entra no job de lint que o CI-07 já roda, então não custa workflow novo. Depende do O-01.
+  --body 'Regra `no-console` do ESLint com exceção só em `src/utils/log.ts`. Sem isso o O-01 vira *mais um* caminho em vez do único caminho, e em seis meses metade do código volta para o `console.log` — que não aparece em release e não entra no buffer do O-04. Entra no job de lint que o CI-07 já roda, então não custa workflow novo. Depende do O-01.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -3012,7 +2955,7 @@ mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-10 · Revisar o que sai para o Sentry à luz da LGPD' \
-  --body 'Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do Data safety form do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário.
+  --body 'Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do *Data safety form* do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -3239,4 +3182,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 235 issues (117 já criadas fechadas) =="
+echo "== pronto: 235 issues (125 já criadas fechadas) =="

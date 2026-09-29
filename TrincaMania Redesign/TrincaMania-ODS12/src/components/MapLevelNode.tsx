@@ -2,6 +2,7 @@ import { memo, useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
+import { IS_E2E_BUILD } from '../testing/e2eProfile';
 import { colors, radii, shadows } from '../styles/theme';
 import { Level } from '../types/game';
 import { getLevelDisplayLabel } from '../utils/levelDisplay';
@@ -74,7 +75,7 @@ function MapLevelNodeBase({
   });
 
   useEffect(() => {
-    if (!current) {
+    if (!current || IS_E2E_BUILD) {
       pulse.stopAnimation();
       pulse.setValue(0);
       return undefined;

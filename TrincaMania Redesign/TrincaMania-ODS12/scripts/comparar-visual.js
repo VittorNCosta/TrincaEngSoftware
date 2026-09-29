@@ -4,7 +4,11 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { PNG } = require('pngjs');
 
-function compare(baseline, actual, { channelDelta, maxChangedRatio }) {
+function compare(
+  baseline,
+  actual,
+  { channelDelta, maxChangedRatio, ignoreRects = [] },
+) {
   if (
     !Number.isInteger(channelDelta) ||
     channelDelta < 0 ||
@@ -16,6 +20,8 @@ function compare(baseline, actual, { channelDelta, maxChangedRatio }) {
     throw new Error(
       'Tolerância exige channelDelta inteiro 0..254 e maxChangedRatio em [0,1).',
     );
+  if (!Array.isArray(ignoreRects))
+    throw new Error('Máscaras devem ser uma lista de retângulos.');
   if (
     !baseline.width ||
     !baseline.height ||
@@ -26,11 +32,39 @@ function compare(baseline, actual, { channelDelta, maxChangedRatio }) {
       'Dimensões distintas ou vazias; não redimensionar screenshots.',
     );
   const pixels = baseline.width * baseline.height;
+  for (const rect of ignoreRects) {
+    if (
+      !Array.isArray(rect) ||
+      rect.length !== 4 ||
+      !rect.every(Number.isInteger) ||
+      rect[0] < 0 ||
+      rect[1] < 0 ||
+      rect[2] <= 0 ||
+      rect[3] <= 0 ||
+      rect[0] + rect[2] > baseline.width ||
+      rect[1] + rect[3] > baseline.height
+    )
+      throw new Error('Máscara fora das dimensões da captura.');
+  }
   if (baseline.data.length !== pixels * 4 || actual.data.length !== pixels * 4)
     throw new Error('Buffer RGBA incompleto.');
   const diff = new PNG({ width: baseline.width, height: baseline.height });
   let changedPixels = 0;
+  let comparedPixels = 0;
   for (let offset = 0; offset < pixels * 4; offset += 4) {
+    const pixel = offset / 4;
+    const x = pixel % baseline.width;
+    const y = Math.floor(pixel / baseline.width);
+    if (
+      ignoreRects.some(
+        ([left, top, width, height]) =>
+          x >= left && x < left + width && y >= top && y < top + height,
+      )
+    ) {
+      diff.data.set([0, 0, 255, 255], offset);
+      continue;
+    }
+    comparedPixels++;
     const changed = [0, 1, 2, 3].some(
       (channel) =>
         Math.abs(
@@ -47,13 +81,16 @@ function compare(baseline, actual, { channelDelta, maxChangedRatio }) {
     );
     diff.data.set(changed ? [255, 0, 0, 255] : [gray, gray, gray, 255], offset);
   }
-  const changedRatio = changedPixels / pixels;
+  if (!comparedPixels) throw new Error('Máscara cobre a captura inteira.');
+  const changedRatio = changedPixels / comparedPixels;
   return {
     diff,
     report: {
       width: baseline.width,
       height: baseline.height,
       pixels,
+      comparedPixels,
+      ignoreRects,
       changedPixels,
       changedRatio,
       channelDelta,
