@@ -13,7 +13,7 @@ test("enfileiramento não é conclusão, commit exato e artefato são obrigatór
       {
         ...b,
         status: "FINISHED",
-        artifacts: { buildUrl: "https://example.com/app.aab" },
+        artifacts: { buildUrl: "https://example.com/app.apk" },
       },
       "abc",
     ),
@@ -23,7 +23,7 @@ test("enfileiramento não é conclusão, commit exato e artefato são obrigatór
 test("sem credencial falha antes de checkout ou CLI remoto", () => {
   const result = spawnSync(
     process.execPath,
-    [require.resolve("../disparar-build"), "production"],
+    [require.resolve("../disparar-build"), "preview"],
     { env: { ...process.env, EXPO_TOKEN: "" }, encoding: "utf8", cwd: "/tmp" },
   );
   assert.equal(result.status, 1);

@@ -44,7 +44,7 @@ ms 'CI/CD' 'O `ci.yml` atual roda lint, typecheck, test, test:ui e test:playthro
 ms 'DevSecOps' 'O último commit do repositório é `chore: corrige vulnerabilidades` — feito à mão. O objetivo deste fluxo é que isso não volte a ser manual.'
 ms 'Qualidade' 'Já existem 19 arquivos de teste. Falta cobertura de ponta a ponta e quebrar os três arquivos que passaram do tamanho gerenciável.'
 ms 'Observabilidade' 'O CI já cobre tudo que dá para saber **antes** de o app rodar: lint, formato, tipo, 188 testes, piso de cobertura, orçamento de bundle, guardas de conteúdo, CodeQL, gitleaks, SBOM, Scorecard. O que não existe é o outro lado — **o que aconte'
-ms 'Release' 'Quase tudo aqui é conta, formulário e captura de tela — trabalho seu, não de código. Vale começar cedo: a conta do Play Console e a política de privacidade travam a submissão.'
+ms 'Release' 'Validar no APK Android de demonstração e decidir o nome final que aparece no aparelho e na apresentação.'
 
 # Cria a issue e, quando a tarefa já foi concluída, fecha em seguida.
 mk() {
@@ -1955,61 +1955,8 @@ mk done --title 'CI-19 · Workflow de build de produção em tag' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
-mk open --title 'CI-20 · Configurar EAS Submit para a Play Store' \
-  --body 'Exige o service account JSON do Google Play.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P1
-**Fluxo:** CI/CD
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,humano' --milestone 'CI/CD'
-mk open --title 'CI-21 · `--auto-submit` no build de produção' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Auto-submit de produção manual e opt-in; depende de credenciais EAS/Play e publicação aprovada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Sonnet 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P2
-**Fluxo:** CI/CD
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
-mk open --title 'CI-22 · Configurar EAS Update (OTA)' \
-  --body 'Correção de JS sem passar pela revisão da loja.
-
-**Entrega Astra low 18/09/2026:** expo-updates, runtime fingerprint e workflow OTA preparados; falta execução EAS com credenciais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Sonnet 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P1
-**Fluxo:** CI/CD
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'CI/CD'
 mk done --title 'CI-23 · Avaliar EAS Workflows em `.eas/workflows/`' \
   --body '**Feito 08/09.** `docs/adr/0005-eas-workflows-nao-substitui-o-github-actions.md`: decisao de nao adotar por ora. O material oficial da Expo descreve EAS Workflows como complemento ao GitHub Actions, nao substituto — nenhum dos guardas hoje (ODS12, assets, cobertura, orcamento de bundle, gitleaks, CodeQL, dependency-review, SBOM, Scorecard) e job pre-empacotado do EAS, e o unico uso real de EAS hoje (`eas build`, via `disparar-build.js`) ja roda direto pelo `eas-cli` dentro do Actions — migrar trocaria um orquestrador gratuito por outro com quota paga sem ganhar capacidade nova. Reavaliar se surgir dor concreta que o Actions nao resolva bem.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Sonnet 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
-**Prioridade:** P2
-**Fluxo:** CI/CD
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
-mk open --title 'CI-24 · Canal de update por branch' \
-  --body '`preview` e `production`.
-
-**Entrega Astra low 18/09/2026:** Canais preview/production definidos; falta validar atualização instalada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2290,31 +2237,6 @@ Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16.
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
-mk open --title 'CI-37 · Garantir release até build EAS concluído e artefatos verificáveis' \
-  --body '**Contexto**
-Release Please usa GITHUB_TOKEN; tags geradas por ele não disparam automaticamente o workflow separado de build. O script EAS usa --no-wait, portanto job verde só comprova enfileiramento.
-
-**Critérios de aceite**
-- [ ] Encadear explicitamente o build a partir do resultado do release, preferindo workflow reutilizável e o SHA/tag exato; impedir builds duplicados.
-- [ ] Corrigir a checagem de token que herda working-directory do app antes de checkout e validar o caminho sem EXPO_TOKEN.
-- [ ] Acompanhar resultado final do EAS com timeout e registrar URL/ID do build; falha ou cancelamento não pode ser reportado como sucesso.
-- [ ] Vincular release, versão, commit, SBOM e artefato correspondente; testar falha de build e release sem credencial.
-- [ ] Não publicar automaticamente na Play Store nesta tarefa; manter isso em CI-20/CI-21.
-
-**Dependências e referências**
-Depende de CI-35 e CI-14 (#136). Complementa #111, #140, #141 e #155. Fonte: https://github.com/googleapis/release-please-action .
-
-**Entrega Astra low 18/09/2026:** Release chama build reutilizável, espera EAS e confere artefato; falta build real EXPO_TOKEN. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Sonnet 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
-**Prioridade:** P1
-**Fluxo:** CI/CD
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-38 · Ajustar gatilhos e relatórios do E2E Android' \
   --body '**Feito 24/09.** PR #278 executou smoke Android (run #36027719768); run manual #36028204534 em develop concluiu os quatro fluxos, com JUnit e capturas. PR documental #291 não disparou E2E. Filtros, cancelamento por PR, duração e retenção foram confirmados.
 
@@ -2327,6 +2249,18 @@ mk done --title 'CI-38 · Ajustar gatilhos e relatórios do E2E Android' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-39 · Bloquear jobs ao atingir 90% do limite mensal de Actions' \
+  --body '**Limite informado em 29/09/2026:** 2.000 minutos por mês; corte em 1.800. A API de faturamento pessoal não está disponível para GITHUB_TOKEN, então o guard calcula minutos dos jobs deste repositório e aceita um piso mensal informado pelo responsável. O piso de setembro é 4.204. A checagem deve acontecer antes dos jobs pesados, falhar fechada se a API não responder e renovar o mês automaticamente. O repositório é público e runners padrão são gratuitos; o limite controla consumo operacional, não cobrança.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P0
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2494,31 +2428,6 @@ mk done --title 'SEC-14 · Escrever o `SECURITY.md`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
-mk open --title 'SEC-15 · Rodar `/security-review` antes do release' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Revisão manual registrada; skill /security-review indisponível. Não declarar execução da skill. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P0
-**Fluxo:** DevSecOps
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
-mk open --title 'SEC-16 · Proteger o keystore Android' \
-  --body 'O `.gitignore` já barra `*.jks`/`*.p12`/`*.key`. Guardar no EAS credentials, nunca no repo.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** DevSecOps
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P0,humano' --milestone 'DevSecOps'
 mk open --title 'SEC-17 · Revisar os dados coletados (LGPD)' \
   --body 'Hoje é tudo AsyncStorage local. Se entrar analytics, a política muda.
 
@@ -2530,56 +2439,6 @@ mk open --title 'SEC-17 · Revisar os dados coletados (LGPD)' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,humano' --milestone 'DevSecOps'
-mk open --title 'SEC-20 · Adicionar análise de segurança do APK com MobSF' \
-  --body '**Contexto**
-CodeQL cobre JS/TS, mas não substitui análise do manifesto e do binário Android gerado.
-
-**Critérios de aceite**
-- [ ] Executar MobSF em ambiente controlado sobre APK de preview/release por tag ou execução manual, com versão/imagem fixada.
-- [ ] Publicar relatório associado ao hash do APK e verificar permissões, componentes exportados, debug, backup e configuração de rede.
-- [ ] Classificar achados com base no contexto; estabelecer política explícita para bloquear novos achados altos/críticos confirmados e exceções com prazo.
-- [ ] Não enviar APKs, credenciais ou relatórios sensíveis para um serviço público de análise.
-- [ ] Validar relatório normal, achado conhecido em fixture segura e indisponibilidade do scanner sem falso verde.
-
-**Dependências e referências**
-Depende de build verificável (CI-37); complementa SEC-11 (#157). Fonte: https://github.com/MobSF/Mobile-Security-Framework-MobSF .
-
-**Entrega Astra low 18/09/2026:** MobSF isolado e fixado por digest, gate+fixtures; falta APK verificável/execução real. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P1
-**Fluxo:** DevSecOps
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
-mk open --title 'SEC-21 · Montar validação dinâmica de segurança mobile baseada no MASVS' \
-  --body '**Contexto**
-Não foi identificado backend próprio; o alvo atual é Android com armazenamento local. DAST web com ZAP não cobre sozinho essa superfície.
-
-**Critérios de aceite**
-- [ ] Preparar emulador/aparelho de teste isolado e roteiro reproduzível segundo OWASP MASVS/MASTG para storage, logs, backup e tráfego.
-- [ ] Verificar o comportamento real de permissões, ausência de dados sensíveis em logs e conexões inesperadas, com evidências sanitizadas.
-- [ ] Automatizar os casos viáveis em job manual/semanal e documentar os casos que ainda exigem inspeção humana.
-- [ ] Não classificar Maestro funcional como DAST de segurança nem MobSF estático como análise dinâmica.
-- [ ] Registrar DAST HTTP/API como condicional a uma futura URL de homologação e backend; não criar servidor apenas para executar scanner.
-
-**Dependências e referências**
-Após SEC-20; alinhar com SEC-17 (#163) e O-10 (#217). Fonte: https://mas.owasp.org/MASTG/tests/ .
-
-**Entrega Astra low 18/09/2026:** Roteiro MASVS e job parcial; falta runner Android isolado, tráfego/logs/backup reais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P2
-**Fluxo:** DevSecOps
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 
 # --- Qualidade ---
 mk done --title 'Q-01 · Montar E2E com Maestro' \
@@ -2820,7 +2679,9 @@ O teste de acessibilidade existente não substitui verificação de foco/leitor 
 **Dependências e referências**
 Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.
 
-**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Ver docs/ENTREGA-TERRA-SOL.md.
+
+**Validação em andamento 28/09/2026:** PR #302 executa cinco jornadas no APK Android isolado, compara nove telas no PR e repete capturas/fontes ampliadas sob demanda. Baseline versionada; calibração de repetibilidade, TalkBack físico e merge pendentes. Manter Q-18 aberta até os aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2876,7 +2737,7 @@ mk open --title 'O-03 · Capturar erro não tratado e promise rejeitada' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-04 · Tela de Diagnóstico com os últimos logs' \
-  --body 'Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste interno do R-13, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01.
+  --body 'Ring buffer em memória com as últimas ~200 linhas, mais uma entrada em Configurações que mostra e exporta o dump. É isto que responde “sempre saber o erro” sem depender de rede, de conta em terceiro nem de o aparelho estar online. E é o que vai valer no teste acadêmico no aparelho, quando quem reporta o bug é alguém sem Metro aberto e a única informação que chega é “travou”. Depende do O-01.
 
 **Entrega Astra low 18/09/2026:** Diagnóstico acessível nas Configurações; exportação somente por ação do usuário. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
@@ -2915,31 +2776,6 @@ mk open --title 'O-06 · Proibir `console.*` fora do logger' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P2,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Observabilidade'
-mk open --title 'O-07 · Criar a conta no Sentry e gerar o DSN' \
-  --body 'O free tier cobre com folga o volume deste projeto. Precisa de você porque envolve criar conta e aceitar termos. O DSN não é segredo forte — ele vai embutido no app, qualquer um que abra o APK acha — mas entra como secret do mesmo jeito, para não ficar chumbado no repositório e para trocar sem recompilar. Bloqueia o O-08.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P1
-**Fluxo:** Observabilidade
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P1,humano' --milestone 'Observabilidade'
-mk open --title 'O-08 · Integrar o Sentry com upload de sourcemap' \
-  --body '`@sentry/react-native`, DSN por variável de ambiente, e o upload de sourcemap no build do EAS. O sourcemap é a parte que costuma ser esquecida e é a que decide se serve para alguma coisa: sem ele o stack que chega é bundle minificado, ou seja, ilegível. Depende do O-07 e do CI-14.
-
-**Entrega Astra low 18/09/2026:** SDK opcional, filtragem de eventos e upload sourcemaps preparados; falta validar evento simbolicado com DSN/credenciais. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Sonnet 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P1
-**Fluxo:** Observabilidade
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
   --body 'Erro sem contexto é `TypeError: undefined` numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01.
 
@@ -2954,30 +2790,8 @@ mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Observabilidade'
-mk open --title 'O-10 · Revisar o que sai para o Sentry à luz da LGPD' \
-  --body 'Casa com o SEC-17. O jogo é offline e não coleta nada hoje; ligar relato remoto muda isso, e a resposta do *Data safety form* do R-11 passa a depender desta revisão. Nada de identificador de aparelho persistente sem decisão explícita, e stack de erro não deve carregar caminho de arquivo com nome de usuário.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P1
-**Fluxo:** Observabilidade
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'observabilidade,P1,humano' --milestone 'Observabilidade'
 
 # --- Release ---
-mk open --title 'R-01 · Criar ou confirmar a conta Google Play Console' \
-  --body 'US$ 25, uma vez.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,humano' --milestone 'Release'
 mk open --title 'R-02 · Definir o nome final do app' \
   --body 'Ver L-14 — hoje há três nomes divergentes.
 
@@ -2989,81 +2803,6 @@ mk open --title 'R-02 · Definir o nome final do app' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
-mk open --title 'R-03 · Gerar e guardar o keystore de produção' \
-  --body 'Via EAS credentials.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,humano' --milestone 'Release'
-mk open --title 'R-04 · Escrever a ficha da loja' \
-  --body 'Título, descrição curta e longa, com o enquadramento ODS 12.
-
-**Entrega Astra low 18/09/2026:** Ficha pt-BR em docs/release/ficha-google-play.md. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Release'
-mk open --title 'R-05 · Capturar 8 screenshots de telefone' \
-  --body 'Mínimo 2, ideal 8.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,humano' --milestone 'Release'
-mk open --title 'R-06 · Feature graphic 1024×500' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Feature graphic PNG 1024×500 em docs/release/assets. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Release'
-mk open --title 'R-07 · Ícone da loja 512×512' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Ícone da loja PNG RGB 512×512 em docs/release/assets. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Release'
-mk open --title 'R-08 · Vídeo de preview' \
-  --body 'Opcional.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P2
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P2,humano' --milestone 'Release'
 mk done --title 'R-09 · Hospedar a política de privacidade' \
   --body '**Feito 18/09/2026.** https://vittorncosta.github.io/TrincaEngSoftware/ — HTTP 200 e contato conferidos; branch gh-pages em 792ed88.
 
@@ -3076,102 +2815,8 @@ mk done --title 'R-09 · Hospedar a política de privacidade' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-sol' --milestone 'Release'
-mk open --title 'R-10 · Responder o questionário de classificação etária' \
-  --body '_Sem detalhe adicional no roadmap._
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,humano' --milestone 'Release'
-mk open --title 'R-11 · Preencher o Data safety form' \
-  --body 'Conferir dados locais, Expo Update e eventual Sentry conforme build real e revisão O-10; não declarar ausência de coleta sem verificação.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,humano' --milestone 'Release'
-mk open --title 'R-12 · Declarar o público-alvo' \
-  --body 'Jogo educativo atrai criança — abaixo de 13 anos entram as regras de Famílias.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,humano' --milestone 'Release'
-mk open --title 'R-13 · Rodar teste interno' \
-  --body 'Até 100 testadores.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P1
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P1,humano' --milestone 'Release'
-mk open --title 'R-14 · Rodar teste fechado e coletar feedback' \
-  --body '_Sem detalhe adicional no roadmap._
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P1
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P1,humano' --milestone 'Release'
 mk open --title 'R-15 · Jogar as 100 fases manualmente' \
-  --body 'O `test:playthrough` simula, mas não substitui jogar.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,humano' --milestone 'Release'
-mk open --title 'R-16 · Rodar `/security-review`' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Revisão manual registrada; skill /security-review indisponível e build release ainda não validado. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Release'
-mk open --title 'R-17 · Marcar a tag `v1.0.0` e publicar o release' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Não publicar v1.0.0 antes dos aceites de arte/áudio, testes Android, segurança, credenciais e aprovação de release. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
-**Critério Codex:** Maior risco: regras, persistência, refactor amplo, segurança ou publicação.
-**Prioridade:** P0
-**Fluxo:** Release
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'release,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'Release'
-mk open --title 'R-18 · Publicar em produção' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body 'Jogar no APK Android de demonstração; o `test:playthrough` simula, mas não substitui jogar no aparelho.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -3182,4 +2827,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 235 issues (125 já criadas fechadas) =="
+echo "== pronto: 209 issues (125 já criadas fechadas) =="

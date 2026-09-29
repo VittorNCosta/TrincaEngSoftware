@@ -10,23 +10,17 @@
 name: CI
 
 on:
-  # Toda branch, nao so main/develop. O motivo e concreto: o trabalho nasce em
-  # `feat/*` e ficava semanas sem verificacao nenhuma alem do `pre-push` local,
-  # que roda so `typecheck`. Quando o merge finalmente acontecia, o erro
-  # aparecia junto com dezenas de commits, longe de quem o escreveu.
-  #
-  # Rodar tambem no `pull_request` duplica o run enquanto o PR esta aberto. Fica
-  # assim de proposito: o repositorio e publico, entao minuto de Actions e
-  # gratuito, e o evento de PR e o unico que cobre PR vindo de fork e o unico
-  # que serve de required check em branch protection (G-10).
+  # PR verifica branches de trabalho; push verifica apenas a integracao.
+  # Evita duplicar todos os jobs a cada push em um PR aberto.
   push:
-    branches: ["**"]
+    branches: [develop, main]
   pull_request: {}
   workflow_dispatch:
 
 # Menor privilegio. Sem isto o workflow herda o escopo padrao do repositorio,
 # que inclui escrita — nenhum job aqui precisa de mais que leitura.
 permissions:
+  actions: read
   contents: read
 
 # Push novo no mesmo PR cancela o run anterior: o resultado dele ja nao
@@ -45,8 +39,12 @@ defaults:
     working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
 
 jobs:
+  orcamento:
+    uses: ./.github/workflows/orcamento-actions.yml
+
   mudancas:
     name: O que mudou
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -94,6 +92,7 @@ jobs:
 
   lint:
     name: Lint e formatacao
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -261,10 +260,12 @@ jobs:
 
   rastreabilidade:
     name: Rastreabilidade da integração
+    needs: orcamento
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
+      actions: read
       contents: read
       issues: read
       pull-requests: read
