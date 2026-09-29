@@ -63,7 +63,7 @@ export function ProfileScreen({ progress }: ProfileScreenProps) {
             </View>
             <View style={styles.profileCopy}>
               <Text numberOfLines={1} style={styles.profileName}>
-                Trinca Mania
+                TileClear - ODS12
               </Text>
               <Text numberOfLines={1} style={styles.profileSubtitle}>
                 Jornada casual

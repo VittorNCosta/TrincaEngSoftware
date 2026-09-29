@@ -172,7 +172,7 @@ export function SettingsModal({
           <View style={styles.header}>
             <GameIcon name="settings" size={42} tone="gold" />
             <View style={styles.headerCopy}>
-              <Text style={styles.kicker}>Trinca Mania</Text>
+              <Text style={styles.kicker}>TileClear - ODS12</Text>
               <Text style={styles.title}>Configurações</Text>
             </View>
             <Pressable

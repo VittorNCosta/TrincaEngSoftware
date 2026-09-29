@@ -1405,7 +1405,7 @@ mk done --title 'L-13 · Escrever o `README.md` de verdade' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-14 · Decidir o nome do app' \
-  --body '**Nota corrigida 09/09:** a versão anterior dizia que o `app.json` trazia `TileAdventure-ODS` — não traz, e não trazia; `grep TileAdventure` não acha nada no repositório. O estado real hoje: nome `TrincaMania`, slug `tileclear-ods12` (herdado do projeto EAS no CI-28, e o EAS não deixa divergir do `projectId`), pacote Android `br.com.mhvtech.trincamania`, pacote npm `trincamania`. Continua sendo três nomes, mas outros três.
+  --body '**Decisão do responsável em 29/09/2026:** nome exibido no app e no APK: **TileClear - ODS12**. Aplicação na configuração, abertura, interface e textos em branch própria; conclusão depende de merge validado. `slug`/`projectId` do EAS e pacote Android permanecem como identificadores técnicos para preservar o build e os dados instalados.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -3036,7 +3036,7 @@ mk open --title 'R-01 · Criar ou confirmar a conta Google Play Console' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 mk open --title 'R-02 · Definir o nome final do app' \
-  --body 'Ver L-14 — hoje há três nomes divergentes.
+  --body '**Decisão do responsável em 29/09/2026:** **TileClear - ODS12**; ver L-14. Implementação em branch própria, aguardando merge validado.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
