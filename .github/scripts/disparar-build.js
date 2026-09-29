@@ -1,7 +1,7 @@
 const { spawnSync, execFileSync } = require("node:child_process");
 const fs = require("node:fs");
 const crypto = require("node:crypto");
-const PERFIS = new Set(["development", "preview", "production"]);
+const PERFIS = new Set(["development", "preview"]);
 function validarBuild(build, sha) {
   if (!build?.id) throw new Error("EAS não retornou ID de build");
   if (build.gitCommitHash !== sha)
@@ -34,59 +34,21 @@ async function main() {
   }).trim();
   if (process.env.BUILD_SHA && process.env.BUILD_SHA !== sha)
     throw new Error("Checkout diverge do SHA solicitado");
-  const autoSubmit = process.env.AUTO_SUBMIT === "true";
-  if (autoSubmit && perfil !== "production")
-    throw new Error("Auto-submit exige production");
-  const tag = process.env.RELEASE_TAG;
   const manifestPath = "build-manifest.json";
-  const upload = (...paths) => {
-    if (tag)
-      execFileSync("gh", ["release", "upload", tag, ...paths, "--clobber"], {
-        stdio: "inherit",
-      });
-  };
-  // O ID publicado antes da espera permite reexecução sem enfileirar outro build.
-  let previous;
-  if (tag) {
-    const result = spawnSync(
-      "gh",
-      ["release", "view", tag, "--json", "assets"],
-      { encoding: "utf8" },
-    );
-    if (result.status !== 0)
-      throw new Error("Não foi possível consultar release para deduplicação");
-    if (
-      JSON.parse(result.stdout).assets.some(
-        (asset) => asset.name === manifestPath,
-      )
-    ) {
-      execFileSync(
-        "gh",
-        ["release", "download", tag, "--pattern", manifestPath, "--clobber"],
-        { stdio: "inherit" },
-      );
-      previous = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-      if (previous.commit !== sha || previous.profile !== perfil)
-        throw new Error("Manifesto existente não corresponde ao release");
-    }
-  }
-  // Recupera também builds lançados antes de uma interrupção no upload do manifesto.
-  if (tag && !previous) {
-    const matches = eas([
-      "build:list",
-      "--platform",
-      "android",
-      "--build-profile",
-      perfil,
-      "--git-commit-hash",
-      sha,
-      "--limit",
-      "50",
-      "--non-interactive",
-    ]);
-    const existing = matches.find((item) => item.gitCommitHash === sha);
-    if (existing) previous = { id: existing.id };
-  }
+  // Reexecucao do mesmo commit reutiliza o build EAS em vez de consumir outra cota.
+  const matches = eas([
+    "build:list",
+    "--platform",
+    "android",
+    "--build-profile",
+    perfil,
+    "--git-commit-hash",
+    sha,
+    "--limit",
+    "50",
+    "--non-interactive",
+  ]);
+  const previous = matches.find((item) => item.gitCommitHash === sha);
   let build = previous
     ? eas(["build:view", previous.id])
     : eas([
@@ -97,23 +59,18 @@ async function main() {
         perfil,
         "--non-interactive",
         "--no-wait",
-        ...(autoSubmit ? ["--auto-submit-with-profile", "production"] : []),
       ])[0];
   if (!build?.id) throw new Error("EAS não retornou ID");
   const manifest = {
     version: require(`${process.cwd()}/package.json`).version,
-    tag: tag || null,
     commit: sha,
     profile: perfil,
-    autoSubmit,
     id: build.id,
     url: `https://expo.dev/accounts/${build.project?.ownerAccount?.name || "unknown"}/projects/${build.project?.slug || "unknown"}/builds/${build.id}`,
-    sbom: tag ? "sbom.cdx.json" : null,
     status: build.status,
   };
   const save = () => {
     fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-    upload(manifestPath);
   };
   save();
   if (process.env.GITHUB_STEP_SUMMARY)
@@ -128,7 +85,7 @@ async function main() {
     await new Promise((resolve) => setTimeout(resolve, 20000));
     build = eas(["build:view", build.id]);
   }
-  const artifact = perfil === "production" ? "app.aab" : "app.apk";
+  const artifact = "app.apk";
   execFileSync(
     "curl",
     [
@@ -149,7 +106,6 @@ async function main() {
     .update(fs.readFileSync(artifact))
     .digest("hex");
   save();
-  upload(artifact);
   console.log(`Build ${build.id} concluído: ${manifest.sha256}`);
 }
 module.exports = { validarBuild };
