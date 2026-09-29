@@ -2,7 +2,7 @@ import { useProgressPersistence } from './src/hooks/useProgressPersistence';
 import { checkBoardSize } from './src/observability/runtimeInvariants';
 import { isChapterModeUnlocked } from './src/utils/chapterAvailability';
 import { installNativeErrorHandlers } from './src/observability/nativeErrors';
-import { runtimeAssert, updateDiagnosticContext } from './src/utils/log';
+import { runtimeAssert, setDiagnosticContext } from './src/utils/log';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
@@ -336,7 +336,7 @@ export default function App() {
   );
   // Snapshot before rendering children: a render failure must not inherit the
   // previous screen's domain context while waiting for effects to run.
-  updateDiagnosticContext({
+  setDiagnosticContext({
     screen,
     levelId:
       screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game')

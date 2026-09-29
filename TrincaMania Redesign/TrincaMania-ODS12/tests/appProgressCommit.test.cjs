@@ -428,6 +428,29 @@ test('duplo toque no ponto de descanso premia uma vida só', async () => {
   assert.deepEqual(persisted.collectedRestCheckpointIds, ['w1-005']);
 });
 
+test('trocar de tela limpa a semente e o retry do diagnóstico anterior', async () => {
+  store.clear();
+  const app = await bootApp();
+  const logger = require(projectModule('src/utils/log.ts'));
+  logger.updateDiagnosticContext({ levelId: 'w1-001', seed: 42, retry: true });
+
+  app.props('MainTabs').onOpenShop();
+  app.flush();
+
+  const originalWarn = console.warn;
+  console.warn = () => {};
+  try {
+    logger.log('warn', 'test', 'after-navigation');
+    const context = logger.getDiagnosticEntries().at(-1).context;
+    assert.equal(context.screen, 'shop');
+    assert.equal(context.levelId, undefined);
+    assert.equal(context.seed, undefined);
+    assert.equal(context.retry, undefined);
+  } finally {
+    console.warn = originalWarn;
+  }
+});
+
 test('modo dev libera navegação apenas em memória e é reversível sem alterar save', async () => {
   store.clear();
   globalThis.__DEV__ = true;

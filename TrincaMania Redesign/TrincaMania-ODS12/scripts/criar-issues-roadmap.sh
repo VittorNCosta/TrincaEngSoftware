@@ -2590,10 +2590,8 @@ mk done --title 'Q-12 · Escrever o ADR da mudança 203 → 100' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
-mk open --title 'Q-13 · Resolver o gap do Modo Dev' \
-  --body 'Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa.
-
-**Entrega Astra low 18/09/2026:** Override efêmero reversível, sem fabricar progresso; teste prova ausência de escrita no toggle. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'Q-13 · Resolver o gap do Modo Dev' \
+  --body 'Override efêmero em App.tsx e navegação; teste appProgressCommit comprova reversão sem escrita no save. Integrado em develop por 9aea3b0; conclusão da issue após merge desta reconciliação.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2777,9 +2775,7 @@ mk open --title 'O-06 · Proibir `console.*` fora do logger' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P2,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Observabilidade'
 mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
-  --body 'Erro sem contexto é `TypeError: undefined` numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01.
-
-**Entrega Astra low 18/09/2026:** Tela, mundo, fase, retry e seed real no diagnóstico; sem contexto livre enviado ao Sentry. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'App registra tela/mundo/fase e GameScreen acrescenta retry/seed; logger captura snapshot em erros locais. Troca de tela substitui o contexto para evitar seed antiga; teste de navegação cobre a limpeza. Contexto remoto depende da revisão de privacidade O-10; Sentry recebe apenas stack.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2827,4 +2823,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 209 issues (127 já criadas fechadas) =="
+echo "== pronto: 209 issues (128 já criadas fechadas) =="
