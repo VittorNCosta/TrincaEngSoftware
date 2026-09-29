@@ -13,6 +13,7 @@
     "test": "node scripts/rodar-testes.js",
     "test:playthrough": "node tests/simulateFullPlaythrough.cjs",
     "test:ui": "jest",
+    "test:visual": "node scripts/verificar-regressao-visual.js",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Modal, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { GameIcon, GameIconName, GameIconTone } from './GameIcon';
@@ -44,8 +51,8 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   {
     iconName: 'powers',
     iconTone: 'purple',
-    title: 'Use itens mágicos',
-    text: 'Trinca Mágica, Voltar e Misturar ajudam nas fases difíceis. Eles gastam moedas.',
+    title: 'Use itens de apoio',
+    text: 'Os itens de apoio ajudam a completar os ciclos de reciclagem. Eles gastam moedas.',
   },
 ];
 
@@ -100,54 +107,60 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
         edges={['top', 'bottom', 'left', 'right']}
         style={styles.overlay}
       >
-        <Animated.View
-          style={[
-            styles.card,
-            {
-              opacity: cardOpacity,
-              transform: [{ scale: cardScale }],
-            },
-          ]}
+        <ScrollView
+          contentContainerStyle={styles.overlayContent}
+          keyboardShouldPersistTaps="handled"
+          testID="tutorial-modal"
         >
-          <Text style={styles.kicker}>Guia da campanha</Text>
-          <GameIcon name={step.iconName} size={68} tone={step.iconTone} />
-          <View style={styles.stepDots}>
-            {TUTORIAL_STEPS.map((_, index) => (
-              <View
-                key={`tutorial-dot-${index}`}
-                style={[
-                  styles.stepDot,
-                  index === stepIndex ? styles.activeStepDot : null,
-                ]}
-              />
-            ))}
-          </View>
-          <Text style={styles.stepCount}>
-            {stepIndex + 1}/{TUTORIAL_STEPS.length}
-          </Text>
-          <Text style={styles.title}>{step.title}</Text>
-          <Text style={styles.text}>{step.text}</Text>
-
-          <View style={styles.examplePanel}>
-            <Text style={styles.exampleText}>
-              Escolha peças livres para montar trincas e avançar pelo mapa.
+          <Animated.View
+            style={[
+              styles.card,
+              {
+                opacity: cardOpacity,
+                transform: [{ scale: cardScale }],
+              },
+            ]}
+          >
+            <Text style={styles.kicker}>Guia da campanha</Text>
+            <GameIcon name={step.iconName} size={68} tone={step.iconTone} />
+            <View style={styles.stepDots}>
+              {TUTORIAL_STEPS.map((_, index) => (
+                <View
+                  key={`tutorial-dot-${index}`}
+                  style={[
+                    styles.stepDot,
+                    index === stepIndex ? styles.activeStepDot : null,
+                  ]}
+                />
+              ))}
+            </View>
+            <Text style={styles.stepCount}>
+              {stepIndex + 1}/{TUTORIAL_STEPS.length}
             </Text>
-          </View>
+            <Text style={styles.title}>{step.title}</Text>
+            <Text style={styles.text}>{step.text}</Text>
 
-          <View style={styles.actions}>
-            <PrimaryButton
-              title={isLastStep ? 'Começar' : 'Próximo'}
-              onPress={nextStep}
-            />
-            <PrimaryButton
-              size="compact"
-              testID="tutorial-pular"
-              title="Pular"
-              variant="secondary"
-              onPress={finishTutorial}
-            />
-          </View>
-        </Animated.View>
+            <View style={styles.examplePanel}>
+              <Text style={styles.exampleText}>
+                Escolha peças livres para montar trincas e avançar pelo mapa.
+              </Text>
+            </View>
+
+            <View style={styles.actions}>
+              <PrimaryButton
+                title={isLastStep ? 'Começar' : 'Próximo'}
+                onPress={nextStep}
+              />
+              <PrimaryButton
+                size="compact"
+                testID="tutorial-pular"
+                title="Pular"
+                variant="secondary"
+                onPress={finishTutorial}
+              />
+            </View>
+          </Animated.View>
+        </ScrollView>
       </SafeAreaView>
     </Modal>
   );
@@ -199,9 +212,12 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   overlay: {
-    alignItems: 'center',
     backgroundColor: colors.overlay,
     flex: 1,
+  },
+  overlayContent: {
+    alignItems: 'center',
+    flexGrow: 1,
     justifyContent: 'center',
     padding: spacing.md,
   },
