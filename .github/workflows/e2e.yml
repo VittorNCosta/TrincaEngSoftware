@@ -127,9 +127,7 @@ jobs:
           # O CLI pergunta sobre telemetria na primeira execucao; num runner sem
           # terminal isso pendura o passo ate o teto de tempo.
           MAESTRO_CLI_NO_ANALYTICS: "true"
-          MAESTRO_FLOW: ${{ inputs.suite == 'lives' && '.maestro/manual/05-perder-vida-recarregar.yaml' || '.maestro' }}
-          MAESTRO_CALIBRATE: ${{ inputs.suite == 'baseline' }}
-          MAESTRO_ACCESSIBILITY: ${{ inputs.suite == 'accessibility' }}
+          MAESTRO_SUITE: ${{ inputs.suite || 'full' }}
         with:
           api-level: 34
           target: google_apis
@@ -139,14 +137,8 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot-save -noaudio -no-boot-anim
           disable-animations: true
           working-directory: "TrincaMania Redesign/TrincaMania-ODS12"
-          # Cada linha do `script` vira um `sh -c` proprio, entao continuacao
-          # com barra invertida nao funciona: a linha seguinte roda sozinha e a
-          # barra sobra como argumento — foi assim que o `\` virou caminho de
-          # fluxo na primeira execucao. Por isso o `maestro test` cabe numa
-          # linha so.
-          #
-          # Os dois caminhos de saida sobem dois niveis de proposito: caem na
-          # raiz do checkout, que e onde o upload-artifact procura.
+          # Cada linha vira um `sh -c` proprio. O script de jornadas coordena
+          # os reinicios e guarda os artefatos na raiz do checkout.
           script: |
             adb install -r android/app/build/outputs/apk/release/app-release.apk
             adb shell wm size 320x640
@@ -154,7 +146,7 @@ jobs:
             adb shell settings put system font_scale 1.0
             adb shell wm size
             adb shell wm density
-            if [ "$MAESTRO_ACCESSIBILITY" = "true" ]; then for font in 1.3 2.0; do adb shell settings put system font_scale "$font"; for flow in 03-vencer-fase 04-comprar-na-loja 05-navegar-abas; do adb shell am force-stop "$APP_ID"; sleep 2; maestro test -e APP_ID="$APP_ID" --test-output-dir "../../maestro-artifacts/font-$font/$flow" --format junit --output "../../maestro-resultado-font-$font-$flow.xml" ".maestro/$flow.yaml" || exit 1; done; done; elif [ "$MAESTRO_CALIBRATE" = "true" ]; then for repetition in 1 2 3 4 5; do adb shell am force-stop "$APP_ID"; sleep 2; maestro test -e APP_ID="$APP_ID" --test-output-dir "../../maestro-artifacts/repeat-$repetition" --format junit --output "../../maestro-resultado-$repetition.xml" "$MAESTRO_FLOW" || exit 1; done; else maestro test -e APP_ID="$APP_ID" --test-output-dir ../../maestro-artifacts --format junit --output ../../maestro-resultado.xml "$MAESTRO_FLOW"; fi
+            bash scripts/rodar-fluxos-maestro.sh
 
       - name: Comparar capturas com baseline revisada
         if: success() && inputs.suite != 'lives' && inputs.suite != 'accessibility'

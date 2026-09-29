@@ -11,7 +11,7 @@ EXPO_PUBLIC_E2E=true npx expo prebuild --platform android
 (cd android && EXPO_PUBLIC_E2E=true ./gradlew assembleRelease)
 adb install -r android/app/build/outputs/apk/release/app-release.apk
 node scripts/gerar-fluxos-e2e.cjs --check
-maestro test -e APP_ID=br.com.mhvtech.trincamania.e2e .maestro
+APP_ID=br.com.mhvtech.trincamania.e2e bash scripts/rodar-fluxos-maestro.sh
 ```
 
 | Fluxo     | Verificação                                                                                                                                |
@@ -26,7 +26,7 @@ maestro test -e APP_ID=br.com.mhvtech.trincamania.e2e .maestro
 O fluxo `manual/05` é separado da suíte normal para não gastar 30 minutos em cada PR:
 
 ```sh
-maestro test .maestro/manual/05-perder-vida-recarregar.yaml
+APP_ID=br.com.mhvtech.trincamania.e2e MAESTRO_SUITE=lives bash scripts/rodar-fluxos-maestro.sh
 # Ou no GitHub Actions, na branch que contém esta versão do workflow:
 gh workflow run e2e.yml --ref test/q18-visual-regression -f suite=lives
 ```
@@ -39,7 +39,11 @@ reabrindo o app com cada escala. As asserções verificam que textos e ações
 continuam disponíveis; as capturas ficam separadas por escala e jornada para
 revisão de cortes e sobreposições. Essas capturas não são comparadas à baseline
 de fonte 1.0.
-Os grupos de concorrência são separados. PRs percorrem as cinco jornadas e
+Os grupos de concorrência são separados. No CI, cada jornada roda em um processo
+Maestro próprio, na ordem 01–05, com `force-stop` e pausa de dois segundos antes
+do `launchApp`. A pausa deixa a tarefa anterior terminar antes do novo processo:
+no PR #302, o Android removeu a tarefa anterior durante a abertura da jornada 01
+e encerrou o processo recém-iniciado. PRs percorrem as cinco jornadas e
 comparam todas as nove telas, incluindo resultado, loja e abas.
 
 Os subfluxos de vitória/derrota são gerados com o solver existente, que verifica
