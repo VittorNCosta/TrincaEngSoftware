@@ -14,7 +14,8 @@ export const TILE_FLY_DURATION_MS = 240;
 export type FlyingTileEvent = {
   from: WindowTarget;
   id: string;
-  tile: Pick<Tile, 'emoji' | 'id' | 'kind' | 'role'>;
+  tile: Pick<Tile, 'emoji' | 'id' | 'kind' | 'role'> &
+    Partial<Pick<Tile, 'cardId'>>;
   to: WindowTarget;
 };
 
@@ -32,11 +33,13 @@ const getCenter = (target: WindowTarget, containerTarget?: WindowTarget) => ({
 });
 
 function FlyingTileBody({
+  cardId,
   emoji,
   kind,
   role,
   scale,
 }: {
+  cardId?: string;
   emoji: string;
   kind: TileKind;
   role: CardRole;
@@ -49,6 +52,7 @@ function FlyingTileBody({
       <View pointerEvents="none" style={styles.innerBottomShade} />
       <View pointerEvents="none" style={styles.specular} />
       <TileIcon
+        cardId={cardId}
         fallbackEmoji={emoji}
         highlighted
         kind={kind}
@@ -157,6 +161,7 @@ function FlyingTileFlight({
         />
         <Animated.View style={[styles.glow, { opacity: glowOpacity }]} />
         <FlyingTileBody
+          cardId={event.tile.cardId}
           emoji={event.tile.emoji}
           kind={event.tile.kind}
           role={event.tile.role}

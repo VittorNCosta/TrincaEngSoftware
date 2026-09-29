@@ -1,4 +1,5 @@
 import type { ImageSourcePropType } from 'react-native';
+import { WORLD_VISUAL_ASSETS } from './worldVisualAssets';
 
 // Chaves e arquivos no vocabulário ODS 12 do Mundo 1 (Parque).
 export const CAMPAIGN_MAP_SEGMENT_ASSETS = {
@@ -18,62 +19,34 @@ export const CAMPAIGN_MAP_SEGMENT_ASSETS = {
     require('../../assets/map/world1/park_06_trailhead.png') as ImageSourcePropType,
 } as const;
 
-export const WORLD1_SCENE_BACKGROUND =
-  require('../../assets/map/map_world1_scene_bg.png') as ImageSourcePropType;
+export const WORLD1_SCENE_BACKGROUND = WORLD_VISUAL_ASSETS[1].map;
 
 export const LEGACY_CAMPAIGN_MAP_ASSETS = {
-  'legacy-world-2':
-    require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
-  'legacy-world-3':
-    require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
-  'legacy-world-4':
-    require('../../assets/map/map_world1_bg.png') as ImageSourcePropType,
-  'legacy-world-5':
-    require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
-  'legacy-world-6':
-    require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
-  'legacy-world-7':
-    require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
-  'legacy-world-8':
-    require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
-  'legacy-world-9':
-    require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
-  'legacy-world-10':
-    require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
+  'legacy-world-2': WORLD_VISUAL_ASSETS[2].map,
+  'legacy-world-3': WORLD_VISUAL_ASSETS[3].map,
+  'legacy-world-4': WORLD_VISUAL_ASSETS[4].map,
+  'legacy-world-5': WORLD_VISUAL_ASSETS[5].map,
+  'legacy-world-6': WORLD_VISUAL_ASSETS[6].map,
+  'legacy-world-7': WORLD_VISUAL_ASSETS[7].map,
+  'legacy-world-8': WORLD_VISUAL_ASSETS[8].map,
+  'legacy-world-9': WORLD_VISUAL_ASSETS[9].map,
+  'legacy-world-10': WORLD_VISUAL_ASSETS[10].map,
   'legacy-world-21':
     require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType,
 } as const;
 
-/**
- * Fundo de mapa de cada capítulo.
- *
- * São 10 capítulos e o pool de PNGs é finito — nenhuma imagem nova é gerada.
- * A variedade percebida vem da identidade visual de cada mapa
- * (`chapterVisualIdentity.ts`), que troca paleta e ordem de camadas por cima
- * desta base. Aqui só garantimos que nenhum capítulo caia no fallback do
- * Parque, o que faria dez capítulos parecerem o mundo 1.
- */
+/** Cada capítulo recebe a arte ODS 12 da sua família de mundo. */
 export const CHAPTER_MAP_ASSETS = {
-  'chapter-map-1':
-    require('../../assets/map/map_world1_bg.png') as ImageSourcePropType,
-  'chapter-map-2':
-    require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
-  'chapter-map-3':
-    require('../../assets/map/map_world3_select_bg.png') as ImageSourcePropType,
-  'chapter-map-4':
-    require('../../assets/map/map_world3_bg.png') as ImageSourcePropType,
-  'chapter-map-5':
-    require('../../assets/map/map_world3_home_bg.png') as ImageSourcePropType,
-  'chapter-map-6':
-    require('../../assets/map/map_world1_bg.png') as ImageSourcePropType,
-  'chapter-map-7':
-    require('../../assets/map/map_world2_bg.png') as ImageSourcePropType,
-  'chapter-map-8':
-    require('../../assets/map/map_world3_bg_wide.png') as ImageSourcePropType,
-  'chapter-map-9':
-    require('../../assets/map/map_world3_shop_bg.png') as ImageSourcePropType,
-  'chapter-map-10':
-    require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType,
+  'chapter-map-1': WORLD_VISUAL_ASSETS[1].map,
+  'chapter-map-2': WORLD_VISUAL_ASSETS[2].map,
+  'chapter-map-3': WORLD_VISUAL_ASSETS[3].map,
+  'chapter-map-4': WORLD_VISUAL_ASSETS[4].map,
+  'chapter-map-5': WORLD_VISUAL_ASSETS[5].map,
+  'chapter-map-6': WORLD_VISUAL_ASSETS[6].map,
+  'chapter-map-7': WORLD_VISUAL_ASSETS[7].map,
+  'chapter-map-8': WORLD_VISUAL_ASSETS[8].map,
+  'chapter-map-9': WORLD_VISUAL_ASSETS[9].map,
+  'chapter-map-10': WORLD_VISUAL_ASSETS[10].map,
 } as const;
 
 export type CampaignMapSegmentAssetKey =

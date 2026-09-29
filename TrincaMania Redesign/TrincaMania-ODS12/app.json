@@ -14,7 +14,8 @@
       "package": "br.com.mhvtech.trincamania",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#009640"
+        "backgroundColor": "#EDF5E8",
+        "backgroundImage": "./assets/adaptive-background.png"
       },
       "permissions": [],
       "edgeToEdgeEnabled": true,

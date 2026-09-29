@@ -11,7 +11,8 @@ export const TRIPLE_CONSUME_DURATION_MS = 190;
 
 export type TripleConsumeTile = {
   target: WindowTarget;
-  tile: Pick<Tile, 'emoji' | 'id' | 'kind' | 'role'>;
+  tile: Pick<Tile, 'emoji' | 'id' | 'kind' | 'role'> &
+    Partial<Pick<Tile, 'cardId'>>;
 };
 
 export type TripleConsumeEvent = {
@@ -114,6 +115,7 @@ function TripleConsumeAnimation({
           ]}
         >
           <TileIcon
+            cardId={item.tile.cardId}
             fallbackEmoji={item.tile.emoji}
             highlighted={false}
             kind={item.tile.kind}

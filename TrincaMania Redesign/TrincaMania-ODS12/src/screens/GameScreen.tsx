@@ -1,3 +1,5 @@
+import { WorldArtContext } from '../components/WorldArtContext';
+import { getWorldVisualAssets } from '../data/worldVisualAssets';
 import { IS_E2E_BUILD, E2E_BOARD_SEED } from '../testing/e2eProfile';
 import { updateDiagnosticContext } from '../utils/log';
 import {
@@ -21,7 +23,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   ImageBackground,
-  ImageSourcePropType,
   LayoutChangeEvent,
   Modal,
   Pressable,
@@ -173,17 +174,6 @@ const TOAST_VISIBLE_MS = 1700;
 const BONUS_FEEDBACK_VISIBLE_MS = 1050;
 const TILE_INSERT_POP_MS = 110;
 
-const gameWorld1Bg =
-  require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
-const gameWorld1SceneBg =
-  require('../../assets/map/worlds/w01_parque_game.png') as ImageSourcePropType;
-const gameWorld2Bg =
-  require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
-const gameWorld3Bg =
-  require('../../assets/map/map_world3_game_bg.png') as ImageSourcePropType;
-const gameBonusBg =
-  require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType;
-
 type LevelCompletionSummary = {
   bonusWorldAchievementUnlocked: boolean;
   chestProgress: ChestProgressSummary;
@@ -258,30 +248,18 @@ type GameScreenProps = {
   onUseItem: (powerType: PowerUpType) => boolean;
 };
 
-const getGameBackground = (worldId: WorldId) => {
-  switch (worldId) {
-    case 2:
-    case 5:
-    case 7:
-    case 9:
-      return gameWorld2Bg;
-    case 3:
-    case 6:
-    case 8:
-    case 10:
-      return gameWorld3Bg;
-    case 4:
-      return gameWorld1Bg;
-    case 21:
-      return gameBonusBg;
-    case 1:
-      return gameWorld1SceneBg;
-    default:
-      return gameWorld1Bg;
-  }
-};
+const getGameBackground = (worldId: WorldId) =>
+  getWorldVisualAssets(worldId).game;
 
-export function GameScreen({
+export function GameScreen(props: GameScreenProps) {
+  return (
+    <WorldArtContext.Provider value={props.level.worldId}>
+      <GameScreenContent {...props} />
+    </WorldArtContext.Provider>
+  );
+}
+
+function GameScreenContent({
   activeTrayCapacity: currentTrayCapacity,
   bestStars,
   bonusTraySlotRemainingMs,

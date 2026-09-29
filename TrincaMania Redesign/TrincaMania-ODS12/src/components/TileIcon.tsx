@@ -1,5 +1,7 @@
-import { memo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { memo, useContext } from 'react';
+import { WorldArtContext } from './WorldArtContext';
+import { getResidueVisual } from '../data/residueVisualAssets';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Ellipse, G, Path, Polygon, Rect } from 'react-native-svg';
 
 import { CardRole } from '../domain/recycling/value-objects/CardRole';
@@ -16,6 +18,7 @@ import { TileKind } from '../types/game';
  * papéis; o desenho identifica o papel.
  */
 type TileIconProps = {
+  cardId?: string;
   fallbackEmoji: string;
   kind: TileKind;
   role: CardRole;
@@ -145,8 +148,12 @@ function ResidueArtwork({
   colorDark,
   colorLight,
   emoji,
+  image,
   size,
-}: ArtworkProps & { emoji: string }) {
+}: ArtworkProps & {
+  emoji: string;
+  image?: import('react-native').ImageSourcePropType;
+}) {
   return (
     <>
       <View
@@ -177,16 +184,25 @@ function ResidueArtwork({
             },
           ]}
         />
-        <Text
-          adjustsFontSizeToFit
-          numberOfLines={1}
-          style={[
-            styles.residueEmoji,
-            { fontSize: size * 0.5, lineHeight: size * 0.6 },
-          ]}
-        >
-          {emoji}
-        </Text>
+        {image ? (
+          <Image
+            accessible={false}
+            source={image}
+            resizeMode="contain"
+            style={{ height: size * 0.72, width: size * 0.72 }}
+          />
+        ) : (
+          <Text
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={[
+              styles.residueEmoji,
+              { fontSize: size * 0.5, lineHeight: size * 0.6 },
+            ]}
+          >
+            {emoji}
+          </Text>
+        )}
       </View>
       <View
         pointerEvents="none"
@@ -197,6 +213,7 @@ function ResidueArtwork({
 }
 
 function TileIconBase({
+  cardId,
   fallbackEmoji,
   kind,
   role,
@@ -204,6 +221,8 @@ function TileIconBase({
   highlighted = false,
   size = 42,
 }: TileIconProps) {
+  const worldId = useContext(WorldArtContext);
+  const residueVisual = getResidueVisual(cardId, worldId);
   const material = getMaterial(kind);
   const artworkProps: ArtworkProps = {
     color: material.binColor,
@@ -222,7 +241,11 @@ function TileIconBase({
       ]}
     >
       {role === 'residuo' ? (
-        <ResidueArtwork {...artworkProps} emoji={fallbackEmoji} />
+        <ResidueArtwork
+          {...artworkProps}
+          emoji={fallbackEmoji}
+          image={residueVisual?.image}
+        />
       ) : role === 'lixeira' ? (
         <BinArtwork {...artworkProps} />
       ) : (

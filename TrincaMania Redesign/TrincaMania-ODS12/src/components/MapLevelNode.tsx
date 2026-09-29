@@ -1,5 +1,12 @@
 import { memo, useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { GameIcon } from './GameIcon';
 import { IS_E2E_BUILD } from '../testing/e2eProfile';
@@ -15,6 +22,12 @@ type MapLevelNodeProps = {
   selected: boolean;
   stars: number;
   onPress: (levelId: string) => void;
+};
+
+const NODE_ART = {
+  complete: require('../../assets/ui/visuais/level_complete.png'),
+  current: require('../../assets/ui/visuais/level_current.png'),
+  locked: require('../../assets/ui/visuais/level_locked.png'),
 };
 
 const STAR_TILT = ['starLeft', 'starCenter', 'starRight'] as const;
@@ -146,13 +159,27 @@ function MapLevelNodeBase({
           />
         ) : null}
         {selected ? <View style={styles.selectedAura} /> : null}
-        <View
+        <ImageBackground
+          accessible={false}
+          source={
+            locked
+              ? NODE_ART.locked
+              : completed
+                ? NODE_ART.complete
+                : NODE_ART.current
+          }
+          resizeMode="contain"
           style={[
             styles.node,
             completed ? styles.completedNode : null,
             current ? styles.currentNode : null,
             locked ? styles.lockedNode : null,
             selected ? styles.selectedNode : null,
+            {
+              backgroundColor: 'transparent',
+              borderWidth: 0,
+              borderBottomWidth: 0,
+            },
           ]}
         >
           <View
@@ -161,9 +188,16 @@ function MapLevelNodeBase({
               completed ? styles.completedInnerDisc : null,
               current ? styles.currentInnerDisc : null,
               locked ? styles.lockedInnerDisc : null,
+              {
+                backgroundColor: '#FFF8E8',
+                borderRadius: 8,
+                height: 25,
+                width: 36,
+                position: 'absolute',
+                bottom: -4,
+              },
             ]}
           >
-            <View pointerEvents="none" style={styles.innerShine} />
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
@@ -173,6 +207,12 @@ function MapLevelNodeBase({
                 completed ? styles.completedNumber : null,
                 current ? styles.currentNumber : null,
                 locked ? styles.lockedNumber : null,
+                {
+                  fontSize: displayLabel.length > 2 ? 12 : 17,
+                  lineHeight: 21,
+                  color: '#23483A',
+                  marginTop: 0,
+                },
               ]}
             >
               {displayLabel}
@@ -188,7 +228,7 @@ function MapLevelNodeBase({
               <GameIcon name="lock" size={13} tone="neutral" variant="plain" />
             </View>
           ) : null}
-        </View>
+        </ImageBackground>
         {showStars ? (
           <View pointerEvents="none" style={styles.starArc}>
             {Array.from({ length: 3 }).map((_, index) => {

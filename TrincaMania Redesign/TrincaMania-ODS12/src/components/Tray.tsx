@@ -153,6 +153,7 @@ function TraySlot({
         <View pointerEvents="none" style={styles.slotInsetShade} />
         <View pointerEvents="none" style={styles.slotSpecular} />
         <TileIcon
+          cardId={tile.cardId}
           fallbackEmoji={tile.emoji}
           highlighted={false}
           kind={tile.kind}

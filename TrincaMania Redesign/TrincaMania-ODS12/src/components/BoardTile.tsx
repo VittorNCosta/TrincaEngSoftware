@@ -1,4 +1,6 @@
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useContext, useEffect, useRef } from 'react';
+import { WorldArtContext } from './WorldArtContext';
+import { getResidueVisual } from '../data/residueVisualAssets';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { TileIcon } from './TileIcon';
@@ -34,6 +36,8 @@ function BoardTileBase({
   onBlockedPress,
   onPress,
 }: BoardTileProps) {
+  const worldId = useContext(WorldArtContext);
+  const residueVisual = getResidueVisual(tile.cardId, worldId);
   const isDisabled = disabled;
   const isMysteryHidden = tile.mystery === true && tile.revealed !== true;
   const tileRef = useRef<View>(null);
@@ -195,7 +199,7 @@ function BoardTileBase({
   return (
     <AnimatedPressable
       ref={tileRef}
-      accessibilityLabel={`${isMysteryHidden ? 'Peça misteriosa' : `Peça ${tile.emoji}`}${
+      accessibilityLabel={`${isMysteryHidden ? 'Peça misteriosa' : `Peça ${residueVisual?.label ?? tile.emoji}`}${
         blocked ? ', bloqueada' : ''
       }`}
       accessibilityRole="button"
@@ -283,6 +287,7 @@ function BoardTileBase({
       ) : (
         <View pointerEvents="none" style={blocked ? styles.blockedIcon : null}>
           <TileIcon
+            cardId={tile.cardId}
             fallbackEmoji={tile.emoji}
             highlighted={highlighted && !blocked}
             kind={tile.kind}
