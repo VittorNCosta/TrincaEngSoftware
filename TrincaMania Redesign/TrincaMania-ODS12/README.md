@@ -1,4 +1,4 @@
-# TrincaMania
+# TileClear - ODS12
 
 Jogo estilo mahjong (React Native / Expo) sobre coleta seletiva, feito em
 torno do ODS 12 (Consumo e Produção Responsáveis) da ONU. O jogador fecha

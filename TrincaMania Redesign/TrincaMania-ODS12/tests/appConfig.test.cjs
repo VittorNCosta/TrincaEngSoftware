@@ -1,7 +1,7 @@
 /**
- * Trava a configuração publicável do app.
+ * Trava a configuração do APK de demonstração.
  *
- * Nada aqui é regra de jogo — é o contrato do que vai para a loja. Cada
+ * Nada aqui é regra de jogo — é o contrato do que vai para o APK. Cada
  * asserção existe porque o erro correspondente é silencioso: um APK sai com a
  * versão errada, uma permissão nova entra junto com uma lib, um segredo vaza
  * num arquivo versionado. Nenhum desses quebra o app em desenvolvimento.
@@ -28,17 +28,18 @@ test('app.json não guarda uma versão própria que possa divergir', () => {
   assert.equal(appJson.expo.version, undefined);
 });
 
-test('a identidade publicada é a do jogo atual, não a do jogo pré-redesign', () => {
+test('a identidade exibida no APK é TileClear - ODS12', () => {
   const config = resolveConfig();
 
-  assert.equal(config.name, 'TrincaMania');
+  assert.equal(config.name, 'TileClear - ODS12');
   assert.equal(config.android.package, 'br.com.mhvtech.trincamania');
 
   // O `slug` é o único destes três que não escolhemos livremente: ele tem que
   // ser igual ao slug do projeto EAS apontado por `extra.eas.projectId`, senão
   // `eas build` recusa antes de compilar. O projeto no expo.dev nasceu como
   // `tileclear-ods12` (CI-28) e a decisão foi acompanhar em vez de recriar o
-  // projeto. Divergência aceita, não descuido — o R-02 decide o nome final.
+  // projeto. O nome exibido foi decidido em L-14/R-02; o package Android
+  // permanece igual para preservar os dados dos APKs já instalados.
   assert.equal(config.slug, 'tileclear-ods12');
   assert.equal(config.owner, 'vittorbestys-team');
 });
