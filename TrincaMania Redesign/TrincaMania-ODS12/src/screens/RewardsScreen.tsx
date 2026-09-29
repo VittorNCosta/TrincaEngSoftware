@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import { BOTTOM_NAV_HEIGHT } from '../components/BottomNavBar';
 import { GameIcon, GameIconName, GameIconTone } from '../components/GameIcon';
@@ -39,6 +46,7 @@ type RewardCardProps = {
   disabled?: boolean;
   iconName: GameIconName;
   iconTone?: GameIconTone;
+  largeText: boolean;
   progressPercent?: number;
   status: string;
   tone?: 'gold' | 'green' | 'purple' | 'blue';
@@ -51,6 +59,7 @@ function RewardCard({
   disabled = false,
   iconName,
   iconTone = 'gold',
+  largeText,
   progressPercent,
   status,
   tone = 'gold',
@@ -67,6 +76,7 @@ function RewardCard({
       onPress={onPress}
       style={({ pressed }) => [
         styles.rewardCard,
+        largeText ? styles.rewardCardLargeText : null,
         tone === 'green' ? styles.rewardCardGreen : null,
         tone === 'purple' ? styles.rewardCardPurple : null,
         tone === 'blue' ? styles.rewardCardBlue : null,
@@ -81,19 +91,29 @@ function RewardCard({
           <View
             style={[
               styles.rewardActionPill,
+              largeText ? styles.rewardActionPillLargeText : null,
               disabled ? styles.rewardActionPillDisabled : null,
             ]}
           >
-            <Text numberOfLines={2} style={styles.rewardActionText}>
+            <Text
+              numberOfLines={largeText ? undefined : 2}
+              style={styles.rewardActionText}
+            >
               {actionLabel}
             </Text>
           </View>
         ) : null}
       </View>
-      <Text numberOfLines={1} style={styles.rewardTitle}>
+      <Text
+        numberOfLines={largeText ? undefined : 1}
+        style={styles.rewardTitle}
+      >
         {title}
       </Text>
-      <Text numberOfLines={2} style={styles.rewardStatus}>
+      <Text
+        numberOfLines={largeText ? undefined : 2}
+        style={styles.rewardStatus}
+      >
         {status}
       </Text>
       {progressPercent !== undefined ? (
@@ -170,6 +190,7 @@ export function RewardsScreen({
   onPurchaseCoinTraySlot,
   onShowTutorial,
 }: RewardsScreenProps) {
+  const largeText = useWindowDimensions().fontScale >= 1.6;
   const currentWorldId = getCurrentWorldId(progress);
   const [message, setMessage] = useState<string | undefined>();
   const [trayBoostMessage, setTrayBoostMessage] = useState<
@@ -306,6 +327,7 @@ export function RewardsScreen({
               <RewardCard
                 iconName="chest"
                 iconTone="gold"
+                largeText={largeText}
                 progressPercent={chestProgressPercent}
                 status={`${chestProgressCount}/${CHEST_PHASES_REQUIRED} - ${commonChestStatus}`}
                 title="Baú Comum"
@@ -315,6 +337,7 @@ export function RewardsScreen({
                 disabled={!pendingWorldChestId}
                 iconName="specialChest"
                 iconTone="purple"
+                largeText={largeText}
                 status={specialChestStatus}
                 title="Baú Especial"
                 tone="purple"
@@ -327,6 +350,7 @@ export function RewardsScreen({
               <RewardCard
                 iconName="bonus"
                 iconTone="blue"
+                largeText={largeText}
                 status={
                   bonusSlotActive ? bonusSlotStatus : 'Disponível na fase'
                 }
@@ -344,6 +368,7 @@ export function RewardsScreen({
                 disabled={!trayPlusActive && !canBuyTrayPlus}
                 iconName="tray"
                 iconTone="green"
+                largeText={largeText}
                 status={trayPlusStatus}
                 title={`Bandeja ${activeTrayCapacity}/${MAX_TRAY_CAPACITY}`}
                 tone="green"
@@ -469,6 +494,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#8D9BA0',
     borderColor: '#D5E0E0',
   },
+  rewardActionPillLargeText: {
+    maxWidth: '55%',
+  },
   rewardActionText: {
     color: colors.inkOnDark,
     fontSize: 9,
@@ -493,6 +521,9 @@ const styles = StyleSheet.create({
   rewardCardBlue: {
     borderBottomColor: '#0A4D95',
     borderColor: '#C8ECFF',
+  },
+  rewardCardLargeText: {
+    flexBasis: '100%',
   },
   rewardCardDisabled: {
     opacity: 0.86,

@@ -6,6 +6,7 @@ import {
   ImageSourcePropType,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
@@ -48,6 +49,7 @@ export function ShopScreen({
   onBuyItem,
 }: ShopScreenProps) {
   const [toast, setToast] = useState<ShopToast | undefined>();
+  const largeText = useWindowDimensions().fontScale >= 1.6;
   const toastOpacity = useRef(new Animated.Value(0)).current;
   const isCrystalShop = worldId === 3 || worldId === 6 || worldId === 8;
   const activeShopImage = isCrystalShop ? world3ShopImage : shopImage;
@@ -100,39 +102,62 @@ export function ShopScreen({
     showToast(`${POWER_UP_UI[powerType].label} adicionado ao inventário.`);
   };
 
+  const shopArtwork = (
+    <View style={styles.shopArtFrame}>
+      <Image
+        resizeMode="contain"
+        source={activeShopImage}
+        style={styles.shopArt}
+      />
+    </View>
+  );
+  const coinBadge = (
+    <View style={styles.coinBadge}>
+      <GameIcon name="coin" size={24} tone="gold" />
+      <Text testID="shop-coins" style={styles.coinText}>
+        {progress.coins}
+      </Text>
+    </View>
+  );
+
   const content = (
     <View
       style={[styles.container, isCrystalShop ? styles.containerCrystal : null]}
     >
       <View
-        style={[styles.header, isCrystalShop ? styles.headerCrystal : null]}
+        style={[
+          styles.header,
+          isCrystalShop ? styles.headerCrystal : null,
+          largeText ? styles.headerLargeText : null,
+        ]}
       >
         <View pointerEvents="none" style={styles.headerGlow} />
-        <View style={styles.shopArtFrame}>
-          <Image
-            resizeMode="contain"
-            source={activeShopImage}
-            style={styles.shopArt}
-          />
-        </View>
-        <View style={styles.titleBlock}>
+        {largeText ? (
+          <View style={styles.headerTopRowLargeText}>
+            {shopArtwork}
+            {coinBadge}
+          </View>
+        ) : (
+          shopArtwork
+        )}
+        <View
+          style={[
+            styles.titleBlock,
+            largeText ? styles.titleBlockLargeText : null,
+          ]}
+        >
           <Text style={styles.eyebrow}>Loja de campanha</Text>
           <Text
             adjustsFontSizeToFit
             minimumFontScale={0.78}
-            numberOfLines={2}
+            numberOfLines={largeText ? undefined : 2}
             style={styles.title}
           >
             Ponto de descanso
           </Text>
           <Text style={styles.subtitle}>Poderes para avançar na coleta</Text>
         </View>
-        <View style={styles.coinBadge}>
-          <GameIcon name="coin" size={24} tone="gold" />
-          <Text testID="shop-coins" style={styles.coinText}>
-            {progress.coins}
-          </Text>
-        </View>
+        {largeText ? null : coinBadge}
       </View>
 
       <View style={styles.toastSlot} pointerEvents="none">
@@ -164,10 +189,16 @@ export function ShopScreen({
                   <PowerIcon name={powerType} size={38} />
                 </View>
                 <View style={styles.itemCopy}>
-                  <Text numberOfLines={1} style={styles.itemTitle}>
+                  <Text
+                    numberOfLines={largeText ? undefined : 1}
+                    style={styles.itemTitle}
+                  >
                     {item.shopTitle}
                   </Text>
-                  <Text numberOfLines={3} style={styles.itemDescription}>
+                  <Text
+                    numberOfLines={largeText ? undefined : 3}
+                    style={styles.itemDescription}
+                  >
                     {item.description}
                   </Text>
                 </View>
@@ -232,7 +263,10 @@ export function ShopScreen({
         <GameIcon name="info" size={32} tone="blue" />
         <View style={styles.noteCopy}>
           <Text style={styles.noteTitle}>Como funciona</Text>
-          <Text numberOfLines={3} style={styles.noteText}>
+          <Text
+            numberOfLines={largeText ? undefined : 3}
+            style={styles.noteText}
+          >
             O estoque comprado é usado primeiro. Depois, o poder ainda pode ser
             ativado com moedas.
           </Text>
@@ -333,6 +367,15 @@ const styles = StyleSheet.create({
   headerCrystal: {
     backgroundColor: 'rgba(25, 19, 66, 0.94)',
     borderColor: 'rgba(229, 221, 255, 0.74)',
+  },
+  headerLargeText: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
+  },
+  headerTopRowLargeText: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   itemAccent: {
     backgroundColor: '#42E5A7',
@@ -523,6 +566,10 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: spacing.xs,
     minWidth: 0,
+  },
+  titleBlockLargeText: {
+    flex: 0,
+    width: '100%',
   },
   toast: {
     alignSelf: 'center',

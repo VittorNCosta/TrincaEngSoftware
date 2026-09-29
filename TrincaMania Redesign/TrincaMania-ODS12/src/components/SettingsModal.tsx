@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -132,6 +133,7 @@ export function SettingsModal({
   onUnlockAllForDevMode,
 }: SettingsModalProps) {
   const [diagnosticsVisible, setDiagnosticsVisible] = useState(false);
+  const largeText = useWindowDimensions().fontScale >= 1.6;
   const silentModeActive = !settings.soundEnabled && !settings.hapticsEnabled;
   const handleResetProgress = () =>
     confirmAction(
@@ -176,7 +178,11 @@ export function SettingsModal({
                 <GameIcon name="settings" size={32} tone="gold" />
                 <Text style={styles.kicker}>Trinca Mania</Text>
               </View>
-              <Text style={styles.title}>Configurações</Text>
+              <Text
+                style={[styles.title, largeText ? styles.titleLargeText : null]}
+              >
+                Configurações
+              </Text>
             </View>
             <Pressable
               accessibilityLabel="Fechar configurações"
@@ -531,5 +537,8 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.28)',
     textShadowOffset: { height: 2, width: 0 },
     textShadowRadius: 2,
+  },
+  titleLargeText: {
+    maxWidth: 180,
   },
 });
