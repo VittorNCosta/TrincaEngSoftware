@@ -1370,8 +1370,8 @@ mk done --title 'L-10 · Revisar `assets/map/README_MUNDO_3.txt`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
-mk open --title 'L-11 · Remover os 4 `PATCH-*.md` da raiz' \
-  --body '96 KB de docs de patch antigos.
+mk done --title 'L-11 · Remover os 4 `PATCH-*.md` da raiz' \
+  --body 'Removidos após conferir referências; código atual é a fonte de verdade. Conclusão após merge e verificações.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1381,8 +1381,8 @@ mk open --title 'L-11 · Remover os 4 `PATCH-*.md` da raiz' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,humano' --milestone 'Limpeza ODS12'
-mk open --title 'L-12 · Remover `TrincaMania Redesign/patch/` aninhado' \
-  --body 'Diretório com o mesmo nome do pai, dentro do projeto.
+mk done --title 'L-12 · Remover `TrincaMania Redesign/patch/APLICAR.md` aninhado' \
+  --body 'A edição A2 pendente foi aplicada em GameScreen e estilos antes da remoção; exclusão obsoleta retirada do tsconfig. Conclusão após merge e verificações.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2827,4 +2827,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 209 issues (125 já criadas fechadas) =="
+echo "== pronto: 209 issues (127 já criadas fechadas) =="

@@ -469,34 +469,6 @@ export const styles = StyleSheet.create({
     top: 0,
     zIndex: 1,
   },
-  sceneWash: {
-    backgroundColor: 'rgba(5, 20, 26, 0.16)',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  sceneWashBottom: {
-    backgroundColor: 'rgba(7, 24, 32, 0.24)',
-    bottom: 0,
-    height: 190,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-  },
-  sceneWashBottomBonus: {
-    backgroundColor: 'rgba(85, 12, 82, 0.22)',
-  },
-  sceneWashBottomCrystal: {
-    backgroundColor: 'rgba(30, 14, 82, 0.22)',
-  },
-  sceneWashCrystal: {
-    backgroundColor: 'rgba(18, 14, 54, 0.18)',
-  },
-  sceneWashMountain: {
-    backgroundColor: 'rgba(4, 18, 36, 0.18)',
-  },
   toast: {
     alignSelf: 'center',
     backgroundColor: colors.surfaceWarm,
