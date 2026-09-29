@@ -2731,10 +2731,8 @@ mk done --title 'Q-12 · Escrever o ADR da mudança 203 → 100' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
-mk open --title 'Q-13 · Resolver o gap do Modo Dev' \
-  --body 'Hoje escreve direto no save real e não é reversível — só “Resetar progresso” limpa.
-
-**Entrega Astra low 18/09/2026:** Override efêmero reversível, sem fabricar progresso; teste prova ausência de escrita no toggle. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'Q-13 · Resolver o gap do Modo Dev' \
+  --body 'Override efêmero em App.tsx e navegação; teste appProgressCommit comprova reversão sem escrita no save. Integrado em develop por 9aea3b0; conclusão da issue após merge desta reconciliação.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2820,7 +2818,9 @@ O teste de acessibilidade existente não substitui verificação de foco/leitor 
 **Dependências e referências**
 Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.
 
-**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Ver docs/ENTREGA-TERRA-SOL.md.
+
+**Validação em andamento 28/09/2026:** PR #302 executa cinco jornadas no APK Android isolado, compara nove telas no PR e repete capturas/fontes ampliadas sob demanda. Baseline versionada; calibração de repetibilidade, TalkBack físico e merge pendentes. Manter Q-18 aberta até os aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2941,9 +2941,7 @@ mk open --title 'O-08 · Integrar o Sentry com upload de sourcemap' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Observabilidade'
 mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
-  --body 'Erro sem contexto é `TypeError: undefined` numa linha qualquer. Com breadcrumb — mundo, fase, tela, se é retry, e a semente do tabuleiro — o mesmo erro vira reproduzível. A semente é o detalhe que importa: tabuleiro de capítulo é determinístico por id, então com ela dá para remontar em desenvolvimento exatamente o tabuleiro que quebrou. Depende do O-01.
-
-**Entrega Astra low 18/09/2026:** Tela, mundo, fase, retry e seed real no diagnóstico; sem contexto livre enviado ao Sentry. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'App registra tela/mundo/fase e GameScreen acrescenta retry/seed; logger captura snapshot em erros locais. Troca de tela substitui o contexto para evitar seed antiga; teste de navegação cobre a limpeza. Contexto remoto depende da revisão de privacidade O-10; Sentry recebe apenas stack.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -3182,4 +3180,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 235 issues (125 já criadas fechadas) =="
+echo "== pronto: 235 issues (126 já criadas fechadas) =="
