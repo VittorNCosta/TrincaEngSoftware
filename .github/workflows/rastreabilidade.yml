@@ -8,6 +8,7 @@ on:
   pull_request_target:
     types: [opened, edited, reopened, synchronize, closed, ready_for_review]
 permissions:
+  actions: read
   contents: read
   issues: write
   pull-requests: write
@@ -15,8 +16,12 @@ concurrency:
   group: rastreabilidade-${{ inputs.pr_number || github.event.pull_request.number }}
   cancel-in-progress: false
 jobs:
+  orcamento:
+    uses: ./.github/workflows/orcamento-actions.yml
+
   issue:
     name: Issue vinculada
+    needs: orcamento
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

@@ -27,7 +27,10 @@ export function DiagnosticReport() {
   };
   const share = async () => {
     try {
-      await Share.share({ message: report, title: 'Diagnóstico TrincaMania' });
+      await Share.share({
+        message: report,
+        title: 'Diagnóstico TileClear - ODS12',
+      });
     } catch (error) {
       log('warn', 'diagnostics', 'share-failed', error);
       Alert.alert(

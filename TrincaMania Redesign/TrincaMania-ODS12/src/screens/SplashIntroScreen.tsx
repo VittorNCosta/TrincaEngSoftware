@@ -383,7 +383,7 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
                   },
                 ]}
               >
-                TRINCA MANIA
+                TileClear - ODS12
               </Animated.Text>
             </View>
           </View>

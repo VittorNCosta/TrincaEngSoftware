@@ -44,9 +44,9 @@ export class ErrorBoundary extends Component<
           <SafeAreaView style={styles.root}>
             <Text style={styles.title}>Algo deu errado</Text>
             <Text style={styles.message}>
-              Feche e abra o TrincaMania de novo. Se continuar acontecendo, seu
-              progresso já confirmado será mantido. Conte pra gente o que estava
-              fazendo quando travou.
+              Feche e abra o TileClear - ODS12 de novo. Se continuar
+              acontecendo, seu progresso já confirmado será mantido. Conte pra
+              gente o que estava fazendo quando travou.
             </Text>
             {__DEV__ ? (
               <Text selectable style={styles.message}>
