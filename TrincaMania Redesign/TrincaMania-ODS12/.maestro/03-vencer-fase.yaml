@@ -32,4 +32,5 @@ name: Vencer por toques reais e preservar desbloqueio após reinício
     id: 'map-level-w1-002'
 - assertVisible:
     id: 'jogar-fase'
+- waitForAnimationToEnd
 - takeScreenshot: artifacts/progresso-reaberto
