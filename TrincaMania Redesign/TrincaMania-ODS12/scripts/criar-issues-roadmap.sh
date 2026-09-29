@@ -1370,8 +1370,8 @@ mk done --title 'L-10 · Revisar `assets/map/README_MUNDO_3.txt`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Limpeza ODS12'
-mk open --title 'L-11 · Remover os 4 `PATCH-*.md` da raiz' \
-  --body '96 KB de docs de patch antigos.
+mk done --title 'L-11 · Remover os 4 `PATCH-*.md` da raiz' \
+  --body 'Removidos após conferir referências; código atual é a fonte de verdade. Conclusão após merge e verificações.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1381,8 +1381,8 @@ mk open --title 'L-11 · Remover os 4 `PATCH-*.md` da raiz' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,humano' --milestone 'Limpeza ODS12'
-mk open --title 'L-12 · Remover `TrincaMania Redesign/patch/` aninhado' \
-  --body 'Diretório com o mesmo nome do pai, dentro do projeto.
+mk done --title 'L-12 · Remover `TrincaMania Redesign/patch/APLICAR.md` aninhado' \
+  --body 'A edição A2 pendente foi aplicada em GameScreen e estilos antes da remoção; exclusão obsoleta retirada do tsconfig. Conclusão após merge e verificações.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2820,7 +2820,9 @@ O teste de acessibilidade existente não substitui verificação de foco/leitor 
 **Dependências e referências**
 Complementa Q-06 (#169), preservando testes existentes. Depende de CI-38.
 
-**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Faltam baseline Android revisada, estabilidade no aparelho e aceite de acessibilidade. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+**Entrega Astra low 18/09/2026:** Comparador PNG com tolerância, diff e provas sintéticas; capturas/roteiro TalkBack preparados. Ver docs/ENTREGA-TERRA-SOL.md.
+
+**Validação em andamento 28/09/2026:** PR #302 executa cinco jornadas no APK Android isolado, compara nove telas no PR e repete capturas/fontes ampliadas sob demanda. Baseline versionada; calibração de repetibilidade, TalkBack físico e merge pendentes. Manter Q-18 aberta até os aceites.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -3182,4 +3184,4 @@ mk open --title 'R-18 · Publicar em produção' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 235 issues (125 já criadas fechadas) =="
+echo "== pronto: 235 issues (127 já criadas fechadas) =="

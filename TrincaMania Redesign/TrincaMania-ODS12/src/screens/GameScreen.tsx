@@ -2267,26 +2267,6 @@ export function GameScreen({
           onLayout={reportGameAreaTarget}
         />
         <View pointerEvents="none" style={styles.sceneOverlay}>
-          <View
-            style={[
-              styles.sceneWash,
-              level.worldId === 2 || level.worldId === 5 || level.worldId === 7
-                ? styles.sceneWashMountain
-                : null,
-              level.worldId === 3 || level.worldId === 6 || level.worldId === 8
-                ? styles.sceneWashCrystal
-                : null,
-            ]}
-          />
-          <View
-            style={[
-              styles.sceneWashBottom,
-              level.worldId === 3 || level.worldId === 6 || level.worldId === 8
-                ? styles.sceneWashBottomCrystal
-                : null,
-              level.worldId === 21 ? styles.sceneWashBottomBonus : null,
-            ]}
-          />
           <View style={[styles.sceneGlow, styles.sceneGlowTop]} />
           <View style={[styles.sceneGlow, styles.sceneGlowBottom]} />
         </View>
