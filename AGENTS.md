@@ -79,6 +79,61 @@ Duas trilhas de conteúdo, não confunda:
 - **Campanha** — 103 fases em `src/data/levels.ts` (mundos 1–10 × 10 + bônus 21 × 3). Tabuleiro varia a cada tentativa.
 - **Capítulos** — 1000 mapas em 10 capítulos de 100, procedurais em `src/data/chapters.ts`. Tabuleiro determinístico por id na primeira montagem (o jogador reencontra a fase que largou); só o _retry_ re-sorteia. Identidade visual derivada por hash em `src/data/chapterVisualIdentity.ts`.
 
+## Testes, builds e validação exclusivamente local — GitHub Actions bloqueado
+
+**Restrição permanente registrada em 30/09/2026 por instrução explícita do
+usuário.** O teto operacional é 90% de 2.000 minutos (1.800 minutos) e já foi
+atingido. GitHub Actions permanece bloqueado nesta sessão e nas próximas
+rodadas de correção. Somente autorização explícita do usuário pode remover
+esta restrição; mudança de data ou início de outra sessão não a revoga.
+
+Esta seção prevalece sobre as instruções de commit, push, publicação e
+validação remota nas demais seções deste arquivo enquanto o bloqueio vigorar.
+
+- Execute todos os testes, verificações, builds e etapas de QA localmente.
+  Antes de executar scripts de teste ou build, leia os scripts envolvidos e
+  confirme que não delegam a execução para CI remoto.
+- Não dispare, reexecute ou habilite workflows, inclusive via
+  `gh workflow run`, `gh run rerun` ou chamadas de API. Não solicite ao usuário
+  testes ou builds pelo GitHub Actions e não use CI remoto como alternativa
+  a uma falha local.
+- Não faça push nem crie tags, releases ou PRs para disparar pipelines.
+  Não faça commit ou push sem autorização explícita do usuário.
+- Não altere cobrança, limites ou workflows para contornar a restrição.
+  Não migre a execução para outro serviço de CI sem autorização.
+  A leitura das configurações é permitida; não altere workflows nesta rodada.
+- Se faltar um requisito local, informe o impedimento e a solução local
+  necessária. Não recorra ao CI.
+- Reutilize resultados anteriores quando continuarem válidos para o código
+  atual. Havendo alteração nova, execute os testes locais pertinentes e as
+  verificações de regressão necessárias; não repita todas as suítes sem motivo.
+
+**VIS-02: Implementado; validação visual no Android pendente.** O retorno
+anterior informou testes direcionados 29/29 e regressão VIS-01 17/17, sem
+captura Android após a alteração e sem APK gerado ou instalado para VIS-02.
+Jest verificando dimensões/propriedades não comprova o antes/depois visual.
+Não avance para VIS-03 ou VIS-04 antes da aprovação visual explícita do usuário.
+
+Para validar VIS-02, use o fluxo Android local existente. Gerar ou instalar
+APK exige autorização explícita prévia na sessão. Confirme o dispositivo de
+destino antes da instalação. Não altere applicationId, assinatura,
+dependências ou versões apenas para instalar; não desinstale, não limpe dados
+e não modifique o save real para fabricar estados de teste. Se instalar exigir
+desinstalação ou ameaçar o save, pare e informe o problema.
+
+Quando autorizado, capture o resultado e compare com a evidência anterior no
+mesmo estado e posição de rolagem. Confira o portal bloqueado, liberado e
+selecionado nos estados acessíveis sem modificar o save real, abrir/fechar o
+painel, rolar o mapa e retornar à tela. Sem acesso ao aparelho, entregue o APK
+local e o roteiro ao usuário, mantendo a aprovação visual pendente. Registre
+comandos/resultados, caminho e SHA-256 do APK, capturas e pendências.
+
+As falhas relatadas de `getGameBackground` e acessibilidade ficam fora desta
+rodada; registre-as separadamente e só as classifique como comprovadamente
+preexistentes com evidência anterior ou comparação que sustente isso.
+Preserve VIS-01, áudio aprovado, progressão, economia, save e demais áreas
+fora do escopo.
+
 ## Verificação (sempre antes de reportar terminado)
 
 ```
