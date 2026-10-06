@@ -37,7 +37,7 @@ ms() { gh api -X POST "repos/$REPO/milestones" -f title="$1" -f description="$2"
 ms 'Fundação' 'Desbloqueia todo o resto. Duas destas travam ferramenta: `gh` não existe no WSL e `node` só resolve em shell interativo.'
 ms 'Conteúdo 10×10' 'O bloco de maior risco. Hoje são 203 fases em 8 mundos × 25 + bônus, e `tests/levelComposition.test.cjs` trava um sha256 do JSON delas. Quebrar esse hash é intencional aqui — mas exige atualizar seis arquivos de teste e migrar o save de que'
 ms 'Arte' 'Vinte imagens de mapa dos mundos principais (A-05…A-24, o lote crítico), mais duas do mundo bônus fora dele (A-24a/A-24b) e oito assets globais. É o maior gargalo do projeto e tudo depende do portão A-04. Alvo de peso: **≤ 400 KB por PNG** '
-ms 'Som' 'MP3 em loop sem emenda audível, 30–60 s, 128 kbps, ≤ 800 KB. Sem melodia forte — o jogo é de concentração.'
+ms 'Som' 'Decisão do usuário 06/10/2026: retirar ambiente contínuo das partidas e excluir pendências de áudio. Oito MP3 de ambiente removidos após backup; 13 efeitos curtos preservados. S-01…S-10, S-12, S-13 e S-14 saíram do backlog ativo; issues #75'
 ms 'Limpeza ODS12' 'A regra permanente do `CLAUDE.md` trata sobra de vocabulário de fantasia como **bug de conteúdo**. Isto é o que ainda existe hoje, verificado no código.'
 ms 'Git e versionamento' 'Os commits já seguem Conventional Commits na prática. Falta travar isso em ferramenta e ligar a versão ao histórico.'
 ms 'CI/CD' 'O `ci.yml` atual roda lint, typecheck, test, test:ui e test:playthrough em **um job sequencial**. Se o lint falha, você não descobre se os testes passariam.'
@@ -359,7 +359,7 @@ mk done --title 'C-16 · Atualizar o comentário das 203 em `boardPositions.ts`'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P1,claude-code,modelo-fable,modelo-codex-luna' --milestone 'Conteúdo 10×10'
 mk done --title 'C-17 · Mapear `AMBIENT_BY_WORLD_ID` para os 10 mundos' \
-  --body '**Feito 03/09.** Mundo 9 reaproveita `volcano` e o 10, `celestial` — nenhum mundo toca em silêncio. Travado por `tests/worldAmbientAndBackgroundCoverage.test.cjs`.
+  --body 'Histórico: mapeamento implementado em 03/09. Em 06/10/2026, por decisão do usuário, loop e mapeamento foram removidos; somente efeitos curtos permanecem durante partidas.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
@@ -478,8 +478,8 @@ mk done --title 'C-26 · Testar a migração de save' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'conteudo,P0,claude-code,modelo-fable,modelo-codex-sol' --milestone 'Conteúdo 10×10'
-mk done --title 'C-27 · Travar em teste a cobertura de fundo e ambiente por mundo' \
-  --body '**Feito 03/09.** `tests/worldAmbientAndBackgroundCoverage.test.cjs`.
+mk done --title 'C-27 · Teste travando cobertura de fundo por mundo' \
+  --body 'Teste real de getGameBackground exige fundos próprios em 1–10, reutilização nos capítulos e placeholder explícito do bônus. Ambiente removido por decisão do usuário em 06/10/2026; seis testes comportamentais dos efeitos curtos em tests/soundEffects.test.cjs.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Fable 5.1
@@ -1043,148 +1043,8 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 
 # --- Som ---
-mk open --title 'S-01 · `ambient_parque.mp3` — Mundo 1' \
-  --body 'Pássaros distantes, folhas, passos ocasionais.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-02 · `ambient_vale.mp3` — Mundo 2' \
-  --body 'Esteira ao longe, vento de vale, maquinário abafado.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-03 · `ambient_central.mp3` — Mundo 3' \
-  --body 'Galpão amplo com eco, prensa distante, ventilação.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-04 · `ambient_viveiro.mp3` — Mundo 4' \
-  --body 'Regador, insetos, lona ao vento.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-05 · `ambient_usina.mp3` — Mundo 5' \
-  --body 'Zumbido grave de biodigestor, vapor, pá revolvendo.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-06 · `ambient_cooperativa.mp3` — Mundo 6' \
-  --body 'Carrinho de metal, fardos, vozes distantes indistintas.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-07 · `ambient_rota.mp3` — Mundo 7' \
-  --body 'Rodovia distante, caminhão manobrando, engradado.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-08 · `ambient_forum.mp3` — Mundo 8' \
-  --body 'Praça aberta, murmúrio cívico, bandeira ao vento.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-09 · `ambient_distrito.mp3` — Mundo 9' \
-  --body 'Prensa hidráulica ao longe, esteira rolante, zumbido grave de forno.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-10 · `ambient_cupula.mp3` — Mundo 10' \
-  --body 'Murmúrio de plenário, papel manuseado, passos em saguão amplo.
-
-**Entrega Astra low 18/09/2026:** Produção e escuta de áudio original exigem ferramenta/entrega externa; especificação por mundo consta no roadmap (MP3 30–60s,128kbps,≤800KB). Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
-  --body '**Feito 09/09** (commit `f771981`, junto de L-01 — mesmo alvo). `beach | celestial | crystal | forest | mountain | snow | stars | volcano` → identidade dos mundos (`central | cooperativa | forum | parque | rota | usina | vale | viveiro`); os `ambient_*.mp3` ficam com o nome antigo até S-13.
+  --body '**Feito 09/09** (commit `f771981`, junto de L-01 — mesmo alvo). `beach | celestial | crystal | forest | mountain | snow | stars | volcano` → identidade dos mundos (`central | cooperativa | forum | parque | rota | usina | vale | viveiro`); Histórico: a funcionalidade ambiente inteira foi retirada em 06/10/2026 por decisão do usuário.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1195,43 +1055,6 @@ mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-12 · Remover os 8 `ambient_*.mp3` antigos' \
-  --body 'Limpeza local 06/10/2026: oito arquivos renomeados para os slugs ODS12, com SHA-256 do áudio preservado e referências atualizadas. Não equivale à substituição das trilhas S-01…S-10: mundos 9/10 ainda reutilizam usina/forum. Substitutos e aceite sonoro continuam pendentes.
-
-**Responsável:** Claude Code
-**Modelo recomendado:** Claude Sonnet 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
-**Prioridade:** P1
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-13 · Integrar os 10 ambientes em `sounds.ts`' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Integração depende de dez novos MP3 aprovados; não mapear nomes novos a áudio antigo fingindo entrega. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Responsável:** Claude Code + Você
-**Modelo recomendado:** Claude Opus 5
-**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
-**Critério Codex:** Preparar especificação e integrar áudio; produção e escuta exigem ferramenta externa e humano.
-**Prioridade:** P0
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
-mk open --title 'S-14 · Revisar os SFX de voz' \
-  --body 'Auditoria local 06/10/2026: seis vozes em inglês sem referências foram removidas após backup, junto de shockwave.wav órfão. Não eram executadas pelo código atual. Revisão humana do tom dos SFX usados e aceite/merge pendentes.
-
-**Responsável:** Você
-**Modelo Codex recomendado:** Manual — sem modelo executor
-**Critério Codex:** Execução humana: decisão, conta, produção ou validação externa.
-**Prioridade:** P2
-**Fluxo:** Som
-
-Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
-  --label 'som,P2,humano' --milestone 'Som'
 mk done --title 'S-15 · Travar em teste que todo mundo tem ambiente' \
   --body '**Feito 09/09** (commit `6aebd00`). Quatro testes novos em `worldAmbientAndBackgroundCoverage.test.cjs` sobre o que o C-27 não pega: chave com `source` resolvido (não só existente), nenhuma trilha órfã, mundos 1-8 distintos entre si e `AmbientKey` sem regressão ao vocabulário de fantasia. 184 → 188 testes.
 
@@ -2786,4 +2609,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 209 issues (132 já criadas fechadas) =="
+echo "== pronto: 196 issues (132 já criadas fechadas) =="

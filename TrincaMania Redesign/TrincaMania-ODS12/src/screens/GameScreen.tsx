@@ -118,8 +118,6 @@ import {
   warningImpact,
 } from '../utils/haptics';
 import {
-  duckAmbient,
-  playAmbientForWorld,
   playCoinSound,
   playConfettiSound,
   playLoseSound,
@@ -129,8 +127,6 @@ import {
   playWhooshSound,
   playWinSound,
   playWorldUnlockSound,
-  stopAmbientSound,
-  unduckAmbient,
 } from '../utils/sounds';
 import { getLevelDisplayLabel } from '../utils/levelDisplay';
 import {
@@ -747,7 +743,6 @@ function GameScreenContent({
       clearTimeout(completionSoundTimeoutRef.current);
       completionSoundTimeoutRef.current = undefined;
     }
-    unduckAmbient();
     lifeConsumedForRoundRef.current = false;
     activeTrayCapacityRef.current = nextTrayCapacity;
     roundBonusTraySlotActiveRef.current = nextTrayBoosts.bonusSlotActive;
@@ -888,19 +883,6 @@ function GameScreenContent({
       setIsMagicTripleRescueVisible(true);
     }
   }, [magicTripleRescueCanShow, trayNearlyFull]);
-
-  useEffect(() => {
-    if (status !== 'playing') {
-      stopAmbientSound({ fadeMs: 240 });
-      return undefined;
-    }
-
-    playAmbientForWorld(level.worldId);
-
-    return () => {
-      stopAmbientSound({ fadeMs: 240 });
-    };
-  }, [level.worldId, status]);
 
   useEffect(() => {
     if (
@@ -1525,7 +1507,6 @@ function GameScreenContent({
     // O modal só pode nascer depois deste snapshot único. Ele é também a fonte
     // enviada à persistência, evitando um frame de vitória com zero estrelas.
     setVictoryResult(snapshot);
-    duckAmbient();
     playConfettiSound();
     setStatus('won');
     void finishWonRound(snapshot);

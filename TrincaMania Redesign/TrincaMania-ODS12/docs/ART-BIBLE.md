@@ -314,3 +314,6 @@ prévia do gerador:
 - `CLAUDE.md` — a regra permanente ODS 12.
 - `assets/map/worlds/README.md` — convenção de nome dos 20 arquivos.
 - CONAMA 275/2001 — a resolução que fixa o código de cores.
+
+Prompts completos para o ChatGPT Imagens (produção, ajustes e revisão opcional):
+`docs/arte/PROMPTS-IMAGENS-20261006.txt`. Começar pelo piloto A-04.

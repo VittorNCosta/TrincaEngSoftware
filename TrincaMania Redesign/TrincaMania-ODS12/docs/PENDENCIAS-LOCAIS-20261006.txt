@@ -1,3 +1,13 @@
+ATUALIZAÇÃO — ÁUDIO E PROMPTS — 06/10/2026
+Loop ambiente removido a pedido do usuário; efeitos curtos preservados.
+13 pendências de áudio (issues #75–84, #86–88) canceladas como não planejadas.
+Registro de arquivos removidos e seus hashes: backup local rodada-4-audio.
+Prompts completos: docs/arte/PROMPTS-IMAGENS-20261006.txt (38 pedidos individuais).
+20 fundos existentes abaixo de 1080×1920; bônus 21 ainda sem dois fundos próprios.
+shop_locked 300×300 em vez de 320×320; recompensa de mundo precisa adaptar gemas.
+Ícones, marcadores e 90 resíduos existem; revisão e aprovação Android pendentes.
+As seções abaixo registram rodadas anteriores e preservam seus números históricos.
+
 TRINCAENG — DECISÕES E PENDÊNCIAS LOCAIS — 06/10/2026
 Branch: develop. Commit e APK local autorizados pelo usuário nesta rodada.
 Publicação por push/Actions continua bloqueada. Aceite Android fica com o usuário.

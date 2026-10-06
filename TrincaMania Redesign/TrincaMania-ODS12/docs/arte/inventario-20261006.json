@@ -1,12 +1,12 @@
 {
-  "data": "2026-10-06T13:04:37.561Z",
+  "data": "2026-10-06T15:47:22.211Z",
   "branch": "develop",
   "limiteBytes": 409600,
   "criterioResolucaoFundos": { "largura": 1080, "altura": 1920 },
   "resumo": {
-    "arquivos": 149,
+    "arquivos": 141,
     "pngs": 128,
-    "bytes": 17912121,
+    "bytes": 15086377,
     "residuos": 90,
     "fundosProprios": 20,
     "acimaDoLimite": [],
@@ -1543,54 +1543,6 @@
       "altura": 256,
       "pixelsComTransparencia": 65083,
       "pngDecodificado": true
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_central.mp3",
-      "bytes": 353218,
-      "sha256": "1339ffbbbc9a785990a75d9340afc5eb9a384f5fd498cd095527fe66558d46c0",
-      "referencias": ["src/utils/sounds.ts"]
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_cooperativa.mp3",
-      "bytes": 353218,
-      "sha256": "219bf1f68b565ddaba2b31937e40b0dfcd3e33b129511c3e10b2f0c57ed4a279",
-      "referencias": ["src/utils/sounds.ts"]
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_forum.mp3",
-      "bytes": 353218,
-      "sha256": "3d935b8417b245046a9e87922042e830d4c0a09694576753d5c496c08a59a905",
-      "referencias": ["src/utils/sounds.ts"]
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_parque.mp3",
-      "bytes": 353218,
-      "sha256": "1063c0e03bf545ccef812d1a456eec12bd6480b55049ae759bffcc26000edb5b",
-      "referencias": ["src/utils/sounds.ts"]
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_rota.mp3",
-      "bytes": 353218,
-      "sha256": "8d375734efd2377308dbf2ad31406326b2d4030540c6735fec6047b41938c124",
-      "referencias": ["src/utils/sounds.ts"]
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_usina.mp3",
-      "bytes": 353218,
-      "sha256": "725f7476258285c35a382281dc6943bd09ce00b5ae25334bcda5031c436f3eb9",
-      "referencias": ["src/utils/sounds.ts"]
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_vale.mp3",
-      "bytes": 353218,
-      "sha256": "a1dcbb49c1ede3a223733ff1a650a334662caab06f3b118b08110248d5757c02",
-      "referencias": ["src/utils/sounds.ts"]
-    },
-    {
-      "arquivo": "assets/sfx/ambient/ambient_viveiro.mp3",
-      "bytes": 353218,
-      "sha256": "dc8fe012db63c3ffc15d122e73c8303439eb189e83572738a4af3afd5e1c00ce",
-      "referencias": ["src/utils/sounds.ts"]
     },
     {
       "arquivo": "assets/sfx/blocked.mp3",

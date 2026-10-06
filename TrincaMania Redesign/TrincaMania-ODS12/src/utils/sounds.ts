@@ -9,7 +9,6 @@ import {
   getSettings,
   setSoundEnabledPreference,
 } from '../storage/settingsStorage';
-import { type WorldId } from '../types/game';
 
 type SoundKey =
   | 'blocked'
@@ -31,31 +30,6 @@ type SoundConfig = {
   source?: AudioSource;
   volume: number;
 };
-type AmbientKey =
-  | 'central'
-  | 'cooperativa'
-  | 'forum'
-  | 'parque'
-  | 'rota'
-  | 'usina'
-  | 'vale'
-  | 'viveiro';
-
-type AmbientConfig = {
-  expectedFile: string;
-  source?: AudioSource;
-  volume: number;
-};
-
-type StopAmbientOptions = {
-  fadeMs?: number;
-};
-
-type InternalStopAmbientOptions = StopAmbientOptions & {
-  keepTarget?: boolean;
-  release?: boolean;
-};
-
 const soundSources: Record<SoundKey, AudioSource | undefined> = {
   blocked: require('../../assets/sfx/blocked.mp3') as AudioSource,
   button: require('../../assets/sfx/button.mp3') as AudioSource,
@@ -71,22 +45,6 @@ const soundSources: Record<SoundKey, AudioSource | undefined> = {
   whoosh: require('../../assets/sfx/whoosh.wav') as AudioSource,
   win: require('../../assets/sfx/win.mp3') as AudioSource,
   worldUnlock: require('../../assets/sfx/world_unlock.mp3') as AudioSource,
-};
-
-// As chaves são o vocabulário ODS12 (L-01/S-11); os arquivos `.mp3` mantêm o
-// nome antigo até S-13 trocar o áudio e S-12 apagar os antigos.
-const ambientSources: Record<AmbientKey, AudioSource | undefined> = {
-  central:
-    require('../../assets/sfx/ambient/ambient_central.mp3') as AudioSource,
-  cooperativa:
-    require('../../assets/sfx/ambient/ambient_cooperativa.mp3') as AudioSource,
-  forum: require('../../assets/sfx/ambient/ambient_forum.mp3') as AudioSource,
-  parque: require('../../assets/sfx/ambient/ambient_parque.mp3') as AudioSource,
-  rota: require('../../assets/sfx/ambient/ambient_rota.mp3') as AudioSource,
-  usina: require('../../assets/sfx/ambient/ambient_usina.mp3') as AudioSource,
-  vale: require('../../assets/sfx/ambient/ambient_vale.mp3') as AudioSource,
-  viveiro:
-    require('../../assets/sfx/ambient/ambient_viveiro.mp3') as AudioSource,
 };
 
 // Expected files:
@@ -129,80 +87,8 @@ const SOUND_CONFIGS: Record<SoundKey, SoundConfig> = {
   },
 };
 
-export const AMBIENT_VOLUME = 0.12;
-// Volume do ambiente durante vitória/baú: o efeito grande precisa de espaço.
-export const AMBIENT_DUCK_VOLUME = 0.04;
-export const AMBIENT_FADE_MS = 500;
-
-// Expected ambient files. If an asset is ever removed locally, leave its source
-// as `undefined` above so the bundle keeps building and the sound becomes a no-op.
-const AMBIENT_CONFIGS: Record<AmbientKey, AmbientConfig> = {
-  central: {
-    expectedFile: 'assets/sfx/ambient/ambient_central.mp3',
-    source: ambientSources.central,
-    volume: AMBIENT_VOLUME,
-  },
-  cooperativa: {
-    expectedFile: 'assets/sfx/ambient/ambient_cooperativa.mp3',
-    source: ambientSources.cooperativa,
-    volume: AMBIENT_VOLUME,
-  },
-  forum: {
-    expectedFile: 'assets/sfx/ambient/ambient_forum.mp3',
-    source: ambientSources.forum,
-    volume: AMBIENT_VOLUME,
-  },
-  parque: {
-    expectedFile: 'assets/sfx/ambient/ambient_parque.mp3',
-    source: ambientSources.parque,
-    volume: AMBIENT_VOLUME,
-  },
-  rota: {
-    expectedFile: 'assets/sfx/ambient/ambient_rota.mp3',
-    source: ambientSources.rota,
-    volume: AMBIENT_VOLUME,
-  },
-  usina: {
-    expectedFile: 'assets/sfx/ambient/ambient_usina.mp3',
-    source: ambientSources.usina,
-    volume: AMBIENT_VOLUME,
-  },
-  vale: {
-    expectedFile: 'assets/sfx/ambient/ambient_vale.mp3',
-    source: ambientSources.vale,
-    volume: AMBIENT_VOLUME,
-  },
-  viveiro: {
-    expectedFile: 'assets/sfx/ambient/ambient_viveiro.mp3',
-    source: ambientSources.viveiro,
-    volume: AMBIENT_VOLUME,
-  },
-};
-
-// Não há áudio novo gerado para os mundos 9 e 10 (mesma lacuna documentada
-// para a arte de mapa em CLAUDE.md) — reaproveitam ambientes existentes que
-// combinam com o tema de cada mundo: o 9 (distrito industrial) repete `usina`
-// e o 10 (cúpula global) repete `forum`.
-const AMBIENT_BY_WORLD_ID: Partial<Record<WorldId, AmbientKey>> = {
-  1: 'parque',
-  2: 'vale',
-  3: 'central',
-  4: 'viveiro',
-  5: 'usina',
-  6: 'cooperativa',
-  7: 'rota',
-  8: 'forum',
-  9: 'usina',
-  10: 'forum',
-};
-
 const players: Partial<Record<SoundKey, AudioPlayer>> = {};
 const lastPlayedAt: Partial<Record<SoundKey, number>> = {};
-let currentAmbientKey: AmbientKey | undefined;
-let currentAmbientPlayer: AudioPlayer | undefined;
-let currentAmbientFade: ReturnType<typeof setInterval> | undefined;
-let desiredAmbientKey: AmbientKey | undefined;
-
 // Espelho síncrono da preferência de som. `getSettings()` é assíncrono, então
 // checar o mute só por ele deixava uma janela em que um som (ex.: a trinca) já
 // tinha sido agendado antes da leitura resolver. Este cache é atualizado na hora
@@ -211,87 +97,6 @@ let soundEnabledCache: boolean | undefined;
 
 const syncAudioActive = (enabled: boolean) => {
   setIsAudioActiveAsync(enabled).catch(() => undefined);
-};
-
-const clearAmbientFade = () => {
-  if (!currentAmbientFade) {
-    return;
-  }
-
-  clearInterval(currentAmbientFade);
-  currentAmbientFade = undefined;
-};
-
-const fadeAmbientTo = (
-  player: AudioPlayer,
-  targetVolume: number,
-  fadeMs: number,
-  onComplete?: () => void,
-) => {
-  clearAmbientFade();
-
-  if (fadeMs <= 0) {
-    player.volume = targetVolume;
-    onComplete?.();
-    return;
-  }
-
-  const startedAt = Date.now();
-  const startVolume = player.volume;
-
-  currentAmbientFade = setInterval(() => {
-    const progress = Math.min(1, (Date.now() - startedAt) / fadeMs);
-    player.volume = startVolume + (targetVolume - startVolume) * progress;
-
-    if (progress < 1) {
-      return;
-    }
-
-    clearAmbientFade();
-    onComplete?.();
-  }, 50);
-};
-
-const stopAmbientPlayback = ({
-  fadeMs = AMBIENT_FADE_MS,
-  keepTarget = false,
-  release = true,
-}: InternalStopAmbientOptions = {}) => {
-  if (!keepTarget) {
-    desiredAmbientKey = undefined;
-  }
-
-  const player = currentAmbientPlayer;
-
-  if (!player) {
-    clearAmbientFade();
-    currentAmbientKey = undefined;
-    return;
-  }
-
-  const finishStop = () => {
-    try {
-      player.pause();
-      player.seekTo(0).catch(() => undefined);
-    } catch {
-      // no-op: ambient cleanup must never interrupt gameplay
-    }
-
-    if (release) {
-      try {
-        player.remove();
-      } catch {
-        // no-op: releasing ambient audio is best-effort
-      }
-    }
-
-    if (currentAmbientPlayer === player) {
-      currentAmbientPlayer = undefined;
-      currentAmbientKey = undefined;
-    }
-  };
-
-  fadeAmbientTo(player, 0, fadeMs, finishStop);
 };
 
 const stopAllPlayers = () => {
@@ -309,16 +114,6 @@ const stopAllPlayers = () => {
   });
 };
 
-export const getAmbientKeyForWorld = (worldId: WorldId) =>
-  AMBIENT_BY_WORLD_ID[worldId];
-
-export const getAmbientExpectedFiles = () =>
-  Object.entries(AMBIENT_CONFIGS).map(([key, config]) => ({
-    file: config.expectedFile,
-    key: key as AmbientKey,
-    ready: config.source !== undefined,
-  }));
-
 export const getSoundEnabled = async () => {
   const settings = await getSettings();
   soundEnabledCache = settings.soundEnabled;
@@ -332,15 +127,10 @@ export const setSoundEnabled = async (value: boolean) => {
 
   if (!value) {
     stopAllPlayers();
-    stopAmbientPlayback({ fadeMs: 0, keepTarget: true });
   }
 
   await setSoundEnabledPreference(value);
   syncAudioActive(value);
-
-  if (value && desiredAmbientKey) {
-    void playAmbientForKey(desiredAmbientKey);
-  }
 };
 
 export const toggleSoundEnabled = async () => {
@@ -368,73 +158,6 @@ const getPlayer = (key: SoundKey) => {
   }
 
   return players[key];
-};
-
-const playAmbientForKey = async (key: AmbientKey) => {
-  desiredAmbientKey = key;
-
-  if (soundEnabledCache === false) {
-    return;
-  }
-
-  const enabled = await getSoundEnabled();
-
-  if (!enabled || desiredAmbientKey !== key) {
-    return;
-  }
-
-  const config = AMBIENT_CONFIGS[key];
-
-  if (!config.source) {
-    stopAmbientPlayback({ fadeMs: 0, keepTarget: true });
-    return;
-  }
-
-  if (currentAmbientKey === key && currentAmbientPlayer) {
-    currentAmbientPlayer.loop = true;
-
-    if (!currentAmbientPlayer.playing) {
-      try {
-        currentAmbientPlayer.play();
-      } catch {
-        return;
-      }
-    }
-
-    fadeAmbientTo(currentAmbientPlayer, config.volume, AMBIENT_FADE_MS);
-    return;
-  }
-
-  stopAmbientPlayback({ fadeMs: 0, keepTarget: true, release: true });
-
-  try {
-    const player = createAudioPlayer(config.source, {
-      keepAudioSessionActive: false,
-    });
-    player.loop = true;
-    player.volume = 0;
-    currentAmbientKey = key;
-    currentAmbientPlayer = player;
-    player.play();
-    fadeAmbientTo(player, config.volume, AMBIENT_FADE_MS);
-  } catch {
-    stopAmbientPlayback({ fadeMs: 0, keepTarget: true, release: true });
-  }
-};
-
-export const playAmbientForWorld = (worldId: WorldId) => {
-  const ambientKey = getAmbientKeyForWorld(worldId);
-
-  if (!ambientKey) {
-    stopAmbientPlayback();
-    return;
-  }
-
-  void playAmbientForKey(ambientKey);
-};
-
-export const stopAmbientSound = (options?: StopAmbientOptions) => {
-  stopAmbientPlayback(options);
 };
 
 const canPlayNow = (key: SoundKey) => {
@@ -489,8 +212,6 @@ const playSound = (key: SoundKey) => {
 };
 
 export const releaseSoundPlayers = () => {
-  stopAmbientPlayback({ fadeMs: 0, release: true });
-
   Object.entries(players).forEach(([key, player]) => {
     if (!player) {
       return;
@@ -535,25 +256,6 @@ export const playCoinCascade = (count = 3) => {
   }
 };
 
-export const duckAmbient = (fadeMs = 300) => {
-  if (!currentAmbientPlayer) {
-    return;
-  }
-
-  fadeAmbientTo(currentAmbientPlayer, AMBIENT_DUCK_VOLUME, fadeMs);
-};
-
-export const unduckAmbient = (fadeMs = 400) => {
-  if (!currentAmbientPlayer || !currentAmbientKey) {
-    return;
-  }
-
-  fadeAmbientTo(
-    currentAmbientPlayer,
-    AMBIENT_CONFIGS[currentAmbientKey].volume,
-    fadeMs,
-  );
-};
 export const playWinSound = () => playSound('win');
 export const playLoseSound = () => playSound('lose');
 export const playCoinSound = () => playSound('coin');
