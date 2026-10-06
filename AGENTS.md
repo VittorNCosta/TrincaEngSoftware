@@ -116,7 +116,7 @@ captura Android após a alteração e sem APK gerado ou instalado para VIS-02.
 Jest verificando dimensões/propriedades não comprova o antes/depois visual.
 Não avance para VIS-03 ou VIS-04 antes da aprovação visual explícita do usuário.
 
-**Entrega Android em 06/10/2026:** o APK local `TrincaMania-v1.1.0-13fded5.apk`
+**Entrega Android anterior em 06/10/2026:** o APK local `TrincaMania-v1.1.0-13fded5.apk`
 foi gerado com os commits locais `f679d06` e `13fded5`, conferido e copiado para
 Downloads do Windows. Assinatura preservada, pacote normal e sem permissão
 de microfone; não instalado. Evidências, SHA-256 e roteiro estão em
@@ -124,6 +124,18 @@ de microfone; não instalado. Evidências, SHA-256 e roteiro estão em
 A aprovação visual de VIS-02 e os aceites de arte continuam pendentes.
 As issues #2, #148, #216 e #230 foram encerradas; 65 permanecem abertas.
 Commits são locais; o bloqueio de push e GitHub Actions continua vigente.
+
+**Entrega atual — sem ambiente, 06/10/2026:** a pedido do usuário, o loop
+da partida e oito MP3 foram removidos após backup; os 13 efeitos curtos
+permanecem. APK local `TrincaMania-v1.1.0-59796a3.apk`, fonte `59796a3`, conferido com zero recursos
+de ambiente, copiado para Downloads do Windows e não instalado. Relatório:
+`TrincaMania Redesign/TrincaMania-ODS12/docs/ENTREGA-ANDROID-SEM-AMBIENTE-20261006.txt`.
+As 13 issues de áudio #75–84 e #86–88 foram canceladas como não planejadas;
+52 permanecem abertas. Os 38 prompts de imagens estão em
+`TrincaMania Redesign/TrincaMania-ODS12/docs/arte/PROMPTS-IMAGENS-20261006.txt`.
+Arte já existente preservada; piloto A-04 e VIS-02 ainda aguardam aceite.
+252 testes de domínio e 56 de UI passaram com os pisos mantidos.
+Commits são locais; GitHub Actions e push continuam bloqueados.
 
 Para validar VIS-02, use o fluxo Android local existente. Gerar ou instalar
 APK exige autorização explícita prévia na sessão. Confirme o dispositivo de

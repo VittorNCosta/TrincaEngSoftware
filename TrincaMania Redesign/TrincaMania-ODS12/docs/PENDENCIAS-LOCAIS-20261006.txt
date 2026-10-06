@@ -1,5 +1,8 @@
 ATUALIZAÇÃO — ÁUDIO E PROMPTS — 06/10/2026
 Loop ambiente removido a pedido do usuário; efeitos curtos preservados.
+Entrega atual: commit 59796a3; APK sem ambiente no Downloads do Windows.
+Relatório: docs/ENTREGA-ANDROID-SEM-AMBIENTE-20261006.txt.
+252 testes de domínio e 56 de UI passaram; 52 issues continuam abertas.
 13 pendências de áudio (issues #75–84, #86–88) canceladas como não planejadas.
 Registro de arquivos removidos e seus hashes: backup local rodada-4-audio.
 Prompts completos: docs/arte/PROMPTS-IMAGENS-20261006.txt (38 pedidos individuais).
@@ -12,7 +15,7 @@ TRINCAENG — DECISÕES E PENDÊNCIAS LOCAIS — 06/10/2026
 Branch: develop. Commit e APK local autorizados pelo usuário nesta rodada.
 Publicação por push/Actions continua bloqueada. Aceite Android fica com o usuário.
 
-Entrega atual (rodada 3): código commitado em 13fded5; APK local gerado.
+Entrega anterior (rodada 3): código commitado em 13fded5; APK local gerado.
 Issues #2, #148, #216 e #230 encerradas; 65 permanecem abertas no GitHub.
 Caminhos, hashes, verificações e roteiro em docs/ENTREGA-ANDROID-20261006.txt.
 As seções e a matriz abaixo registram o estado histórico ao fim da rodada 2.

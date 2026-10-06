@@ -1,0 +1,81 @@
+TRINCAMANIA — APK SEM ÁUDIO AMBIENTE — 06/10/2026
+
+Fonte: 59796a36c0ad27700f463ef8fed5c1b1eb1f76c2, branch develop. Commit local autorizado pelo usuário.
+APK: /home/vittor/personal-project/apks/TrincaMania-v1.1.0-59796a3/TrincaMania-v1.1.0-59796a3.apk
+Windows: /mnt/c/Users/Vittor Costa/Downloads/TrincaMania-v1.1.0-59796a3.apk
+SHA-256: 2d0b1af090c4e5abf4a8dc4502ebbdf8bf3d674d20fba517f9159a29306b56dd
+Tamanho: 89145791 bytes (85.02 MiB).
+Metadados e evidências: /home/vittor/personal-project/apks/TrincaMania-v1.1.0-59796a3/build-manifest.json
+Pacote br.com.mhvtech.trincamania; versão 1.1.0; versionCode 1; minSdk 24; targetSdk 36.
+Certificado preservado: fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c
+Release não debuggable; E2E desligado; quatro ABIs. Não instalado.
+APK anterior preservado em TrincaMania-v1.1.0-13fded5; este é o atualizado.
+
+ALTERAÇÃO
+Som contínuo que começava ao entrar na partida removido do GameScreen e
+sounds.ts. Oito MP3 de ambiente removidos após backup com SHA-256 conferido.
+Os 13 efeitos curtos existentes continuam idênticos em bytes e respeitam a
+preferência de som. Ativar o som não inicia player automaticamente.
+Issues #75–84 e #86–88 encerradas como não planejadas a pedido do usuário;
+13 tarefas retiradas do backlog ativo. Permanecem 52 issues abertas.
+Cancelamento não equivale à composição ou aprovação de novas trilhas.
+
+VALIDAÇÃO LOCAL
+252 testes domínio/storage e 56 testes UI passaram; 15 suítes UI.
+Simulação: 103 fases da campanha e 1000 fases de capítulos passaram.
+Cobertura domínio: linhas 78,81%, ramos 84,66%, funções 83,08%.
+Cobertura UI: linhas 26,82%, ramos 32,43%, funções 27,96%.
+Todos os pisos anteriores preservados. Seis testes novos cobrem efeitos
+curtos, mute, cooldown, liberação e falhas nativas; dois testes de fundos.
+Typecheck, lint, format:check, valida:assets e guarda:ods12 passaram.
+Lint mantém três avisos preexistentes de hooks, sem erros.
+Roadmap validado; 196 tarefas ativas, 132 concluídas nos registros.
+Inventário: 141 assets, 128 PNG, zero ausentes, órfãos ou acima de 400 KiB.
+Não foram alteradas dependências, campanha, capítulos, saves ou permissões.
+
+APK CONFERIDO
+Gradle local: createReleaseUpdatesResources --rerun-tasks e assembleRelease.
+Assinatura, pacote, versões, CRC ZIP, zipalign 16 KiB e Hermes passaram.
+Permissão de microfone ausente. Bundle Hermes 1687892 bytes,
+abaixo do teto preservado de 2761261 bytes; idêntico à saída Gradle.
+139 assets embarcados, hashes conferidos com as fontes do commit.
+13 arquivos de efeitos curtos idênticos em bytes; zero recursos de ambiente
+no manifesto e nos recursos nativos. 20 fundos, 90 resíduos e 20 ícones
+nativos presentes e conferidos. Não houve geração de arte nova.
+
+IMAGENS E PROMPTS
+38 prompts completos: docs/arte/PROMPTS-IMAGENS-20261006.txt.
+Cópia: /mnt/c/Users/Vittor Costa/Downloads/TrincaMania-prompts-imagens.txt.
+24 de correção/produção: 20 fundos existentes abaixo de 1080×1920, dois
+fundos ausentes do Jardim Renascido, loja bloqueada 300×300 em vez de
+320×320 e recompensa de mundo com gemas que precisa de adaptação ODS 12.
+14 opcionais para revisão de imagens existentes. Os 90 resíduos já existem.
+Comece pelo piloto w01_parque_game.png e valide no Android antes do lote.
+Aceites de arte e VIS-02 continuam pendentes; VIS-03/04 não avançaram.
+
+ROTEIRO ANDROID
+1. Use este APK atualizado e preserve o progresso atual ao instalar.
+   Pacote e assinatura permanecem os mesmos da entrega anterior.
+2. Com o som ativado, entre em uma fase e aguarde: não deve haver áudio
+   contínuo. Toque nas cartas, feche trincas e conclua a fase: efeitos curtos
+   devem continuar. Saia, retorne e desative/reative o som nas configurações.
+3. Confira save, moedas, chaves e vidas depois de fechar e abrir o app.
+4. Para VIS-02, compare portais e painel nos estados acessíveis, na mesma
+   posição de rolagem. Confira recorte/nitidez dos fundos e demais imagens.
+   Registre modelo/Android e capturas; os testes não comprovam aceite visual.
+
+CONTEXTO E EVIDÊNCIAS
+Toolchain local persistente: /home/vittor/.local/share/trinca-android-toolchain.
+Java 21, Android build-tools 36.0.0, NDK 27.1.12297006, Gradle 8.14.3.
+EXPO_PUBLIC_E2E=false NODE_ENV=production EXPO_NO_TELEMETRY=1
+SENTRY_DISABLE_AUTO_UPLOAD=true. JAVA_HOME aponta ao jdk21 da toolchain;
+ANDROID_HOME e ANDROID_SDK_ROOT apontam ao android-sdk da toolchain.
+./gradlew :app:createReleaseUpdatesResources --rerun-tasks --no-daemon --max-workers=2 --console=plain '-Dorg.gradle.jvmargs=-Xmx3072m -XX:MaxMetaspaceSize=2048m' -Dorg.gradle.parallel=false
+./gradlew assembleRelease --no-daemon --max-workers=2 --console=plain '-Dorg.gradle.jvmargs=-Xmx3072m -XX:MaxMetaspaceSize=2048m' -Dorg.gradle.parallel=false
+Oito recursos antigos removidos somente do diretório gerado do build para
+evitar empacotamento de áudio obsoleto. A ausência foi comprovada no APK.
+Backup e logs: /home/vittor/personal-project/backups/trinca-consolidacao-20261006/rodada-4-audio
+O relatório ENTREGA-ANDROID-20261006.txt preserva as evidências da entrega
+anterior, inclusive as pendências de auditoria que não foram alteradas nesta
+rodada. GitHub Actions e push permanecem bloqueados pela regra de 30/09.
+Nenhuma publicação, instalação ou mudança no save real foi executada.
