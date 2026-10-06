@@ -18,6 +18,7 @@
         "backgroundImage": "./assets/adaptive-background.png"
       },
       "permissions": [],
+      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
