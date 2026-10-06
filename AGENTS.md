@@ -89,6 +89,15 @@ atingido. GitHub Actions permanece bloqueado nesta sessão e nas próximas
 rodadas de correção. Somente autorização explícita do usuário pode remover
 esta restrição; mudança de data ou início de outra sessão não a revoga.
 
+**Exceção autorizada em 06/10/2026:** após a pergunta explícita sobre publicar
+em `origin/develop` e liberar os workflows desse envio, o usuário respondeu
+“pode publicar e commitar”. Esta entrega está autorizada a publicar diretamente
+em `develop` os cinco commits locais já validados e o registro desta autorização,
+com os workflows automáticos do push. A exceção prevalece sobre a regra de branch
+própria para esta entrega. Não autoriza disparos manuais, reruns, releases,
+alterações de cobrança ou novos envios em sessões futuras; nesses casos, o
+bloqueio anterior continua vigente.
+
 Esta seção prevalece sobre as instruções de commit, push, publicação e
 validação remota nas demais seções deste arquivo enquanto o bloqueio vigorar.
 
@@ -135,7 +144,7 @@ As 13 issues de áudio #75–84 e #86–88 foram canceladas como não planejadas
 `TrincaMania Redesign/TrincaMania-ODS12/docs/arte/PROMPTS-IMAGENS-20261006.txt`.
 Arte já existente preservada; piloto A-04 e VIS-02 ainda aguardam aceite.
 252 testes de domínio e 56 de UI passaram com os pisos mantidos.
-Commits são locais; GitHub Actions e push continuam bloqueados.
+Os commits desta entrega têm publicação autorizada pela exceção acima.
 
 Para validar VIS-02, use o fluxo Android local existente. Gerar ou instalar
 APK exige autorização explícita prévia na sessão. Confirme o dispositivo de
