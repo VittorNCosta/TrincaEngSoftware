@@ -116,6 +116,15 @@ captura Android após a alteração e sem APK gerado ou instalado para VIS-02.
 Jest verificando dimensões/propriedades não comprova o antes/depois visual.
 Não avance para VIS-03 ou VIS-04 antes da aprovação visual explícita do usuário.
 
+**Entrega Android em 06/10/2026:** o APK local `TrincaMania-v1.1.0-13fded5.apk`
+foi gerado com os commits locais `f679d06` e `13fded5`, conferido e copiado para
+Downloads do Windows. Assinatura preservada, pacote normal e sem permissão
+de microfone; não instalado. Evidências, SHA-256 e roteiro estão em
+`TrincaMania Redesign/TrincaMania-ODS12/docs/ENTREGA-ANDROID-20261006.txt`.
+A aprovação visual de VIS-02 e os aceites de arte continuam pendentes.
+As issues #2, #148, #216 e #230 foram encerradas; 65 permanecem abertas.
+Commits são locais; o bloqueio de push e GitHub Actions continua vigente.
+
 Para validar VIS-02, use o fluxo Android local existente. Gerar ou instalar
 APK exige autorização explícita prévia na sessão. Confirme o dispositivo de
 destino antes da instalação. Não altere applicationId, assinatura,

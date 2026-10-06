@@ -72,7 +72,7 @@ mk done --title 'F0-01 · Instalar o `gh` CLI' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P0,humano' --milestone 'Fundação'
 mk done --title 'F0-02 · Expor `node` no PATH não-interativo' \
-  --body 'Validação local 06/10/2026: ~/.zshenv expõe Node 22.23.2 e npm 10.9.8 em zsh não interativo. node e npm resolvem no Linux, sem usar o npm do Windows. Alteração de ambiente está fora do Git; evidência no relatório de consolidação. Aceite humano pendente.
+  --body 'Validação local 06/10/2026: ~/.zshenv expõe Node 22.23.2 e npm 10.9.8 em zsh não interativo. node e npm resolvem no Linux, sem usar o npm do Windows. Alteração de ambiente está fora do Git; hooks de pre-commit e commit-msg executados com sucesso no commit f679d06. Issue #2 encerrada em 06/10/2026 após esta verificação.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2198,7 +2198,7 @@ mk open --title 'CI-35 · Consolidar e ativar as automações na branch padrão'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'CI/CD'
 mk done --title 'CI-36 · Migrar ferramentas e CI do Node 20 para LTS suportado' \
-  --body 'Verificação local 06/10/2026: engines, .nvmrc e ferramentas da develop já usam Node 22.23.2. Instalação limpa/doctor e metodologia de cobertura estão documentados em docs/ENTREGA-TERRA-SOL.md e docs/ci-entrega.md. APK anterior de 05/10 para develop 54fcabc: manifesto registra build Android bem-sucedido com Node 22.23.2; SHA-256 conferido 4c0adb820c2e49f7c955cabaee197c07d661f18b7a8ff1a0028233e12e5a124e. Nenhum APK novo ou CI remoto executado. Alterações desta rodada têm validação e pendências próprias no relatório; conciliação da issue após revisão da evidência.
+  --body 'Verificação local 06/10/2026: engines, .nvmrc, workflows e perfis EAS alinhados com Node 22.23.2. Instalação limpa/doctor e comparação de cobertura documentados em docs/ENTREGA-TERRA-SOL.md e docs/ci-entrega.md. Typecheck, 252 testes de domínio, 56 UI e export passaram. Build Android local de f679d06 passou com JDK 21/SDK 36; a correção de permissão em 13fded5 tem entrega documentada em docs/ENTREGA-ANDROID-20261006.txt. Sem execução remota; auditoria de dependências e aceites Android continuam pendentes próprios. Issue #230 encerrada em 06/10/2026 com o build comprovado.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2248,7 +2248,7 @@ mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk done --title 'SEC-02 · Habilitar Secret Scanning e Push Protection' \
-  --body 'API do GitHub em 06/10/2026 confirma secret_scanning e secret_scanning_push_protection habilitados. Não foi necessário alterar configurações. A proteção bloqueia push de segredo reconhecido; não substitui revisão local. Conciliação da issue após revisão/integração da evidência.
+  --body 'API do GitHub em 06/10/2026 confirma secret_scanning e secret_scanning_push_protection habilitados. Não foi necessário alterar configurações. A proteção bloqueia push de segredo reconhecido; não substitui revisão local. Issue #148 encerrada em 06/10/2026 após conferência da configuração pela API.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2738,7 +2738,7 @@ mk open --title 'O-06 · Proibir `console.*` fora do logger' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P2,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Observabilidade'
 mk done --title 'O-09 · Anexar contexto de domínio a todo erro' \
-  --body 'Implementação integrada pela PR #310 no commit 54fcabc da develop. App registra tela/mundo/fase e GameScreen acrescenta retry/seed; a troca de tela substitui o contexto para não atribuir seed antigo a erro novo. Testes de diagnóstico e navegação passaram localmente em 06/10/2026. Contexto remoto continua condicionado à revisão de privacidade O-10; Sentry recebe somente o erro. Conciliação da issue após revisão da evidência.
+  --body 'Implementação integrada pela PR #310 no commit 54fcabc da develop. App registra tela/mundo/fase e GameScreen acrescenta retry/seed; a troca de tela substitui o contexto para não atribuir seed antigo a erro novo. Testes de diagnóstico e navegação passaram localmente em 06/10/2026. Contexto remoto continua condicionado à revisão de privacidade O-10; Sentry recebe somente o erro. Issue #216 encerrada em 06/10/2026 com a integração e os testes comprovados.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5

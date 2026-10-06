@@ -2,6 +2,11 @@ TRINCAENG — DECISÕES E PENDÊNCIAS LOCAIS — 06/10/2026
 Branch: develop. Commit e APK local autorizados pelo usuário nesta rodada.
 Publicação por push/Actions continua bloqueada. Aceite Android fica com o usuário.
 
+Entrega atual (rodada 3): código commitado em 13fded5; APK local gerado.
+Issues #2, #148, #216 e #230 encerradas; 65 permanecem abertas no GitHub.
+Caminhos, hashes, verificações e roteiro em docs/ENTREGA-ANDROID-20261006.txt.
+As seções e a matriz abaixo registram o estado histórico ao fim da rodada 2.
+
 A-33 / #71 — Compressão
 Seis PNGs comprimidos com pngquant 2.18.0, paleta de 256 cores,
 --quality 70-100 --speed 1 --nofs --strip. Dimensões preservadas.

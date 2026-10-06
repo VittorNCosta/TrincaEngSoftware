@@ -1,0 +1,95 @@
+TRINCAENG — ENTREGA ANDROID LOCAL — 06/10/2026
+
+Código e assets: commit 13fded52b1bc2d1d51b4fc67834aa08c8c3e1cff, branch develop.
+APK: /home/vittor/personal-project/apks/TrincaMania-v1.1.0-13fded5/TrincaMania-v1.1.0-13fded5.apk
+Cópia no Windows: /mnt/c/Users/Vittor Costa/Downloads/TrincaMania-v1.1.0-13fded5.apk
+SHA-256: 163d2f7d62a1e861099c86276ece2b82436e192fcfe9c1fd9ed39f0eb1d4b4b3
+Tamanho: 91978471 bytes (87.72 MiB).
+Pacote: br.com.mhvtech.trincamania; versão 1.1.0, versionCode 1.
+Android mínimo 7.0/API 24; target API 36.
+Assinatura existente preservada: fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c.
+Release local não debuggable, modo E2E desligado, quatro ABIs.
+Metadados: /home/vittor/personal-project/apks/TrincaMania-v1.1.0-13fded5/build-manifest.json.
+APK gerado e copiado; não instalado, não enviado ao GitHub nem publicado.
+
+RESULTADOS
+252 testes domínio/storage e 56 testes UI passaram; 25 testes locais de
+configuração CI passaram. Simulação: 103 fases de campanha e 1000 capítulos.
+Cobertura: domínio linhas 77,08%, ramos 84,69%, funções 76,45%; UI linhas
+26,74%, ramos 32,40%, funções 27,87%. Pisos existentes preservados.
+Após o rótulo acessível do painel: typecheck, lint direcionado, 26 testes UI,
+2 testes de isolamento Maestro, solver dos fluxos e scripts passaram.
+149 assets inventariados: zero órfãos, ausentes ou acima de 409.600 bytes.
+Export Hermes passou no orçamento vigente. O APK contém bundle Hermes de
+1693084 bytes, abaixo do teto preservado de 2761261 bytes.
+Prebuild Expo local, recursos de updates e assembleRelease passaram.
+Verificações APK: assinatura, pacote/versões, CRC de todo ZIP, zipalign com
+páginas de 16 KiB e ausência de permissão de microfone passaram.
+Manifesto embarcado: 147 assets, hashes conferidos com fontes atuais;
+20 fundos e 90 resíduos presentes nos recursos; 21 áudios idênticos em bytes.
+20 ícones nativos WEBP conferidos com a saída atual do prebuild.
+A primeira conferência detectou RECORD_AUDIO herdado do expo-audio apesar de
+recordAudioAndroid=false. Corrigido em 13fded5 com android.blockedPermissions;
+prebuild gera tools:node=remove e a ausência é comprovada no APK entregue.
+Fonte: https://docs.expo.dev/guides/permissions/ . Demais permissões efetivas
+estão listadas no manifesto JSON; a revisão de privacidade ainda está pendente.
+Zipalign não substitui teste em dispositivo Android com página de 16 KiB.
+
+ISSUES
+Encerradas com comprovação: #2 (PATH/hooks), #148 (proteções de segredos),
+#216 (contexto de erro já integrado na PR #310) e #230 (Node 22, inclusive
+build Android local). GitHub ainda tem 65 issues abertas; lista com URLs em
+/home/vittor/personal-project/apks/TrincaMania-v1.1.0-13fded5/issues-abertas.json.
+Não foi possível finalizar todas: aceites de arte/Android, resolução dos
+fundos, bônus, produção/licenciamento de dez trilhas, credenciais, privacidade,
+performance no aparelho e integração remota continuam pendentes.
+As implementações novas estão no commit local, sem push/merge remoto.
+A matriz completa das 69 issues originalmente abertas permanece como
+registro histórico em docs/PENDENCIAS-LOCAIS-20261006.txt.
+
+AUDITORIA AINDA FALHA
+Duas vulnerabilidades altas novas sem primeira versão corrigida publicada:
+braces <=3.0.3 (GHSA-vfj7-8cjw-p6xm) e node-forge <=1.4.0
+(GHSA-86w9-cpqp-85rv); uma moderada nova em sprintf-js e cinco ocorrências
+na baseline anterior. Não se ampliou a baseline nem se forçou troca de majors.
+APK entregue para validação; não há aceite para produção/loja.
+
+ROTEIRO PARA SEU ANDROID
+1. Anote ou capture o progresso, moedas, chaves e vidas atuais. Instale como
+   atualização. Se houver conflito de assinatura/pacote, interrompa e informe;
+   preserve os dados existentes. O applicationId, versão e chave foram mantidos.
+2. Abra primeiro offline. Confira splash/ícone, legibilidade e recorte dos
+   fundos de mapa/jogo nos mundos acessíveis pelo seu progresso. A galeria
+   docs/arte/galeria-20261006.html permite revisar os 20 fundos fora do aparelho.
+3. Para VIS-02, capture na mesma posição de rolagem o portal bloqueado,
+   liberado e selecionado nos estados acessíveis. Abra/feche o painel,
+   role o mapa, entre na fase e volte. Não altere o save para fabricar estados.
+4. Confira resíduos/lixeiras/símbolos, trincas, bandeja, vitória/derrota,
+   loja e recompensas. Verifique nitidez/alpha das imagens comprimidas e áudio.
+5. Feche e reabra o app duas vezes; compare moedas, vidas, fases e estrelas.
+   Registre Android/modelo e capturas. Upgrade de fixture e interrupção durante
+   escrita ainda exigem o aplicativo E2E isolado; os fluxos Maestro rejeitam
+   o pacote normal para proteger seus dados.
+6. Repita online e reporte erros. Updates do Expo continuam habilitados no
+   pacote normal; tráfego e privacidade precisam ser validados no aparelho.
+
+ACEITES VISUAIS PENDENTES
+Os 20 fundos estão integrados, porém abaixo de 1080×1920. shop_locked tem
+300×300, abaixo dos 320×320 previstos. Bônus 21 reutiliza o Viveiro; não tem
+fundos próprios. A-04/VIS-02 aguardam aprovação explícita antes de arte bônus
+e etapas VIS-03/VIS-04. Registro e testes não comprovam estilo ou licença.
+
+REPRODUÇÃO E EVIDÊNCIAS
+App: /home/vittor/personal-project/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12
+EXPO_PUBLIC_E2E=false NODE_ENV=production npx --no-install expo prebuild --platform android --no-install
+Gradle local com JAVA_HOME=/home/vittor/.local/share/trinca-android-toolchain/jdk21,
+ANDROID_HOME e ANDROID_SDK_ROOT=/home/vittor/.local/share/trinca-android-toolchain/android-sdk,
+EXPO_PUBLIC_E2E=false NODE_ENV=production EXPO_NO_TELEMETRY=1 SENTRY_DISABLE_AUTO_UPLOAD=true:
+./gradlew :app:createReleaseUpdatesResources --rerun-tasks --no-daemon --max-workers=2 --console=plain '-Dorg.gradle.jvmargs=-Xmx3072m -XX:MaxMetaspaceSize=2048m' -Dorg.gradle.parallel=false
+./gradlew assembleRelease --no-daemon --max-workers=2 --console=plain '-Dorg.gradle.jvmargs=-Xmx3072m -XX:MaxMetaspaceSize=2048m' -Dorg.gradle.parallel=false
+Primeira limpeza Gradle falhou por cache .cxx apontando ao SDK antigo /tmp;
+apenas caches nativos/outputs gerados foram removidos. Regeneração e build
+subsequentes passaram com SDK persistente; não houve alteração de assinatura.
+Logs, script de conferência, metadados e snapshots ficam protegidos em
+/home/vittor/personal-project/backups/trinca-consolidacao-20261006/rodada-3.
+GitHub Actions/push continuam bloqueados pela instrução de 30/09/2026.
