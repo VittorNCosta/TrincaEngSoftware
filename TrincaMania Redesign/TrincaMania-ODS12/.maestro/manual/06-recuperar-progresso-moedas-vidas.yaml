@@ -1,0 +1,63 @@
+appId: br.com.mhvtech.trincamania.e2e
+name: Preservar conclusão, saldo e vida perdida após reiniciar duas vezes
+---
+# Limpa somente o pacote isolado; produz os dados pelas regras reais.
+- runFlow: ../01-entrar-numa-fase.yaml
+- runFlow: ../subflows/vencer-w1-001.yaml
+- tapOn: 'Próxima fase'
+- runFlow: ../subflows/perder-w1-002.yaml
+- tapOn: 'Mapa'
+- assertVisible:
+    id: map-lives-count
+    text: '4'
+- tapOn: 'Ganhar moedas'
+- copyTextFrom:
+    id: shop-coins
+- evalScript: ${output.savedCoins = Number(maestro.copiedText)}
+- assertTrue: ${output.savedCoins >= 10}
+- tapOn:
+    id: nav-map
+- takeScreenshot: artifacts/recuperacao-antes
+# Repetir a leitura prova que abrir o app não concede novamente a recompensa.
+- repeat:
+    times: 2
+    commands:
+      - stopApp
+      - launchApp
+      - extendedWaitUntil:
+          visible:
+            id: 'splash-skip|nav-map'
+          timeout: 40000
+      - tapOn:
+          id: splash-skip
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: nav-map
+          timeout: 40000
+      - assertVisible:
+          id: map-lives-count
+          text: '4'
+      - scrollUntilVisible:
+          element:
+            id: map-level-w1-001
+          direction: DOWN
+          timeout: 30000
+      - assertVisible: 'Fase 1, concluída com [1-3] de 3 estrelas'
+      - scrollUntilVisible:
+          element:
+            id: map-level-w1-002
+          direction: UP
+          timeout: 30000
+      - tapOn:
+          id: map-level-w1-002
+      - assertVisible:
+          id: jogar-fase
+      - tapOn: 'Fechar painel de seleção'
+      - tapOn: 'Ganhar moedas'
+      - assertVisible:
+          id: shop-coins
+          text: ${String(output.savedCoins)}
+      - tapOn:
+          id: nav-map
+- takeScreenshot: artifacts/recuperacao-depois

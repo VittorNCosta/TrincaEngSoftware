@@ -1,4 +1,4 @@
-appId: ${APP_ID}
+appId: br.com.mhvtech.trincamania.e2e
 name: Abrir o app do zero e entrar na primeira fase
 ---
 # O caminho mais curto entre "instalei" e "estou jogando". Nenhuma das outras

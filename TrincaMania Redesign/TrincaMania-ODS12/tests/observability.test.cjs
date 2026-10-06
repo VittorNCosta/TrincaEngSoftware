@@ -20,6 +20,11 @@ const {
 const {
   checkBoardSize,
   checkCampaignIds,
+  checkChapterIds,
+  checkCanonicalCampaign,
+  checkTrayCapacity,
+  checkRewardUnclaimed,
+  diagnosePersistenceWrite,
 } = require('../src/observability/runtimeInvariants.ts');
 const {
   isChapterModeUnlocked,
@@ -125,4 +130,85 @@ test('optional remote reporter deduplicates errors and cannot break fatal handli
   });
   assert.doesNotThrow(() => reportRemoteError(new Error('original')));
   configureRemoteErrorReporter();
+});
+
+test('runtime content checks detect same-length corruption without exposing or changing levels', () => {
+  const before = JSON.stringify(LEVELS);
+  assert.equal(checkCanonicalCampaign(LEVELS), true);
+  const changed = JSON.parse(before);
+  changed[0].tileCount += 3;
+  assert.equal(checkCanonicalCampaign(changed), false);
+  assert.equal(checkCanonicalCampaign(LEVELS.slice(1)), false);
+  assert.equal(JSON.stringify(LEVELS), before);
+  const entry = logger.getDiagnosticEntries().at(-1);
+  assert.equal(entry.message, 'canonical-campaign-content');
+  assert.equal(entry.namespace, 'invariant');
+  assert.ok(Number.isFinite(Date.parse(entry.timestamp)));
+  assert.equal(entry.detail, undefined);
+});
+test('invalid tray input, crossed storage ids and a claimed async reward only emit diagnostics', () => {
+  for (const capacity of [7, 8, 9])
+    assert.equal(checkTrayCapacity(capacity, 7, 9), true);
+  for (const capacity of [undefined, NaN, 6, 10, 7.5])
+    assert.equal(checkTrayCapacity(capacity, 7, 9), false);
+  assert.equal(checkChapterIds(['ch01-001']), true);
+  assert.equal(checkChapterIds(['w1-001']), false);
+  assert.equal(checkChapterIds(['bonus-w1-001']), false);
+  assert.equal(checkRewardUnclaimed(false), true);
+  assert.equal(checkRewardUnclaimed(true), false);
+});
+test('persistence diagnostics observe overlap and preserve results, independent scopes and storage failures', async () => {
+  const diagnostics = () =>
+    logger
+      .getDiagnosticEntries()
+      .filter((entry) => entry.message.endsWith('writes-serialized'));
+  const before = diagnostics().length;
+  let release;
+  const pending = diagnosePersistenceWrite(
+    'campaign',
+    'commitProgress',
+    () =>
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+  );
+  const chapter = await diagnosePersistenceWrite(
+    'chapter',
+    'commitChapterProgress',
+    async () => 23,
+  );
+  assert.equal(chapter, 23);
+  assert.equal(diagnostics().length, before);
+  assert.equal(
+    await diagnosePersistenceWrite(
+      'campaign',
+      'commitProgress',
+      async () => 42,
+    ),
+    42,
+  );
+  assert.equal(diagnostics().length, before + 1);
+  release(17);
+  assert.equal(await pending, 17);
+  const failure = new Error('fixture storage failure');
+  await assert.rejects(
+    diagnosePersistenceWrite('campaign', 'commitProgress', async () => {
+      throw failure;
+    }),
+    (error) => error === failure,
+  );
+  assert.equal(
+    await diagnosePersistenceWrite(
+      'campaign',
+      'commitProgress',
+      async () => 'recovered',
+    ),
+    'recovered',
+  );
+  assert.equal(diagnostics().length, before + 1);
+  await diagnosePersistenceWrite('lives', undefined, async () => undefined);
+  assert.equal(
+    logger.getDiagnosticEntries().at(-1).message,
+    'lives-write-through-owner',
+  );
 });

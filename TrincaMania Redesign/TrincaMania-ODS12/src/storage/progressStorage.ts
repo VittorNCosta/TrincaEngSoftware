@@ -1,7 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { LEVEL_BY_ID, LEVELS } from '../data/levels';
-import { checkCampaignIds } from '../observability/runtimeInvariants';
+import {
+  checkCampaignIds,
+  diagnosePersistenceWrite,
+} from '../observability/runtimeInvariants';
 import { WORLDS, getWorldById } from '../data/worlds';
 import {
   ChestProgressSummary,
@@ -772,11 +775,16 @@ export const loadProgress = async (): Promise<ProgressState> => {
   }
 };
 
-export const saveProgress = async (progress: ProgressState) => {
+export const saveProgress = async (
+  progress: ProgressState,
+  source?: 'commitProgress',
+) => {
   diagnoseCampaignStorageIds(progress);
-  await AsyncStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(normalizeProgress(progress)),
+  await diagnosePersistenceWrite('campaign', source, () =>
+    AsyncStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(normalizeProgress(progress)),
+    ),
   );
 };
 

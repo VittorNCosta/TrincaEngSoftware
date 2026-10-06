@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { diagnosePersistenceWrite } from '../observability/runtimeInvariants';
 
 export const LIVES_STORAGE_KEY = '@trinca-mania/lives-v1';
 export const MAX_LIVES = 5;
@@ -77,8 +78,10 @@ const applyLifeRegeneration = (
   };
 };
 
-const saveLivesState = async (state: LivesState) => {
-  await AsyncStorage.setItem(LIVES_STORAGE_KEY, JSON.stringify(state));
+const saveLivesState = async (state: LivesState, source?: 'mutateLives') => {
+  await diagnosePersistenceWrite('lives', source, () =>
+    AsyncStorage.setItem(LIVES_STORAGE_KEY, JSON.stringify(state)),
+  );
 };
 
 const readLivesState = async (now: number): Promise<LivesState> => {
@@ -111,7 +114,7 @@ const mutateLives = (
         now,
       );
 
-      await saveLivesState(nextState);
+      await saveLivesState(nextState, 'mutateLives');
       return nextState;
     });
 

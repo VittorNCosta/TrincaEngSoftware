@@ -1,9 +1,14 @@
 # `assets/map/worlds/` — arte nova dos 10 mundos
 
-Pasta de destino das imagens de fundo geradas no bloco A do roadmap. O piloto
-`w01_parque_game.png` já está integrado ao Mundo 1; veja `docs/arte/piloto-parque.md`.
-Os demais fundos aguardam a validação in-game de A-04, incluindo contraste e
-recorte em diferentes proporções de tela.
+A consolidação de 06/10/2026 recuperou e integrou os 20 fundos dos mundos 1–10.
+O registro `src/data/worldVisualAssets.ts` fornece o mapa e o jogo de cada mundo;
+os capítulos 101–110 reutilizam essas famílias. O bônus 21 ainda usa o Viveiro
+como placeholder: os dois arquivos `w21_jardim_*` não existem.
+
+Todos os fundos existentes estão abaixo do teto de 400 KiB, mas também abaixo
+da resolução 1080×1920 exigida pela art bible. Presença e integração não
+comprovam contraste, recorte nem aceite no Android. A-04 permanece pendente.
+Veja `docs/arte/inventario-20261006.json` e `docs/arte/galeria-20261006.html`.
 
 **Antes de gerar qualquer coisa, leia `docs/ART-BIBLE.md`** — paleta, bloco de
 estilo, prompt de cada mundo e critério de aceite. Este arquivo trata só do
@@ -45,11 +50,11 @@ alfabética da pasta.
 | 10    | Cúpula da Reciclagem Global    | `cupula`      | `w10_cupula_map.png`      | `w10_cupula_game.png`      |
 | 21    | Jardim Renascido (bônus)       | `jardim`      | `w21_jardim_map.png`      | `w21_jardim_game.png`      |
 
-Os slugs são os mesmos das `AmbientKey` de `src/utils/sounds.ts` (renomeadas no
-L-01/S-11), de propósito: um mundo tem um nome só no código inteiro.
+Os mundos 1–8 compartilham os slugs das `AmbientKey`. Os mundos 9 e 10
+ainda reutilizam os ambientes `usina` e `forum`; não têm trilhas próprias.
 
 O mundo 21 é bônus e fica **fora do lote crítico** A-05…A-24 — o par dele é
-A-24a/A-24b, em P1. Até chegar a vez, ele segue com `map_bonus_bg.png`.
+A-24a/A-24b, em P1. Até chegar a vez, ele reutiliza `w04_viveiro_map.png` e `w04_viveiro_game.png`.
 
 ## Ao adicionar um arquivo
 

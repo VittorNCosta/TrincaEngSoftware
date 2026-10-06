@@ -1,0 +1,728 @@
+[
+  {
+    "original": "Mundo_01_Parque\\01_trilha\\w01_parque_map.png",
+    "asset": "assets/map/worlds/w01_parque_map.png",
+    "bytes": 375817,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_01_Parque\\02_fundo_partida\\w01_parque_game.png",
+    "asset": "assets/map/worlds/w01_parque_game.png",
+    "bytes": 365598,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_01_garrafa_pet.png",
+    "asset": "assets/residuos/w01_01_garrafa_pet.png",
+    "bytes": 40307,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_02_copo_plastico.png",
+    "asset": "assets/residuos/w01_02_copo_plastico.png",
+    "bytes": 48677,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_03_sacola.png",
+    "asset": "assets/residuos/w01_03_sacola.png",
+    "bytes": 49263,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_04_jornal.png",
+    "asset": "assets/residuos/w01_04_jornal.png",
+    "bytes": 57664,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_05_caixa_papelao.png",
+    "asset": "assets/residuos/w01_05_caixa_papelao.png",
+    "bytes": 43075,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_06_folha_amassada.png",
+    "asset": "assets/residuos/w01_06_folha_amassada.png",
+    "bytes": 52781,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_07_lata_bebida.png",
+    "asset": "assets/residuos/w01_07_lata_bebida.png",
+    "bytes": 40353,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_08_lata_conserva.png",
+    "asset": "assets/residuos/w01_08_lata_conserva.png",
+    "bytes": 63988,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_01_Parque\\03_icones\\w01_09_tampa_metal.png",
+    "asset": "assets/residuos/w01_09_tampa_metal.png",
+    "bytes": 49289,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\01_trilha\\w02_vale_map.png",
+    "asset": "assets/map/worlds/w02_vale_map.png",
+    "bytes": 374590,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_02_Vale\\02_fundo_partida\\w02_vale_game.png",
+    "asset": "assets/map/worlds/w02_vale_game.png",
+    "bytes": 405481,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_01_frasco_detergente.png",
+    "asset": "assets/residuos/w02_01_frasco_detergente.png",
+    "bytes": 44544,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_02_pote_plastico.png",
+    "asset": "assets/residuos/w02_02_pote_plastico.png",
+    "bytes": 48075,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_03_embalagem_plastica.png",
+    "asset": "assets/residuos/w02_03_embalagem_plastica.png",
+    "bytes": 46592,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_04_caixa_cereal.png",
+    "asset": "assets/residuos/w02_04_caixa_cereal.png",
+    "bytes": 40882,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_05_tubo_papelao.png",
+    "asset": "assets/residuos/w02_05_tubo_papelao.png",
+    "bytes": 39469,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_06_saco_papel.png",
+    "asset": "assets/residuos/w02_06_saco_papel.png",
+    "bytes": 46005,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_07_garrafa_vidro.png",
+    "asset": "assets/residuos/w02_07_garrafa_vidro.png",
+    "bytes": 34636,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_08_pote_vidro.png",
+    "asset": "assets/residuos/w02_08_pote_vidro.png",
+    "bytes": 60588,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_02_Vale\\03_icones\\w02_09_copo_vidro.png",
+    "asset": "assets/residuos/w02_09_copo_vidro.png",
+    "bytes": 50907,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\01_trilha\\w03_central_map.png",
+    "asset": "assets/map/worlds/w03_central_map.png",
+    "bytes": 369587,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_03_Central\\02_fundo_partida\\w03_central_game.png",
+    "asset": "assets/map/worlds/w03_central_game.png",
+    "bytes": 379117,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_01_chapa_metal.png",
+    "asset": "assets/residuos/w03_01_chapa_metal.png",
+    "bytes": 49276,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_02_cano_metal.png",
+    "asset": "assets/residuos/w03_02_cano_metal.png",
+    "bytes": 39747,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_03_engrenagem.png",
+    "asset": "assets/residuos/w03_03_engrenagem.png",
+    "bytes": 48449,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_04_papelao_dobrado.png",
+    "asset": "assets/residuos/w03_04_papelao_dobrado.png",
+    "bytes": 42716,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_05_revista.png",
+    "asset": "assets/residuos/w03_05_revista.png",
+    "bytes": 41836,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_06_caixa_ovos_papelao.png",
+    "asset": "assets/residuos/w03_06_caixa_ovos_papelao.png",
+    "bytes": 60935,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_07_bandeja_plastica.png",
+    "asset": "assets/residuos/w03_07_bandeja_plastica.png",
+    "bytes": 41772,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_08_balde_plastico.png",
+    "asset": "assets/residuos/w03_08_balde_plastico.png",
+    "bytes": 49908,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_03_Central\\03_icones\\w03_09_tampa_plastica.png",
+    "asset": "assets/residuos/w03_09_tampa_plastica.png",
+    "bytes": 41718,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\01_trilha\\w04_viveiro_map.png",
+    "asset": "assets/map/worlds/w04_viveiro_map.png",
+    "bytes": 334354,
+    "dimensoes": [512, 910]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\02_fundo_partida\\w04_viveiro_game.png",
+    "asset": "assets/map/worlds/w04_viveiro_game.png",
+    "bytes": 366253,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_01_garrafa_cortada.png",
+    "asset": "assets/residuos/w04_01_garrafa_cortada.png",
+    "bytes": 50798,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_02_vaso_plastico_quebrado.png",
+    "asset": "assets/residuos/w04_02_vaso_plastico_quebrado.png",
+    "bytes": 46501,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_03_regador_plastico_quebrado.png",
+    "asset": "assets/residuos/w04_03_regador_plastico_quebrado.png",
+    "bytes": 45621,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_04_lata_tinta_vazia.png",
+    "asset": "assets/residuos/w04_04_lata_tinta_vazia.png",
+    "bytes": 49452,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_05_lata_plantio_vazia.png",
+    "asset": "assets/residuos/w04_05_lata_plantio_vazia.png",
+    "bytes": 60301,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_06_balde_metal.png",
+    "asset": "assets/residuos/w04_06_balde_metal.png",
+    "bytes": 54333,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_07_tubete_papelao.png",
+    "asset": "assets/residuos/w04_07_tubete_papelao.png",
+    "bytes": 46501,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_08_caixa_mudas_papelao.png",
+    "asset": "assets/residuos/w04_08_caixa_mudas_papelao.png",
+    "bytes": 48569,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_04_Viveiro\\03_icones\\w04_09_saco_papel_rasgado.png",
+    "asset": "assets/residuos/w04_09_saco_papel_rasgado.png",
+    "bytes": 43040,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\01_trilha\\w05_usina_map.png",
+    "asset": "assets/map/worlds/w05_usina_map.png",
+    "bytes": 401681,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_05_Usina\\02_fundo_partida\\w05_usina_game.png",
+    "asset": "assets/map/worlds/w05_usina_game.png",
+    "bytes": 357016,
+    "dimensoes": [512, 910]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_01_folhas_secas.png",
+    "asset": "assets/residuos/w05_01_folhas_secas.png",
+    "bytes": 40512,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_02_gravetos.png",
+    "asset": "assets/residuos/w05_02_gravetos.png",
+    "bytes": 54266,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_03_borra_cafe_filtro.png",
+    "asset": "assets/residuos/w05_03_borra_cafe_filtro.png",
+    "bytes": 82054,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_04_papelao_picado.png",
+    "asset": "assets/residuos/w05_04_papelao_picado.png",
+    "bytes": 67556,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_05_saco_kraft.png",
+    "asset": "assets/residuos/w05_05_saco_kraft.png",
+    "bytes": 50457,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_06_rolo_papel.png",
+    "asset": "assets/residuos/w05_06_rolo_papel.png",
+    "bytes": 35583,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_07_balde_metal_amassado.png",
+    "asset": "assets/residuos/w05_07_balde_metal_amassado.png",
+    "bytes": 58553,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_08_peneira_metal_quebrada.png",
+    "asset": "assets/residuos/w05_08_peneira_metal_quebrada.png",
+    "bytes": 74273,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_05_Usina\\03_icones\\w05_09_tambor_metal.png",
+    "asset": "assets/residuos/w05_09_tambor_metal.png",
+    "bytes": 46999,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\01_trilha\\w06_cooperativa_map.png",
+    "asset": "assets/map/worlds/w06_cooperativa_map.png",
+    "bytes": 363684,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\02_fundo_partida\\w06_cooperativa_game.png",
+    "asset": "assets/map/worlds/w06_cooperativa_game.png",
+    "bytes": 366471,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_01_galao_plastico.png",
+    "asset": "assets/residuos/w06_01_galao_plastico.png",
+    "bytes": 53134,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_02_cesta_plastica_quebrada.png",
+    "asset": "assets/residuos/w06_02_cesta_plastica_quebrada.png",
+    "bytes": 64889,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_03_pote_margarina.png",
+    "asset": "assets/residuos/w06_03_pote_margarina.png",
+    "bytes": 41675,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_04_caixa_entrega.png",
+    "asset": "assets/residuos/w06_04_caixa_entrega.png",
+    "bytes": 46834,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_05_pilha_papeis.png",
+    "asset": "assets/residuos/w06_05_pilha_papeis.png",
+    "bytes": 63256,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_06_cartela_papelao.png",
+    "asset": "assets/residuos/w06_06_cartela_papelao.png",
+    "bytes": 56119,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_07_lata_oleo.png",
+    "asset": "assets/residuos/w06_07_lata_oleo.png",
+    "bytes": 52732,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_08_panela_velha.png",
+    "asset": "assets/residuos/w06_08_panela_velha.png",
+    "bytes": 49234,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_06_Cooperativa\\03_icones\\w06_09_arame_enrolado.png",
+    "asset": "assets/residuos/w06_09_arame_enrolado.png",
+    "bytes": 72574,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\01_trilha\\w07_rota_map.png",
+    "asset": "assets/map/worlds/w07_rota_map.png",
+    "bytes": 401781,
+    "dimensoes": [640, 1138]
+  },
+  {
+    "original": "Mundo_07_Rota\\02_fundo_partida\\w07_rota_game.png",
+    "asset": "assets/map/worlds/w07_rota_game.png",
+    "bytes": 367774,
+    "dimensoes": [640, 1138]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_01_engradado_plastico.png",
+    "asset": "assets/residuos/w07_01_engradado_plastico.png",
+    "bytes": 80148,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_02_frasco_shampoo.png",
+    "asset": "assets/residuos/w07_02_frasco_shampoo.png",
+    "bytes": 35780,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_03_embalagem_refil.png",
+    "asset": "assets/residuos/w07_03_embalagem_refil.png",
+    "bytes": 54891,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_04_garrafa_retornavel.png",
+    "asset": "assets/residuos/w07_04_garrafa_retornavel.png",
+    "bytes": 26681,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_05_pote_conserva.png",
+    "asset": "assets/residuos/w07_05_pote_conserva.png",
+    "bytes": 60996,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_06_frasco_vidro.png",
+    "asset": "assets/residuos/w07_06_frasco_vidro.png",
+    "bytes": 54302,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_07_lata_aerosol_vazia.png",
+    "asset": "assets/residuos/w07_07_lata_aerosol_vazia.png",
+    "bytes": 38678,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_08_caixa_metal.png",
+    "asset": "assets/residuos/w07_08_caixa_metal.png",
+    "bytes": 52284,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_07_Rota\\03_icones\\w07_09_tambor_pequeno.png",
+    "asset": "assets/residuos/w07_09_tambor_pequeno.png",
+    "bytes": 45260,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\01_trilha\\w08_forum_map.png",
+    "asset": "assets/map/worlds/w08_forum_map.png",
+    "bytes": 379122,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_08_Forum\\02_fundo_partida\\w08_forum_game.png",
+    "asset": "assets/map/worlds/w08_forum_game.png",
+    "bytes": 370835,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_01_folheto.png",
+    "asset": "assets/residuos/w08_01_folheto.png",
+    "bytes": 38274,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_02_envelope.png",
+    "asset": "assets/residuos/w08_02_envelope.png",
+    "bytes": 46936,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_03_pasta_papelao.png",
+    "asset": "assets/residuos/w08_03_pasta_papelao.png",
+    "bytes": 40919,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_04_copo_descartavel.png",
+    "asset": "assets/residuos/w08_04_copo_descartavel.png",
+    "bytes": 50342,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_05_garrafa_agua.png",
+    "asset": "assets/residuos/w08_05_garrafa_agua.png",
+    "bytes": 45946,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_06_tampa_copo.png",
+    "asset": "assets/residuos/w08_06_tampa_copo.png",
+    "bytes": 55221,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_07_garrafa_suco_vidro.png",
+    "asset": "assets/residuos/w08_07_garrafa_suco_vidro.png",
+    "bytes": 53945,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_08_copo_vidro_lascado.png",
+    "asset": "assets/residuos/w08_08_copo_vidro_lascado.png",
+    "bytes": 60052,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_08_Forum\\03_icones\\w08_09_pote_vidro_baixo.png",
+    "asset": "assets/residuos/w08_09_pote_vidro_baixo.png",
+    "bytes": 57799,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\01_trilha\\w09_distrito_map.png",
+    "asset": "assets/map/worlds/w09_distrito_map.png",
+    "bytes": 405452,
+    "dimensoes": [576, 1024]
+  },
+  {
+    "original": "Mundo_09_Distrito\\02_fundo_partida\\w09_distrito_game.png",
+    "asset": "assets/map/worlds/w09_distrito_game.png",
+    "bytes": 343839,
+    "dimensoes": [512, 910]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_01_porca_metal.png",
+    "asset": "assets/residuos/w09_01_porca_metal.png",
+    "bytes": 58458,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_02_parafuso_metal.png",
+    "asset": "assets/residuos/w09_02_parafuso_metal.png",
+    "bytes": 39290,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_03_mola_metal.png",
+    "asset": "assets/residuos/w09_03_mola_metal.png",
+    "bytes": 57189,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_04_tubo_plastico.png",
+    "asset": "assets/residuos/w09_04_tubo_plastico.png",
+    "bytes": 41942,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_05_peca_plastica.png",
+    "asset": "assets/residuos/w09_05_peca_plastica.png",
+    "bytes": 50127,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_06_carretel_plastico.png",
+    "asset": "assets/residuos/w09_06_carretel_plastico.png",
+    "bytes": 54500,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_07_caco_vidro.png",
+    "asset": "assets/residuos/w09_07_caco_vidro.png",
+    "bytes": 51100,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_08_placa_vidro.png",
+    "asset": "assets/residuos/w09_08_placa_vidro.png",
+    "bytes": 46424,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_09_Distrito\\03_icones\\w09_09_frasco_vidro_quebrado.png",
+    "asset": "assets/residuos/w09_09_frasco_vidro_quebrado.png",
+    "bytes": 33441,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\01_trilha\\w10_cupula_map.png",
+    "asset": "assets/map/worlds/w10_cupula_map.png",
+    "bytes": 389852,
+    "dimensoes": [640, 1138]
+  },
+  {
+    "original": "Mundo_10_Cupula\\02_fundo_partida\\w10_cupula_game.png",
+    "asset": "assets/map/worlds/w10_cupula_game.png",
+    "bytes": 398460,
+    "dimensoes": [640, 1138]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_01_programa_papel.png",
+    "asset": "assets/residuos/w10_01_programa_papel.png",
+    "bytes": 36287,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_02_cracha_papel.png",
+    "asset": "assets/residuos/w10_02_cracha_papel.png",
+    "bytes": 39376,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_03_caixa_documentos.png",
+    "asset": "assets/residuos/w10_03_caixa_documentos.png",
+    "bytes": 43227,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_04_garrafa_plastica_amassada.png",
+    "asset": "assets/residuos/w10_04_garrafa_plastica_amassada.png",
+    "bytes": 54660,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_05_bandeja_embalagem.png",
+    "asset": "assets/residuos/w10_05_bandeja_embalagem.png",
+    "bytes": 42373,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_06_sacola_embalagem.png",
+    "asset": "assets/residuos/w10_06_sacola_embalagem.png",
+    "bytes": 61198,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_07_lata_bebida_amassada.png",
+    "asset": "assets/residuos/w10_07_lata_bebida_amassada.png",
+    "bytes": 59121,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_08_tampa_rosca_metal.png",
+    "asset": "assets/residuos/w10_08_tampa_rosca_metal.png",
+    "bytes": 39029,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Mundo_10_Cupula\\03_icones\\w10_09_recipiente_aluminio.png",
+    "asset": "assets/residuos/w10_09_recipiente_aluminio.png",
+    "bytes": 55764,
+    "dimensoes": [256, 256]
+  },
+  {
+    "original": "Arte_Global\\01_icone_app\\icon.png",
+    "asset": "assets/icon.png",
+    "bytes": 319028,
+    "dimensoes": [1024, 1024]
+  },
+  {
+    "original": "Arte_Global\\02_adaptive_android\\adaptive_background.png",
+    "asset": "assets/adaptive-background.png",
+    "bytes": 222,
+    "dimensoes": [1024, 1024]
+  },
+  {
+    "original": "Arte_Global\\02_adaptive_android\\adaptive_foreground.png",
+    "asset": "assets/adaptive-icon.png",
+    "bytes": 149775,
+    "dimensoes": [1024, 1024]
+  },
+  {
+    "original": "Arte_Global\\03_abertura\\splash.png",
+    "asset": "assets/ui/visuais/splash.png",
+    "bytes": 283633,
+    "dimensoes": [720, 1280]
+  },
+  {
+    "original": "Arte_Global\\04_selos\\guardian.png",
+    "asset": "assets/ui/visuais/guardian.png",
+    "bytes": 115804,
+    "dimensoes": [320, 320]
+  },
+  {
+    "original": "Arte_Global\\04_selos\\rest.png",
+    "asset": "assets/ui/visuais/rest.png",
+    "bytes": 121201,
+    "dimensoes": [320, 320]
+  },
+  {
+    "original": "Arte_Global\\04_selos\\shop.png",
+    "asset": "assets/ui/visuais/shop.png",
+    "bytes": 109314,
+    "dimensoes": [320, 320]
+  },
+  {
+    "original": "Arte_Global\\05_passagem_mundos\\world_transition.png",
+    "asset": "assets/ui/visuais/world_transition.png",
+    "bytes": 90248,
+    "dimensoes": [320, 320]
+  },
+  {
+    "original": "Arte_Global\\06_pontos_fases\\level_complete.png",
+    "asset": "assets/ui/visuais/level_complete.png",
+    "bytes": 67800,
+    "dimensoes": [320, 320]
+  },
+  {
+    "original": "Arte_Global\\06_pontos_fases\\level_current.png",
+    "asset": "assets/ui/visuais/level_current.png",
+    "bytes": 80686,
+    "dimensoes": [320, 320]
+  },
+  {
+    "original": "Arte_Global\\06_pontos_fases\\level_locked.png",
+    "asset": "assets/ui/visuais/level_locked.png",
+    "bytes": 94827,
+    "dimensoes": [320, 320]
+  }
+]

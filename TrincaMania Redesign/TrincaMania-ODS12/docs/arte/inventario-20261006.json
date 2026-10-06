@@ -1,0 +1,1832 @@
+{
+  "data": "2026-10-06T13:04:37.561Z",
+  "branch": "develop",
+  "limiteBytes": 409600,
+  "criterioResolucaoFundos": { "largura": 1080, "altura": 1920 },
+  "resumo": {
+    "arquivos": 149,
+    "pngs": 128,
+    "bytes": 17912121,
+    "residuos": 90,
+    "fundosProprios": 20,
+    "acimaDoLimite": [],
+    "orfaos": [],
+    "referenciasAusentes": [],
+    "interfaceForaDaResolucao": [
+      {
+        "arquivo": "assets/ui/visuais/shop_locked.png",
+        "esperado": { "largura": 320, "altura": 320 },
+        "encontrado": { "largura": 300, "altura": 300 }
+      }
+    ],
+    "fundosAbaixoDaEspecificacao": [
+      "assets/map/worlds/w01_parque_map.png",
+      "assets/map/worlds/w01_parque_game.png",
+      "assets/map/worlds/w02_vale_map.png",
+      "assets/map/worlds/w02_vale_game.png",
+      "assets/map/worlds/w03_central_map.png",
+      "assets/map/worlds/w03_central_game.png",
+      "assets/map/worlds/w04_viveiro_map.png",
+      "assets/map/worlds/w04_viveiro_game.png",
+      "assets/map/worlds/w05_usina_map.png",
+      "assets/map/worlds/w05_usina_game.png",
+      "assets/map/worlds/w06_cooperativa_map.png",
+      "assets/map/worlds/w06_cooperativa_game.png",
+      "assets/map/worlds/w07_rota_map.png",
+      "assets/map/worlds/w07_rota_game.png",
+      "assets/map/worlds/w08_forum_map.png",
+      "assets/map/worlds/w08_forum_game.png",
+      "assets/map/worlds/w09_distrito_map.png",
+      "assets/map/worlds/w09_distrito_game.png",
+      "assets/map/worlds/w10_cupula_map.png",
+      "assets/map/worlds/w10_cupula_game.png"
+    ]
+  },
+  "limites": [
+    "Referências literais e configuração comprovam registro, não visibilidade em todos os estados do Android.",
+    "Decodificação e tamanho não comprovam contraste 3:1, recorte, estilo, direitos de uso ou aprovação humana.",
+    "As imagens de recompensa antigas precisam de revisão de conteúdo ODS12; o baú de mundo ainda exibe gemas.",
+    "shop_locked.png mede 300×300; os marcadores de mapa têm especificação de 320×320. A splash mede 720×1280, sem resolução específica de splash fixada na art bible.",
+    "A-04 e VIS-02 permanecem aguardando aprovação visual explícita; A-24a/b não foram geradas."
+  ],
+  "mundos": [
+    {
+      "id": 1,
+      "nome": "Parque da Coleta Seletiva",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w01_parque_map.png",
+          "bytes": 375817,
+          "sha256": "e24d6d7b067293a36865dba0d424cba751463c272e05af70a0d606ceb6dc5022",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w01_parque_game.png",
+          "bytes": 365598,
+          "sha256": "fcea06b4e3864e083d144e2e2f5f0081f876bdc28f0a7a5288300dbc11d1672f",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nome": "Vale da Reciclagem",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w02_vale_map.png",
+          "bytes": 374590,
+          "sha256": "450ed97d2084638e2f338c108c89abc332faf56520b430a5e02101a62d364314",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w02_vale_game.png",
+          "bytes": 405481,
+          "sha256": "1aa9f00c5653ed3e288a381b521cf86c9e52b81fe5cb9affbdb3fa86c36f1ef3",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "nome": "Central de Materiais",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w03_central_map.png",
+          "bytes": 369587,
+          "sha256": "42d8c10cb92c9adbabbe449f2bd3e7603f8d0c5506a00f319ef2dd3a9818c0f7",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w03_central_game.png",
+          "bytes": 379117,
+          "sha256": "63aaa78d3ff573652f19674479bc6e7e38dae32a9a885d9062b6f5ad8b143735",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "nome": "Viveiro Comunitário",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w04_viveiro_map.png",
+          "bytes": 334354,
+          "sha256": "58ee070caa4b569999f00bd93c1d6232df275b41e24410d700b9ddb265fc7bc1",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 512,
+          "altura": 910,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w04_viveiro_game.png",
+          "bytes": 366253,
+          "sha256": "e5a8657f03c50a64300d8be58945cfe22b24c9a3490851a1f02a32b8338b77ce",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "nome": "Usina de Compostagem",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w05_usina_map.png",
+          "bytes": 401681,
+          "sha256": "73fcae705d996b7d077e54d6d427a5490e4808483e569d1997541a4f113588b7",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w05_usina_game.png",
+          "bytes": 357016,
+          "sha256": "d555d6a413b20fc295f8067c6adf98fefa3128832d9902b57910a9978b6533bf",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 512,
+          "altura": 910,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "nome": "Cooperativa dos Catadores",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w06_cooperativa_map.png",
+          "bytes": 363684,
+          "sha256": "981eed03d5be8d04a9cf470e9729a0775be960985779cd847232b300d1b9312b",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w06_cooperativa_game.png",
+          "bytes": 366471,
+          "sha256": "7b0e99e20cb1e9b2f8b5f4a7765d6ea0e8cee5cdfc50ca9abfe01db35e281c77",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "nome": "Rota da Logística Reversa",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w07_rota_map.png",
+          "bytes": 401781,
+          "sha256": "8b63422559e6a546c7cb0931d82023b292c00da46aeae85a859aeaba02672f5e",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 640,
+          "altura": 1138,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w07_rota_game.png",
+          "bytes": 367774,
+          "sha256": "300923d00996d5f92d8b97297390498df62450a1e4bbda74e519c7da2a4c6705",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 640,
+          "altura": 1138,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "nome": "Fórum da Economia Circular",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w08_forum_map.png",
+          "bytes": 379122,
+          "sha256": "efa71b1dead2e9b724af36cd5976c9485baaa14a67794510f8161a28f5179fab",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w08_forum_game.png",
+          "bytes": 370835,
+          "sha256": "7f525dc105cb882b7c4a1ce28081225fb4ba7bdba40bd53c1031d64ebe5337f7",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "nome": "Distrito da Reindustrialização",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w09_distrito_map.png",
+          "bytes": 405452,
+          "sha256": "18716f0406827874a428744dbc79d4f20be335348af7afc2f99e5f215184a81d",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w09_distrito_game.png",
+          "bytes": 343839,
+          "sha256": "e0cc060c99fe9fab6fe2c128476785d814ee0f8732bf875a48951a8fd8595201",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 512,
+          "altura": 910,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "nome": "Cúpula da Reciclagem Global",
+      "registroProprio": true,
+      "placeholder": null,
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w10_cupula_map.png",
+          "bytes": 389852,
+          "sha256": "2a5600ac8a55b356a12665fed702c2f8c853e00350ef4fd104f8e73aafd873bf",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 640,
+          "altura": 1138,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w10_cupula_game.png",
+          "bytes": 398460,
+          "sha256": "f5a93d46c0aacbc7aece7c89a0282e41ed6192ce570281273fc462dcfda58a36",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 640,
+          "altura": 1138,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "nome": "Jardim Renascido",
+      "registroProprio": false,
+      "placeholder": "Família do Viveiro (mundo 4); A-24a/b pendentes.",
+      "fundos": [
+        {
+          "papel": "map",
+          "arquivo": "assets/map/worlds/w04_viveiro_map.png",
+          "bytes": 334354,
+          "sha256": "58ee070caa4b569999f00bd93c1d6232df275b41e24410d700b9ddb265fc7bc1",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 512,
+          "altura": 910,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        },
+        {
+          "papel": "game",
+          "arquivo": "assets/map/worlds/w04_viveiro_game.png",
+          "bytes": 366253,
+          "sha256": "e5a8657f03c50a64300d8be58945cfe22b24c9a3490851a1f02a32b8338b77ce",
+          "referencias": ["src/data/worldVisualAssets.ts"],
+          "largura": 576,
+          "altura": 1024,
+          "pixelsComTransparencia": 0,
+          "pngDecodificado": true,
+          "atendeResolucao1080x1920": false
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "arquivo": "assets/adaptive-background.png",
+      "bytes": 222,
+      "sha256": "1829c15cd01566bada32430f9a0f45eaffde16fec8bdc59c008f4f0ec1d35084",
+      "referencias": ["app.json"],
+      "largura": 1024,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/adaptive-icon.png",
+      "bytes": 149775,
+      "sha256": "49802f040567d3d84deafb82a463f25376086e89c099b6980ecd70f607c6260a",
+      "referencias": ["app.json", "src/screens/SplashIntroScreen.tsx"],
+      "largura": 1024,
+      "altura": 1024,
+      "pixelsComTransparencia": 1047235,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/icon.png",
+      "bytes": 319028,
+      "sha256": "b1caa666f6d4821bec3def04d36b691cfe2d44c4aa31880ca9d1b043a3f08dd3",
+      "referencias": ["app.json"],
+      "largura": 1024,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/igrion-logo.png",
+      "bytes": 339529,
+      "sha256": "5a4cc3a9fefed63efa50e229f8b87a9a2e15d477c92668abdb7995ee851c0509",
+      "referencias": ["src/screens/SplashIntroScreen.tsx"],
+      "largura": 1024,
+      "altura": 1024,
+      "pixelsComTransparencia": 653891,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w01_parque_game.png",
+      "bytes": 365598,
+      "sha256": "fcea06b4e3864e083d144e2e2f5f0081f876bdc28f0a7a5288300dbc11d1672f",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w01_parque_map.png",
+      "bytes": 375817,
+      "sha256": "e24d6d7b067293a36865dba0d424cba751463c272e05af70a0d606ceb6dc5022",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w02_vale_game.png",
+      "bytes": 405481,
+      "sha256": "1aa9f00c5653ed3e288a381b521cf86c9e52b81fe5cb9affbdb3fa86c36f1ef3",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w02_vale_map.png",
+      "bytes": 374590,
+      "sha256": "450ed97d2084638e2f338c108c89abc332faf56520b430a5e02101a62d364314",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w03_central_game.png",
+      "bytes": 379117,
+      "sha256": "63aaa78d3ff573652f19674479bc6e7e38dae32a9a885d9062b6f5ad8b143735",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w03_central_map.png",
+      "bytes": 369587,
+      "sha256": "42d8c10cb92c9adbabbe449f2bd3e7603f8d0c5506a00f319ef2dd3a9818c0f7",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w04_viveiro_game.png",
+      "bytes": 366253,
+      "sha256": "e5a8657f03c50a64300d8be58945cfe22b24c9a3490851a1f02a32b8338b77ce",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w04_viveiro_map.png",
+      "bytes": 334354,
+      "sha256": "58ee070caa4b569999f00bd93c1d6232df275b41e24410d700b9ddb265fc7bc1",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 512,
+      "altura": 910,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w05_usina_game.png",
+      "bytes": 357016,
+      "sha256": "d555d6a413b20fc295f8067c6adf98fefa3128832d9902b57910a9978b6533bf",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 512,
+      "altura": 910,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w05_usina_map.png",
+      "bytes": 401681,
+      "sha256": "73fcae705d996b7d077e54d6d427a5490e4808483e569d1997541a4f113588b7",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w06_cooperativa_game.png",
+      "bytes": 366471,
+      "sha256": "7b0e99e20cb1e9b2f8b5f4a7765d6ea0e8cee5cdfc50ca9abfe01db35e281c77",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w06_cooperativa_map.png",
+      "bytes": 363684,
+      "sha256": "981eed03d5be8d04a9cf470e9729a0775be960985779cd847232b300d1b9312b",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w07_rota_game.png",
+      "bytes": 367774,
+      "sha256": "300923d00996d5f92d8b97297390498df62450a1e4bbda74e519c7da2a4c6705",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 640,
+      "altura": 1138,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w07_rota_map.png",
+      "bytes": 401781,
+      "sha256": "8b63422559e6a546c7cb0931d82023b292c00da46aeae85a859aeaba02672f5e",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 640,
+      "altura": 1138,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w08_forum_game.png",
+      "bytes": 370835,
+      "sha256": "7f525dc105cb882b7c4a1ce28081225fb4ba7bdba40bd53c1031d64ebe5337f7",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w08_forum_map.png",
+      "bytes": 379122,
+      "sha256": "efa71b1dead2e9b724af36cd5976c9485baaa14a67794510f8161a28f5179fab",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w09_distrito_game.png",
+      "bytes": 343839,
+      "sha256": "e0cc060c99fe9fab6fe2c128476785d814ee0f8732bf875a48951a8fd8595201",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 512,
+      "altura": 910,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w09_distrito_map.png",
+      "bytes": 405452,
+      "sha256": "18716f0406827874a428744dbc79d4f20be335348af7afc2f99e5f215184a81d",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 576,
+      "altura": 1024,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w10_cupula_game.png",
+      "bytes": 398460,
+      "sha256": "f5a93d46c0aacbc7aece7c89a0282e41ed6192ce570281273fc462dcfda58a36",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 640,
+      "altura": 1138,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/map/worlds/w10_cupula_map.png",
+      "bytes": 389852,
+      "sha256": "2a5600ac8a55b356a12665fed702c2f8c853e00350ef4fd104f8e73aafd873bf",
+      "referencias": ["src/data/worldVisualAssets.ts"],
+      "largura": 640,
+      "altura": 1138,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_01_garrafa_pet.png",
+      "bytes": 40307,
+      "sha256": "edade4dbf6851e0a89db8031f6f5c7baaf277b8d439c8ec1719e2d9bee09e9f2",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65137,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_02_copo_plastico.png",
+      "bytes": 48677,
+      "sha256": "7e03016f62277ec325b76fe2f504a0ddcd2fb95a6abd3d9209fd832c5b6c30b9",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65071,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_03_sacola.png",
+      "bytes": 49263,
+      "sha256": "27393c9d663a4489a318f48a6d09b84417cd74beb2f3093630f189629ed3c5e1",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64903,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_04_jornal.png",
+      "bytes": 57664,
+      "sha256": "29f49c6dd67639dd8aaf11bcf6f628efd00ddf627287979635ec2e7794af4de7",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65099,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_05_caixa_papelao.png",
+      "bytes": 43075,
+      "sha256": "6d21f6e8433446cc3fb7c01194a7939e7c735dca07d30efc954fdbce9a33fbee",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65030,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_06_folha_amassada.png",
+      "bytes": 52781,
+      "sha256": "211375b76b3643ba67c4e6c50d76e5edc4f7999fd6ce564140e756ebdea72706",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65121,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_07_lata_bebida.png",
+      "bytes": 40353,
+      "sha256": "9c8fc4a43e6da63f367f5d149446bf26047ebaf060d9b05522ae869fea416fa7",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65130,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_08_lata_conserva.png",
+      "bytes": 63988,
+      "sha256": "a93b619f4226cc56951f8ffffd69883463bd3d9e3ecdaac4cc11a90a0ba76dce",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65071,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w01_09_tampa_metal.png",
+      "bytes": 49289,
+      "sha256": "a485b372f68dfaa5233ca66d8545e9319200ce7a6334c9d279656f335d9ec69c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65080,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_01_frasco_detergente.png",
+      "bytes": 44544,
+      "sha256": "0fb5aea58bcc19e88cd4e7012b9931096a5df942fa75b1d93bb2ded21111e82e",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65021,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_02_pote_plastico.png",
+      "bytes": 48075,
+      "sha256": "040963689957a2ef9acd1ebd543b75da1ec78aaf5f6950f1dc0bf75fc4ee4bdf",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65060,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_03_embalagem_plastica.png",
+      "bytes": 46592,
+      "sha256": "aceb1b243b7fd5c7d34ef7c52eec424d8262180ca7bf082d911f97b589dcfd37",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65124,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_04_caixa_cereal.png",
+      "bytes": 40882,
+      "sha256": "6ebc59b2d892f8de1f9cf51d74b08ff04a10d69f287c67e6565af63441c9917c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64970,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_05_tubo_papelao.png",
+      "bytes": 39469,
+      "sha256": "00f7300cb70f73e7207fef0916a1af06098a0747b735d799be6f882b3411e26d",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65156,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_06_saco_papel.png",
+      "bytes": 46005,
+      "sha256": "1375ae6586e93a8e9663a263f320221cd49ace488187d5d6ffd86d530a5e4d2c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65019,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_07_garrafa_vidro.png",
+      "bytes": 34636,
+      "sha256": "ff4359e18bbfc8b4d9d04e6ce93ffac2124910b69a30eefa791d70eb7205c151",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65139,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_08_pote_vidro.png",
+      "bytes": 60588,
+      "sha256": "0aaf0e4d0740578bd0fb4cfe75753ccf5debe18b0f5b166c9651cd42a433b7c0",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65075,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w02_09_copo_vidro.png",
+      "bytes": 50907,
+      "sha256": "4ba7753402f23a86d3975f9fa8b2ed798157eb615b0fbae9afee9dc1596b0e7b",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65082,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_01_chapa_metal.png",
+      "bytes": 49276,
+      "sha256": "7c3ce439e8430fee32b2fa23aa86fbc23e1029364bcb05b6af5bc5b235fcf365",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65064,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_02_cano_metal.png",
+      "bytes": 39747,
+      "sha256": "5bbd8d9fc8fb367a23db4cfde10a0ffe8f0fe53fd6fe27c54ab94c2011b2ef0a",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65050,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_03_engrenagem.png",
+      "bytes": 48449,
+      "sha256": "90bffa5db7caee99eef9678d7f825242af28807b53583096dcf20f7adf7755d7",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64763,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_04_papelao_dobrado.png",
+      "bytes": 42716,
+      "sha256": "03b95c816ca7ca913dc502e0344a4bb553e6eb245cdf755255d40a304a773d44",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65105,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_05_revista.png",
+      "bytes": 41836,
+      "sha256": "fceb9675fc2eb10adeba7890b28e8ce8b2b9e780ab29f0fddf71b9ef65d2207f",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65146,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_06_caixa_ovos_papelao.png",
+      "bytes": 60935,
+      "sha256": "7a22ebb41bc5b0911a938d0220e3f19df582abd53307e82aa1634426ba92c505",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65004,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_07_bandeja_plastica.png",
+      "bytes": 41772,
+      "sha256": "c65215728608a0acf1c971817fd251572c2b476e338cc551bbff2e3df83da80f",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65122,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_08_balde_plastico.png",
+      "bytes": 49908,
+      "sha256": "da00f2bf20fcfd5231d18353fd8d1f11a68fb74524b050a8b6d350570987c39c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64982,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w03_09_tampa_plastica.png",
+      "bytes": 41718,
+      "sha256": "1a84242921fb6cef412a24c657f8193e649ad5ecf5e763fdec4daa9374ee17a3",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65116,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_01_garrafa_cortada.png",
+      "bytes": 50798,
+      "sha256": "488874936a731692921c17962421e6f372dd0c968ef6472faa11e41a3351e2b9",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65076,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_02_vaso_plastico_quebrado.png",
+      "bytes": 46501,
+      "sha256": "7f75ed15f5595a9c47fe1de5dd2ef88d7b7e86dd1501053e90794ecd1ca6fb0c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65070,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_03_regador_plastico_quebrado.png",
+      "bytes": 45621,
+      "sha256": "02a0a2a7b8cb0b61b28ce139a5678901bab8c24b06f93a7ae7c8c84076649520",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64947,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_04_lata_tinta_vazia.png",
+      "bytes": 49452,
+      "sha256": "52be4a1ae814da35e15fedc6dd4575cc804c92d81976f645e0cca7d6608642f1",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65010,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_05_lata_plantio_vazia.png",
+      "bytes": 60301,
+      "sha256": "f69b6d850cdf50250fbd8d125d3197f73b89cdd713e608cb974197766f5f9860",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65028,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_06_balde_metal.png",
+      "bytes": 54333,
+      "sha256": "9b2ed98b723055234f18880c9e3723c54efbf09cf19bb94e0296cab729947e2b",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64915,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_07_tubete_papelao.png",
+      "bytes": 46501,
+      "sha256": "734eb228561c807e4559e87515d75dc49729e9dfc99add9e62c06a77f20cf3d8",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65105,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_08_caixa_mudas_papelao.png",
+      "bytes": 48569,
+      "sha256": "65fba822f545f79c58bbce7809760377e3a276b836e92c8ff757f5f5b3b2db0f",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65097,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w04_09_saco_papel_rasgado.png",
+      "bytes": 43040,
+      "sha256": "834ec876c202e57bdcbea3b81cbc15d1215c10034c3c44e7b1e9cd9fb34c9742",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65089,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_01_folhas_secas.png",
+      "bytes": 40512,
+      "sha256": "5758587f2e27c4ec925d2e7c72f6c860a7171646083ee1bb6d3f373d2b20c985",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65096,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_02_gravetos.png",
+      "bytes": 54266,
+      "sha256": "fa0cf40b9291ad269be57d0126803c48714b3585e929a7029c8aa9d77d3d0e00",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64927,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_03_borra_cafe_filtro.png",
+      "bytes": 82054,
+      "sha256": "b9be20d44e9679ba51e48795752eed33046dd1e7b122501b93a19bfbbdccbe01",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65069,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_04_papelao_picado.png",
+      "bytes": 67556,
+      "sha256": "796c0be08c4a6005d178ae458195f6e3f3e6822d3e1895498ae8ee50a66d0c2d",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65037,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_05_saco_kraft.png",
+      "bytes": 50457,
+      "sha256": "35f8dde142ce6226710604f0c3a93b544ca2844f20f819b74342766857e6a02c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65066,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_06_rolo_papel.png",
+      "bytes": 35583,
+      "sha256": "71116f24310021297b593381ae9d81e79060da22a31a46cf3e99cc3dee23b9bc",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65104,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_07_balde_metal_amassado.png",
+      "bytes": 58553,
+      "sha256": "ef853b9bbe08632be9db9cf9168e7946f449c85837d04dde50aaf0f9ef05f047",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64985,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_08_peneira_metal_quebrada.png",
+      "bytes": 74273,
+      "sha256": "6d4ae1921666271de29f6e91476fa64dec99d6dcaf084925b5545364bce540d0",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 63120,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w05_09_tambor_metal.png",
+      "bytes": 46999,
+      "sha256": "dd321a292583b8af336efed66809d2cf0c24d55dabc1f1107638724921e70f79",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65075,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_01_galao_plastico.png",
+      "bytes": 53134,
+      "sha256": "cafc65009a48768d48dfda93fd600b7cd8ccec271d0f7cf061699e7e5467ad1c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64957,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_02_cesta_plastica_quebrada.png",
+      "bytes": 64889,
+      "sha256": "45c5554eeeda36da889da13469ecaf99eaeaf8473dd1ff8144c979943cc5b60e",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64111,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_03_pote_margarina.png",
+      "bytes": 41675,
+      "sha256": "ab60fe022999c0379000693566e71c0542a13d1caddb3cf8454d6adde9b3e4c3",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65090,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_04_caixa_entrega.png",
+      "bytes": 46834,
+      "sha256": "d2f93471a7ab35abc9c8c94d4fb918edab390408e5fd9c5d3c6d0005aeaf993c",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65009,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_05_pilha_papeis.png",
+      "bytes": 63256,
+      "sha256": "e2ecb945a0f5dcf2416028bae1d79bdffa1a25323d86a7e248107f99c6157713",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65018,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_06_cartela_papelao.png",
+      "bytes": 56119,
+      "sha256": "d788134ddda7de1c14dc6054c7585aaa4e7bbb83ef42409cef4227192236fd48",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64953,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_07_lata_oleo.png",
+      "bytes": 52732,
+      "sha256": "c26d0fb349df6a2a86fdd826dc73277cb68399d218667aa363be4e1b69606194",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64969,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_08_panela_velha.png",
+      "bytes": 49234,
+      "sha256": "861f23b895681d913a227821b8fb6e5110ad4ca8e823f41e82eac78ae8686821",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64961,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w06_09_arame_enrolado.png",
+      "bytes": 72574,
+      "sha256": "f5cc08a01217cc4da06e62aa848739859639612685d3ce4a89ca4f726ec29ed0",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65061,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_01_engradado_plastico.png",
+      "bytes": 80148,
+      "sha256": "ed1a77c421aeea108298d71667fd204b5b43601b870c9377a19c9abf40aca3e8",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 63491,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_02_frasco_shampoo.png",
+      "bytes": 35780,
+      "sha256": "9b7df5efa6032fc9e2206ffe9274f50f27910b7ac072e4a7fcdb06b240fe5493",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65070,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_03_embalagem_refil.png",
+      "bytes": 54891,
+      "sha256": "979bea7df78a8e3fb1c68b08e528f4510e0cc946f4d22c494fa7d1eff1539f32",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64947,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_04_garrafa_retornavel.png",
+      "bytes": 26681,
+      "sha256": "127bf9a0daa0b12ee37966206c0b187cff49644aae356ddfd95188d1ce8f651b",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65125,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_05_pote_conserva.png",
+      "bytes": 60996,
+      "sha256": "fd2222226ed113c2a87d6bef3b1f98125e7e4c06eaee50042b12115d09265539",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65023,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_06_frasco_vidro.png",
+      "bytes": 54302,
+      "sha256": "be24bc3f28cdc27f5d89f06dea13dc60ef2810484a97efee693f9b82ce5b63f8",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65065,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_07_lata_aerosol_vazia.png",
+      "bytes": 38678,
+      "sha256": "628bd9adf37591f446adcb0e77ea5914101474fd1462fe6e80f2cc78311b437f",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65077,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_08_caixa_metal.png",
+      "bytes": 52284,
+      "sha256": "01400b5de6da691edd19b2cdd088d46f9c5e824244c4422375a074f068094e81",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65043,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w07_09_tambor_pequeno.png",
+      "bytes": 45260,
+      "sha256": "4ad8362b20192fd0604e69cd040ade94aa6007d40ca2ec6f8f2777e8cb052c8f",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65069,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_01_folheto.png",
+      "bytes": 38274,
+      "sha256": "8274538bb4e72042a8a2a4aa4b5b372ec7e94f4ccd0a6566da7133844577fcce",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64952,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_02_envelope.png",
+      "bytes": 46936,
+      "sha256": "32e8c9554262b49f22e121f6d648fcfaf6d2f3183c0bba2c97016ef5cf5de9b3",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65021,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_03_pasta_papelao.png",
+      "bytes": 40919,
+      "sha256": "3d04fadcc3b8aa739014234e4d1b37cda4e37c364a0a0d110a485971927b14e5",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65019,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_04_copo_descartavel.png",
+      "bytes": 50342,
+      "sha256": "f7601f3b3fe690e5fbf2d988745f2143480741e97b1113be0309349a1c82b96d",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65074,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_05_garrafa_agua.png",
+      "bytes": 45946,
+      "sha256": "c102b7a56747111b15bc70c7ab1a20d8cf12339c5aacd7f0771d0143de8d4d4d",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65131,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_06_tampa_copo.png",
+      "bytes": 55221,
+      "sha256": "65be93b85d688f00904a4d8f3766062f64241c6969b83163a1cd916725d812bb",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65082,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_07_garrafa_suco_vidro.png",
+      "bytes": 53945,
+      "sha256": "9fc3a5ae3fca58b698a258620ad5996e6992e7033bb1fcfcbcd8bb4354d6fa96",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65079,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_08_copo_vidro_lascado.png",
+      "bytes": 60052,
+      "sha256": "89b1843ca6502150ee92b4ce175b049aa3d6d769b7fb524afeb510d217b21974",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65033,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w08_09_pote_vidro_baixo.png",
+      "bytes": 57799,
+      "sha256": "a0019caae47da691f9028ed4b7acb86d02518c2aceb40a93acf105744894ce65",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65107,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_01_porca_metal.png",
+      "bytes": 58458,
+      "sha256": "e507c952bfebb7fea40605d3ca81561fa669bd1679bd38ee18ebda1cfe1333e0",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64954,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_02_parafuso_metal.png",
+      "bytes": 39290,
+      "sha256": "d2034b2ede5f9513466c06e683790e9a84a6fc34a21c8d86b131580fc647ed0d",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65123,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_03_mola_metal.png",
+      "bytes": 57189,
+      "sha256": "b6f919c154c6601d18f837aea81707340a822e3478099d564a5504854bc5d23e",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64432,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_04_tubo_plastico.png",
+      "bytes": 41942,
+      "sha256": "1d51901d2d4d04da2d72c8a553619b6fc9389d6060d45c46ca6adfd0281c05c3",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65086,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_05_peca_plastica.png",
+      "bytes": 50127,
+      "sha256": "77f0af5c68e2a0fae73a3f0d0ddb7e8adcdc8df0f58e97727229c1ec2763b365",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64818,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_06_carretel_plastico.png",
+      "bytes": 54500,
+      "sha256": "8d70cc39524cba03515662662f7df19ffc628dda51bbcdc4673d8efa3a42ca2b",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64928,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_07_caco_vidro.png",
+      "bytes": 51100,
+      "sha256": "dbfca56d2d451326f28f9623c8e26ae07b25e50776ac8c731b31979c014f1ec5",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65107,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_08_placa_vidro.png",
+      "bytes": 46424,
+      "sha256": "80a7dcbab2ceea1e504fa83224e4243556a050cefa9e69b4a3a368f4c99dc544",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65120,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w09_09_frasco_vidro_quebrado.png",
+      "bytes": 33441,
+      "sha256": "f1b80c4882f9533298a0e21e49311c519366051f69cb44e22c008c04374cae93",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65156,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_01_programa_papel.png",
+      "bytes": 36287,
+      "sha256": "5562fc308b8c4b926415a52a95644a797929ed063085754a1b37e49966109a42",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64991,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_02_cracha_papel.png",
+      "bytes": 39376,
+      "sha256": "47ed3ddc497500ac8be45c9dce3da0a6f2d696bf33cf659bfa3758ca5de4ba0b",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64981,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_03_caixa_documentos.png",
+      "bytes": 43227,
+      "sha256": "2ec289ce1eeba489de6e7391d27bf0529b51629ae704b2cf5c6e1c55b55d5374",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65027,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_04_garrafa_plastica_amassada.png",
+      "bytes": 54660,
+      "sha256": "a026ce0f4c358abec1d8a667a7fd39ecef904184473947ff55c7af2fa250a60e",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65135,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_05_bandeja_embalagem.png",
+      "bytes": 42373,
+      "sha256": "18854e250b44547aa2d56425c7bb66a840c0e0a3f71df41995e93f00c7c43eeb",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65124,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_06_sacola_embalagem.png",
+      "bytes": 61198,
+      "sha256": "30a48474170d8dec2a3b967d45edb3cd875deb0826b9f5f671407e323cdfe729",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 64811,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_07_lata_bebida_amassada.png",
+      "bytes": 59121,
+      "sha256": "8bea4254684614a8a5cc3a33fbad81a06e12708800760fb82116cf7c19afd7ba",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65117,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_08_tampa_rosca_metal.png",
+      "bytes": 39029,
+      "sha256": "b3e6bcc088e663434edfc03c0a36b281f2c4c43daa83d0c9ee0f9ff8296c86d2",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65174,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/residuos/w10_09_recipiente_aluminio.png",
+      "bytes": 55764,
+      "sha256": "55040e79322ef0d19a4874c14fcb40c138d059fd801456a1de4b7525cac0052b",
+      "referencias": ["src/data/residueVisualAssets.ts"],
+      "largura": 256,
+      "altura": 256,
+      "pixelsComTransparencia": 65083,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_central.mp3",
+      "bytes": 353218,
+      "sha256": "1339ffbbbc9a785990a75d9340afc5eb9a384f5fd498cd095527fe66558d46c0",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_cooperativa.mp3",
+      "bytes": 353218,
+      "sha256": "219bf1f68b565ddaba2b31937e40b0dfcd3e33b129511c3e10b2f0c57ed4a279",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_forum.mp3",
+      "bytes": 353218,
+      "sha256": "3d935b8417b245046a9e87922042e830d4c0a09694576753d5c496c08a59a905",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_parque.mp3",
+      "bytes": 353218,
+      "sha256": "1063c0e03bf545ccef812d1a456eec12bd6480b55049ae759bffcc26000edb5b",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_rota.mp3",
+      "bytes": 353218,
+      "sha256": "8d375734efd2377308dbf2ad31406326b2d4030540c6735fec6047b41938c124",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_usina.mp3",
+      "bytes": 353218,
+      "sha256": "725f7476258285c35a382281dc6943bd09ce00b5ae25334bcda5031c436f3eb9",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_vale.mp3",
+      "bytes": 353218,
+      "sha256": "a1dcbb49c1ede3a223733ff1a650a334662caab06f3b118b08110248d5757c02",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/ambient/ambient_viveiro.mp3",
+      "bytes": 353218,
+      "sha256": "dc8fe012db63c3ffc15d122e73c8303439eb189e83572738a4af3afd5e1c00ce",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/blocked.mp3",
+      "bytes": 2413,
+      "sha256": "186e51dd7a67e50803ff22f164e5a38c5326ab7443602ee410ed152194368706",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/button.mp3",
+      "bytes": 1763,
+      "sha256": "c0a47dbda3dded7eea88feb10a84b12fe326559758618872bc27b4b0c42bd696",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/coin.mp3",
+      "bytes": 2858,
+      "sha256": "b918b6cd281996ab3f61c0a3ef4f2ee6293f4259ab9c2284feb9631452771e5b",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/confetti.wav",
+      "bytes": 67076,
+      "sha256": "b7f27d998041c0b92d681729bf707b84413d45073bec521f35ad8c2db37d39c0",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/lose.mp3",
+      "bytes": 4128,
+      "sha256": "79aeda987f351938eee8480b006a81d3b279306cbbdb6f3d68cdb4241ac9c53f",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/match.mp3",
+      "bytes": 3978,
+      "sha256": "8b8d77e1f383e633409d87c95f7d8536daaf1aa43bfe4e2e22e902f172382a5e",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/shop_buy.mp3",
+      "bytes": 4081,
+      "sha256": "282b2215d1e8ec5b84985b204606036f53b7ffdc3633de37c307644dfefa0fdc",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/tap.mp3",
+      "bytes": 1608,
+      "sha256": "c6b7b881ee322287111913ca07328f57eec157a31bc49cb8b79a6e5b94061695",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/voice/chest_open.mp3",
+      "bytes": 12163,
+      "sha256": "e3b930f5f388cf68778e5cdc130d6d18bc5b25c072795f8b105e7fe27ed46cc8",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/voice/reward_sparkle.mp3",
+      "bytes": 7984,
+      "sha256": "fad323333b3b26b955e17f30f1a7e8d55b0ade6d09921b615494d538477f2e9b",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/whoosh.wav",
+      "bytes": 18566,
+      "sha256": "7d52730b4ef14ea8fc30dfb2810e6548a0906b88a46b7cf6ba765ab737f9cca2",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/win.mp3",
+      "bytes": 6263,
+      "sha256": "8e735bac5d4a3100f420ccafbbf96c9f20d19deef166c712f1ef154052d7e335",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/sfx/world_unlock.mp3",
+      "bytes": 8943,
+      "sha256": "21b5151928d9e236876b0e295e3582968d29267ae55a617f1d8032b8745b13db",
+      "referencias": ["src/utils/sounds.ts"]
+    },
+    {
+      "arquivo": "assets/ui/rewards/chest_common_closed.png",
+      "bytes": 218888,
+      "sha256": "622b7e79ad45b50c953f4f2161c3a87fd7577ceca1a74aaced1cff46093a45b4",
+      "referencias": ["src/components/RewardAssetIcon.tsx"],
+      "largura": 1536,
+      "altura": 1024,
+      "pixelsComTransparencia": 1209483,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/rewards/chest_world_closed.png",
+      "bytes": 345887,
+      "sha256": "a72e942c5c39430563599a2bf21d040e4659967bf565327d6db2617a71a4ce6f",
+      "referencias": ["src/components/RewardAssetIcon.tsx"],
+      "largura": 1536,
+      "altura": 1024,
+      "pixelsComTransparencia": 1292502,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/rewards/reward_coin.png",
+      "bytes": 173957,
+      "sha256": "2bde03cc9298b2575122143e3a44e888ae354a674ff2526b0052d4b9237d5750",
+      "referencias": ["src/components/RewardAssetIcon.tsx"],
+      "largura": 1536,
+      "altura": 1024,
+      "pixelsComTransparencia": 1374783,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/rewards/reward_key.png",
+      "bytes": 143127,
+      "sha256": "7ea2cee686a8b13557b6292a58714fe34e1fab74e4c1a3eda7b7ab7415a2cc25",
+      "referencias": ["src/components/RewardAssetIcon.tsx"],
+      "largura": 1536,
+      "altura": 1024,
+      "pixelsComTransparencia": 1557280,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/rewards/reward_life.png",
+      "bytes": 159920,
+      "sha256": "671974619e6cc2eea699bca6dc0c4d54ca9850d15f90b5d41f233b9f871e8fd1",
+      "referencias": ["src/components/RewardAssetIcon.tsx"],
+      "largura": 1536,
+      "altura": 1024,
+      "pixelsComTransparencia": 1454495,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/guardian.png",
+      "bytes": 115804,
+      "sha256": "b2e513adfe57d069c0896a1c18ea5841913db466278ecf535b689b44fc3facaa",
+      "referencias": ["src/components/RecyclingMarkerArt.tsx"],
+      "largura": 320,
+      "altura": 320,
+      "pixelsComTransparencia": 101802,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/level_complete_base.png",
+      "bytes": 65162,
+      "sha256": "315b9269bd09aefcea3ccdce31072e14f99ff87f85d342665cb94b25ed3ac72e",
+      "referencias": [
+        "src/components/MapLevelNode.tsx",
+        "src/components/__tests__/mapLevelNode.test.tsx"
+      ],
+      "largura": 320,
+      "altura": 320,
+      "pixelsComTransparencia": 102400,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/level_current.png",
+      "bytes": 80686,
+      "sha256": "600d2ca6435dc4ed25e4ca42cb9b42f3d58c11842852c44182ef5f01b43b5940",
+      "referencias": [
+        "src/components/MapLevelNode.tsx",
+        "src/components/__tests__/mapLevelNode.test.tsx"
+      ],
+      "largura": 320,
+      "altura": 320,
+      "pixelsComTransparencia": 101832,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/level_locked.png",
+      "bytes": 94827,
+      "sha256": "0ac4c738c07bfde0491e43f9cf9988f8a888285d9e4d97fed07bc81408e0fe11",
+      "referencias": [
+        "src/components/MapLevelNode.tsx",
+        "src/components/__tests__/mapLevelNode.test.tsx"
+      ],
+      "largura": 320,
+      "altura": 320,
+      "pixelsComTransparencia": 101834,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/rest.png",
+      "bytes": 121201,
+      "sha256": "3b54558c183f54a4c0b7d8dff42ab004f561697559e63fa3976167ccd88fab05",
+      "referencias": ["src/components/RecyclingMarkerArt.tsx"],
+      "largura": 320,
+      "altura": 320,
+      "pixelsComTransparencia": 101383,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/shop.png",
+      "bytes": 109314,
+      "sha256": "553144d30648b9bd5479dfaa45348f9abb26a05b17f7fa9ea08da3e3ef1d42ff",
+      "referencias": [
+        "src/components/RecyclingMarkerArt.tsx",
+        "src/screens/ShopScreen.tsx"
+      ],
+      "largura": 320,
+      "altura": 320,
+      "pixelsComTransparencia": 101199,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/shop_locked.png",
+      "bytes": 125353,
+      "sha256": "77dcf902d0ffb8b018b9319cb71dbf67ce95ff83f1e237066032010c5adfb4dc",
+      "referencias": [
+        "src/components/RecyclingMarkerArt.tsx",
+        "src/components/__tests__/RecyclingMarkerArt.test.tsx"
+      ],
+      "largura": 300,
+      "altura": 300,
+      "pixelsComTransparencia": 89143,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/splash.png",
+      "bytes": 283633,
+      "sha256": "fe58e6f6ea69c76077b20554945b3b05d7028760c1c31fb7fbc94f4ad561f272",
+      "referencias": ["src/screens/SplashIntroScreen.tsx"],
+      "largura": 720,
+      "altura": 1280,
+      "pixelsComTransparencia": 0,
+      "pngDecodificado": true
+    },
+    {
+      "arquivo": "assets/ui/visuais/world_transition.png",
+      "bytes": 90248,
+      "sha256": "f49df07ebf11d75be5c3bf329bbcf072b4c0395f5d458a17c147df26fd5b1c41",
+      "referencias": [
+        "src/components/RecyclingMarkerArt.tsx",
+        "src/components/__tests__/WorldPortalMapMarker.test.tsx"
+      ],
+      "largura": 320,
+      "altura": 320,
+      "pixelsComTransparencia": 101356,
+      "pngDecodificado": true
+    }
+  ]
+}

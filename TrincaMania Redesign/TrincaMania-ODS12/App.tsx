@@ -1,8 +1,15 @@
+import { useAppSettings } from './src/hooks/useAppSettings';
+import { useWorldChestController } from './src/hooks/useWorldChestController';
 import { useProgressPersistence } from './src/hooks/useProgressPersistence';
-import { checkBoardSize } from './src/observability/runtimeInvariants';
+import {
+  checkBoardSize,
+  checkCanonicalCampaign,
+  checkRewardUnclaimed,
+  checkTrayCapacity,
+} from './src/observability/runtimeInvariants';
 import { isChapterModeUnlocked } from './src/utils/chapterAvailability';
 import { installNativeErrorHandlers } from './src/observability/nativeErrors';
-import { runtimeAssert, setDiagnosticContext } from './src/utils/log';
+import { setDiagnosticContext } from './src/utils/log';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
@@ -39,7 +46,6 @@ import {
   loadStoredProgressMigrationInfo,
   markBonusWorldAchievementShown,
   normalizeProgress,
-  openWorldChest,
   purchasePowerUpTransaction,
   restorePurchasedPowerUpItem,
   saveCampaignResizeNoticeSeen,
@@ -81,20 +87,15 @@ import {
   PowerUpType,
   ProgressState,
   RestCheckpointRewardResult,
-  WorldChestOpenMode,
-  WorldChestOpenResult,
   WorldId,
 } from './src/types/game';
 import { WindowTarget } from './src/types/ui';
-import {
-  AppSettings,
-  createDefaultSettings,
-  getSettings,
-  setHapticsEnabledPreference,
-} from './src/storage/settingsStorage';
+import { getSettings } from './src/storage/settingsStorage';
 import {
   BonusTraySlotActivationResult,
   COIN_TRAY_SLOT_COST,
+  BASE_TRAY_CAPACITY,
+  MAX_TRAY_CAPACITY,
   RetryLevelResult,
   TrayBoostPurchaseResult,
   TrayBoostState,
@@ -114,7 +115,6 @@ import {
   getIncrementalCoinRewardForLevel,
 } from './src/utils/gameLogic';
 import { getRestCheckpointCoinReward } from './src/utils/shop';
-import { setSoundEnabled } from './src/utils/sounds';
 import { getCurrentWorldId } from './src/utils/worldProgress';
 
 type AppScreen = 'splash' | 'levels' | 'game' | 'shop' | 'chapters';
@@ -152,18 +152,15 @@ export default function App() {
     useState(false);
   const [magicTripleRescueState, setMagicTripleRescueState] =
     useState<MagicTripleRescueState>(createInitialMagicTripleRescueState());
-  const [settings, setSettings] = useState<AppSettings>(
-    createDefaultSettings(),
-  );
+  const {
+    settings,
+    setSettings,
+    handleToggleSound,
+    handleToggleHaptics,
+    handleEnableSilentMode,
+  } = useAppSettings();
   const [devMode, setDevMode] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-  const [activeWorldChestId, setActiveWorldChestId] = useState<
-    string | undefined
-  >();
-  const [worldChestResult, setWorldChestResult] = useState<
-    WorldChestOpenResult | undefined
-  >();
-  const [isOpeningWorldChest, setIsOpeningWorldChest] = useState(false);
   const [coinCollectTarget, setCoinCollectTarget] = useState<
     WindowTarget | undefined
   >();
@@ -178,7 +175,6 @@ export default function App() {
   const isProgressMutationInFlightRef = useRef(false);
   const isPurchasingPowerUpRef = useRef(false);
   const isPurchasingTraySlotRef = useRef(false);
-  const isOpeningWorldChestRef = useRef(false);
   const isCollectingCheckpointRef = useRef(false);
   const bonusTraySlotActivationPromiseRef = useRef<
     Promise<BonusTraySlotActivationResult> | undefined
@@ -253,7 +249,7 @@ export default function App() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [setSettings]);
 
   const refreshLivesState = useCallback(async () => {
     const nextLivesState = await getLivesState();
@@ -327,6 +323,20 @@ export default function App() {
     return () => clearInterval(interval);
   }, [isLoadingProgress, refreshLivesState, refreshTrayBoostState, screen]);
 
+  const {
+    activeWorldChestId,
+    worldChestResult,
+    isOpeningWorldChest,
+    showWorldChest,
+    closeWorldChest,
+    handleOpenWorldChest,
+  } = useWorldChestController({
+    progressRef,
+    commitProgress,
+    setLivesState,
+    setLivesNow,
+  });
+
   const selectedLevel = useMemo(
     () =>
       buildChapterLevel(selectedLevelId) ??
@@ -349,8 +359,10 @@ export default function App() {
   });
   useEffect(() => {
     if (selectedLevel) checkBoardSize(selectedLevel.tiles.length);
-    runtimeAssert(LEVELS.length === 103, 'canonical-campaign-count');
   }, [screen, selectedLevel]);
+  useEffect(() => {
+    checkCanonicalCampaign(LEVELS);
+  }, []);
   const isChapterLevelSelected = isChapterMapId(selectedLevelId);
   const isMysteryTutorialVisible =
     screen === 'game' &&
@@ -364,6 +376,13 @@ export default function App() {
     screen === 'game' || (screen === 'shop' && shopReturnScreen === 'game');
   const timeUntilNextLifeMs = getTimeUntilNextLife(livesState, livesNow);
   const activeTrayCapacity = getActiveTrayCapacity(trayBoostState, livesNow);
+  useEffect(() => {
+    checkTrayCapacity(
+      activeTrayCapacity,
+      BASE_TRAY_CAPACITY,
+      MAX_TRAY_CAPACITY,
+    );
+  }, [activeTrayCapacity]);
   const isCoinTraySlotActiveNow = isCoinTraySlotActive(
     trayBoostState,
     livesNow,
@@ -792,7 +811,11 @@ export default function App() {
       // premiam o mesmo ponto de descanso duas vezes.
       const latestProgress = progressRef.current;
 
-      if (latestProgress.collectedRestCheckpointIds.includes(afterLevelId)) {
+      if (
+        !checkRewardUnclaimed(
+          latestProgress.collectedRestCheckpointIds.includes(afterLevelId),
+        )
+      ) {
         return {
           granted: false,
           worldId,
@@ -831,90 +854,6 @@ export default function App() {
       isCollectingCheckpointRef.current = false;
     }
   };
-
-  const showWorldChest = useCallback((worldChestId?: string) => {
-    const targetWorldChestId =
-      worldChestId ?? progressRef.current.pendingWorldChestIds[0];
-
-    if (!targetWorldChestId) {
-      return;
-    }
-
-    setWorldChestResult(undefined);
-    setActiveWorldChestId(targetWorldChestId);
-  }, []);
-
-  const closeWorldChest = useCallback(() => {
-    setActiveWorldChestId(undefined);
-    setWorldChestResult(undefined);
-  }, []);
-
-  const handleOpenWorldChest = useCallback(
-    async (
-      worldChestId: string,
-      mode: WorldChestOpenMode,
-    ): Promise<WorldChestOpenResult> => {
-      if (isOpeningWorldChestRef.current) {
-        return (
-          worldChestResult ?? {
-            keyPurchased: false,
-            progress: progressRef.current,
-            status: 'unavailable',
-            worldChestId,
-          }
-        );
-      }
-
-      isOpeningWorldChestRef.current = true;
-      setIsOpeningWorldChest(true);
-
-      try {
-        const currentLivesState = await getLivesState();
-        setLivesState(currentLivesState);
-        setLivesNow(Date.now());
-
-        const openResult = openWorldChest(
-          progressRef.current,
-          worldChestId,
-          mode,
-          currentLivesState.currentLives >= currentLivesState.maxLives,
-        );
-
-        if (openResult.status !== 'opened') {
-          setWorldChestResult(openResult);
-          return openResult;
-        }
-
-        await commitProgress(openResult.progress);
-
-        if (openResult.reward?.lifeGranted) {
-          try {
-            const nextLivesState = await addLife();
-            setLivesState(nextLivesState);
-            setLivesNow(Date.now());
-          } catch {
-            // Progress is already saved here; do not reopen the chest and risk a duplicate reward.
-          }
-        }
-
-        setWorldChestResult(openResult);
-        return openResult;
-      } catch {
-        const failedResult: WorldChestOpenResult = {
-          keyPurchased: false,
-          progress: progressRef.current,
-          status: 'unavailable',
-          worldChestId,
-        };
-        setWorldChestResult(failedResult);
-        return failedResult;
-      } finally {
-        isOpeningWorldChestRef.current = false;
-        setIsOpeningWorldChest(false);
-      }
-    },
-    [commitProgress, worldChestResult],
-  );
 
   const handleSelectLevel = async (levelId: string) => {
     if (!devMode && !progress.unlockedLevelIds.includes(levelId)) {
@@ -959,53 +898,6 @@ export default function App() {
 
   const openSettings = () => {
     setIsSettingsVisible(true);
-  };
-
-  const handleToggleSound = () => {
-    const nextSoundEnabled = !settings.soundEnabled;
-
-    setSettings((currentSettings) => ({
-      ...currentSettings,
-      soundEnabled: nextSoundEnabled,
-    }));
-
-    setSoundEnabled(nextSoundEnabled).catch(() => {
-      getSettings()
-        .then(setSettings)
-        .catch(() => undefined);
-    });
-  };
-
-  const handleToggleHaptics = () => {
-    const nextHapticsEnabled = !settings.hapticsEnabled;
-
-    setSettings((currentSettings) => ({
-      ...currentSettings,
-      hapticsEnabled: nextHapticsEnabled,
-    }));
-
-    setHapticsEnabledPreference(nextHapticsEnabled).catch(() => {
-      getSettings()
-        .then(setSettings)
-        .catch(() => undefined);
-    });
-  };
-
-  const handleEnableSilentMode = () => {
-    setSettings((currentSettings) => ({
-      ...currentSettings,
-      hapticsEnabled: false,
-      soundEnabled: false,
-    }));
-
-    Promise.all([
-      setSoundEnabled(false),
-      setHapticsEnabledPreference(false),
-    ]).catch(() => {
-      getSettings()
-        .then(setSettings)
-        .catch(() => undefined);
-    });
   };
 
   const handleBonusWorldAchievementSeen = (goToBonusWorld: boolean) => {

@@ -4,6 +4,10 @@ set -euo pipefail
 # O Maestro descobre fluxos em ordem variável. Cada jornada limpa o save e
 # precisa que o processo anterior termine antes do próximo launchApp.
 : "${APP_ID:?APP_ID é obrigatório}"
+if [[ "$APP_ID" != "br.com.mhvtech.trincamania.e2e" ]]; then
+  printf 'Suíte destrutiva permitida apenas em br.com.mhvtech.trincamania.e2e; recebido: %s\n' "$APP_ID" >&2
+  exit 2
+fi
 
 run_flow() {
   local flow="$1"
@@ -40,6 +44,9 @@ case "${MAESTRO_SUITE:-full}" in
     ;;
   lives)
     run_flow manual/05-perder-vida-recarregar ../../maestro-artifacts/lives ../../maestro-resultado-lives.xml
+    ;;
+  recovery)
+    run_flow manual/06-recuperar-progresso-moedas-vidas ../../maestro-artifacts/recovery ../../maestro-resultado-recovery.xml
     ;;
   *)
     printf 'Suíte Maestro desconhecida: %s\n' "$MAESTRO_SUITE" >&2

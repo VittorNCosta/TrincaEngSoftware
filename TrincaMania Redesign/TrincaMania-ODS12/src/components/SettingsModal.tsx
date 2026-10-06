@@ -539,6 +539,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   titleLargeText: {
-    maxWidth: 180,
+    fontSize: 15,
+    lineHeight: 19,
   },
 });

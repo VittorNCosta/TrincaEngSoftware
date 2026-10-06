@@ -1,4 +1,6 @@
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useContext, useEffect, useRef } from 'react';
+import { WorldArtContext } from './WorldArtContext';
+import { getResidueVisual } from '../data/residueVisualAssets';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { TileIcon } from './TileIcon';
@@ -34,6 +36,8 @@ function BoardTileBase({
   onBlockedPress,
   onPress,
 }: BoardTileProps) {
+  const worldId = useContext(WorldArtContext);
+  const residueVisual = getResidueVisual(tile.cardId, worldId);
   const isDisabled = disabled;
   const isMysteryHidden = tile.mystery === true && tile.revealed !== true;
   const tileRef = useRef<View>(null);
@@ -195,7 +199,7 @@ function BoardTileBase({
   return (
     <AnimatedPressable
       ref={tileRef}
-      accessibilityLabel={`${isMysteryHidden ? 'Peça misteriosa' : `Peça ${tile.emoji}`}${
+      accessibilityLabel={`${isMysteryHidden ? 'Peça misteriosa' : `Peça ${residueVisual?.label ?? tile.emoji}`}${
         blocked ? ', bloqueada' : ''
       }`}
       accessibilityRole="button"
@@ -283,6 +287,7 @@ function BoardTileBase({
       ) : (
         <View pointerEvents="none" style={blocked ? styles.blockedIcon : null}>
           <TileIcon
+            cardId={tile.cardId}
             fallbackEmoji={tile.emoji}
             highlighted={highlighted && !blocked}
             kind={tile.kind}
@@ -444,8 +449,8 @@ const styles = StyleSheet.create({
     right: 2,
     top: 2,
   },
-  // Tratamento 4 · Jelly/Candy: um único corpo de doce, sem face aninhada.
-  // A face creme dentro do tile creme era o que fazia a fruta sumir.
+  // Corpo único da peça, sem face aninhada.
+  // Faces com a mesma cor de fundo reduziam o contraste do resíduo.
   tile: {
     alignItems: 'center',
     backgroundColor: '#FFE7A6',
@@ -464,7 +469,7 @@ const styles = StyleSheet.create({
     shadowRadius: 13,
     width: TILE_SIZE,
   },
-  // Sombra interna na base — o doce assenta em vez de flutuar.
+  // Sombra interna na base para dar profundidade à peça.
   innerBottomShade: {
     backgroundColor: 'rgba(161, 99, 20, 0.24)',
     borderBottomLeftRadius: 19,

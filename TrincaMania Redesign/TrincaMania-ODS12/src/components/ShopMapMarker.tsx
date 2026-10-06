@@ -1,9 +1,7 @@
-import { RecyclingMarkerArt } from './RecyclingMarkerArt';
-import { useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
-import { IS_E2E_BUILD } from '../testing/e2eProfile';
+import { RecyclingMarkerArt } from './RecyclingMarkerArt';
 import { colors, radii, shadows } from '../styles/theme';
 
 type ShopMapMarkerProps = {
@@ -13,8 +11,6 @@ type ShopMapMarkerProps = {
   selected: boolean;
   onPress: () => void;
 };
-
-const AWNING_STRIPES = 6;
 
 export function ShopMapMarker({
   afterLevelLabel,
@@ -26,42 +22,9 @@ export function ShopMapMarker({
   const label = comingSoon
     ? 'Em breve'
     : locked
-      ? `Bloq. ${afterLevelLabel}`
+      ? `Após ${afterLevelLabel}`
       : 'Descanso';
   const isOpen = !locked && !comingSoon;
-  const swing = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (!isOpen || IS_E2E_BUILD) {
-      swing.stopAnimation();
-      swing.setValue(0);
-      return undefined;
-    }
-
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(swing, {
-          duration: 1300,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-        Animated.timing(swing, {
-          duration: 1300,
-          toValue: -1,
-          useNativeDriver: true,
-        }),
-      ]),
-    );
-
-    animation.start();
-
-    return () => animation.stop();
-  }, [isOpen, swing]);
-
-  const plaqueTilt = swing.interpolate({
-    inputRange: [-1, 1],
-    outputRange: ['-3.5deg', '3.5deg'],
-  });
 
   return (
     <Pressable
@@ -75,183 +38,114 @@ export function ShopMapMarker({
       accessibilityLabel={`Loja, ${label}`}
       accessibilityRole="button"
       accessibilityState={{ selected }}
+      hitSlop={4}
       onPress={onPress}
       style={({ pressed }) => [
         styles.pressable,
         pressed ? styles.pressed : null,
       ]}
     >
-      <View style={styles.shadow} />
-      {selected ? <View style={styles.selectedAura} /> : null}
-      <View style={[styles.stall, isOpen ? null : styles.stallClosed]}>
-        <View style={styles.awning}>
-          {Array.from({ length: AWNING_STRIPES }).map((_, index) => (
-            <View
-              key={`stripe-${index}`}
-              style={[
-                styles.stripe,
-                index % 2 === 0 ? styles.stripeA : styles.stripeB,
-                isOpen
-                  ? null
-                  : index % 2 === 0
-                    ? styles.stripeClosedA
-                    : styles.stripeClosedB,
-              ]}
+      <View pointerEvents="none" style={styles.scene}>
+        <View style={styles.shadow} />
+        {selected ? <View style={styles.selectedAura} /> : null}
+        <RecyclingMarkerArt
+          kind={isOpen ? 'shop' : 'shopLocked'}
+          style={styles.shopImage}
+        />
+        {!isOpen ? (
+          <View
+            style={[styles.stateBadge, comingSoon ? styles.soonBadge : null]}
+          >
+            <GameIcon
+              name={locked ? 'lock' : 'bonus'}
+              size={15}
+              tone={locked ? 'neutral' : 'pink'}
+              variant="plain"
             />
-          ))}
+          </View>
+        ) : (
+          <View style={styles.openIndicator}>
+            <View style={styles.openIndicatorCore} />
+          </View>
+        )}
+        <View
+          style={[
+            styles.label,
+            locked ? styles.lockedLabel : null,
+            comingSoon ? styles.soonLabel : null,
+            selected ? styles.selectedLabel : null,
+          ]}
+        >
+          <Text
+            adjustsFontSizeToFit
+            minimumFontScale={0.78}
+            numberOfLines={1}
+            style={styles.labelText}
+          >
+            {label}
+          </Text>
         </View>
-        <View style={styles.awningLip} />
-        <View style={[styles.body, isOpen ? null : styles.bodyClosed]}>
-          {comingSoon ? (
-            <View style={styles.soonBody}>
-              <GameIcon
-                muted={locked}
-                name={locked ? 'lock' : 'bonus'}
-                size={24}
-                tone={locked ? 'neutral' : 'pink'}
-              />
-              <Text style={styles.shopText}>{locked ? 'Bloq.' : 'Novo'}</Text>
-            </View>
-          ) : (
-            <RecyclingMarkerArt
-              kind="shop"
-
-              style={[styles.shopImage, locked ? styles.shopImageLocked : null]}
-            />
-          )}
-        </View>
-      </View>
-      <Animated.View
-        pointerEvents="none"
-        style={[styles.plaqueSwing, { transform: [{ rotate: plaqueTilt }] }]}
-      >
-        <View style={styles.plaqueRope} />
-        <View style={[styles.plaque, isOpen ? null : styles.plaqueClosed]}>
-          <Text style={styles.plaqueText}>Loja</Text>
-        </View>
-      </Animated.View>
-      {isOpen ? (
-        <View style={styles.alertBadge}>
-          <Text style={styles.alertText}>!</Text>
-        </View>
-      ) : null}
-      <View
-        style={[
-          styles.label,
-          locked ? styles.lockedLabel : null,
-          comingSoon ? styles.soonLabel : null,
-        ]}
-      >
-        <Text numberOfLines={1} style={styles.labelText}>
-          {label}
-        </Text>
       </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  alertBadge: {
-    alignItems: 'center',
-    backgroundColor: '#F0527A',
-    borderColor: '#FFFFFF',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 18,
-    justifyContent: 'center',
-    left: 8,
-    position: 'absolute',
-    top: 10,
-    width: 18,
-    zIndex: 4,
-    ...shadows.button,
-  },
-  alertText: {
-    color: colors.inkOnDark,
-    fontSize: 11,
-    fontWeight: '900',
-    lineHeight: 13,
-  },
-  awning: {
-    flexDirection: 'row',
-    height: 14,
-    overflow: 'hidden',
-  },
-  awningLip: {
-    backgroundColor: 'rgba(58, 31, 11, 0.22)',
-    height: 4,
-  },
-  body: {
-    alignItems: 'center',
-    backgroundColor: '#FFE9C2',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  bodyClosed: {
-    backgroundColor: '#D6DEE0',
-  },
   label: {
     alignItems: 'center',
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
+    backgroundColor: '#805126',
+    borderBottomColor: '#46280F',
+    borderBottomWidth: 2,
+    borderColor: '#D6A563',
+    borderRadius: 7,
     borderWidth: 2,
     bottom: 0,
-    minWidth: 76,
+    justifyContent: 'center',
+    maxWidth: 98,
+    minHeight: 21,
+    minWidth: 72,
     paddingHorizontal: 7,
-    paddingVertical: 2,
+    paddingVertical: 1,
     position: 'absolute',
     ...shadows.card,
   },
   labelText: {
-    color: colors.ink,
-    fontSize: 10,
+    color: colors.inkOnDark,
+    fontSize: 9,
     fontWeight: '900',
+    letterSpacing: 0.25,
+    lineHeight: 11,
+    textAlign: 'center',
     textTransform: 'uppercase',
   },
   lockedLabel: {
-    backgroundColor: '#F6E8C8',
-    borderColor: '#B89453',
+    backgroundColor: '#6E7775',
+    borderBottomColor: '#3F4947',
+    borderColor: '#C6D1CE',
   },
-  plaque: {
-    backgroundColor: '#8A5527',
-    borderBottomColor: '#4E2B10',
-    borderBottomWidth: 2,
-    borderColor: '#E0B26A',
-    borderRadius: 6,
-    borderWidth: 2,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-  },
-  plaqueClosed: {
-    backgroundColor: '#7C8A90',
-    borderBottomColor: '#404C51',
-    borderColor: '#C3D0D3',
-  },
-  plaqueRope: {
-    backgroundColor: '#5E3714',
-    height: 10,
-    width: 2,
-  },
-  plaqueSwing: {
+  openIndicator: {
     alignItems: 'center',
-    height: 32,
+    backgroundColor: '#E8FFF3',
+    borderColor: '#FFFFFF',
+    borderRadius: radii.pill,
+    borderWidth: 2,
+    height: 16,
+    justifyContent: 'center',
     position: 'absolute',
-    right: 2,
-    top: 20,
-    width: 40,
+    right: 8,
+    top: 7,
+    width: 16,
     zIndex: 3,
   },
-  plaqueText: {
-    color: '#FFF1D6',
-    fontSize: 9,
-    fontWeight: '900',
-    lineHeight: 12,
-    textTransform: 'uppercase',
+  openIndicatorCore: {
+    backgroundColor: '#23C889',
+    borderRadius: radii.pill,
+    height: 7,
+    width: 7,
   },
   pressed: {
     opacity: 0.9,
-    transform: [{ translateY: 2 }, { scale: 0.98 }],
+    transform: [{ translateY: 1 }, { scale: 0.98 }],
   },
   pressable: {
     alignItems: 'center',
@@ -260,79 +154,60 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: 104,
   },
+  scene: {
+    alignItems: 'center',
+    height: 96,
+    justifyContent: 'flex-start',
+    position: 'relative',
+    width: 104,
+  },
   selectedAura: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderColor: 'rgba(255, 255, 255, 0.78)',
+    backgroundColor: 'rgba(255, 226, 120, 0.26)',
+    borderColor: 'rgba(255, 246, 198, 0.82)',
     borderRadius: radii.pill,
     borderWidth: 2,
-    height: 88,
+    bottom: 8,
+    height: 21,
     position: 'absolute',
-    width: 98,
+    width: 92,
+  },
+  selectedLabel: {
+    borderColor: '#FFF3B5',
   },
   shadow: {
-    backgroundColor: 'rgba(68, 43, 22, 0.22)',
+    backgroundColor: 'rgba(48, 35, 19, 0.25)',
     borderRadius: radii.pill,
-    bottom: 7,
-    height: 16,
+    bottom: 12,
+    height: 11,
     position: 'absolute',
-    width: 78,
+    width: 76,
   },
   shopImage: {
-    height: 46,
-    width: 62,
+    height: 76,
+    width: 76,
+    zIndex: 2,
   },
-  shopImageLocked: {
-    opacity: 0.58,
-  },
-  shopText: {
-    color: colors.ink,
-    fontSize: 11,
-    fontWeight: '900',
-    lineHeight: 12,
-    textTransform: 'uppercase',
-  },
-  soonBody: {
-    alignItems: 'center',
-    gap: 1,
+  soonBadge: {
+    backgroundColor: '#FFF0F6',
+    borderColor: '#F7B7D1',
   },
   soonLabel: {
-    backgroundColor: '#DCE7FF',
-    borderColor: '#8AA5E8',
+    backgroundColor: '#596F94',
+    borderBottomColor: '#34445F',
+    borderColor: '#C9D8F0',
   },
-  stall: {
-    borderBottomColor: '#5E3714',
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    borderBottomWidth: 5,
-    borderLeftColor: '#8A5527',
-    borderLeftWidth: 5,
-    borderRightColor: '#8A5527',
-    borderRightWidth: 5,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    height: 70,
-    overflow: 'hidden',
-    width: 84,
-    ...shadows.button,
-  },
-  stallClosed: {
-    borderBottomColor: '#404C51',
-    borderLeftColor: '#7C8A90',
-    borderRightColor: '#7C8A90',
-  },
-  stripe: {
-    flex: 1,
-  },
-  stripeA: {
-    backgroundColor: '#E4483F',
-  },
-  stripeB: {
-    backgroundColor: '#FFF1D6',
-  },
-  stripeClosedA: {
-    backgroundColor: '#9DAAB0',
-  },
-  stripeClosedB: {
-    backgroundColor: '#E8EEF0',
+  stateBadge: {
+    alignItems: 'center',
+    backgroundColor: '#EFF3F1',
+    borderColor: '#C2CECA',
+    borderRadius: radii.pill,
+    borderWidth: 2,
+    height: 22,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 6,
+    top: 5,
+    width: 22,
+    zIndex: 3,
   },
 });

@@ -1,5 +1,9 @@
 # E2E Android
 
+Nesta sessão, a execução é exclusivamente local. Gerar/instalar APK exige
+autorização explícita e confirmação do dispositivo, conforme `../../AGENTS.md`.
+As referências históricas a workflows abaixo não autorizam CI remoto.
+
 Os fluxos completos usam o aplicativo **isolado** `br.com.mhvtech.trincamania.e2e`.
 `EXPO_PUBLIC_E2E=true` fixa somente a semente do tabuleiro (`123456789`);
 vitória, compras, perda de vida, recompensa e persistência seguem o código real.
@@ -22,13 +26,13 @@ APP_ID=br.com.mhvtech.trincamania.e2e bash scripts/rodar-fluxos-maestro.sh
 | 04        | Cinco vitórias geram pelo menos 50 moedas; compra de Voltar desconta exatamente 45 e acrescenta 1 ao estoque; ambos sobrevivem ao reinício |
 | 05        | Navegação por recompensas, configurações, poderes e perfil com labels obrigatórios e capturas                                              |
 | manual/05 | Derrota real desconta uma vida, reinício preserva 4/5 e recarga real devolve 5/5 após 30 minutos                                           |
+| manual/06 | Uma vitória e uma derrota reais; dois reinícios preservam fase concluída, fase desbloqueada, saldo e 4/5 vidas, sem repetir recompensa     |
 
 O fluxo `manual/05` é separado da suíte normal para não gastar 30 minutos em cada PR:
 
 ```sh
 APP_ID=br.com.mhvtech.trincamania.e2e MAESTRO_SUITE=lives bash scripts/rodar-fluxos-maestro.sh
-# Ou no GitHub Actions, na branch que contém esta versão do workflow:
-gh workflow run e2e.yml --ref test/q18-visual-regression -f suite=lives
+APP_ID=br.com.mhvtech.trincamania.e2e MAESTRO_SUITE=recovery bash scripts/rodar-fluxos-maestro.sh
 ```
 
 O input `suite=full` executa as cinco jornadas comuns. `suite=lives` executa
@@ -51,8 +55,9 @@ cada jogada pela regra de domínio. O gerador também exige que as três primeir
 jogadas sigam os alvos do tutorial real. Não há botão secreto para ganhar nem
 escrita de saldo artificial. Mudanças intencionais na geração pedem regenerar
 `node scripts/gerar-fluxos-e2e.cjs` e revisar os YAMLs; `--check` detecta drift.
-O smoke 01/02 pode rodar no pacote normal passando `-e APP_ID=br.com.mhvtech.trincamania`.
-Os fluxos completos exigem o pacote de teste.
+Todos os fluxos que usam `clearState` fixam o pacote de teste. O runner recusa
+qualquer `APP_ID` diferente antes de chamar ADB, inclusive nas jornadas 01/02.
+Nunca rode esses fluxos sobre o pacote normal: eles apagam o save de teste.
 
 Usamos `copyTextFrom` e `maestro.copiedText` para comparar os valores reais da
 loja, conforme a [referência Maestro](https://docs.maestro.dev/reference/commands-available/copytextfrom).
@@ -61,14 +66,17 @@ A descoberta de subfluxos fica restrita em `config.yaml`, conforme a
 
 ## Evidência e limites atuais
 
-Os caminhos do solver e o TypeScript são verificáveis localmente; a execução
-Android acontece no GitHub Actions. Conferir o JUnit da execução correspondente
-ao SHA do PR #302 para cada jornada. O workflow publica capturas explícitas
-em sucesso/falha e diagnóstico completo quando falha. Capturas são evidências
+Os caminhos do solver e o TypeScript foram verificados localmente nesta sessão.
+Nenhum fluxo foi executado no Android nesta rodada. A execução histórica do
+PR #302 possui JUnit e capturas para consulta; isso não valida as alterações
+atuais. GitHub Actions continua bloqueado; a próxima execução deve ser local
+sobre o APK/dispositivo autorizado. Capturas são evidências
 de execução, não aprovação automática de arte ou baseline visual.
 
-Q-17 (#236) tem persistência de desbloqueio, moedas, inventário e vidas coberta
-pelos roteiros acima. Ainda faltam execução sobre APK antigo com save legado,
+Q-17 (#236) tem roteiros para persistência de desbloqueio, moedas, inventário e vidas,
+incluindo a jornada combinada `manual/06`. Eles ainda exigem execução Android local.
+O APK normal entregue para teste humano não executa esses fluxos destrutivos;
+eles exigem o pacote isolado `.e2e`. Ainda faltam execução sobre APK antigo com save legado,
 upgrade in-place e interrupção controlada da gravação. Esse ensaio precisa de
 um APK antigo assinado com a mesma chave e package `.e2e`; reinstalar com
 `clearState` não prova migração e foi deliberadamente evitado como substituto.

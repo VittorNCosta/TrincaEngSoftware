@@ -71,8 +71,8 @@ mk done --title 'F0-01 · Instalar o `gh` CLI' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'fundacao,P0,humano' --milestone 'Fundação'
-mk open --title 'F0-02 · Expor `node` no PATH não-interativo' \
-  --body 'Hoje só existe via nvm. Em shell não-interativo o comando não resolve — isso quebra hook de git e script de CI local.
+mk done --title 'F0-02 · Expor `node` no PATH não-interativo' \
+  --body 'Validação local 06/10/2026: ~/.zshenv expõe Node 22.23.2 e npm 10.9.8 em zsh não interativo. node e npm resolvem no Linux, sem usar o npm do Windows. Alteração de ambiente está fora do Git; evidência no relatório de consolidação. Aceite humano pendente.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -995,7 +995,7 @@ mk open --title 'A-32 · Nós de fase: bloqueado, atual, completo' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P2,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-33 · Comprimir todos os PNGs para ≤ 400 KB' \
-  --body '`assets/` tem ~50 MB hoje. pngquant, oxipng ou TinyPNG.
+  --body 'Implementação local 06/10/2026: seis PNGs comprimidos com pngquant, dimensões preservadas; economia de 12.272.257 bytes. 149 assets (~17,08 MiB), zero excessos acima de 400 KiB e zero órfãos. Quantização de cores; revisão Android e merge pendentes. Evidências em docs/arte/inventario-20261006.json e backup/rodada-2/compressao-png.json.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1030,9 +1030,7 @@ mk done --title 'A-35 · Remover os 6 arquivos `.png.png`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Arte'
 mk open --title 'A-36 · Integrar cada asset entregue no código' \
-  --body '`campaignMapAssets.ts` e `getGameBackground`.
-
-**Entrega Astra low 18/09/2026:** Piloto, ícones e marcadores integrados; fundos restantes aguardam A-04. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Validação local 06/10/2026: 20 fundos próprios dos mundos 1–10 e 90 PNGs de resíduos registrados; todos decodificam e têm referências válidas. Teste getGameBackground atualizado para executar a função real, exigir fundo distinto e cobrir capítulos/bônus. Os 20 fundos estão abaixo de 1080×1920; bônus 21 reutiliza o Viveiro. Galeria/inventário em docs/arte/. Aceite Android e merge pendentes; VIS-03/VIS-04 dependem de aprovação explícita.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1198,9 +1196,7 @@ mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-12 · Remover os 8 `ambient_*.mp3` antigos' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Remover somente após receber substitutos; as oito trilhas continuam referenciadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Limpeza local 06/10/2026: oito arquivos renomeados para os slugs ODS12, com SHA-256 do áudio preservado e referências atualizadas. Não equivale à substituição das trilhas S-01…S-10: mundos 9/10 ainda reutilizam usina/forum. Substitutos e aceite sonoro continuam pendentes.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1226,7 +1222,7 @@ mk open --title 'S-13 · Integrar os 10 ambientes em `sounds.ts`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'som,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Som'
 mk open --title 'S-14 · Revisar os SFX de voz' \
-  --body '`voice_amazing`, `voice_excellent` e afins — conferir se o tom bate com o tema.
+  --body 'Auditoria local 06/10/2026: seis vozes em inglês sem referências foram removidas após backup, junto de shockwave.wav órfão. Não eram executadas pelo código atual. Revisão humana do tom dos SFX usados e aceite/merge pendentes.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1538,7 +1534,7 @@ mk done --title 'G-08 · Versão num lugar só' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
 mk open --title 'G-09 · Definir a estratégia de branch' \
-  --body 'Hoje só existe `develop`. O CI já espera `main` também.
+  --body 'Decisão do usuário em 06/10/2026: manter apenas develop no WSL. Worktrees e branches locais antigas removidas após backup verificável; trabalho recente preservado na develop. GitHub usa develop como branch padrão; branches remotas não foram removidas. A estratégia de publicação continua sujeita às regras do repositório.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1549,7 +1545,7 @@ mk open --title 'G-09 · Definir a estratégia de branch' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,humano' --milestone 'Git e versionamento'
 mk open --title 'G-10 · Branch protection em `main` e `develop`' \
-  --body 'Exigir PR, checks verdes, sem force-push.
+  --body 'Leitura da API em 06/10/2026: develop existe e não possui proteção de branch; main não existe. Exigir PR, checks verdes e impedir force-push ainda depende da configuração remota e de definir checks executáveis enquanto Actions estiver bloqueado. Nenhuma configuração alterada.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1620,7 +1616,7 @@ mk done --title 'G-15 · Revisar o `.gitattributes`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk open --title 'G-16 · Decidir sobre Git LFS para os PNGs' \
-  --body 'Reavaliar depois de A-33 — com tudo ≤ 400 KB pode não valer.
+  --body 'Avaliação local 06/10/2026: recomendar Git comum para os assets atuais, todos abaixo de 400 KiB (~17,08 MiB no conjunto). Histórico ainda contém blobs antigos; nenhuma migração ou reescrita executada. Evidência e condições de reavaliação em docs/PENDENCIAS-LOCAIS-20261006.txt; decisão do responsável pendente.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2190,19 +2186,7 @@ mk done --title 'CI-34 · Automatizar validação de PR e corrigir checks de ent
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-35 · Consolidar e ativar as automações na branch padrão' \
-  --body '**Contexto**
-A develop contém somente o CI básico; segurança, E2E, Dependabot e release estão na feat/campanha-10x10. Agendamentos e a descoberta do dependabot.yml dependem da branch padrão.
-
-**Critérios de aceite**
-- [ ] Integrar por PR as automações e seus scripts/configurações dependentes, sem incluir mudanças de campanha inadvertidamente; registrar dependências que impeçam separação.
-- [ ] Confirmar na develop os workflows e o dependabot.yml, e comprovar execução manual e a primeira execução agendada.
-- [ ] Ajustar os filtros de PR às branches realmente usadas, inclusive PRs para feat/campanha-10x10 enquanto ela for base de integração.
-- [ ] Reutilizar G-09 (#114), G-10 (#115) e SEC-03 (#149) para estratégia de branches, proteção e ativação do Dependabot.
-
-**Dependências e referências**
-Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule .
-
-**Entrega Astra low 18/09/2026:** Fatia independente preparada em chore/ci35-automacoes-isoladas, sem mudanças da campanha; faltam merge e primeira execução agendada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Leitura em 06/10/2026: develop é a branch padrão e já contém workflows de CI, segurança, E2E, release e dependabot.yml. O contexto de automações exclusivas na feat/campanha-10x10 ficou histórico. Execuções manuais/agendadas adicionais e alterações de workflows permanecem bloqueadas pela instrução permanente do usuário de 30/09; nenhuma execução remota nesta sessão.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2213,20 +2197,8 @@ Após CI-34 (#226); coordenar com #114, #115 e #149. Fonte: https://docs.github.
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'CI/CD'
-mk open --title 'CI-36 · Migrar ferramentas e CI do Node 20 para LTS suportado' \
-  --body '**Contexto**
-O engines restringe o projeto ao Node 20, já fora de suporte; a matrix também testa Node 22, que hoje não satisfaz engines.
-
-**Critérios de aceite**
-- [ ] Adotar Node 22 LTS como alvo inicial e validar compatibilidade com Expo SDK 54, npm, Jest e EAS.
-- [ ] Alinhar engines, arquivo de versão, workflows e documentação; atualizar lock somente quando necessário.
-- [ ] Recalibrar a medição de cobertura por mudança de runtime com comparação documentada, sem ocultar redução real de testes.
-- [ ] Passar instalação limpa, expo-doctor, typecheck, testes, export e build Android no runtime escolhido.
-
-**Dependências e referências**
-Fonte: https://nodejs.org/en/about/previous-releases . Coordenar com Q-16.
-
-**Entrega Astra low 18/09/2026:** Node22.23.2 alinhado; instalação limpa/doctor verificados, cobertura com nova metodologia explícita. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'CI-36 · Migrar ferramentas e CI do Node 20 para LTS suportado' \
+  --body 'Verificação local 06/10/2026: engines, .nvmrc e ferramentas da develop já usam Node 22.23.2. Instalação limpa/doctor e metodologia de cobertura estão documentados em docs/ENTREGA-TERRA-SOL.md e docs/ci-entrega.md. APK anterior de 05/10 para develop 54fcabc: manifesto registra build Android bem-sucedido com Node 22.23.2; SHA-256 conferido 4c0adb820c2e49f7c955cabaee197c07d661f18b7a8ff1a0028233e12e5a124e. Nenhum APK novo ou CI remoto executado. Alterações desta rodada têm validação e pendências próprias no relatório; conciliação da issue após revisão da evidência.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2275,8 +2247,8 @@ mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P0,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
-mk open --title 'SEC-02 · Habilitar Secret Scanning e Push Protection' \
-  --body 'Bloqueia o commit de segredo antes de sair da máquina.
+mk done --title 'SEC-02 · Habilitar Secret Scanning e Push Protection' \
+  --body 'API do GitHub em 06/10/2026 confirma secret_scanning e secret_scanning_push_protection habilitados. Não foi necessário alterar configurações. A proteção bloqueia push de segredo reconhecido; não substitui revisão local. Conciliação da issue após revisão/integração da evidência.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2287,7 +2259,7 @@ mk open --title 'SEC-02 · Habilitar Secret Scanning e Push Protection' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P0,humano' --milestone 'DevSecOps'
 mk open --title 'SEC-03 · Habilitar Dependabot alerts e security updates' \
-  --body '_Sem detalhe adicional no roadmap._
+  --body 'API do GitHub em 06/10/2026: alertas de vulnerabilidade habilitados; automated-security-fixes desabilitado. Atualizações automáticas continuam pendentes, pois podem abrir PRs e acionar workflows bloqueados. Nenhuma configuração remota alterada.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2310,7 +2282,7 @@ mk done --title 'SEC-04 · `dependabot.yml` para npm e github-actions' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-05 · Avaliar Renovate no lugar do Dependabot' \
-  --body 'Agrupa PRs e respeita melhor os ranges do Expo.
+  --body 'Avaliação local 06/10/2026: recomendar manter Dependabot, que já agrupa minor/patch e protege a matriz Expo. Presets Renovate não comprovam compatibilidade automática com SDK 54. Comparação com fontes primárias em docs/PENDENCIAS-LOCAIS-20261006.txt; decisão do responsável pendente; nenhuma automação alterada.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2429,7 +2401,7 @@ mk done --title 'SEC-14 · Escrever o `SECURITY.md`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-17 · Revisar os dados coletados (LGPD)' \
-  --body 'Hoje é tudo AsyncStorage local. Se entrar analytics, a política muda.
+  --body 'Inventário técnico local 06/10/2026: AsyncStorage, diagnóstico compartilhado pelo usuário, Sentry opcional com sanitização e expo-updates. Política já descreve serviços externos; configuração efetiva/tráfego no APK e revisão jurídica/aceite do responsável pendentes. Evidência em docs/PENDENCIAS-LOCAIS-20261006.txt; nenhuma publicação realizada.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2518,6 +2490,8 @@ mk open --title 'Q-07 · Quebrar `GameScreen.tsx`' \
 
 **Entrega Astra low 18/09/2026:** Estilos, tutorial e montagem do tabuleiro extraídos em módulos; seeds reais registrados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
+**Validação local 06/10/2026: os quatro diálogos foram separados em GameDialogs, mantendo handlers e guardas por ref na tela; 2778 → 2579 linhas. Três testes novos cobrem tutorial, compra e fechamento nativo durante operações. Aceite Android e integração pendentes.**
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2532,6 +2506,8 @@ mk open --title 'Q-08 · Quebrar `LevelSelectScreen.tsx`' \
 
 **Entrega Astra low 18/09/2026:** Estilos e geometria/apresentação do mapa separados; acesso Dev e pós-campanha testados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
 
+**Validação local 06/10/2026: renderização do mapa e painel de seleção separados em CampaignMapLayers/MapSelectionPanel; 1457 → 818 linhas. Controle de seleção, animação, rolagem e progresso permanece na tela; testes de acesso e regressão visual preservados. Aceite Android e integração pendentes.**
+
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
 **Modelo Codex recomendado:** GPT-5.6 Sol (gpt-5.6-sol)
@@ -2545,6 +2521,8 @@ mk open --title 'Q-09 · Quebrar `App.tsx`' \
   --body '1169 linhas.
 
 **Entrega Astra low 18/09/2026:** Fila de persistência extraída para hook, preservando geração e serialização. Outros handlers continuam em App. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+
+**Validação local 06/10/2026: preferências e baús separados em useAppSettings/useWorldChestController; 1318 → 1188 linhas. Fila e geração de save preservadas; dois testes novos verificam duplo toque, remontagem e abertura sem saldo. Navegação e outros handlers continuam em App; integração pendente.**
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2639,20 +2617,7 @@ mk done --title 'Q-16 · Medir cobertura de produção separada por domínio e i
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-17 · Testar recuperação e migração de progresso no Android instalado' \
-  --body '**Contexto**
-Existem testes unitários de migração, mas os dois fluxos Maestro atuais não comprovam recuperação do save em cenário real de atualização/interrupção.
-
-**Critérios de aceite**
-- [ ] Adicionar fluxo determinístico que obtenha progresso, encerre/reabra o app e valide fases, moedas e vidas persistidas.
-- [ ] Instalar versão nova sobre fixture de save antigo e confirmar preservação dos dados e aviso de migração sem repetição indevida.
-- [ ] Cobrir interrupção durante gravação e reinício sem recompensas duplicadas ou perda de progresso já confirmado.
-- [ ] Usar dados e build de teste isolados, sem contaminar saves reais nem liberar Modo Dev no aplicativo de produção.
-- [ ] Publicar evidência e diagnóstico em CI; reutilizar os fluxos de vitória/loja/vidas quando forem implementados.
-
-**Dependências e referências**
-Complementa C-26 (#34) e Q-02/Q-03/Q-04 (#165–#167); coordenar com Q-13 (#176).
-
-**Entrega Astra low 18/09/2026:** Persistência pós-reinício preparada; falta instalar APK legado, upgrade e interrupção de gravação no aparelho. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Preparação local 06/10/2026: todos os fluxos Maestro fixam o pacote E2E; runner recusa pacote normal antes de ADB, com dois testes de isolamento. Seis sequências reais verificadas pelo gerador. Fluxos 03/04/manual-05 já cobrem reinício; manual/06 combina vitória/derrota e dois reinícios, conferindo conclusão, desbloqueio, saldo e 4/5 vidas sem repetir recompensa (roteiro preparado, execução Android pendente). Upgrade de fixture antiga, interrupção durante escrita e evidência em Android continuam pendentes; CI remoto bloqueado. Ver docs/PENDENCIAS-LOCAIS-20261006.txt.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2749,9 +2714,7 @@ mk open --title 'O-04 · Tela de Diagnóstico com os últimos logs' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Observabilidade'
 mk open --title 'O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime' \
-  --body 'Os sete invariantes que já quebraram (`commitProgress`, `mutateLives`, id de capítulo no storage da campanha, `tileCount` múltiplo de 3…) são hoje regra escrita em documento — quem não leu, não sabe. Viram função que checa e **loga**, nunca lança: derrubar o jogo do jogador para provar um ponto é pior que o bug. O valor é converter corrupção silenciosa de save em linha de log com nome e hora. Depende do O-01.
-
-**Entrega Astra low 18/09/2026:** Logs para quantidade de peças, contagem canônica e ids de capítulo no save da campanha antes da normalização, na leitura e escrita. Invariantes arquiteturais/concorrência seguem em testes; conversão completa não alegada. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Implementação local 06/10/2026: diagnósticos para origem e sobreposição de gravações de campanha/capítulo/vidas; IDs cruzados antes da normalização; contagem e fingerprint das 103 fases; tileCount; capacidade de bandeja; guarda de recompensa após await. Somente logs, preservando filas, payloads, erros de storage e hash SHA-256 canônico. Cinco testes novos cobrem corrupção, concorrência, isolamento e falhas. Marcadores de origem são diagnósticos; não provam arquitetura, geração ou todas as guardas async. Validação do conjunto registra falha anterior do teste estrutural getGameBackground e alertas de segurança sem correção; publicação/merge pendentes.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2774,8 +2737,8 @@ mk open --title 'O-06 · Proibir `console.*` fora do logger' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P2,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Observabilidade'
-mk open --title 'O-09 · Anexar contexto de domínio a todo erro' \
-  --body 'App registra tela/mundo/fase e GameScreen acrescenta retry/seed; logger captura snapshot em erros locais. Troca de tela substitui o contexto para evitar seed antiga; teste de navegação cobre a limpeza. Contexto remoto depende da revisão de privacidade O-10; Sentry recebe apenas stack.
+mk done --title 'O-09 · Anexar contexto de domínio a todo erro' \
+  --body 'Implementação integrada pela PR #310 no commit 54fcabc da develop. App registra tela/mundo/fase e GameScreen acrescenta retry/seed; a troca de tela substitui o contexto para não atribuir seed antigo a erro novo. Testes de diagnóstico e navegação passaram localmente em 06/10/2026. Contexto remoto continua condicionado à revisão de privacidade O-10; Sentry recebe somente o erro. Conciliação da issue após revisão da evidência.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2823,4 +2786,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 209 issues (128 já criadas fechadas) =="
+echo "== pronto: 209 issues (132 já criadas fechadas) =="

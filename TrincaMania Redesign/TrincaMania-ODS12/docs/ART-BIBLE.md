@@ -73,18 +73,20 @@ papel não salta na imagem, o fundo está saturado demais.
 
 ## 3. Especificação técnica
 
-| Peça                    | Resolução   | Formato          | Referência atual                                   |
-| ----------------------- | ----------- | ---------------- | -------------------------------------------------- |
-| Fundo de jogo           | 1080 × 1920 | PNG              | `map_world3_game_bg.png`                           |
-| Fundo de mapa           | 1080 × 1920 | PNG              | `map_world3_select_bg.png`                         |
-| Marcador / selo de mapa | 320 × 320   | PNG transparente | `forest_rest_cart.png`                             |
-| Ícone do app            | 1024 × 1024 | PNG              | `assets/icon.png` (hoje 1254 × 1254, fora da spec) |
-| Adaptive icon (Android) | 1024 × 1024 | PNG              | elemento dentro do círculo central de 66%          |
+| Peça                    | Resolução   | Formato          | Referência atual                                    |
+| ----------------------- | ----------- | ---------------- | --------------------------------------------------- |
+| Fundo de jogo           | 1080 × 1920 | PNG              | `assets/map/worlds/w03_central_game.png`            |
+| Fundo de mapa           | 1080 × 1920 | PNG              | `assets/map/worlds/w03_central_map.png`             |
+| Marcador / selo de mapa | 320 × 320   | PNG transparente | `assets/ui/visuais/rest.png`                        |
+| Ícone do app            | 1024 × 1024 | PNG              | `assets/icon.png` (1024 × 1024 no inventário atual) |
+| Adaptive icon (Android) | 1024 × 1024 | PNG              | elemento dentro do círculo central de 66%           |
 
 **Peso: ≤ 400 KB por imagem depois de comprimir.** Não é sugestão — é o limite
 que `scripts/valida-assets.js` cobra (`LIMITE_BYTES`). Arquivo novo acima disso
-reprova a verificação. Para comparação, o `map_world1_scene_bg.png` de hoje tem
-5,8 MB: sozinho ele pesa mais que os 20 arquivos novos juntos deveriam pesar.
+reprova a verificação. Em 06/10/2026, o inventário local registra todos os 149
+assets dentro desse teto após compressão. Isso não comprova resolução ou
+aceite visual: os 20 fundos permanecem menores que 1080 × 1920, e
+`assets/ui/visuais/shop_locked.png` mede 300 × 300 em vez de 320 × 320.
 
 Ilustração vetorial achatada com poucos gradientes comprime muito bem em PNG-8
 / PNG-24 com paleta reduzida. Se não estiver cabendo em 400 KB, quase sempre a
@@ -239,9 +241,9 @@ crates, a rainwater cistern, compost bins, butterflies and pollinators, soft
 pink and gold dawn light.
 ```
 
-Hoje o mundo 21 cai no `map_bonus_bg.png`. Substituir não libera peso nenhum: o
-mesmo arquivo é o fundo do capítulo 10 (`CHAPTER_MAP_ASSETS`), então ele
-continua no repositório de qualquer jeito. Este par é arte própria, não faxina.
+Em 06/10/2026, o mundo 21 reutiliza os fundos do Viveiro (`w04_viveiro_*`).
+O capítulo 10 usa a família da Cúpula (`w10_cupula_*`); `map_bonus_bg.png` já
+foi removido. O par do Jardim continua pendente e não substitui o Viveiro.
 
 ---
 
@@ -264,26 +266,29 @@ prompt fala em "mundo".
 
 ## 7. Onde o arquivo entra no código
 
-Os 22 arquivos vão para `assets/map/worlds/` seguindo a convenção do
-`README.md` de lá. Depois de gerados, os dois pontos de ligação são:
+Os arquivos vão para `assets/map/worlds/`, seguindo o `README.md` da pasta.
+Estado técnico confirmado em 06/10/2026:
 
-- **Fundo de jogo** → `getGameBackground(worldId)` em
-  `src/screens/GameScreen.tsx`. Hoje é um `switch` que reaproveita 4 PNGs para
-  os 10 mundos (mundos 2/5/7/9 dividem um, 3/6/8/10 dividem outro); o mundo 21
-  tem o seu, `gameBonusBg`.
-- **Fundo de mapa** → `LEGACY_CAMPAIGN_MAP_ASSETS` em
-  `src/data/campaignMapAssets.ts`, chaves `legacy-world-2` … `legacy-world-10`,
-  mais `legacy-world-21`. Mesmo reaproveitamento.
+- `WORLD_VISUAL_ASSETS`, em `src/data/worldVisualAssets.ts`, registra os 20
+  fundos próprios dos mundos 1–10, com caminhos literais de mapa e jogo.
+- `GameScreen.tsx` resolve `getGameBackground(worldId)` pelo registro único.
+- `campaignMapAssets.ts` usa o mesmo registro para a campanha e capítulos.
+  As famílias 101–110 correspondem a 1–10; o bônus 21 reutiliza o Viveiro.
+- Os dois fundos próprios do Jardim (A-24a/A-24b) ainda não existem.
 
-Ou seja: hoje **8 dos 10 mundos não têm arte própria**. Cada par de arquivos
-novo substitui uma entrada dessas duas tabelas — não precisa de refatoração,
-só de trocar o `require`.
+Os 20 PNGs foram decodificados com verificação de CRC e têm referências
+válidas. Todos cabem no teto, mas **nenhum atende à resolução 1080×1920**:
+as dimensões encontradas incluem 512×910, 576×1024 e 640×1138. Não mudar a
+especificação para fazer a auditoria passar. Corrigir resolução e aprovar
+contraste/recorte no Android antes de considerar os aceites de arte concluídos.
 
-Os PNGs antigos (`map_world1_bg.png`, `map_world2_bg.png`, …) só podem ser
-apagados quando **nenhuma** das duas tabelas apontar mais para eles;
-`scripts/valida-assets.js` acusa se sobrar órfão. Atenção ao
-`map_bonus_bg.png`: ele é fundo do mundo 21 **e** do capítulo 10
-(`CHAPTER_MAP_ASSETS`), então substituir o mundo 21 não o torna órfão.
+O teste de `getGameBackground` agora executa a função da tela e exige arquivo
+próprio por mundo; não depende mais de um `switch` que já foi removido.
+Inventário reproduzível: `node scripts/inventariar-arte.cjs`. Evidências:
+`docs/arte/inventario-20261006.json` e `docs/arte/galeria-20261006.html`.
+
+Remover um fundo antigo apenas depois de confirmar ausência de referências
+na campanha, nos capítulos e na partida; manter backup antes da remoção.
 
 ---
 

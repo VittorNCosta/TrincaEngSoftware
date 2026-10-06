@@ -153,6 +153,7 @@ function TraySlot({
         <View pointerEvents="none" style={styles.slotInsetShade} />
         <View pointerEvents="none" style={styles.slotSpecular} />
         <TileIcon
+          cardId={tile.cardId}
           fallbackEmoji={tile.emoji}
           highlighted={false}
           kind={tile.kind}
@@ -170,10 +171,13 @@ function TraySlot({
       <View style={styles.lockedSlotContent}>
         <GameIcon
           name={isCoinSlot ? 'coin' : 'bonus'}
-          size={16}
+          size={12}
           tone={isCoinSlot ? 'gold' : 'green'}
         />
         <Text
+          adjustsFontSizeToFit
+          minimumFontScale={0.75}
+          numberOfLines={1}
           style={[
             styles.lockedLabel,
             isBonusSlot ? styles.lockedLabelBonus : null,
@@ -298,7 +302,7 @@ const styles = StyleSheet.create({
   coinLockedSlot: {
     borderColor: 'rgba(255, 211, 90, 0.65)',
   },
-  // Encaixe ocupado: o mesmo doce dos tiles do tabuleiro.
+  // Encaixe ocupado: a mesma aparência das peças do tabuleiro.
   filledSlot: {
     backgroundColor: '#FFE7A6',
     borderBottomColor: '#C9922F',
@@ -313,20 +317,23 @@ const styles = StyleSheet.create({
   },
   lockedLabel: {
     color: '#FFD35A',
-    fontSize: 10,
+    fontSize: 8,
     fontWeight: '900',
-    lineHeight: 12,
+    includeFontPadding: false,
+    lineHeight: 10,
+    textAlign: 'center',
   },
   lockedLabelBonus: {
     color: '#BDFBE4',
   },
   lockedSlotContent: {
     alignItems: 'center',
-    gap: 1,
     justifyContent: 'center',
+    width: '85%',
   },
   lockedSlot: {
     backgroundColor: 'rgba(70, 40, 15, 0.72)',
+    borderRadius: 8,
     borderStyle: 'dashed',
     borderWidth: 2,
   },

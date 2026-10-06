@@ -17,15 +17,26 @@ nuvem do EAS). A pasta `android/` é código nativo _gerado_ a partir do `app.js
 
 ## Resumo rápido (o dia a dia)
 
-Na maioria das vezes você só precisa destes dois comandos:
+Atualize o código, regenere a lista de assets e compile:
 
 ```powershell
 cd C:\Users\SEU_USUARIO\TrincaMania
 git pull
 
 cd C:\Users\SEU_USUARIO\TrincaMania\android
+.\gradlew.bat :app:clean
+.\gradlew.bat :app:createReleaseUpdatesResources --rerun-tasks
 .\gradlew.bat assembleRelease
 ```
+
+A limpeza remove recursos gerados que o Metro pode conservar mesmo após apagar
+o PNG original. Isso impede que artes antigas continuem empacotadas no APK.
+
+A etapa `createReleaseUpdatesResources` atualiza o `app.manifest` do Expo e seu identificador
+de atualização. Com a versão atual de `expo-updates`, o cache dessa tarefa pode
+continuar válido após mudanças de código ou imagens. Sem regenerá-lo, os PNGs
+novos podem estar dentro do APK e ainda assim aparecer invisíveis no aplicativo.
+Execute essa etapa antes de cada APK atualizado, inclusive ao trocar de branch.
 
 O APK sai em:
 
@@ -81,6 +92,8 @@ npm install        # só se o package.json / package-lock.json tiver mudado
 
 ```powershell
 cd C:\Users\SEU_USUARIO\TrincaMania\android
+.\gradlew.bat :app:clean
+.\gradlew.bat :app:createReleaseUpdatesResources --rerun-tasks
 .\gradlew.bat assembleRelease
 ```
 
@@ -111,7 +124,7 @@ arquivo. O Android vai pedir para permitir "instalar de fontes desconhecidas" �
 ## Quando preciso regerar a pasta nativa (`prebuild`)?
 
 Na maioria das atualizações (mudanças só em `src/`, ou seja, JavaScript/TypeScript)
-**NÃO** precisa. O `assembleRelease` já pega o código novo sozinho.
+**NÃO** precisa. O fluxo acima atualiza o bundle e a lista de assets do Expo.
 
 Você só precisa regerar a pasta `android/` quando mudar algo **nativo**:
 

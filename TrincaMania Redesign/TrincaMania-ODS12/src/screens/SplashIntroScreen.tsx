@@ -243,6 +243,15 @@ export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
         style={styles.skipLayer}
       >
         <View pointerEvents="none" style={StyleSheet.absoluteFillObject}>
+          <Animated.Image
+            accessible={false}
+            source={require('../../assets/ui/visuais/splash.png')}
+            resizeMode="cover"
+            style={[
+              StyleSheet.absoluteFillObject,
+              { width: '100%', height: '100%' },
+            ]}
+          />
           <View style={styles.topWash} />
           <View style={styles.centerGlow} />
           <View style={styles.bottomShade} />

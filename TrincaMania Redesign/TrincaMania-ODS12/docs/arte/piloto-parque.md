@@ -5,6 +5,13 @@ Ilustração gerada com a ferramenta imagegen em 18/09/2026; exportação PNG
 indexada (qualidade 70, sem dithering), 364.398 bytes, em 1080×1920. O original gerado permanece fora do
 repositório, no diretório de imagens do Codex. Não substitui o fundo do mapa.
 
+**Consolidação local em 06/10/2026:** o arquivo atual foi preservado do lote
+de arte integrado no commit `de8351e`, com 365.598 bytes em 576×1024.
+As medidas acima descrevem o piloto anterior, não o arquivo atual. O lote
+também contém um fundo de mapa próprio do Mundo 1. A art bible continua
+prevendo 1080×1920; resolução e aprovação visual do lote atual permanecem
+pendentes de aceite no aparelho.
+
 A cena reúne cinco lixeiras nas cores da coleta seletiva, abrigo, bancos e
 árvores. O centro foi mantido escuro e pouco detalhado para receber as peças.
 Inspeção da imagem: sem texto, rostos, símbolos de fantasia ou UI desenhada.

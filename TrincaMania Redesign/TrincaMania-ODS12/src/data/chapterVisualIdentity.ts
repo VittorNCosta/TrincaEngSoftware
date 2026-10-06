@@ -47,9 +47,9 @@ export type ChapterVisualIdentity = {
 };
 
 /**
- * Pool finito de arte de mapa. São os PNGs que já existem em
- * `assets/map/world1` e estão registrados em `CAMPAIGN_MAP_SEGMENT_ASSETS`.
- * Nenhuma imagem nova é gerada — o que varia é a ordem e o recorte.
+ * Chaves de composição preservadas para a identidade determinística dos
+ * capítulos. A tela usa os fundos atuais de WORLD_VISUAL_ASSETS; estas chaves
+ * não carregam os PNGs segmentados antigos.
  */
 export const CHAPTER_ART_SEGMENT_KEYS = [
   'parque-canopy',

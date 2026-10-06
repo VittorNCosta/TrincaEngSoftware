@@ -1,5 +1,13 @@
 import { memo, useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 import { GameIcon } from './GameIcon';
 import { IS_E2E_BUILD } from '../testing/e2eProfile';
@@ -15,6 +23,13 @@ type MapLevelNodeProps = {
   selected: boolean;
   stars: number;
   onPress: (levelId: string) => void;
+};
+
+const NODE_ART = {
+  // O medalhão indica conclusão; a pontuação vem somente das estrelas abaixo.
+  complete: require('../../assets/ui/visuais/level_complete_base.png'),
+  current: require('../../assets/ui/visuais/level_current.png'),
+  locked: require('../../assets/ui/visuais/level_locked.png'),
 };
 
 const STAR_TILT = ['starLeft', 'starCenter', 'starRight'] as const;
@@ -131,7 +146,7 @@ function MapLevelNodeBase({
         pressed ? styles.pressed : null,
       ]}
     >
-      <View style={styles.nodeWrap}>
+      <View testID={`map-level-frame-${level.id}`} style={styles.nodeWrap}>
         <View style={styles.groundShadow} />
         {current ? (
           <Animated.View
@@ -146,24 +161,46 @@ function MapLevelNodeBase({
           />
         ) : null}
         {selected ? <View style={styles.selectedAura} /> : null}
-        <View
+        <ImageBackground
+          accessible={false}
+          source={
+            locked
+              ? NODE_ART.locked
+              : completed
+                ? NODE_ART.complete
+                : NODE_ART.current
+          }
+          resizeMode="contain"
           style={[
             styles.node,
             completed ? styles.completedNode : null,
             current ? styles.currentNode : null,
             locked ? styles.lockedNode : null,
             selected ? styles.selectedNode : null,
+            {
+              backgroundColor: 'transparent',
+              borderWidth: 0,
+              borderBottomWidth: 0,
+            },
           ]}
         >
           <View
+            testID={`map-level-number-${level.id}`}
             style={[
               styles.innerDisc,
               completed ? styles.completedInnerDisc : null,
               current ? styles.currentInnerDisc : null,
               locked ? styles.lockedInnerDisc : null,
+              {
+                backgroundColor: '#FFF8E8',
+                borderRadius: 8,
+                height: 25,
+                width: 36,
+                position: 'absolute',
+                bottom: -4,
+              },
             ]}
           >
-            <View pointerEvents="none" style={styles.innerShine} />
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
@@ -173,6 +210,12 @@ function MapLevelNodeBase({
                 completed ? styles.completedNumber : null,
                 current ? styles.currentNumber : null,
                 locked ? styles.lockedNumber : null,
+                {
+                  fontSize: displayLabel.length > 2 ? 12 : 17,
+                  lineHeight: 21,
+                  color: '#23483A',
+                  marginTop: 0,
+                },
               ]}
             >
               {displayLabel}
@@ -188,28 +231,45 @@ function MapLevelNodeBase({
               <GameIcon name="lock" size={13} tone="neutral" variant="plain" />
             </View>
           ) : null}
-        </View>
+        </ImageBackground>
         {showStars ? (
-          <View pointerEvents="none" style={styles.starArc}>
+          <View
+            pointerEvents="none"
+            testID={`map-level-rating-${level.id}`}
+            style={styles.starArc}
+          >
             {Array.from({ length: 3 }).map((_, index) => {
               const isEarned = index < earnedStars;
 
               return (
                 <View
                   key={`star-${level.id}-${index}`}
+                  testID={`map-level-star-${level.id}-${index}`}
                   style={[
                     styles.starMark,
                     styles[STAR_TILT[index]],
                     !isEarned ? styles.starDimmed : null,
                   ]}
                 >
-                  <GameIcon
-                    muted={!isEarned}
-                    name="star"
-                    size={isEarned ? 15 : 13}
-                    tone={isEarned ? 'gold' : 'neutral'}
-                    variant="plain"
-                  />
+                  <Svg
+                    accessible={false}
+                    height={16}
+                    viewBox="0 0 24 24"
+                    width={16}
+                  >
+                    <Path
+                      d="M12 2.5l3 6.1 6.7 1-4.9 4.8 1.2 6.7-6-3.2-6 3.2 1.2-6.7-4.9-4.8 6.7-1z"
+                      fill={isEarned ? '#FFD23F' : '#D8E3FF'}
+                      stroke={isEarned ? '#7A4A0C' : '#7482AA'}
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                    />
+                    <Path
+                      d="M12 4.2v11.5L8.2 13l-3.7-2.8 5.5-.8z"
+                      fill="#FFF8D8"
+                      opacity={isEarned ? 0.65 : 0.25}
+                    />
+                  </Svg>
                 </View>
               );
             })}
@@ -401,8 +461,9 @@ const styles = StyleSheet.create({
   },
   starArc: {
     alignItems: 'center',
-    // As estrelas montam sobre a borda de baixo da bolha, não flutuam abaixo dela.
-    bottom: 20,
+    // Reserva a faixa inferior do marcador para a pontuação, abaixo do número.
+    // A inclinação e a estrela central ampliada também cabem nos 98 dp do nó.
+    bottom: 2,
     flexDirection: 'row',
     gap: 1,
     justifyContent: 'center',

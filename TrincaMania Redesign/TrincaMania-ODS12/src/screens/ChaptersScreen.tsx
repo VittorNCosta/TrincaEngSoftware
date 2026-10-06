@@ -71,6 +71,7 @@ export function ChaptersScreen({
       <ScreenShell scroll={false}>
         <View style={styles.header}>
           <Pressable
+            accessibilityLabel="Voltar aos capítulos"
             accessibilityRole="button"
             onPress={() => setOpenChapterId(undefined)}
             style={({ pressed }) => [
@@ -138,9 +139,8 @@ export function ChaptersScreen({
                 {item.milestone ? (
                   <View
                     style={{
-                      flexDirection: 'row',
                       alignItems: 'center',
-                      gap: 2,
+                      width: '100%',
                     }}
                   >
                     <RecyclingMarkerArt
@@ -165,6 +165,7 @@ export function ChaptersScreen({
     <ScreenShell scroll={false}>
       <View style={styles.header}>
         <Pressable
+          accessibilityLabel="Voltar ao mapa"
           accessibilityRole="button"
           onPress={onBack}
           style={({ pressed }) => [

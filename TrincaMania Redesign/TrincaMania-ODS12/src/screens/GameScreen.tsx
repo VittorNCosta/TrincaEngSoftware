@@ -1,5 +1,9 @@
+import { GameDialogs } from './game/GameDialogs';
+import { WorldArtContext } from '../components/WorldArtContext';
+import { getWorldVisualAssets } from '../data/worldVisualAssets';
 import { IS_E2E_BUILD, E2E_BOARD_SEED } from '../testing/e2eProfile';
 import { updateDiagnosticContext } from '../utils/log';
+import { checkTrayCapacity } from '../observability/runtimeInvariants';
 import {
   createSeededRandom,
   mixSeed,
@@ -9,7 +13,6 @@ import { getChapterVisualIdentity } from '../data/chapterVisualIdentity';
 import { createBoardVariation } from './game/createBoardVariation';
 import {
   PRACTICAL_TUTORIAL_LEVEL_ID,
-  PRACTICAL_TUTORIAL_POPUPS,
   isPracticalTutorialPopupStep,
   isPracticalTutorialTapStep,
   getTutorialAvailableTiles,
@@ -21,16 +24,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   ImageBackground,
-  ImageSourcePropType,
   LayoutChangeEvent,
-  Modal,
   Pressable,
   StyleSheet,
   Text,
   useWindowDimensions,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BonusWorldAchievementModal } from '../components/BonusWorldAchievementModal';
 import {
@@ -41,8 +41,6 @@ import { GameBoard } from '../components/GameBoard';
 import { GameIcon } from '../components/GameIcon';
 import { PhasePlate } from '../components/PhasePlate';
 import { PowerDrawer } from '../components/PowerDrawer';
-import { PowerIcon } from '../components/PowerIcon';
-import { PrimaryButton } from '../components/PrimaryButton';
 import { ResourcePill } from '../components/ResourcePill';
 import { ResultModal } from '../components/ResultModal';
 import { ScreenShell } from '../components/ScreenShell';
@@ -173,17 +171,6 @@ const TOAST_VISIBLE_MS = 1700;
 const BONUS_FEEDBACK_VISIBLE_MS = 1050;
 const TILE_INSERT_POP_MS = 110;
 
-const gameWorld1Bg =
-  require('../../assets/map/map_world1_bg.png') as ImageSourcePropType;
-const gameWorld1SceneBg =
-  require('../../assets/map/worlds/w01_parque_game.png') as ImageSourcePropType;
-const gameWorld2Bg =
-  require('../../assets/map/map_world2_bg.png') as ImageSourcePropType;
-const gameWorld3Bg =
-  require('../../assets/map/map_world3_game_bg.png') as ImageSourcePropType;
-const gameBonusBg =
-  require('../../assets/map/map_bonus_bg.png') as ImageSourcePropType;
-
 type LevelCompletionSummary = {
   bonusWorldAchievementUnlocked: boolean;
   chestProgress: ChestProgressSummary;
@@ -258,30 +245,18 @@ type GameScreenProps = {
   onUseItem: (powerType: PowerUpType) => boolean;
 };
 
-const getGameBackground = (worldId: WorldId) => {
-  switch (worldId) {
-    case 2:
-    case 5:
-    case 7:
-    case 9:
-      return gameWorld2Bg;
-    case 3:
-    case 6:
-    case 8:
-    case 10:
-      return gameWorld3Bg;
-    case 4:
-      return gameWorld1Bg;
-    case 21:
-      return gameBonusBg;
-    case 1:
-      return gameWorld1SceneBg;
-    default:
-      return gameWorld1Bg;
-  }
-};
+const getGameBackground = (worldId: WorldId) =>
+  getWorldVisualAssets(worldId).game;
 
-export function GameScreen({
+export function GameScreen(props: GameScreenProps) {
+  return (
+    <WorldArtContext.Provider value={props.level.worldId}>
+      <GameScreenContent {...props} />
+    </WorldArtContext.Provider>
+  );
+}
+
+function GameScreenContent({
   activeTrayCapacity: currentTrayCapacity,
   bestStars,
   bonusTraySlotRemainingMs,
@@ -328,6 +303,18 @@ export function GameScreen({
   const levelDisplayLabel = getLevelDisplayLabel(level);
   const [activeTrayCapacity, setActiveTrayCapacity] =
     useState(currentTrayCapacity);
+  useEffect(() => {
+    checkTrayCapacity(
+      currentTrayCapacity,
+      BASE_TRAY_CAPACITY,
+      MAX_TRAY_CAPACITY,
+    );
+    checkTrayCapacity(
+      activeTrayCapacity,
+      BASE_TRAY_CAPACITY,
+      MAX_TRAY_CAPACITY,
+    );
+  }, [currentTrayCapacity, activeTrayCapacity]);
   const [roundBonusTraySlotActive, setRoundBonusTraySlotActive] = useState(
     isBonusTraySlotActive,
   );
@@ -2564,204 +2551,28 @@ export function GameScreen({
             onBonusWorldAchievementSeen(true);
           }}
         />
-        <Modal
-          animationType="fade"
-          transparent
-          visible={practicalTutorialPopupStep !== undefined}
-          onRequestClose={() => undefined}
-        >
-          <SafeAreaView
-            edges={['top', 'bottom', 'left', 'right']}
-            style={styles.modalOverlay}
-          >
-            <View style={styles.practicalModalCard}>
-              {practicalTutorialPopupStep ? (
-                <>
-                  <Text style={styles.practicalModalTitle}>
-                    {
-                      PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep]
-                        .title
-                    }
-                  </Text>
-                  <Text style={styles.practicalModalText}>
-                    {PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].text}
-                  </Text>
-                  <PrimaryButton
-                    // O rótulo muda a cada passo ("Começar", "Entendi",
-                    // "Continuar", "Jogar"), então texto não serve de
-                    // endereço: o id é o mesmo botão nos quatro.
-                    testID="tutorial-pratico-avancar"
-                    title={
-                      PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep]
-                        .button
-                    }
-                    onPress={advancePracticalTutorialPopup}
-                  />
-                </>
-              ) : null}
-            </View>
-          </SafeAreaView>
-        </Modal>
-        <Modal
-          animationType="fade"
-          transparent
-          visible={isMagicTripleRescueVisible}
-          onRequestClose={dismissMagicTripleRescue}
-        >
-          <SafeAreaView
-            edges={['top', 'bottom', 'left', 'right']}
-            style={styles.modalOverlay}
-          >
-            <View style={styles.rescueModalCard}>
-              <GameIcon name="powers" size={46} tone="purple" />
-              <Text style={styles.purchaseModalTitle}>Quase sem espaço!</Text>
-              <Text style={styles.purchaseModalText}>
-                A Trinca Mágica forma uma trinca possível automaticamente.
-              </Text>
-              <Text style={styles.rescueModalHint}>
-                Use uma vez grátis para salvar sua bandeja.
-              </Text>
-              <View style={styles.purchaseModalActions}>
-                <PrimaryButton
-                  size="small"
-                  title="Depois"
-                  variant="secondary"
-                  onPress={dismissMagicTripleRescue}
-                />
-                <PrimaryButton
-                  size="small"
-                  title="Usar grátis"
-                  onPress={useFreeMagicTripleRescue}
-                />
-              </View>
-            </View>
-          </SafeAreaView>
-        </Modal>
-        <Modal
-          animationType="fade"
-          statusBarTranslucent
-          transparent
-          visible={isBonusSlotConfirmVisible}
-          onRequestClose={() => {
-            if (!isBonusSlotProcessingRef.current) {
-              setIsBonusSlotConfirmVisible(false);
-            }
-          }}
-        >
-          <SafeAreaView
-            edges={['top', 'bottom', 'left', 'right']}
-            style={styles.modalOverlay}
-          >
-            <View style={styles.bonusPurchaseModalCard}>
-              <View style={styles.bonusModalIcon}>
-                <GameIcon name="bonus" size={34} tone="green" />
-              </View>
-              <Text style={styles.purchaseModalTitle}>
-                Liberar espaço bônus?
-              </Text>
-              <Text style={styles.purchaseModalText}>
-                Ganhe um sétimo espaço na bandeja e jogue com mais segurança.
-              </Text>
-              <View style={styles.bonusBenefitPill}>
-                <Text style={styles.bonusBenefitText}>+1 ESPAÇO · 30 MIN</Text>
-              </View>
-              <View style={styles.purchaseModalActions}>
-                <PrimaryButton
-                  disabled={isBonusSlotProcessing}
-                  size="small"
-                  title="Cancelar"
-                  variant="secondary"
-                  onPress={() => setIsBonusSlotConfirmVisible(false)}
-                />
-                <PrimaryButton
-                  disabled={isBonusSlotProcessing}
-                  size="small"
-                  title={
-                    isBonusSlotProcessing ? 'Liberando…' : 'Liberar grátis'
-                  }
-                  onPress={confirmBonusTraySlot}
-                />
-              </View>
-            </View>
-          </SafeAreaView>
-        </Modal>
-        <Modal
-          animationType="fade"
-          statusBarTranslucent
-          transparent
-          visible={pendingPowerPurchase !== undefined}
-          onRequestClose={() => {
-            if (!isPowerPurchaseProcessingRef.current) {
-              setPendingPowerPurchase(undefined);
-            }
-          }}
-        >
-          <SafeAreaView
-            edges={['top', 'bottom', 'left', 'right']}
-            style={styles.modalOverlay}
-          >
-            <View style={styles.powerPurchaseModalCard}>
-              {pendingPowerPurchase ? (
-                <>
-                  <View style={styles.powerPurchaseIcon}>
-                    <PowerIcon name={pendingPowerPurchase} size={38} />
-                  </View>
-                  <Text style={styles.purchaseModalTitle}>
-                    {POWER_UP_UI[pendingPowerPurchase].label}
-                  </Text>
-                  <Text style={styles.purchaseModalText}>
-                    {POWER_UP_UI[pendingPowerPurchase].description}
-                  </Text>
-                  <View style={styles.powerPriceRow}>
-                    <GameIcon name="coin" size={20} tone="gold" />
-                    <Text style={styles.powerPriceText}>
-                      {pendingPowerPurchaseCost}
-                    </Text>
-                    <Text style={styles.powerBalanceText}>Saldo: {coins}</Text>
-                  </View>
-                  {pendingPowerUnavailableMessage ? (
-                    <Text style={styles.powerPurchaseCondition}>
-                      {pendingPowerUnavailableMessage} A compra ficará no
-                      inventário.
-                    </Text>
-                  ) : (
-                    <Text style={styles.powerPurchaseConditionReady}>
-                      Pronto para comprar e usar nesta jogada.
-                    </Text>
-                  )}
-                  {!pendingPowerHasEnoughCoins ? (
-                    <Text style={styles.powerPurchaseInsufficient}>
-                      Moedas insuficientes.
-                    </Text>
-                  ) : null}
-                  <View style={styles.purchaseModalActions}>
-                    <PrimaryButton
-                      disabled={isPowerPurchaseProcessing}
-                      size="small"
-                      title="Cancelar"
-                      variant="secondary"
-                      onPress={() => setPendingPowerPurchase(undefined)}
-                    />
-                    <PrimaryButton
-                      disabled={
-                        isPowerPurchaseProcessing || !pendingPowerHasEnoughCoins
-                      }
-                      size="small"
-                      title={
-                        isPowerPurchaseProcessing
-                          ? 'Comprando…'
-                          : pendingPowerCanUseImmediately
-                            ? 'Comprar e usar'
-                            : 'Comprar'
-                      }
-                      onPress={confirmPendingPowerPurchase}
-                    />
-                  </View>
-                </>
-              ) : null}
-            </View>
-          </SafeAreaView>
-        </Modal>
+        <GameDialogs
+          practicalTutorialPopupStep={practicalTutorialPopupStep}
+          advancePracticalTutorialPopup={advancePracticalTutorialPopup}
+          isMagicTripleRescueVisible={isMagicTripleRescueVisible}
+          dismissMagicTripleRescue={dismissMagicTripleRescue}
+          useFreeMagicTripleRescue={useFreeMagicTripleRescue}
+          isBonusSlotConfirmVisible={isBonusSlotConfirmVisible}
+          isBonusSlotProcessingRef={isBonusSlotProcessingRef}
+          setIsBonusSlotConfirmVisible={setIsBonusSlotConfirmVisible}
+          isBonusSlotProcessing={isBonusSlotProcessing}
+          confirmBonusTraySlot={confirmBonusTraySlot}
+          pendingPowerPurchase={pendingPowerPurchase}
+          isPowerPurchaseProcessingRef={isPowerPurchaseProcessingRef}
+          setPendingPowerPurchase={setPendingPowerPurchase}
+          pendingPowerPurchaseCost={pendingPowerPurchaseCost}
+          coins={coins}
+          pendingPowerUnavailableMessage={pendingPowerUnavailableMessage}
+          pendingPowerHasEnoughCoins={pendingPowerHasEnoughCoins}
+          isPowerPurchaseProcessing={isPowerPurchaseProcessing}
+          pendingPowerCanUseImmediately={pendingPowerCanUseImmediately}
+          confirmPendingPowerPurchase={confirmPendingPowerPurchase}
+        />
       </ImageBackground>
     </ScreenShell>
   );

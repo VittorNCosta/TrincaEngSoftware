@@ -4,33 +4,6 @@ import { BOTTOM_NAV_HEIGHT } from '../../components/BottomNavBar';
 import { MAP_HEIGHT, MAP_WIDTH, MAP_PARALLAX_TRAVEL } from './mapPresentation';
 
 export const styles = StyleSheet.create({
-  bonusMapBadge: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 139, 193, 0.94)',
-    borderColor: '#FFE1F0',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    left: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 3,
-    position: 'absolute',
-    top: 74,
-    zIndex: 6,
-    ...shadows.card,
-  },
-  bonusMapBadgeName: {
-    color: colors.inkOnDark,
-    fontSize: 10,
-    fontWeight: '900',
-    lineHeight: 12,
-  },
-  bonusMapBadgeText: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    lineHeight: 13,
-    textTransform: 'uppercase',
-  },
   bonusChestPosition: {
     alignItems: 'center',
     position: 'absolute',

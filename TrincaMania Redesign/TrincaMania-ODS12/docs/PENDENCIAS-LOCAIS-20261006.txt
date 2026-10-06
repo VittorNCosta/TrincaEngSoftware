@@ -1,0 +1,434 @@
+TRINCAENG — DECISÕES E PENDÊNCIAS LOCAIS — 06/10/2026
+Branch: develop. Commit e APK local autorizados pelo usuário nesta rodada.
+Publicação por push/Actions continua bloqueada. Aceite Android fica com o usuário.
+
+A-33 / #71 — Compressão
+Seis PNGs comprimidos com pngquant 2.18.0, paleta de 256 cores,
+--quality 70-100 --speed 1 --nofs --strip. Dimensões preservadas.
+Não é compressão sem perda: há quantização de cores/alpha. Qualidade estimada
+pelo codec: 76–92. Pixels originalmente totalmente transparentes permanecem
+transparentes; RMSE de alpha entre 0,69 e 1,42 unidades de 255.
+Economia: 12.272.257 bytes (~11,70 MiB). Todos os 149 assets agora cabem no
+limite existente de 409.600 bytes. Livro-razão encolheu para zero excessos.
+Os originais, hashes e métricas ficaram no backup/rodada-2.
+Aprovação visual da compressão no Android e integração/merge ainda pendentes.
+
+S-12 / #86 e S-14 / #88 — Áudio
+Sete arquivos sem referências exatas foram removidos após backup: seis vozes
+em inglês e shockwave.wav. Nenhuma dessas vozes era tocada pelo código atual.
+Os oito ambientes usados foram renomeados para central, cooperativa, forum,
+parque, rota, usina, vale e viveiro; SHA-256 comprova preservação do áudio.
+Isso NÃO entrega as dez trilhas novas S-01…S-10: mundos 9/10 ainda reutilizam
+usina/forum, e o bônus não tem trilha própria. A substituição de conteúdo
+sonoro e a revisão humana de tom/licença permanecem abertas.
+
+G-16 / #121 — Git LFS
+Recomendação técnica: manter os assets atuais no Git comum. Após A-33, nenhum
+asset ultrapassa 400 KiB e o conjunto soma ~17,08 MiB; não há necessidade
+imediata de adicionar um segundo serviço de download aos clones/builds.
+A compressão não remove blobs históricos. O maior blob nas refs locais tem
+5.986.935 bytes (map_world1_scene_bg.png); migrar o histórico exige uma tarefa
+coordenada, não uma limpeza da pasta. Não reescrever histórico nem habilitar
+LFS nesta rodada. Reavaliar ao introduzir fontes editáveis grandes ou mídias
+que deixem de caber no orçamento. Aceite da decisão pelo responsável pendente.
+Fonte primária consultada em 06/10/2026:
+https://docs.github.com/en/repositories/working-with-files/managing-large-files/moving-a-file-in-your-repository-to-git-large-file-storage
+
+SEC-05 / #151 — Renovate x Dependabot
+Recomendação técnica: manter Dependabot nesta rodada. A configuração atual
+já agrupa minor/patch de produção e desenvolvimento, e protege as versões
+coordenadas pelo Expo SDK. A premissa de que só Renovate agrupa PRs não se
+sustenta. Renovate oferece presets de monorepo (inclusive Expo), mas agrupamento
+não comprova compatibilidade de qualquer versão com o SDK 54 deste app.
+React e react-test-renderer devem continuar alinhados em 19.1.0; a migração de
+Sentry precisa acompanhar a validação do SDK (#245/#285), não uma atualização
+isolada. Não instalar outro bot nem mudar automação/workflows enquanto Actions
+estiver bloqueado. Um piloto futuro só faz sentido com um ganho mensurável
+específico, preservando os limites do SDK e os checks locais atuais.
+Aceite da decisão pelo responsável pendente.
+Fontes primárias consultadas em 06/10/2026:
+https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
+https://docs.renovatebot.com/presets-group/
+https://docs.renovatebot.com/presets-monorepo/
+https://docs.expo.dev/versions/latest/
+
+SEC-17 / #163 — Inventário técnico de dados
+A descrição da issue está desatualizada: não é correto dizer que toda interação
+é apenas AsyncStorage, porque o código oferece Sentry opcional e expo-updates.
+- Persistência local: campanha, capítulos, estrelas, saldos/itens, vidas e
+  preferências em storages separados; sem conta de jogador exigida.
+- Diagnóstico local: estado técnico em memória, com tela/fase/mundo e contexto
+  de reprodução. Compartilhamento/cópia são acionados pelo usuário.
+- Sentry: habilitado somente fora de desenvolvimento/E2E e com
+  EXPO_PUBLIC_SENTRY_DSN. beforeSend remove user/request/extra/contexts/tags,
+  breadcrumbs/server_name/transaction e frame.vars; mensagens de exceção são
+  substituídas por texto neutro. Tracking de sessões, traces, profiles e módulo
+  nativo estão desativados. Stack técnico e metadados restantes do SDK podem
+  integrar o evento; não afirmar ausência de toda informação identificável
+  só por sendDefaultPii=false.
+- Expo Updates: configuração em app.json/app.config.js permite consulta remota
+  nas versões normais; o perfil E2E desativa updates. Inspecionar o APK efetivo
+  e capturar tráfego na validação Android para comprovar a prática publicada.
+- Política pública: docs/privacy/index.html já explica diagnóstico remoto
+  opcional, IP/metadados de rede, atualizações, contato e exclusão de dados.
+Não houve inspeção de DSN, tokens, saves ou dados de um jogador. Não foi feita
+avaliação jurídica de conformidade LGPD, de base legal, contratos, prazo real
+no servidor ou transferência internacional. Esses itens dependem do responsável
+e da configuração efetiva dos serviços. A política não foi publicada/alterada.
+Evidências: src/observability/sentry.ts, errorReporter.ts, src/storage/,
+app.json, app.config.js e docs/privacy/index.html.
+
+Q-17 / #236 — Recuperação no Android
+Preparação local adicional: runner Maestro rejeita qualquer APP_ID diferente de
+br.com.mhvtech.trincamania.e2e antes de chamar ADB. Todos os fluxos executáveis,
+incluindo 01/02, fixam o pacote isolado mesmo em execução direta. Dois testes
+provam recusa de todos os modos e controle positivo com ADB substituto.
+Os fluxos existentes 03/04/manual-05 já conferem fase/moedas/vidas após reinício;
+o novo manual/06 combina uma vitória e uma derrota reais, verifica conclusão,
+desbloqueio, moedas e 4/5 vidas em dois reinícios, sem duplicar recompensa.
+Disponível no runner local com MAESTRO_SUITE=recovery; pacote isolado obrigatório.
+Roteiro preparado, ainda não executado em Android.
+o gerador validou as seis sequências de jogadas, sem conceder vitória artificial.
+APK normal autorizado para geração/entrega; sem aparelho confirmado: upgrade de fixture antiga,
+interrupção DURANTE escrita e recuperação em AsyncStorage Android não foram
+executados. Testes Node/Jest não substituem esses aceites; CI remoto bloqueado.
+
+A-04 / #42, A-05…A-24 / #43…#62, A-24a/b / #204/#205, A-36 / #74
+20 fundos dos mundos 1–10 existem, decodificam e resolvem pelo registro real.
+Todos estão abaixo de 1080×1920 (há 512×910, 576×1024 e 640×1138).
+Não redimensionar para fabricar cumprimento de resolução; a origem/qualidade
+precisa de revisão e uma exportação aprovada. Bônus 21 segue com o Viveiro.
+90 PNGs de resíduos e assets globais possuem referências válidas. O baú de
+mundo antigo ainda contém gemas; fica sinalizado para revisão de conteúdo ODS12.
+O teste desatualizado getGameBackground foi corrigido sem mudar a resolução
+usada em produção: testa a função real, fundos distintos, capítulos e bônus.
+Ícones do app/adaptive: 1024×1024; selos/nós/portal: 320×320, exceto
+shop_locked.png (300×300, abaixo da especificação). Splash: 720×1280;
+a art bible não fixa uma resolução específica para splash. Aceite pendente.
+Galeria: docs/arte/galeria-20261006.html. Inventário: inventario-20261006.json.
+Presença, integração, tamanho e decode não constituem aceite de estilo,
+contraste 3:1, recorte, direitos de uso ou validação no Android.
+A-04 e VIS-02 precisam de aceite visual explícito antes das próximas etapas
+previstas nas instruções; nenhuma arte nova ou etapa VIS-03/VIS-04 foi gerada.
+
+CI-33 / #224
+O piloto controlado registrado anteriormente continua parcial; não há métricas
+novas de agentes especializados nem prova de execução dos perfis pelo cliente.
+Esta sessão não autoriza delegação. Não inventar medições nem repetir instalações
+globais para simular conclusão. Ver docs/PILOTO-CODEX.md.
+
+Demais aceites
+Teste manual de todas as fases (#193), medição em aparelho de pouca memória
+(#174), contas/tokens (#136), proteção remota (#115) e aprovação humana de arte,
+áudio, privacidade e ferramentas continuam pendentes onde exigidos.
+Issues com implementação previamente integrada dependem de reconciliação do
+backlog, sem reabrir ou fechar em lote só pelo estado do roadmap.
+Segurança mantém seu gate: os advisories novos de braces e node-forge não
+foram aceitos no baseline nem contornados. Fontes consultadas em 06/10/2026:
+https://github.com/advisories/GHSA-vfj7-8cjw-p6xm
+https://github.com/advisories/GHSA-86w9-cpqp-85rv
+
+Verificações da segunda rodada
+- Domínio/storage: 252/252 testes; UI: 56/56, 15 suítes.
+- Cobertura completa passou, pisos inalterados: domínio 77,08% linhas,
+  84,69% ramos, 76,45% funções; UI 26,74%, 32,40%, 27,87%.
+- Typecheck passou; lint sem erros, com três avisos existentes de GameScreen.
+- Testes da configuração CI executados localmente: 25/25. Nenhum CI remoto.
+- Simulação desta rodada: 103 fases canônicas e 1000 capítulos vencíveis,
+  incluindo retry dos capítulos. Integridade canônica permanece testada.
+- Exportação Android/Hermes passou no teto existente de 2.761.261 bytes.
+  Até a rodada 2, nenhum APK gerado ou instalado; orçamento não foi elevado naquela rodada. APK local autorizado na rodada 3.
+- Assets: 149 arquivos, 17.912.121 bytes; zero órfãos, excessos ou referências
+  ausentes. 128 PNGs decodificados integralmente com CRC. Resolução é débito
+  separado: 20 fundos e shop_locked.png fora da especificação.
+- ODS12: zero pendências de nomes/string conhecidas; revisão das imagens
+  antigas continua necessária (baú com gemas). Não alegar tema visual aprovado.
+- Roadmap MD/HTML e coluna Codex consistentes (209 tarefas); script inicial
+  de criação regenerado, nunca executado. Propostas sem marcar novo aceite.
+- Auditoria FALHOU: dois advisories novos high (braces/node-forge) e um
+  moderate novo (sprintf-js); cinco advisories do baseline permanecem.
+  npm sugere mudanças de major/SDK como solução da árvore, sem comprovar
+  compatibilidade; não foram aplicadas à força nem aceitas no baseline.
+- Histórico da primeira rodada preservado em VALIDACAO-WSL-20261006.txt;
+  os saldos de teste/PNG/órfãos desse relatório são anteriores à correção atual.
+
+Estado atual das 69 issues consultadas em 06/10/2026
+Até a rodada 2, nenhuma issue remota foi comentada, fechada ou reaberta. Implementação local
+não equivale a merge ou aceite manual. O estado abaixo substitui a avaliação
+da primeira rodada para os arquivos atualmente presentes.
+
+#2 — F0-02 · Expor `node` no PATH não-interativo
+PATH não interativo verificado com Node 22.23.2/npm 10.9.8; conciliação do backlog e aceite humano pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/2
+
+#41 — A-03 · Escolher a ferramenta de geração e travar seed/estilo
+Art bible e piloto existentes; ferramenta/seed/proveniência e aceite do lote atual não comprovados.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/41
+
+#42 — A-04 · Gerar e validar a imagem-piloto no aparelho
+Piloto existe; resolução abaixo de 1080×1920 e aceite visual no aparelho pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/42
+
+#43 — A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/43
+
+#44 — A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/44
+
+#45 — A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/45
+
+#46 — A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/46
+
+#47 — A-09 · Mundo 3 · Central de Materiais — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/47
+
+#48 — A-10 · Mundo 3 · Central de Materiais — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/48
+
+#49 — A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/49
+
+#50 — A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/50
+
+#51 — A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/51
+
+#52 — A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/52
+
+#53 — A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/53
+
+#54 — A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/54
+
+#55 — A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/55
+
+#56 — A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/56
+
+#57 — A-19 · Mundo 8 · Fórum da Economia Circular — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/57
+
+#58 — A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/58
+
+#59 — A-21 · Mundo 9 · Distrito da Reindustrialização — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/59
+
+#60 — A-22 · Mundo 9 · Distrito da Reindustrialização — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/60
+
+#61 — A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/61
+
+#62 — A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo
+PNG próprio existente, integrado e decodificado. Resolução abaixo de 1080×1920; aceite de estilo/recorte/contraste Android e merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/62
+
+#63 — A-25 · Ícone do app 1024×1024
+Ícone registrado e 1024×1024; composição sem texto/contraste e aceite visual pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/63
+
+#64 — A-26 · Adaptive icon Android 1024×1024
+Adaptive icon registrado e 1024×1024; círculo central de 66% e recorte Android precisam de validação.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/64
+
+#65 — A-27 · Splash screen
+Splash integrada em PNG 720×1280; composição e recortes Android ainda sem aceite.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/65
+
+#66 — A-28 · Selo de marco “Descanso” 320×320
+Marcador descanso PNG integrado, 320×320; aceite visual Android pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/66
+
+#67 — A-29 · Selo de marco “Loja” 320×320
+Marcadores loja integrados; shop.png 320×320, shop_locked.png 300×300 fora da especificação. Aceite pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/67
+
+#68 — A-30 · Selo de marco “Guardião” 320×320
+Marcador guardião integrado, 320×320; aceite visual Android pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/68
+
+#69 — A-31 · Marcador de portal entre mundos 320×320
+Portal integrado, 320×320; VIS-02 implementada com testes e aprovação visual explícita pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/69
+
+#70 — A-32 · Nós de fase: bloqueado, atual, completo
+Nós bloqueado/atual/completo registrados, 320×320; estados testados, aceite visual Android pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/70
+
+#71 — A-33 · Comprimir todos os PNGs para ≤ 400 KB
+Implementação local: seis PNGs comprimidos, todos os assets ≤409.600 bytes. Quantização documentada; originais preservados; aceite visual/merge pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/71
+
+#74 — A-36 · Integrar cada asset entregue no código
+Integração local verificada: 20 fundos distintos e 90 PNGs de resíduos, sem referências ausentes/órfãos; débitos de resolução, bônus e aprovação permanecem.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/74
+
+#75 — S-01 · `ambient_parque.mp3` — Mundo 1
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/75
+
+#76 — S-02 · `ambient_vale.mp3` — Mundo 2
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/76
+
+#77 — S-03 · `ambient_central.mp3` — Mundo 3
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/77
+
+#78 — S-04 · `ambient_viveiro.mp3` — Mundo 4
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/78
+
+#79 — S-05 · `ambient_usina.mp3` — Mundo 5
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/79
+
+#80 — S-06 · `ambient_cooperativa.mp3` — Mundo 6
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/80
+
+#81 — S-07 · `ambient_rota.mp3` — Mundo 7
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/81
+
+#82 — S-08 · `ambient_forum.mp3` — Mundo 8
+Arquivo com nome ODS12 presente após renomeação; áudio antigo preservado byte a byte. Não comprova composição da trilha nova; licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/82
+
+#83 — S-09 · `ambient_distrito.mp3` — Mundo 9
+Trilha própria do Distrito ausente; jogo reutiliza Usina. Composição/licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/83
+
+#84 — S-10 · `ambient_cupula.mp3` — Mundo 10
+Trilha própria da Cúpula ausente; jogo reutiliza Fórum. Composição/licença/aceite pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/84
+
+#86 — S-12 · Remover os 8 `ambient_*.mp3` antigos
+Parcial: oito nomes antigos removidos por renomeação com bytes preservados. Não substitui composição/revisão das dez trilhas novas.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/86
+
+#87 — S-13 · Integrar os 10 ambientes em `sounds.ts`
+Oito ambientes existentes integrados; mundos 9/10 ainda reutilizam áudio. Dez novos ambientes/licenças não entregues.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/87
+
+#88 — S-14 · Revisar os SFX de voz
+Seis vozes em inglês sem referências removidas após backup; arquivos usados preservados. Revisão auditiva humana de SFX/licença pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/88
+
+#114 — G-09 · Definir a estratégia de branch
+Uma branch local develop e uma cópia ativa conforme pedido. Estratégia documentada; branches remotas preservadas.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/114
+
+#115 — G-10 · Branch protection em `main` e `develop`
+develop sem proteção/ruleset na consulta anterior. Configuração remota não alterada; Actions bloqueado, main ausente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/115
+
+#121 — G-16 · Decidir sobre Git LFS para os PNGs
+Avaliação técnica preparada: recomendar Git comum com assets atuais (~17,08 MiB e todos <400 KiB); aceite do responsável pendente, histórico não reescrito.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/121
+
+#136 — CI-14 · Criar o secret `EXPO_TOKEN`
+EXPO_TOKEN ausente na consulta anterior; credencial deve ser fornecida/configurada pelo responsável. Sem exposição de tokens.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/136
+
+#148 — SEC-02 · Habilitar Secret Scanning e Push Protection
+Secret Scanning e Push Protection habilitados na consulta anterior; backlog ainda aberto, nenhuma alteração remota.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/148
+
+#149 — SEC-03 · Habilitar Dependabot alerts e security updates
+Alertas habilitados; atualizações automáticas desabilitadas na consulta anterior. Não ativadas enquanto Actions estiver bloqueado.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/149
+
+#151 — SEC-05 · Avaliar Renovate no lugar do Dependabot
+Avaliação técnica pronta: manter Dependabot, que já agrupa atualizações e preserva limites Expo. Decisão humana pendente; nenhum bot/automação novo.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/151
+
+#163 — SEC-17 · Revisar os dados coletados (LGPD)
+Inventário técnico e limites da política preparados; Sentry opcional e Expo Updates identificados. Validação de tráfego, configuração dos serviços e revisão jurídica pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/163
+
+#170 — Q-07 · Quebrar `GameScreen.tsx`
+Refatoração local: diálogos extraídos; 2778→2579 linhas. Testes passaram; demais handlers continuam na tela, aceite/integração pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/170
+
+#171 — Q-08 · Quebrar `LevelSelectScreen.tsx`
+Refatoração local: camadas/painel/tipos extraídos; 1457→818 linhas. Testes passaram; aprovação visual e integração pendentes.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/171
+
+#172 — Q-09 · Quebrar `App.tsx`
+Refatoração local: preferências e controlador de baús extraídos; 1318→1188 linhas. Recompensa única e persistência testadas; integração pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/172
+
+#174 — Q-11 · Perfilar performance em aparelho de entrada
+Performance em aparelho de entrada não medida; exige dispositivo e APK autorizado. Bundle em orçamento não substitui profiling.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/174
+
+#193 — R-15 · Jogar as 100 fases manualmente
+100 fases principais não jogadas manualmente. Simulação venceu 103 fases +1000 capítulos; não substitui teste manual.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/193
+
+#204 — A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa
+Fundo de mapa próprio do bônus não existe; usa Viveiro. Geração aguarda aprovação A-04/VIS-02 prevista nas instruções.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/204
+
+#205 — A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo
+Fundo de jogo próprio do bônus não existe; usa Viveiro. Geração aguarda aprovação A-04/VIS-02 prevista nas instruções.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/205
+
+#212 — O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime
+Diagnósticos de runtime implementados localmente e testados: IDs, contagem/fingerprint, tileCount, bandeja e gravações/recompensa. Logs não substituem guardas arquiteturais; merge pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/212
+
+#216 — O-09 · Anexar contexto de domínio a todo erro
+Pipeline de erro com contexto já integrado em develop 54fcabc; revisão/conciliação do backlog pendente, nenhuma issue fechada por inferência.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/216
+
+#224 — CI-33 · Validar o fluxo Codex em um piloto controlado
+Piloto anterior parcial; nenhum agente foi delegado nesta sessão, nenhuma métrica de perfis inventada. Validação do cliente/perfis pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/224
+
+#229 — CI-35 · Consolidar e ativar as automações na branch padrão
+Automação remota não ativada. Restrição permanente de Actions impede as etapas de execução/publicação.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/229
+
+#230 — CI-36 · Migrar ferramentas e CI do Node 20 para LTS suportado
+Node 22.23.2 já verificado localmente, toolchain e APK anterior documentados. Nenhum build nativo ou workflow novo; conciliação do backlog pendente.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/230
+
+#236 — Q-17 · Testar recuperação e migração de progresso no Android instalado
+Dois testes novos garantem isolamento .e2e antes de ADB; roteiros existentes de persistência/solver verificados. Upgrade real e interrupção durante escrita no Android não executados.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/236
+
+#245 — PR #243: chore(deps): bump react-test-renderer from 19.1.0 to 19.3.0 in /TrincaMania Redesign/TrincaMania-ODS12 in the desenvolvimento group
+React/react-test-renderer alinhados em 19.1.0 para SDK54; 56 testes UI passaram. Forçar somente renderer19.3 recriaria incompatibilidade; histórico requer conciliação.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/245
+
+#285 — PR #280: chore(deps): bump @sentry/react-native from 7.2.0 to 8.27.0 in /TrincaMania Redesign/TrincaMania-ODS12
+PR280 fechada sem merge; Sentry ~7.2 mantido por compatibilidade SDK54. Migração8.27 requer validação coordenada e Android; não realizada.
+https://github.com/VittorNCosta/TrincaEngSoftware/issues/285

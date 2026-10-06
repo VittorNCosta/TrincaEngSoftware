@@ -3,7 +3,6 @@ import {
   Animated,
   Image,
   ImageBackground,
-  ImageSourcePropType,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -15,18 +14,14 @@ import { PowerIcon } from '../components/PowerIcon';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { ScreenShell } from '../components/ScreenShell';
 import { POWER_UP_ORDER, POWER_UP_UI } from '../data/powerUps';
+import { getWorldVisualAssets } from '../data/worldVisualAssets';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 import { PowerUpType, ProgressState, WorldId } from '../types/game';
 import { POWER_UP_COSTS } from '../utils/gameLogic';
 import { lightImpact, successImpact, warningImpact } from '../utils/haptics';
 import { playShopBuySound } from '../utils/sounds';
 
-const shopImage =
-  require('../../assets/map/map_shop.png') as ImageSourcePropType;
-const world3ShopImage =
-  require('../../assets/map/map_world3_shop.png') as ImageSourcePropType;
-const world3ShopBg =
-  require('../../assets/map/map_world3_shop_bg.png') as ImageSourcePropType;
+const shopImage = require('../../assets/ui/visuais/shop.png');
 
 type ShopScreenProps = {
   backTitle?: string;
@@ -51,8 +46,7 @@ export function ShopScreen({
   const [toast, setToast] = useState<ShopToast | undefined>();
   const largeText = useWindowDimensions().fontScale >= 1.6;
   const toastOpacity = useRef(new Animated.Value(0)).current;
-  const isCrystalShop = worldId === 3 || worldId === 6 || worldId === 8;
-  const activeShopImage = isCrystalShop ? world3ShopImage : shopImage;
+  const background = getWorldVisualAssets(worldId).game;
 
   useEffect(() => {
     if (!toast) {
@@ -104,11 +98,7 @@ export function ShopScreen({
 
   const shopArtwork = (
     <View style={styles.shopArtFrame}>
-      <Image
-        resizeMode="contain"
-        source={activeShopImage}
-        style={styles.shopArt}
-      />
+      <Image resizeMode="contain" source={shopImage} style={styles.shopArt} />
     </View>
   );
   const coinBadge = (
@@ -121,16 +111,8 @@ export function ShopScreen({
   );
 
   const content = (
-    <View
-      style={[styles.container, isCrystalShop ? styles.containerCrystal : null]}
-    >
-      <View
-        style={[
-          styles.header,
-          isCrystalShop ? styles.headerCrystal : null,
-          largeText ? styles.headerLargeText : null,
-        ]}
-      >
+    <View style={styles.container}>
+      <View style={[styles.header, largeText ? styles.headerLargeText : null]}>
         <View pointerEvents="none" style={styles.headerGlow} />
         {largeText ? (
           <View style={styles.headerTopRowLargeText}>
@@ -281,18 +263,14 @@ export function ShopScreen({
 
   return (
     <ScreenShell>
-      {isCrystalShop ? (
-        <ImageBackground
-          imageStyle={styles.shopBackdropImage}
-          resizeMode="cover"
-          source={world3ShopBg}
-          style={styles.shopBackdrop}
-        >
-          {content}
-        </ImageBackground>
-      ) : (
-        content
-      )}
+      <ImageBackground
+        imageStyle={styles.shopBackdropImage}
+        resizeMode="cover"
+        source={background}
+        style={styles.shopBackdrop}
+      >
+        {content}
+      </ImageBackground>
     </ScreenShell>
   );
 }
@@ -326,11 +304,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: spacing.sm,
+    padding: spacing.sm,
     paddingBottom: spacing.xl,
     width: '100%',
-  },
-  containerCrystal: {
-    padding: spacing.sm,
   },
   eyebrow: {
     color: colors.primary,
@@ -363,10 +339,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 92,
     top: -52,
-  },
-  headerCrystal: {
-    backgroundColor: 'rgba(25, 19, 66, 0.94)',
-    borderColor: 'rgba(229, 221, 255, 0.74)',
   },
   headerLargeText: {
     alignItems: 'stretch',

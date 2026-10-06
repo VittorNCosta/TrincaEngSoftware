@@ -95,6 +95,10 @@ export const getWorldSelectorSubtitle = (worldId: WorldId) => {
       return 'Rota';
     case 8:
       return 'Fórum';
+    case 9:
+      return 'Distrito';
+    case 10:
+      return 'Cúpula';
     case 21:
       return 'Jardim Renascido';
     default:

@@ -39,7 +39,7 @@ export function useProgressPersistence({
         .catch(() => undefined)
         .then(() =>
           progressGenerationRef.current === generation
-            ? saveProgress(nextProgress)
+            ? saveProgress(nextProgress, 'commitProgress')
             : undefined,
         );
       progressSaveQueueRef.current = saveOperation.catch((error) => {
@@ -58,7 +58,7 @@ export function useProgressPersistence({
       setChapterProgress(nextProgress);
       const saveOperation = chapterProgressSaveQueueRef.current
         .catch(() => undefined)
-        .then(() => saveChapterProgress(nextProgress));
+        .then(() => saveChapterProgress(nextProgress, 'commitChapterProgress'));
       chapterProgressSaveQueueRef.current = saveOperation.catch((error) => {
         log('error', 'storage', 'chapter-save-failed', error);
       });

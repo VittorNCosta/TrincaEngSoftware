@@ -77,16 +77,16 @@ const soundSources: Record<SoundKey, AudioSource | undefined> = {
 // nome antigo até S-13 trocar o áudio e S-12 apagar os antigos.
 const ambientSources: Record<AmbientKey, AudioSource | undefined> = {
   central:
-    require('../../assets/sfx/ambient/ambient_crystal.mp3') as AudioSource,
+    require('../../assets/sfx/ambient/ambient_central.mp3') as AudioSource,
   cooperativa:
-    require('../../assets/sfx/ambient/ambient_stars.mp3') as AudioSource,
-  forum:
-    require('../../assets/sfx/ambient/ambient_celestial.mp3') as AudioSource,
-  parque: require('../../assets/sfx/ambient/ambient_forest.mp3') as AudioSource,
-  rota: require('../../assets/sfx/ambient/ambient_snow.mp3') as AudioSource,
-  usina: require('../../assets/sfx/ambient/ambient_volcano.mp3') as AudioSource,
-  vale: require('../../assets/sfx/ambient/ambient_mountain.mp3') as AudioSource,
-  viveiro: require('../../assets/sfx/ambient/ambient_beach.mp3') as AudioSource,
+    require('../../assets/sfx/ambient/ambient_cooperativa.mp3') as AudioSource,
+  forum: require('../../assets/sfx/ambient/ambient_forum.mp3') as AudioSource,
+  parque: require('../../assets/sfx/ambient/ambient_parque.mp3') as AudioSource,
+  rota: require('../../assets/sfx/ambient/ambient_rota.mp3') as AudioSource,
+  usina: require('../../assets/sfx/ambient/ambient_usina.mp3') as AudioSource,
+  vale: require('../../assets/sfx/ambient/ambient_vale.mp3') as AudioSource,
+  viveiro:
+    require('../../assets/sfx/ambient/ambient_viveiro.mp3') as AudioSource,
 };
 
 // Expected files:
@@ -138,42 +138,42 @@ export const AMBIENT_FADE_MS = 500;
 // as `undefined` above so the bundle keeps building and the sound becomes a no-op.
 const AMBIENT_CONFIGS: Record<AmbientKey, AmbientConfig> = {
   central: {
-    expectedFile: 'assets/sfx/ambient/ambient_crystal.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_central.mp3',
     source: ambientSources.central,
     volume: AMBIENT_VOLUME,
   },
   cooperativa: {
-    expectedFile: 'assets/sfx/ambient/ambient_stars.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_cooperativa.mp3',
     source: ambientSources.cooperativa,
     volume: AMBIENT_VOLUME,
   },
   forum: {
-    expectedFile: 'assets/sfx/ambient/ambient_celestial.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_forum.mp3',
     source: ambientSources.forum,
     volume: AMBIENT_VOLUME,
   },
   parque: {
-    expectedFile: 'assets/sfx/ambient/ambient_forest.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_parque.mp3',
     source: ambientSources.parque,
     volume: AMBIENT_VOLUME,
   },
   rota: {
-    expectedFile: 'assets/sfx/ambient/ambient_snow.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_rota.mp3',
     source: ambientSources.rota,
     volume: AMBIENT_VOLUME,
   },
   usina: {
-    expectedFile: 'assets/sfx/ambient/ambient_volcano.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_usina.mp3',
     source: ambientSources.usina,
     volume: AMBIENT_VOLUME,
   },
   vale: {
-    expectedFile: 'assets/sfx/ambient/ambient_mountain.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_vale.mp3',
     source: ambientSources.vale,
     volume: AMBIENT_VOLUME,
   },
   viveiro: {
-    expectedFile: 'assets/sfx/ambient/ambient_beach.mp3',
+    expectedFile: 'assets/sfx/ambient/ambient_viveiro.mp3',
     source: ambientSources.viveiro,
     volume: AMBIENT_VOLUME,
   },

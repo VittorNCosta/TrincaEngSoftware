@@ -19,14 +19,9 @@ require.extensions['.ts'] = (module, filename) => {
 };
 
 /**
- * C-27: quando o Mundo 9/10 foram adicionados no resize 203→103, dois mapas
- * paralelos por `worldId` precisaram de entrada nova — `AMBIENT_BY_WORLD_ID`
- * (`src/utils/sounds.ts`) e o `switch` de `getGameBackground`
- * (`src/screens/GameScreen.tsx`) — e nenhum dos dois avisa em compilação se
- * um mundo futuro ficar de fora: o primeiro cai em silêncio
- * (`playAmbientForWorld` chama `stopAmbientPlayback()` quando não acha
- * chave), o segundo cai no `default` (fundo do Mundo 1, floresta-fantasma
- * atrás de outro tema). Este arquivo tranca os dois contra `WORLDS`.
+ * C-27: cada mundo precisa de ambiente registrado e de fundo próprio.
+ * O bônus reutiliza explicitamente o Viveiro até receber os assets A-24a/b.
+ * O teste executa a função real da tela, sem exigir uma forma de implementação.
  */
 
 // `sounds.ts` importa `expo-audio` (módulo nativo) só para tocar áudio de
@@ -205,44 +200,84 @@ test('S-15: AmbientKey não regride ao vocabulário de fantasia (L-01/S-11)', ()
   );
 });
 
-test('getGameBackground (GameScreen.tsx) cobre todo mundo em WORLDS com um case explícito', () => {
-  const gameScreenSource = fs.readFileSync(
-    path.join(__dirname, '..', 'src', 'screens', 'GameScreen.tsx'),
-    'utf8',
-  );
-  const functionMatch = gameScreenSource.match(
-    /const getGameBackground = \(worldId: WorldId\) => \{([\s\S]*?)\n};/,
-  );
+require.extensions['.png'] = (module, filename) => {
+  module.exports = filename;
+};
 
+const {
+  getWorldVisualAssets,
+  WORLD_VISUAL_ASSETS,
+} = require('../src/data/worldVisualAssets.ts');
+
+const loadGameBackground = () => {
+  const filename = path.join(
+    __dirname,
+    '..',
+    'src',
+    'screens',
+    'GameScreen.tsx',
+  );
+  const source = fs.readFileSync(filename, 'utf8');
+  const ast = ts.createSourceFile(
+    filename,
+    source,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
+  const declaration = ast.statements
+    .filter(ts.isVariableStatement)
+    .flatMap((statement) => [...statement.declarationList.declarations])
+    .find(
+      (entry) =>
+        ts.isIdentifier(entry.name) && entry.name.text === 'getGameBackground',
+    );
   assert.ok(
-    functionMatch,
-    'não encontrou a função getGameBackground em GameScreen.tsx — teste desatualizado?',
+    declaration?.initializer,
+    'GameScreen precisa resolver seu fundo por getGameBackground',
   );
+  const compiled = ts.transpileModule(
+    `const getGameBackground = ${declaration.initializer.getText(ast)};`,
+    { compilerOptions: { target: ts.ScriptTarget.ES2020 } },
+  ).outputText;
+  return new Function(
+    'getWorldVisualAssets',
+    `${compiled}\nreturn getGameBackground;`,
+  )(getWorldVisualAssets);
+};
 
-  const functionBody = functionMatch[1];
-  assert.ok(
-    /default:/.test(functionBody),
-    'esperava um default: de segurança em getGameBackground',
+test('getGameBackground resolve o arquivo próprio de cada mundo da campanha', () => {
+  const getGameBackground = loadGameBackground();
+  const backgrounds = [];
+  for (const worldId of mainWorldIds) {
+    assert.ok(
+      Object.hasOwn(WORLD_VISUAL_ASSETS, worldId),
+      `Mundo ${worldId} precisa de registro explícito`,
+    );
+    const file = getGameBackground(worldId);
+    assert.equal(file, WORLD_VISUAL_ASSETS[worldId].game);
+    assert.ok(fs.existsSync(file), `Fundo do mundo ${worldId} precisa existir`);
+    assert.match(
+      path.basename(file),
+      new RegExp(`^w${String(worldId).padStart(2, '0')}_.+_game\\.png$`),
+    );
+    backgrounds.push(file);
+  }
+  assert.equal(
+    new Set(backgrounds).size,
+    mainWorldIds.length,
+    'Cada mundo numerado precisa de fundo próprio',
   );
+});
 
-  const coveredWorldIds = new Set(
-    Array.from(functionBody.matchAll(/case (\d+):/g), (match) =>
-      Number(match[1]),
-    ),
-  );
-  assert.ok(
-    coveredWorldIds.size > 0,
-    'não encontrou nenhum case numérico — regex desatualizada?',
-  );
-
-  const allWorldIds = WORLDS.map(({ id }) => id);
-  const missingWorldIds = allWorldIds.filter(
-    (worldId) => !coveredWorldIds.has(worldId),
-  );
-
-  assert.deepEqual(
-    missingWorldIds,
-    [],
-    `Mundo(s) ${missingWorldIds.join(', ')} sem case explícito em getGameBackground — cai no default (fundo do Mundo 1)`,
-  );
+test('getGameBackground reutiliza a família dos capítulos e o placeholder explícito do bônus', () => {
+  const getGameBackground = loadGameBackground();
+  for (const worldId of mainWorldIds) {
+    assert.equal(
+      getGameBackground(100 + worldId),
+      WORLD_VISUAL_ASSETS[worldId].game,
+    );
+  }
+  assert.equal(getGameBackground(BONUS_WORLD_ID), WORLD_VISUAL_ASSETS[4].game);
+  assert.equal(getGameBackground(-1), WORLD_VISUAL_ASSETS[1].game);
 });

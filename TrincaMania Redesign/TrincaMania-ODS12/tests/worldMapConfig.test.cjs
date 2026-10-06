@@ -44,16 +44,6 @@ const validationContext = {
   knownWorldIds,
 };
 
-const parqueSegmentAssetFiles = {
-  'parque-canopy': 'park_00_canopy.png',
-  'parque-entry': 'park_01_entrance.png',
-  'parque-grove': 'park_02_grove.png',
-  'parque-river': 'park_03_riverbank.png',
-  'parque-sunlit': 'park_04_sunlit_grove.png',
-  'parque-gate': 'park_05_gateway.png',
-  'parque-trailhead': 'park_06_trailhead.png',
-};
-
 test('dados existentes continuam formando 103 fases canônicas sem lacunas', () => {
   const expectedCounts = new Map([
     [1, 10],
@@ -146,38 +136,18 @@ test('segmentos seguem a composição e o overlap canônico de 24 unidades', () 
   );
 });
 
-test('assets segmentados existem e respeitam o teto seguro de textura', () => {
-  assert.deepEqual(
-    new Set(Object.keys(parqueSegmentAssetFiles)),
-    new Set(PARQUE_MAP_ASSET_KEYS),
-  );
-
-  Object.values(parqueSegmentAssetFiles).forEach((fileName) => {
-    const filePath = path.join(
-      __dirname,
-      '..',
-      'assets',
-      'map',
-      'world1',
-      fileName,
-    );
-    const header = Buffer.alloc(24);
-    const descriptor = fs.openSync(filePath, 'r');
-
-    try {
-      assert.equal(
-        fs.readSync(descriptor, header, 0, header.length, 0),
-        header.length,
-      );
-    } finally {
-      fs.closeSync(descriptor);
-    }
-
-    assert.equal(header.subarray(1, 4).toString('ascii'), 'PNG');
-    const width = header.readUInt32BE(16);
-    const height = header.readUInt32BE(20);
-    assert.ok(width <= 768, `${fileName} excedeu 768 px de largura`);
-    assert.ok(height <= 1152, `${fileName} excedeu 1152 px de altura`);
+test('fundos ODS 12 atuais existem e respeitam o orçamento de textura', () => {
+  const folder = path.join(__dirname, '..', 'assets', 'map', 'worlds');
+  const files = fs
+    .readdirSync(folder)
+    .filter((name) => /^w\d{2}_.*_(map|game)\.png$/.test(name));
+  assert.equal(files.length, 20);
+  files.forEach((name) => {
+    const bytes = fs.readFileSync(path.join(folder, name));
+    assert.equal(bytes.subarray(1, 4).toString('ascii'), 'PNG');
+    assert.ok(bytes.length <= 400 * 1024, name + ' excedeu 400 KB');
+    assert.ok(bytes.readUInt32BE(16) <= 2048, name + ' excedeu largura segura');
+    assert.ok(bytes.readUInt32BE(20) <= 4096, name + ' excedeu altura segura');
   });
 });
 

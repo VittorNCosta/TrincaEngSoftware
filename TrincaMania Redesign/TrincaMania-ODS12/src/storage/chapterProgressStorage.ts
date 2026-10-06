@@ -1,4 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  checkChapterIds,
+  diagnosePersistenceWrite,
+} from '../observability/runtimeInvariants';
 
 import {
   CHAPTERS,
@@ -193,6 +197,14 @@ export const unlockAllChapterMapsForDevMode = (
   return normalizeChapterProgress({ mapStars });
 };
 
+const diagnoseChapterStorageIds = (raw: unknown) => {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return;
+  const stars = (raw as Record<string, unknown>).mapStars;
+  if (stars && typeof stars === 'object' && !Array.isArray(stars)) {
+    checkChapterIds(Object.keys(stars));
+  }
+};
+
 export const loadChapterProgress = async (): Promise<ChapterProgressState> => {
   const rawProgress = await AsyncStorage.getItem(STORAGE_KEY);
 
@@ -201,17 +213,23 @@ export const loadChapterProgress = async (): Promise<ChapterProgressState> => {
   }
 
   try {
-    return normalizeChapterProgress(
-      JSON.parse(rawProgress) as Partial<ChapterProgressState>,
-    );
+    const parsed: unknown = JSON.parse(rawProgress);
+    diagnoseChapterStorageIds(parsed);
+    return normalizeChapterProgress(parsed as Partial<ChapterProgressState>);
   } catch {
     return createInitialChapterProgress();
   }
 };
 
-export const saveChapterProgress = async (progress: ChapterProgressState) => {
-  await AsyncStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(normalizeChapterProgress(progress)),
+export const saveChapterProgress = async (
+  progress: ChapterProgressState,
+  source?: 'commitChapterProgress',
+) => {
+  diagnoseChapterStorageIds(progress);
+  await diagnosePersistenceWrite('chapter', source, () =>
+    AsyncStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(normalizeChapterProgress(progress)),
+    ),
   );
 };

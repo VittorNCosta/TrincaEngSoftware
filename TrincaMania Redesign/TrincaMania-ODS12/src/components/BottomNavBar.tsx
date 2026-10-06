@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GameIcon, GameIconName } from './GameIcon';
 import { playButtonSound } from '../utils/sounds';
@@ -30,8 +31,10 @@ type BottomNavBarProps = {
  * A aba ativa usa a mesma placa dourada dos botões do app.
  */
 export function BottomNavBar({ activeIndex, onSelect }: BottomNavBarProps) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.bar}>
+    <View style={[styles.bar, { bottom: insets.bottom }]}>
       {MAIN_TAB_ITEMS.map((item, index) => {
         const isActive = index === activeIndex;
 
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 86,
     left: 0,
-    // A folga de baixo respeita a área segura dos aparelhos com barra de gestos.
+    // Folga interna; a barra inteira fica acima da navegação do Android.
     paddingBottom: 14,
     paddingHorizontal: 4,
     paddingTop: 5,

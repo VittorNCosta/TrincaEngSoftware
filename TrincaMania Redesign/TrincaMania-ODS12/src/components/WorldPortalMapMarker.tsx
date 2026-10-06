@@ -51,7 +51,10 @@ function WorldPortalMapMarkerBase({
             {locked ? (
               <GameIcon name="lock" size={23} tone="neutral" variant="plain" />
             ) : (
-              <RecyclingMarkerArt kind="portal" />
+              <RecyclingMarkerArt
+                kind="portal"
+                imageStyle={styles.portalImage}
+              />
             )}
           </View>
           {!locked ? (
@@ -184,6 +187,12 @@ const styles = StyleSheet.create({
   portalGlowSelected: {
     backgroundColor: 'rgba(255, 225, 112, 0.24)',
     borderColor: 'rgba(255, 245, 193, 0.76)',
+  },
+  portalImage: {
+    // As dimensões intrínsecas do PNG prevalecem sobre left/right/top/bottom
+    // em Image no Android; a imagem deve acompanhar o disco do marcador.
+    height: '100%',
+    width: '100%',
   },
   pressed: {
     opacity: 0.92,

@@ -109,3 +109,48 @@ test('normalization stays pure and valid or malformed ids do not cause spurious 
   }
   assert.equal(diagnostics().length, before);
 });
+
+const {
+  loadChapterProgress,
+  saveChapterProgress,
+  normalizeChapterProgress,
+} = require('../src/storage/chapterProgressStorage.ts');
+const chapterDiagnostics = () =>
+  getDiagnosticEntries().filter(
+    (entry) => entry.message === 'chapter-storage-rejects-campaign-ids',
+  );
+
+test('chapter storage diagnoses campaign ids before normalization on read and write, preserving valid chapter progress', async () => {
+  const raw = { mapStars: { 'ch01-001': 2, 'w1-001': 3, 'bonus-w1-001': 3 } };
+  const snapshot = JSON.stringify(raw);
+  stored = snapshot;
+  writes = 0;
+  const before = chapterDiagnostics().length;
+  const result = await loadChapterProgress();
+  assert.deepEqual(result, { mapStars: { 'ch01-001': 2 } });
+  assert.equal(stored, snapshot);
+  assert.equal(writes, 0);
+  assert.equal(chapterDiagnostics().length, before + 1);
+  await saveChapterProgress(raw, 'commitChapterProgress');
+  assert.equal(writes, 1);
+  assert.equal(stored, JSON.stringify(normalizeChapterProgress(raw)));
+  assert.equal(JSON.stringify(raw), snapshot);
+  assert.equal(chapterDiagnostics().length, before + 2);
+  assert.equal(chapterDiagnostics().at(-1).detail, undefined);
+});
+
+test('valid and malformed chapter saves remain accepted without spurious domain diagnostics', async () => {
+  const before = chapterDiagnostics().length;
+  for (const raw of [
+    null,
+    17,
+    [],
+    { mapStars: [] },
+    { mapStars: 17 },
+    { mapStars: { 'ch01-001': 3 } },
+  ]) {
+    stored = JSON.stringify(raw);
+    await assert.doesNotReject(() => loadChapterProgress());
+  }
+  assert.equal(chapterDiagnostics().length, before);
+});

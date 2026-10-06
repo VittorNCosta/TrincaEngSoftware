@@ -147,17 +147,17 @@ const createHookRuntime = () => {
         value: typeof initial === 'function' ? initial() : initial,
       }));
 
-      return [
-        slot.value,
-        (next) => {
-          const value = typeof next === 'function' ? next(slot.value) : next;
+      // React mantém a identidade do setter entre renders; hooks extraídos
+      // dependem dessa garantia para não repetir a hidratação do save.
+      slot.set ??= (next) => {
+        const value = typeof next === 'function' ? next(slot.value) : next;
 
-          if (!Object.is(value, slot.value)) {
-            slot.value = value;
-            isDirty = true;
-          }
-        },
-      ];
+        if (!Object.is(value, slot.value)) {
+          slot.value = value;
+          isDirty = true;
+        }
+      };
+      return [slot.value, slot.set];
     },
     useRef(initial) {
       return slotAt(cursor++, () => ({ current: initial }));
@@ -479,4 +479,73 @@ test('capítulos bloqueados não abrem antes de concluir campanha e preservam sa
   app.flush();
   assert.equal(app.props('ChaptersScreen'), undefined);
   assert.deepEqual(store, before);
+});
+
+const chestLevelIds = require(projectModule('src/data/levels.ts'))
+  .LEVELS.filter((level) => level.worldId === 1 || level.worldId === 21)
+  .map((level) => level.id);
+const chestProgress = {
+  completedLevelIds: chestLevelIds,
+  levelStars: Object.fromEntries(chestLevelIds.map((id) => [id, 3])),
+};
+
+test('controlador de baú preserva a guarda de duplo toque e a recompensa após remontar', async () => {
+  store.clear();
+  seedLives(MAX_LIVES - 1);
+  const initial = {
+    ...createInitialProgress(),
+    coins: 100,
+    keys: 2,
+    pendingWorldChestIds: ['bonus-world-21'],
+    ...chestProgress,
+  };
+  await saveProgress(initial);
+  const app = await bootApp();
+  app.props('MainTabs').onOpenWorldChest('bonus-world-21');
+  app.flush();
+  const modal = app.props('WorldChestModal');
+  modal.onOpenWithKey();
+  modal.onOpenWithKey();
+  await app.waitFor(
+    () => app.props('WorldChestModal').result?.status === 'opened',
+  );
+  const persisted = await loadProgress();
+  assert.equal(persisted.keys, 1);
+  assert.deepEqual(persisted.claimedWorldChestIds, ['bonus-world-21']);
+  assert.deepEqual(persisted.pendingWorldChestIds, []);
+  for (const power of ['hint', 'shuffle', 'undo'])
+    assert.equal(persisted.itemCounts[power], initial.itemCounts[power] + 1);
+  assert.equal((await getLivesState()).currentLives, MAX_LIVES);
+  const afterReward = await loadProgress();
+  app.props('WorldChestModal').onOpenWithKey();
+  await app.settle(100);
+  assert.equal(app.props('WorldChestModal').result.status, 'already-opened');
+  assert.deepEqual(await loadProgress(), afterReward);
+  assert.equal((await getLivesState()).currentLives, MAX_LIVES);
+  const reopened = await bootApp();
+  assert.deepEqual(reopened.props('MainTabs').progress, persisted);
+});
+
+test('controlador de baú mantém saldo e chave quando a abertura não pode premiar', async () => {
+  store.clear();
+  await saveProgress({
+    ...createInitialProgress(),
+    coins: 0,
+    keys: 0,
+    pendingWorldChestIds: ['bonus-world-21'],
+    ...chestProgress,
+  });
+  const app = await bootApp();
+  app.props('MainTabs').onOpenWorldChest('bonus-world-21');
+  app.flush();
+  const before = await loadProgress();
+  app.props('WorldChestModal').onBuyAndOpen();
+  await app.waitFor(
+    () => app.props('WorldChestModal').result?.status === 'insufficient-coins',
+  );
+  assert.deepEqual(await loadProgress(), before);
+  assert.equal(app.props('WorldChestModal').isOpening, false);
+  app.props('WorldChestModal').onClose();
+  app.flush();
+  assert.equal(app.props('WorldChestModal').visible, false);
 });
