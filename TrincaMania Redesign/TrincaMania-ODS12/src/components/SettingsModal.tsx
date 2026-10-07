@@ -26,6 +26,7 @@ type SettingsModalProps = {
   onResetProgress: () => void;
   onToggleHaptics: () => void;
   onToggleSound: () => void;
+  onToggleMusic: () => void;
   onUnlockAllForDevMode: () => void;
 };
 
@@ -130,11 +131,15 @@ export function SettingsModal({
   onResetProgress,
   onToggleHaptics,
   onToggleSound,
+  onToggleMusic,
   onUnlockAllForDevMode,
 }: SettingsModalProps) {
   const [diagnosticsVisible, setDiagnosticsVisible] = useState(false);
   const largeText = useWindowDimensions().fontScale >= 1.6;
-  const silentModeActive = !settings.soundEnabled && !settings.hapticsEnabled;
+  const silentModeActive =
+    !settings.soundEnabled &&
+    !settings.musicEnabled &&
+    !settings.hapticsEnabled;
   const handleResetProgress = () =>
     confirmAction(
       'Resetar progresso?',
@@ -248,6 +253,14 @@ export function SettingsModal({
                   status="Resposta ao toque"
                   tone="green"
                   onPress={onToggleHaptics}
+                />
+                <SettingsAction
+                  active={settings.musicEnabled}
+                  iconName={settings.musicEnabled ? 'sound-on' : 'sound-off'}
+                  label={`Música: ${settings.musicEnabled ? 'Ligada' : 'Desligada'}`}
+                  status="Trilha de menus e partidas"
+                  tone="purple"
+                  onPress={onToggleMusic}
                 />
                 <SettingsAction
                   active={silentModeActive}

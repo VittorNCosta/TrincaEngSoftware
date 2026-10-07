@@ -100,6 +100,9 @@ stub(projectModule('src/components/NoLivesModal'), {
 stub(projectModule('src/components/SettingsModal'), {
   SettingsModal: 'SettingsModal',
 });
+stub(projectModule('src/components/RoutineModal'), {
+  RoutineModal: 'RoutineModal',
+});
 stub(projectModule('src/components/TutorialModal'), {
   TutorialModal: 'TutorialModal',
 });
@@ -117,6 +120,17 @@ stub(projectModule('src/screens/SplashIntroScreen'), {
 });
 stub(projectModule('src/utils/sounds'), {
   setSoundEnabled: async () => undefined,
+  playRewardCollectSound: () => undefined,
+  releaseSoundPlayers: () => undefined,
+});
+stub(projectModule('src/utils/music'), {
+  setMusicEnabled: () => undefined,
+  playMetaMusic: () => undefined,
+  playWorldMusic: () => undefined,
+  releaseMusicPlayer: () => undefined,
+});
+stub(projectModule('src/utils/voiceOver'), {
+  releaseVoiceOverPlayers: () => undefined,
 });
 
 // Runtime de hooks mínimo: só o suficiente para o App executar de verdade — os

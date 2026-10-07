@@ -2,11 +2,12 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
 const { resolve } = require("node:path");
+const { pathToFileURL } = require("node:url");
 
 const script = resolve(__dirname, "../../../scripts/actions-budget.mjs");
 
 test("piso mensal expira na virada do mes e corta aos 90%", async () => {
-  const { floorForMonth, minutesForJob } = await import(script);
+  const { floorForMonth, minutesForJob } = await import(pathToFileURL(script).href);
   assert.equal(floorForMonth("2026-09:4204", "2026-09"), 4204);
   assert.equal(floorForMonth("2026-09:4204", "2026-10"), 0);
   assert.equal(
@@ -31,7 +32,7 @@ test("piso mensal expira na virada do mes e corta aos 90%", async () => {
 });
 
 test("conta todas as tentativas de um run e falha se API nao responder", async () => {
-  const { measuredMinutes } = await import(script);
+  const { measuredMinutes } = await import(pathToFileURL(script).href);
   const now = new Date("2026-09-01T02:00:00Z");
   const requests = [];
   const request = async (path) => {

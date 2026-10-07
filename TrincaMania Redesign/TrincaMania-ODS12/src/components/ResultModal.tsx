@@ -172,11 +172,13 @@ export function ResultModal({
   const canAdvanceDirectly = chapterSummary
     ? chapterSummary.campaignPosition < CHAPTER_COUNT * CHAPTER_MAPS_PER_CHAPTER
     : Boolean(nextLevel && (nextLevel.worldId !== 21 || level.worldId === 21));
-  const nextActionTitle = canAdvanceDirectly
-    ? 'Próxima fase'
-    : world.isBonus || chapterSummary
-      ? 'Voltar ao mapa'
-      : 'Novo mundo em breve';
+  const nextActionTitle = level.id.startsWith('daily-')
+    ? 'Voltar ao mapa'
+    : canAdvanceDirectly
+      ? 'Próxima fase'
+      : world.isBonus || chapterSummary
+        ? 'Voltar ao mapa'
+        : 'Novo mundo em breve';
   const unlockText = unlockedLevelTitle?.includes('desbloqueado')
     ? unlockedLevelTitle
     : unlockedLevelTitle

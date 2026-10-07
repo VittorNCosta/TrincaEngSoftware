@@ -296,6 +296,19 @@ export const normalizeProgress = (
   }
 
   return {
+    ...(Array.isArray(progress.rewardOperationIds) &&
+    progress.rewardOperationIds.length > 0
+      ? {
+          rewardOperationIds: [
+            ...new Set(
+              progress.rewardOperationIds.filter(
+                (id): id is string =>
+                  typeof id === 'string' && id.length > 0 && id.length <= 128,
+              ),
+            ),
+          ].slice(-512),
+        }
+      : {}),
     bonusWorldAchievementShown: progress.bonusWorldAchievementShown === true,
     chestProgressLevelIds: LEVEL_IDS.filter((levelId) =>
       chestProgressSet.has(levelId),
@@ -325,6 +338,28 @@ export const normalizeProgress = (
         unlockedSet.has(levelId) && canUnlockLevel(levelId, levelStars),
     ),
   };
+};
+
+/** Ledger and reward share the same progress write, so a retried claim is safe. */
+export const grantRewardForOperation = (
+  progress: ProgressState,
+  operationId: string,
+  reward: { coins?: number; powerType?: PowerUpType },
+): ProgressState => {
+  const current = normalizeProgress(progress);
+  if (!operationId || current.rewardOperationIds?.includes(operationId))
+    return current;
+  return normalizeProgress({
+    ...current,
+    rewardOperationIds: [...(current.rewardOperationIds ?? []), operationId],
+    coins: current.coins + Math.max(0, Math.floor(reward.coins ?? 0)),
+    itemCounts: reward.powerType
+      ? {
+          ...current.itemCounts,
+          [reward.powerType]: current.itemCounts[reward.powerType] + 1,
+        }
+      : current.itemCounts,
+  });
 };
 
 /**
