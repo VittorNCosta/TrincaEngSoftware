@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from './keyValueStorage';
 
 export const MAGIC_TRIPLE_RESCUE_STORAGE_KEY =
   '@trinca-mania/magic-triple-rescue-v1';

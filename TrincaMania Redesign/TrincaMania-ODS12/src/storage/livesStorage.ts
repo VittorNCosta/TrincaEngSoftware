@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from './keyValueStorage';
 import { diagnosePersistenceWrite } from '../observability/runtimeInvariants';
 
 export const LIVES_STORAGE_KEY = '@trinca-mania/lives-v1';

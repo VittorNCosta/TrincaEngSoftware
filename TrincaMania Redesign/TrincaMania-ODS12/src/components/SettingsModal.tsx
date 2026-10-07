@@ -1,7 +1,7 @@
+import Alert from '../utils/appAlert';
 import { useState } from 'react';
 import { DiagnosticReport } from './DiagnosticReport';
 import {
-  Alert,
   Linking,
   Modal,
   Pressable,

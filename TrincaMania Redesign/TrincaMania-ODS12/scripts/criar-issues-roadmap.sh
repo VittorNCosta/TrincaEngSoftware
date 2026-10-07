@@ -2056,6 +2056,18 @@ mk open --title 'CI-39 · Bloquear jobs ao atingir 90% do limite mensal de Actio
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-40 · Criar site Igrion ODS12 e demonstração web offline para feira' \
+  --body '**Escopo autorizado em 07/10/2026:** projeto irmão `igrion-ODS-site` baseado no visual de `igrion-site`, conteúdo canônico ODS12, download do APK 7461c48 e QR para página de instalação após definição de SITE_URL público HTTPS. Mesmo aplicativo Expo no PC, recarga no desenvolvimento, pacote estático offline, tela cheia e novo visitante com storage em memória separado dos testes persistentes. **Entrega local validada em 07/10/2026:** pacote offline preservado após reinício; ver `docs/ENTREGA-SITE-PC-20261007.md`. Usuário testou o site no PC e autorizou commit/push em 07/10/2026. Site independente inclui jogo exportado e APK aprovados; build sem pasta irmã. Envio em branch de trabalho do aplicativo e novo repositório privado do site, sem PR ou Actions. Hospedagem e domínio pendentes; não concluir antes de integração e aceites.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2609,4 +2621,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 196 issues (132 já criadas fechadas) =="
+echo "== pronto: 197 issues (132 já criadas fechadas) =="

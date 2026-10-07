@@ -1,7 +1,7 @@
+import Alert from '../utils/appAlert';
 import * as Clipboard from 'expo-clipboard';
 import { useState } from 'react';
 import {
-  Alert,
   Pressable,
   ScrollView,
   Share,

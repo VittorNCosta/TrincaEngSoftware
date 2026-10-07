@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from './keyValueStorage';
 
 export const TRAY_BOOST_STORAGE_KEY = '@trinca-mania/tray-boost-v1';
 /**

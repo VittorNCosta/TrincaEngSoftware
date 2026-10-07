@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from './keyValueStorage';
 
 import { LEVEL_BY_ID, LEVELS } from '../data/levels';
 import {

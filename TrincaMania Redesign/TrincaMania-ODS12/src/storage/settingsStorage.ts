@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from './keyValueStorage';
 
 export type AppSettings = {
   hapticsEnabled: boolean;
