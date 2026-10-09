@@ -15,6 +15,8 @@ export function CampaignResizeNoticeModal({
 }: CampaignResizeNoticeModalProps) {
   return (
     <Modal
+      onRequestClose={onClose}
+      accessibilityLabel="Atualização da campanha"
       animationType="fade"
       statusBarTranslucent
       transparent

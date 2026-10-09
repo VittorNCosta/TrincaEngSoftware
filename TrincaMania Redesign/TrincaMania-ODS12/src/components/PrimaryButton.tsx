@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   danger: {
-    backgroundColor: '#F05278',
+    backgroundColor: '#B82950',
     borderBottomColor: '#A9274A',
     borderColor: '#FFB3C4',
   },
@@ -116,12 +116,9 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.lg,
     fontWeight: '900',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.28)',
-    textShadowOffset: { height: 2, width: 0 },
-    textShadowRadius: 2,
   },
   primary: {
-    backgroundColor: '#28C96F',
+    backgroundColor: '#087A54',
     borderBottomColor: '#087A54',
     borderColor: '#C7FFD9',
   },
@@ -129,7 +126,7 @@ const styles = StyleSheet.create({
     color: colors.inkOnDark,
   },
   power: {
-    backgroundColor: '#7862F5',
+    backgroundColor: '#5943BE',
     borderBottomColor: '#3C2D9D',
     borderColor: '#C8C1FF',
   },
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   secondary: {
-    backgroundColor: '#238DF5',
+    backgroundColor: '#1768B5',
     borderBottomColor: '#0A4D95',
     borderColor: '#C8ECFF',
   },
@@ -155,7 +152,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
   },
   topHighlight: {
-    backgroundColor: 'rgba(255, 255, 255, 0.34)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderRadius: radii.pill,
     height: '38%',
     left: 8,

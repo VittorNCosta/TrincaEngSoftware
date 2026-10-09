@@ -86,15 +86,17 @@ export const getTrayBoostState = async () => {
     return initialState;
   }
 
+  let parsedState: unknown;
   try {
-    const nextState = normalizeTrayBoostState(JSON.parse(rawState), now);
-    await saveTrayBoostState(nextState);
-    return nextState;
+    parsedState = JSON.parse(rawState);
   } catch {
-    const initialState = createInitialTrayBoostState();
-    await saveTrayBoostState(initialState);
-    return initialState;
+    parsedState = null;
   }
+
+  const nextState = normalizeTrayBoostState(parsedState, now);
+  // I/O failure must propagate, never trigger a second write with empty boosts.
+  await saveTrayBoostState(nextState);
+  return nextState;
 };
 
 export const isCoinTraySlotActive = (state: TrayBoostState, now = Date.now()) =>

@@ -17,6 +17,8 @@ campanha. A conclusão das issues depende do merge em `develop`. As demais
 issues abertas mantêm seus critérios de aceite próprios, em especial as que
 exigem aparelho, serviço externo ou revisão manual.
 
+**Auditoria local de 09/10/2026:** [relatório e evidências](AUDITORIA-ODS12-20261009.md). Correções locais e validação web; aceite Android BLOCKED por boot incompleto sem KVM. Issues humanas e dados BLOCKS mantêm seus critérios próprios.
+
 ---
 
 ## Pausa de sessão — 2026-09-03 (retomar daqui)

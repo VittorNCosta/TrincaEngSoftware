@@ -201,6 +201,7 @@ export function ChaptersScreen({
           return (
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={`Capítulo ${item.chapterId}: ${chapter.name}, ${item.completedCount}/${item.totalCount} mapas concluídos${!item.unlocked ? ', bloqueado' : ''}`}
               accessibilityState={{ disabled: !item.unlocked }}
               disabled={!item.unlocked}
               onPress={() => setOpenChapterId(item.chapterId)}

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { BOTTOM_NAV_HEIGHT } from '../components/BottomNavBar';
 import { GameIcon } from '../components/GameIcon';
@@ -29,6 +29,8 @@ export function PowersScreen({ progress }: PowersScreenProps) {
     <ScreenShell scroll={false}>
       <TabScene worldId={currentWorldId}>
         <ScrollView
+          {...(Platform.OS === 'web' ? { tabIndex: 0 } : {})}
+          accessibilityLabel="Inventário de poderes"
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >

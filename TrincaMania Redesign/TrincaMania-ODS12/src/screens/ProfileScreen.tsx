@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { BOTTOM_NAV_HEIGHT } from '../components/BottomNavBar';
 import { GameIcon, GameIconName, GameIconTone } from '../components/GameIcon';
@@ -54,6 +54,8 @@ export function ProfileScreen({ progress }: ProfileScreenProps) {
     <ScreenShell scroll={false}>
       <TabScene worldId={currentWorldId}>
         <ScrollView
+          {...(Platform.OS === 'web' ? { tabIndex: 0 } : {})}
+          accessibilityLabel="Estatísticas do perfil"
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >

@@ -1,3 +1,6 @@
+import { ActiveGameClock } from '../utils/activeGameClock';
+import { useActiveGameClock } from '../hooks/useActiveGameClock';
+import { useRoundAction } from '../hooks/useRoundAction';
 import { GameDialogs } from './game/GameDialogs';
 import { WorldArtContext } from '../components/WorldArtContext';
 import { getWorldVisualAssets } from '../data/worldVisualAssets';
@@ -404,6 +407,11 @@ function GameScreenContent({
   const boardRef = useRef(board);
   const trayRef = useRef(tray);
   const elapsedSecondsRef = useRef(0);
+  const elapsedClockRef = useRef(new ActiveGameClock());
+  const updateElapsedClock = useCallback((seconds: number) => {
+    elapsedSecondsRef.current = seconds;
+    setElapsedSeconds(seconds);
+  }, []);
   const boardTileTargetsRef = useRef<Record<string, WindowTarget>>({});
   const traySlotTargetsRef = useRef<Record<number, WindowTarget>>({});
   const gameAreaRef = useRef<View>(null);
@@ -755,6 +763,7 @@ function GameScreenContent({
     setBoard(nextBoard);
     setBoardBounds(getBoardBounds(nextBoard));
     setBoardLayoutGeneration((currentGeneration) => currentGeneration + 1);
+    elapsedClockRef.current.reset();
     elapsedSecondsRef.current = 0;
     setElapsedSeconds(0);
     setHighlightedTileId(undefined);
@@ -884,40 +893,18 @@ function GameScreenContent({
     }
   }, [magicTripleRescueCanShow, trayNearlyFull]);
 
-  useEffect(() => {
-    if (
-      status !== 'playing' ||
-      isBlockingModalVisible ||
-      gameplayModalOpen ||
-      isCoinSlotProcessing ||
-      isMagicTripleRescueVisible ||
-      isMysteryTutorialVisible ||
-      isSettingsMenuVisible ||
-      practicalTutorialActive
-    ) {
-      return undefined;
-    }
-
-    const interval = setInterval(() => {
-      setElapsedSeconds((currentSeconds) => {
-        const nextSeconds = currentSeconds + 1;
-        elapsedSecondsRef.current = nextSeconds;
-        return nextSeconds;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [
-    gameplayModalOpen,
-    isCoinSlotProcessing,
-    isMagicTripleRescueVisible,
-    isBlockingModalVisible,
-    isMysteryTutorialVisible,
-    isSettingsMenuVisible,
-    level.id,
-    practicalTutorialActive,
-    status,
-  ]);
+  useActiveGameClock(
+    elapsedClockRef.current,
+    status === 'playing' &&
+      !isBlockingModalVisible &&
+      !gameplayModalOpen &&
+      !isCoinSlotProcessing &&
+      !isMagicTripleRescueVisible &&
+      !isMysteryTutorialVisible &&
+      !isSettingsMenuVisible &&
+      !practicalTutorialActive,
+    updateElapsedClock,
+  );
 
   useEffect(() => {
     if (!practicalTutorialWaitingForTile) {
@@ -1278,18 +1265,19 @@ function GameScreenContent({
     showToast('Nova variação pronta.');
   };
 
-  const handleRetryLevel = () => {
-    onRetryLevel()
-      .then((result) => {
-        if (result.canRetry) {
-          resetLevel(result.trayCapacity, {
-            bonusSlotActive: result.bonusSlotActive,
-            coinSlotActive: result.coinSlotActive,
-          });
-        }
-      })
-      .catch(() => undefined);
-  };
+  const handleRetryLevel = useRoundAction(
+    onRetryLevel,
+    (result) => {
+      if (result.canRetry)
+        resetLevel(result.trayCapacity, {
+          bonusSlotActive: result.bonusSlotActive,
+          coinSlotActive: result.coinSlotActive,
+        });
+    },
+    roundGenerationRef,
+    isMountedRef,
+    () => showToast('Não foi possível reiniciar. Tente novamente.'),
+  );
 
   const handleCoinTraySlotPress = async () => {
     if (isCoinSlotProcessingRef.current) {
@@ -1579,7 +1567,9 @@ function GameScreenContent({
         activeTrayCapacityRef.current,
       );
       const terminalElapsedSeconds =
-        result.status === 'won' ? elapsedSecondsRef.current : undefined;
+        result.status === 'won'
+          ? elapsedClockRef.current.readSeconds()
+          : undefined;
 
       if (result.board === currentBoard && result.tray === currentTray) {
         isVisualMoveResolvingRef.current = false;
@@ -1642,7 +1632,9 @@ function GameScreenContent({
           setIsMovePipelineActive(false);
 
           if (result.status === 'won') {
-            startWonRound(terminalElapsedSeconds ?? elapsedSecondsRef.current);
+            startWonRound(
+              terminalElapsedSeconds ?? elapsedClockRef.current.readSeconds(),
+            );
           }
           resolve('applied');
         };
@@ -1855,7 +1847,9 @@ function GameScreenContent({
 
   const finishTerminalMove = (move: PendingTileMove) => {
     if (move.result.status === 'won') {
-      startWonRound(move.terminalElapsedSeconds ?? elapsedSecondsRef.current);
+      startWonRound(
+        move.terminalElapsedSeconds ?? elapsedClockRef.current.readSeconds(),
+      );
       return;
     }
 
@@ -1868,7 +1862,7 @@ function GameScreenContent({
       }
       playLoseSound();
       setResultElapsedSeconds(
-        move.terminalElapsedSeconds ?? elapsedSecondsRef.current,
+        move.terminalElapsedSeconds ?? elapsedClockRef.current.readSeconds(),
       );
     }
   };
@@ -2029,7 +2023,9 @@ function GameScreenContent({
         },
         result,
         terminalElapsedSeconds:
-          result.status === 'playing' ? undefined : elapsedSecondsRef.current,
+          result.status === 'playing'
+            ? undefined
+            : elapsedClockRef.current.readSeconds(),
         tutorialStep: practicalTutorialWaitingForTile
           ? practicalTutorialStep
           : undefined,

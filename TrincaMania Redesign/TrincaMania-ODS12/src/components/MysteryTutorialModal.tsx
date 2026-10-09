@@ -15,6 +15,8 @@ export function MysteryTutorialModal({
 }: MysteryTutorialModalProps) {
   return (
     <Modal
+      onRequestClose={onClose}
+      accessibilityLabel="Peças mistério"
       animationType="fade"
       statusBarTranslucent
       transparent

@@ -380,7 +380,6 @@ const styles = StyleSheet.create({
   },
   itemCardDisabled: {
     borderColor: '#D5C7A8',
-    opacity: 0.82,
   },
   itemCopy: {
     flex: 1,

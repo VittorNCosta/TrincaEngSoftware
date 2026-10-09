@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
   },
   playRibbon: {
     alignItems: 'center',
-    backgroundColor: '#F1497F',
+    backgroundColor: '#BD2456',
     borderColor: '#FFFFFF',
     borderRadius: radii.pill,
     borderWidth: 2,

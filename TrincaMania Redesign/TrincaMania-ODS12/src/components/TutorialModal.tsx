@@ -32,7 +32,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     iconName: 'target',
     iconTone: 'blue',
     title: 'Escolha peças livres',
-    text: 'Peças claras podem entrar na barra de coleta. Peças escuras ainda estão presas por outra camada.',
+    text: 'Peças claras podem entrar na bandeja. Peças escuras ainda estão presas por outra camada.',
   },
   {
     iconName: 'check',
@@ -45,7 +45,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
   {
     iconName: 'tray',
     iconTone: 'danger',
-    title: 'Cuide da barra',
+    title: 'Cuide da bandeja',
     text: `A bandeja começa com ${BASE_TRAY_CAPACITY} espaços ativos. Forme trincas antes que ela encha; extras são apenas uma ajuda.`,
   },
   {
@@ -102,7 +102,13 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
   };
 
   return (
-    <Modal animationType="none" transparent visible={visible}>
+    <Modal
+      onRequestClose={finishTutorial}
+      accessibilityLabel="Como jogar"
+      animationType="none"
+      transparent
+      visible={visible}
+    >
       <SafeAreaView
         edges={['top', 'bottom', 'left', 'right']}
         style={styles.overlay}
@@ -134,10 +140,12 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
                 />
               ))}
             </View>
-            <Text style={styles.stepCount}>
+            <Text accessibilityLiveRegion="polite" style={styles.stepCount}>
               {stepIndex + 1}/{TUTORIAL_STEPS.length}
             </Text>
-            <Text style={styles.title}>{step.title}</Text>
+            <Text accessibilityRole="header" style={styles.title}>
+              {step.title}
+            </Text>
             <Text style={styles.text}>{step.text}</Text>
 
             <View style={styles.examplePanel}>

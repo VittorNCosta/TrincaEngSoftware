@@ -94,6 +94,7 @@ const lastPlayedAt: Partial<Record<SoundKey, number>> = {};
 // tinha sido agendado antes da leitura resolver. Este cache é atualizado na hora
 // em setSoundEnabled e serve de portão imediato em playSound.
 let soundEnabledCache: boolean | undefined;
+let soundGeneration = 0;
 
 const syncAudioActive = (enabled: boolean) => {
   setIsAudioActiveAsync(enabled).catch(() => undefined);
@@ -116,14 +117,17 @@ const stopAllPlayers = () => {
 
 export const getSoundEnabled = async () => {
   const settings = await getSettings();
-  soundEnabledCache = settings.soundEnabled;
-  syncAudioActive(settings.soundEnabled);
-  return settings.soundEnabled;
+  // A preference changed while storage was being read takes precedence.
+  if (soundEnabledCache === undefined)
+    soundEnabledCache = settings.soundEnabled;
+  syncAudioActive(soundEnabledCache);
+  return soundEnabledCache;
 };
 
 export const setSoundEnabled = async (value: boolean) => {
   // Atualiza o cache síncrono ANTES do await: o mute vale a partir de já.
   soundEnabledCache = value;
+  soundGeneration += 1;
 
   if (!value) {
     stopAllPlayers();
@@ -173,10 +177,15 @@ const canPlayNow = (key: SoundKey) => {
 };
 
 const playSoundAsync = async (key: SoundKey) => {
+  const operationGeneration = soundGeneration;
   try {
     const enabled = await getSoundEnabled();
 
-    if (!enabled || !canPlayNow(key)) {
+    if (
+      !enabled ||
+      operationGeneration !== soundGeneration ||
+      !canPlayNow(key)
+    ) {
       return;
     }
 
@@ -191,6 +200,13 @@ const playSoundAsync = async (key: SoundKey) => {
     } catch {
       // no-op: playback can still be attempted after a failed seek
     }
+
+    if (
+      soundEnabledCache !== true ||
+      operationGeneration !== soundGeneration ||
+      players[key] !== player
+    )
+      return;
 
     try {
       player.play();
@@ -212,6 +228,7 @@ const playSound = (key: SoundKey) => {
 };
 
 export const releaseSoundPlayers = () => {
+  soundGeneration += 1;
   Object.entries(players).forEach(([key, player]) => {
     if (!player) {
       return;

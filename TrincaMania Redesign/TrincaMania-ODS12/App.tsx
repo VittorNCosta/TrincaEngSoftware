@@ -1,3 +1,4 @@
+import { useWebDemoReady } from './src/hooks/useWebDemoReady';
 import { useAppSettings } from './src/hooks/useAppSettings';
 import { useWorldChestController } from './src/hooks/useWorldChestController';
 import { useProgressPersistence } from './src/hooks/useProgressPersistence';
@@ -45,7 +46,6 @@ import {
   loadProgress,
   loadStoredProgressMigrationInfo,
   markBonusWorldAchievementShown,
-  normalizeProgress,
   purchasePowerUpTransaction,
   restorePurchasedPowerUpItem,
   saveCampaignResizeNoticeSeen,
@@ -56,7 +56,6 @@ import {
 } from './src/storage/progressStorage';
 import {
   ChapterProgressState,
-  applyChapterMapCompletion,
   createInitialChapterProgress,
   getChapterMapStars,
   getNextChapterMapId,
@@ -110,10 +109,7 @@ import {
   purchaseCoinTraySlot,
   resetTrayBoostState,
 } from './src/storage/trayBoostStorage';
-import {
-  POWER_UP_COSTS,
-  getIncrementalCoinRewardForLevel,
-} from './src/utils/gameLogic';
+import { POWER_UP_COSTS } from './src/utils/gameLogic';
 import { getRestCheckpointCoinReward } from './src/utils/shop';
 import { getCurrentWorldId } from './src/utils/worldProgress';
 
@@ -130,6 +126,9 @@ export default function App() {
     createInitialChapterProgress(),
   );
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
+  useWebDemoReady(!isLoadingProgress);
+  const [progressLoadAttempt, setProgressLoadAttempt] = useState(0);
+  const [progressLoadError, setProgressLoadError] = useState(false);
   const [campaignInitialWorldId, setCampaignInitialWorldId] = useState<
     WorldId | undefined
   >();
@@ -192,6 +191,21 @@ export default function App() {
     magicTripleRescueRef.current = magicTripleRescueState;
   }, [magicTripleRescueState]);
 
+  const {
+    commitProgress,
+    commitChapterCompletion,
+    recoverChapterReward,
+    resetProgressPair,
+  } = useProgressPersistence({
+    progressRef,
+    progressGenerationRef,
+    progressSaveQueueRef,
+    chapterProgressRef,
+    chapterProgressSaveQueueRef,
+    setProgress,
+    setChapterProgress,
+  });
+
   useEffect(() => {
     let isMounted = true;
 
@@ -209,7 +223,7 @@ export default function App() {
       getCampaignResizeNoticeSeen(),
     ])
       .then(
-        ([
+        async ([
           storedProgress,
           storedChapterProgress,
           tutorialSeen,
@@ -223,8 +237,12 @@ export default function App() {
           campaignResizeNoticeSeen,
         ]) => {
           if (isMounted) {
+            progressRef.current = storedProgress;
+            chapterProgressRef.current = storedChapterProgress;
             setProgress(storedProgress);
             setChapterProgress(storedChapterProgress);
+            await recoverChapterReward();
+            if (!isMounted) return;
             setLivesState(storedLives);
             setTrayBoostState(storedTrayBoost);
             setSettings(storedSettings);
@@ -240,16 +258,20 @@ export default function App() {
           }
         },
       )
-      .finally(() => {
+      .then(() => {
         if (isMounted) {
+          setProgressLoadError(false);
           setIsLoadingProgress(false);
         }
+      })
+      .catch(() => {
+        if (isMounted) setProgressLoadError(true);
       });
 
     return () => {
       isMounted = false;
     };
-  }, [setSettings]);
+  }, [setSettings, recoverChapterReward, progressLoadAttempt]);
 
   const refreshLivesState = useCallback(async () => {
     const nextLivesState = await getLivesState();
@@ -264,16 +286,6 @@ export default function App() {
     setLivesNow(Date.now());
     return nextTrayBoostState;
   }, []);
-
-  const { commitProgress, commitChapterProgress } = useProgressPersistence({
-    progressRef,
-    progressGenerationRef,
-    progressSaveQueueRef,
-    chapterProgressRef,
-    chapterProgressSaveQueueRef,
-    setProgress,
-    setChapterProgress,
-  });
 
   const livesStateRef = useRef(livesState);
   const trayBoostStateRef = useRef(trayBoostState);
@@ -408,30 +420,17 @@ export default function App() {
    * isso o resumo devolve a contagem atual com `isLevelCounted: false`, que é o
    * que mantém a barra parada em vez de animar sem motivo.
    */
+  const renderedProgressGeneration = progressGenerationRef.current;
   const handleChapterLevelComplete = async (
     mapId: string,
     starsEarned: number,
   ) => {
-    const completionResult = applyChapterMapCompletion(
-      chapterProgressRef.current,
+    const completionResult = await commitChapterCompletion(
       mapId,
       starsEarned,
+      renderedProgressGeneration,
     );
-    const coinsEarned = getIncrementalCoinRewardForLevel(
-      completionResult.previousStars,
-      completionResult.starsEarned,
-    );
-
-    await commitChapterProgress(completionResult.progress);
-
-    if (coinsEarned > 0) {
-      await commitProgress(
-        normalizeProgress({
-          ...progressRef.current,
-          coins: progressRef.current.coins + coinsEarned,
-        }),
-      );
-    }
+    const { coinsEarned } = completionResult;
 
     return {
       bonusWorldAchievementUnlocked: false,
@@ -636,13 +635,14 @@ export default function App() {
   }, [commitMagicTripleRescueState]);
 
   const handleResetProgress = () => {
-    const freshProgress = createInitialProgress();
     const freshMagicTripleRescueState = createInitialMagicTripleRescueState();
-    progressGenerationRef.current += 1;
-    void commitProgress(freshProgress).catch(() => undefined);
-    void commitChapterProgress(createInitialChapterProgress()).catch(
-      () => undefined,
-    );
+    setIsLoadingProgress(true);
+    setProgressLoadError(false);
+    void resetProgressPair()
+      .then(() => {
+        setIsLoadingProgress(false);
+      })
+      .catch(() => setProgressLoadError(true));
     magicTripleRescueRef.current = freshMagicTripleRescueState;
     setMagicTripleRescueState(freshMagicTripleRescueState);
     setSelectedLevelId(LEVELS[0]?.id ?? '');
@@ -1000,8 +1000,30 @@ export default function App() {
       <SafeAreaProvider>
         <SafeAreaView edges={['top', 'bottom']} style={styles.loadingContainer}>
           <StatusBar style="light" />
-          <ActivityIndicator color={colors.primary} size="large" />
-          <Text style={styles.loadingText}>Carregando progresso...</Text>
+          {!progressLoadError && (
+            <ActivityIndicator
+              accessibilityLabel="Carregando progresso"
+              color={colors.primary}
+              size="large"
+            />
+          )}
+          <Text style={styles.loadingText}>
+            {progressLoadError
+              ? 'Não foi possível salvar ou recuperar o progresso.'
+              : 'Carregando progresso...'}
+          </Text>
+          {progressLoadError && (
+            <Text
+              accessibilityRole="button"
+              onPress={() => {
+                setProgressLoadError(false);
+                setProgressLoadAttempt((attempt) => attempt + 1);
+              }}
+              style={styles.loadingText}
+            >
+              Tentar novamente
+            </Text>
+          )}
         </SafeAreaView>
       </SafeAreaProvider>
     );

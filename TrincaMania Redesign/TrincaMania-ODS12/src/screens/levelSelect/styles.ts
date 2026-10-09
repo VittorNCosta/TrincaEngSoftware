@@ -226,7 +226,7 @@ export const styles = StyleSheet.create({
   },
   panelBanner: {
     alignSelf: 'center',
-    backgroundColor: '#F7B91E',
+    backgroundColor: '#884900',
     borderColor: '#FFF2A7',
     borderRadius: radii.pill,
     borderWidth: 2,
@@ -236,15 +236,15 @@ export const styles = StyleSheet.create({
     ...shadows.button,
   },
   panelBannerLocked: {
-    backgroundColor: '#8D9BA0',
+    backgroundColor: '#526166',
     borderColor: '#D5E0E0',
   },
   panelBannerPortal: {
-    backgroundColor: '#5E82DE',
+    backgroundColor: '#3859A8',
     borderColor: '#E7F0FF',
   },
   panelBannerSoon: {
-    backgroundColor: '#6F82D8',
+    backgroundColor: '#4A4C9C',
     borderColor: '#DDE6FF',
   },
   panelBannerText: {
@@ -306,7 +306,7 @@ export const styles = StyleSheet.create({
   },
   portalMarker: {
     alignItems: 'center',
-    backgroundColor: '#5E82DE',
+    backgroundColor: '#3859A8',
     borderBottomColor: '#2E438B',
     borderBottomWidth: 4,
     borderColor: '#E7F0FF',

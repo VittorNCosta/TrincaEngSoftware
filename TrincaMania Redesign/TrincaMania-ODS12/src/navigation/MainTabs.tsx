@@ -1,13 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import {
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 import { BottomNavBar, MAIN_TAB_ITEMS } from '../components/BottomNavBar';
 import { LevelSelectScreen } from '../screens/LevelSelectScreen';
@@ -25,6 +34,35 @@ import {
   WorldId,
 } from '../types/game';
 import { WindowTarget } from '../types/ui';
+
+function TabPage({
+  active,
+  children,
+  size,
+  name,
+}: {
+  active: boolean;
+  children: ReactNode;
+  size: { width: number; height: number };
+  name: string;
+}) {
+  return (
+    <View
+      ref={(node) => {
+        if (Platform.OS === 'web' && node) {
+          (node as unknown as HTMLElement).inert = !active;
+        }
+      }}
+      aria-hidden={!active}
+      accessibilityElementsHidden={!active}
+      importantForAccessibility={active ? 'auto' : 'no-hide-descendants'}
+      style={size}
+      testID={`tab-page-${name}`}
+    >
+      {children}
+    </View>
+  );
+}
 
 const MAP_TAB_INDEX = 0;
 const PROFILE_TAB_INDEX = MAIN_TAB_ITEMS.findIndex(
@@ -82,6 +120,7 @@ export function MainTabs({
   onShowTutorial,
 }: MainTabsProps) {
   const window = useWindowDimensions();
+  const reducedMotion = useReducedMotion();
   const pagerRef = useRef<ScrollView>(null);
   const activeIndexRef = useRef(MAP_TAB_INDEX);
   const [activeIndex, setActiveIndex] = useState(MAP_TAB_INDEX);
@@ -110,9 +149,12 @@ export function MainTabs({
     (index: number) => {
       activeIndexRef.current = index;
       setActiveIndex(index);
-      pagerRef.current?.scrollTo({ animated: true, x: index * pageSize.width });
+      pagerRef.current?.scrollTo({
+        animated: Platform.OS !== 'web' && !reducedMotion,
+        x: index * pageSize.width,
+      });
     },
-    [pageSize.width],
+    [pageSize.width, reducedMotion],
   );
 
   // Se a largura mudar (rotação, split screen), o pager precisa reencontrar a
@@ -155,7 +197,7 @@ export function MainTabs({
         showsHorizontalScrollIndicator={false}
         style={styles.pager}
       >
-        <View style={pageSize}>
+        <TabPage active={activeIndex === 0} size={pageSize} name="map">
           <LevelSelectScreen
             devMode={devMode}
             activeTrayCapacity={activeTrayCapacity}
@@ -174,8 +216,8 @@ export function MainTabs({
             onResetProgress={onResetProgress}
             onSelectLevel={onSelectLevel}
           />
-        </View>
-        <View style={pageSize}>
+        </TabPage>
+        <TabPage active={activeIndex === 1} size={pageSize} name="rewards">
           <RewardsScreen
             activeTrayCapacity={activeTrayCapacity}
             bonusTraySlotRemainingMs={bonusTraySlotRemainingMs}
@@ -187,13 +229,13 @@ export function MainTabs({
             onPurchaseCoinTraySlot={onPurchaseCoinTraySlot}
             onShowTutorial={onShowTutorial}
           />
-        </View>
-        <View style={pageSize}>
+        </TabPage>
+        <TabPage active={activeIndex === 2} size={pageSize} name="powers">
           <PowersScreen progress={progress} />
-        </View>
-        <View style={pageSize}>
+        </TabPage>
+        <TabPage active={activeIndex === 3} size={pageSize} name="profile">
           <ProfileScreen progress={progress} />
-        </View>
+        </TabPage>
       </ScrollView>
 
       <BottomNavBar activeIndex={activeIndex} onSelect={goToTab} />

@@ -426,7 +426,17 @@ export function ResultModal({
 
   return (
     <>
-      <Modal animationType="none" transparent visible={status !== 'playing'}>
+      <Modal
+        accessibilityLabel={isWon ? 'Fase concluída' : 'Fim da partida'}
+        onRequestClose={onBackToLevels}
+        animationType="none"
+        transparent
+        visible={
+          status !== 'playing' &&
+          !isCommonChestOpeningVisible &&
+          !isWorldChestOpeningVisible
+        }
+      >
         <SafeAreaView
           edges={['top', 'bottom', 'left', 'right']}
           style={styles.overlay}

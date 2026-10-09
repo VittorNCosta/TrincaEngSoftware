@@ -28,7 +28,7 @@ describe('BoardTile', () => {
       />,
     );
 
-    expect(getByLabelText(`Peça ${tile.emoji}`)).toBeTruthy();
+    expect(getByLabelText('Peça Resíduo de Plástico')).toBeTruthy();
   });
 
   it('marca o rótulo de acessibilidade como bloqueada quando blocked=true', () => {
@@ -44,6 +44,53 @@ describe('BoardTile', () => {
       />,
     );
 
-    expect(getByLabelText(`Peça ${tile.emoji}, bloqueada`)).toBeTruthy();
+    expect(getByLabelText('Peça Resíduo de Plástico, bloqueada')).toBeTruthy();
+  });
+});
+
+describe('identificação educativa acessível', () => {
+  it('diferencia os cinco materiais mesmo no símbolo de reciclagem', () => {
+    const materials = [
+      'plastico',
+      'papel',
+      'vidro',
+      'metal',
+      'organico',
+    ] as const;
+    const labels = ['Plástico', 'Papel', 'Vidro', 'Metal', 'Orgânico'];
+    const { getByLabelText } = render(
+      <>
+        {materials.map((kind) => (
+          <BoardTile
+            key={kind}
+            tile={{ ...tile, kind, role: 'simbolo', emoji: '♻', id: kind }}
+            blocked={false}
+            boardOriginX={0}
+            boardOriginY={0}
+            disabled={false}
+            highlighted={false}
+            onPress={() => {}}
+          />
+        ))}
+      </>,
+    );
+    labels.forEach((label) =>
+      expect(getByLabelText(`Peça Reciclagem de ${label}`)).toBeTruthy(),
+    );
+  });
+  it('não revela o material de uma peça misteriosa oculta', () => {
+    const { getByLabelText, queryByLabelText } = render(
+      <BoardTile
+        tile={{ ...tile, mystery: true }}
+        blocked={false}
+        boardOriginX={0}
+        boardOriginY={0}
+        disabled={false}
+        highlighted={false}
+        onPress={() => {}}
+      />,
+    );
+    expect(getByLabelText('Peça misteriosa')).toBeTruthy();
+    expect(queryByLabelText(/Plástico/)).toBeNull();
   });
 });

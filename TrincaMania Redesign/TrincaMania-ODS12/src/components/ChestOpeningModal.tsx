@@ -276,6 +276,7 @@ export function ChestOpeningModal({
 
   return (
     <Modal
+      accessibilityLabel="Recompensa do baú"
       animationType="fade"
       transparent
       visible={visible}
@@ -396,7 +397,10 @@ export function ChestOpeningModal({
                         numberOfLines={1}
                         adjustsFontSizeToFit
                         minimumFontScale={0.82}
-                        style={styles.rewardText}
+                        style={[
+                          styles.rewardText,
+                          isWorld ? styles.rewardTextWorld : null,
+                        ]}
                       >
                         {mainReward.label}
                       </Text>
@@ -435,7 +439,10 @@ export function ChestOpeningModal({
                     numberOfLines={1}
                     adjustsFontSizeToFit
                     minimumFontScale={0.82}
-                    style={styles.rewardText}
+                    style={[
+                      styles.rewardText,
+                      isWorld ? styles.rewardTextWorld : null,
+                    ]}
                   >
                     {mainReward.label}
                   </Text>
@@ -653,6 +660,9 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '900',
     textAlign: 'center',
+  },
+  rewardTextWorld: {
+    color: '#FFF4B8',
   },
   stage: {
     alignItems: 'center',

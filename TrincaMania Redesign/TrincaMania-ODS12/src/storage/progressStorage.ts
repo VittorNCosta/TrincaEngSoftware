@@ -1,3 +1,4 @@
+import { copyChapterRewardLedger } from './chapterRewardJournal';
 import AsyncStorage from './keyValueStorage';
 
 import { LEVEL_BY_ID, LEVELS } from '../data/levels';
@@ -296,6 +297,7 @@ export const normalizeProgress = (
   }
 
   return {
+    ...copyChapterRewardLedger(progress),
     bonusWorldAchievementShown: progress.bonusWorldAchievementShown === true,
     chestProgressLevelIds: LEVEL_IDS.filter((levelId) =>
       chestProgressSet.has(levelId),
@@ -766,11 +768,19 @@ export const loadProgress = async (): Promise<ProgressState> => {
     return createInitialProgress();
   }
 
+  let parsedProgress: unknown;
   try {
-    const parsedProgress: unknown = JSON.parse(rawProgress);
+    parsedProgress = JSON.parse(rawProgress);
+  } catch {
+    return createInitialProgress();
+  }
+  const rewardMetadata = copyChapterRewardLedger(parsedProgress);
+  try {
     diagnoseCampaignStorageIds(parsedProgress);
     return normalizeProgress(parsedProgress as Partial<ProgressState>);
-  } catch {
+  } catch (error) {
+    // Never replace a journal-bearing save with a fresh wallet.
+    if (rewardMetadata.chapterRewards) throw error;
     return createInitialProgress();
   }
 };

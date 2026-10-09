@@ -60,10 +60,11 @@ export function GameDialogs({
   return (
     <>
       <Modal
+        accessibilityLabel="Tutorial da partida"
         animationType="fade"
         transparent
         visible={practicalTutorialPopupStep !== undefined}
-        onRequestClose={() => undefined}
+        onRequestClose={advancePracticalTutorialPopup}
       >
         <SafeAreaView
           edges={['top', 'bottom', 'left', 'right']}
@@ -94,6 +95,7 @@ export function GameDialogs({
         </SafeAreaView>
       </Modal>
       <Modal
+        accessibilityLabel="Ajuda para liberar a bandeja"
         animationType="fade"
         transparent
         visible={isMagicTripleRescueVisible}
@@ -129,6 +131,7 @@ export function GameDialogs({
         </SafeAreaView>
       </Modal>
       <Modal
+        accessibilityLabel="Liberar espaço bônus"
         animationType="fade"
         statusBarTranslucent
         transparent
@@ -149,7 +152,7 @@ export function GameDialogs({
             </View>
             <Text style={styles.purchaseModalTitle}>Liberar espaço bônus?</Text>
             <Text style={styles.purchaseModalText}>
-              Ganhe um sétimo espaço na bandeja e jogue com mais segurança.
+              Ganhe mais um espaço na bandeja e jogue com mais segurança.
             </Text>
             <View style={styles.bonusBenefitPill}>
               <Text style={styles.bonusBenefitText}>+1 ESPAÇO · 30 MIN</Text>
@@ -173,6 +176,7 @@ export function GameDialogs({
         </SafeAreaView>
       </Modal>
       <Modal
+        accessibilityLabel="Comprar poder"
         animationType="fade"
         statusBarTranslucent
         transparent

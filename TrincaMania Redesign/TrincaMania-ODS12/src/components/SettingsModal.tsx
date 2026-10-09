@@ -46,11 +46,13 @@ function SettingsAction({
   tone = 'gold',
   onPress,
 }: SettingsActionProps) {
+  const brightBackground = active && (tone === 'gold' || tone === 'green');
   const stateMark = active ? '\u2713' : '\u00D7';
 
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={`${label}${status ? `, ${status}` : ''}`}
       onPress={onPress}
       style={({ pressed }) => [
         styles.actionButton,
@@ -68,11 +70,23 @@ function SettingsAction({
         tone={active ? tone : 'neutral'}
       />
       <View style={styles.actionCopy}>
-        <Text numberOfLines={2} style={styles.actionLabel}>
+        <Text
+          numberOfLines={2}
+          style={[
+            styles.actionLabel,
+            brightBackground ? styles.darkActionText : null,
+          ]}
+        >
           {label}
         </Text>
         {status ? (
-          <Text numberOfLines={2} style={styles.actionStatus}>
+          <Text
+            numberOfLines={2}
+            style={[
+              styles.actionStatus,
+              brightBackground ? styles.darkActionText : null,
+            ]}
+          >
             {status}
           </Text>
         ) : null}
@@ -133,7 +147,8 @@ export function SettingsModal({
   onUnlockAllForDevMode,
 }: SettingsModalProps) {
   const [diagnosticsVisible, setDiagnosticsVisible] = useState(false);
-  const largeText = useWindowDimensions().fontScale >= 1.6;
+  const { width, fontScale } = useWindowDimensions();
+  const largeText = fontScale >= 1.6;
   const silentModeActive = !settings.soundEnabled && !settings.hapticsEnabled;
   const handleResetProgress = () =>
     confirmAction(
@@ -156,6 +171,7 @@ export function SettingsModal({
 
   return (
     <Modal
+      accessibilityLabel="Configurações"
       animationType="fade"
       transparent
       visible={visible}
@@ -166,7 +182,10 @@ export function SettingsModal({
         style={styles.overlay}
       >
         <Pressable
-          accessibilityRole="button"
+          accessible={false}
+          focusable={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
           style={styles.backdrop}
           onPress={onClose}
         />
@@ -179,7 +198,11 @@ export function SettingsModal({
                 <Text style={styles.kicker}>TileClear - ODS12</Text>
               </View>
               <Text
-                style={[styles.title, largeText ? styles.titleLargeText : null]}
+                style={[
+                  styles.title,
+                  width < 360 ? styles.titleCompact : null,
+                  largeText ? styles.titleLargeText : null,
+                ]}
               >
                 Configurações
               </Text>
@@ -335,7 +358,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#087A54',
   },
   actionButtonPurple: {
-    backgroundColor: '#8A65FF',
+    backgroundColor: '#6543C5',
     borderBottomColor: '#2C0E56',
   },
   actionButtonPurpleIdle: {
@@ -351,15 +374,15 @@ const styles = StyleSheet.create({
     color: colors.inkOnDark,
     fontSize: fontSizes.md,
     fontWeight: '900',
-    textShadowColor: 'rgba(0, 0, 0, 0.22)',
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 1,
+  },
+  darkActionText: {
+    color: colors.ink,
   },
   actionList: {
     gap: spacing.sm,
   },
   actionStatus: {
-    color: 'rgba(255, 255, 255, 0.82)',
+    color: colors.inkOnDark,
     fontSize: fontSizes.xs,
     fontWeight: '900',
   },
@@ -410,9 +433,9 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: 'center',
-    height: 36,
+    height: 48,
     justifyContent: 'center',
-    width: 36,
+    width: 48,
   },
   devButton: {
     alignItems: 'center',
@@ -434,7 +457,7 @@ const styles = StyleSheet.create({
   doneButton: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#28C96F',
+    backgroundColor: '#087A54',
     borderBottomColor: '#087A54',
     borderBottomWidth: 5,
     borderColor: '#C7FFD9',
@@ -537,6 +560,10 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.28)',
     textShadowOffset: { height: 2, width: 0 },
     textShadowRadius: 2,
+  },
+  titleCompact: {
+    fontSize: 20,
+    lineHeight: 24,
   },
   titleLargeText: {
     fontSize: 15,

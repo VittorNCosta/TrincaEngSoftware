@@ -675,6 +675,7 @@ export function LevelSelectScreen({
           >
             {selectedTarget ? (
               <Pressable
+                accessibilityLabel="Fechar seleção de fase"
                 accessibilityRole="button"
                 onPress={closePanel}
                 style={styles.mapBackgroundHitArea}
@@ -778,9 +779,12 @@ export function LevelSelectScreen({
         />
 
         <Modal
+          accessibilityLabel="Recompensa do ponto de descanso"
           animationType="fade"
           transparent
           visible={restCheckpointReward !== undefined}
+
+          onRequestClose={() => setRestCheckpointReward(undefined)}
         >
           <View style={styles.rewardOverlay}>
             <View style={styles.rewardCard}>

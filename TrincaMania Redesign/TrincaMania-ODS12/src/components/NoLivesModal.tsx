@@ -18,7 +18,13 @@ export function NoLivesModal({
   onClose,
 }: NoLivesModalProps) {
   return (
-    <Modal animationType="fade" transparent visible={visible}>
+    <Modal
+      onRequestClose={onClose}
+      accessibilityLabel="Sem vidas"
+      animationType="fade"
+      transparent
+      visible={visible}
+    >
       <SafeAreaView
         edges={['top', 'bottom', 'left', 'right']}
         style={styles.overlay}

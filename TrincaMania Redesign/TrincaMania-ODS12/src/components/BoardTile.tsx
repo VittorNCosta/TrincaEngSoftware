@@ -1,8 +1,11 @@
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import { memo, useCallback, useContext, useEffect, useRef } from 'react';
 import { WorldArtContext } from './WorldArtContext';
 import { getResidueVisual } from '../data/residueVisualAssets';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { getMaterial } from '../domain/recycling/value-objects/MaterialType';
+import { getCardRole } from '../domain/recycling/value-objects/CardRole';
 import { TileIcon } from './TileIcon';
 import { IS_E2E_BUILD } from '../testing/e2eProfile';
 import { radii } from '../styles/theme';
@@ -36,6 +39,7 @@ function BoardTileBase({
   onBlockedPress,
   onPress,
 }: BoardTileProps) {
+  const reducedMotion = useReducedMotion();
   const worldId = useContext(WorldArtContext);
   const residueVisual = getResidueVisual(tile.cardId, worldId);
   const isDisabled = disabled;
@@ -61,7 +65,7 @@ function BoardTileBase({
   );
 
   useEffect(() => {
-    if (!highlighted || blocked || IS_E2E_BUILD) {
+    if (!highlighted || blocked || IS_E2E_BUILD || reducedMotion) {
       scale.stopAnimation();
       scale.setValue(1);
       return undefined;
@@ -85,7 +89,7 @@ function BoardTileBase({
     pulse.start();
 
     return () => pulse.stop();
-  }, [blocked, highlighted, scale]);
+  }, [blocked, highlighted, scale, reducedMotion]);
 
   useEffect(() => {
     if (
@@ -199,7 +203,7 @@ function BoardTileBase({
   return (
     <AnimatedPressable
       ref={tileRef}
-      accessibilityLabel={`${isMysteryHidden ? 'Peça misteriosa' : `Peça ${residueVisual?.label ?? tile.emoji}`}${
+      accessibilityLabel={`${isMysteryHidden ? 'Peça misteriosa' : `Peça ${getCardRole(tile.role).shortLabel} de ${getMaterial(tile.kind).label}${residueVisual ? `, ${residueVisual.label}` : ''}`}${
         blocked ? ', bloqueada' : ''
       }`}
       accessibilityRole="button"

@@ -124,7 +124,15 @@ export function WorldChestModal({
 
   return (
     <>
-      <Modal animationType="fade" transparent visible={visible}>
+      <Modal
+        onRequestClose={() => {
+          if (!isOpening) onClose();
+        }}
+        accessibilityLabel="Baú Especial"
+        animationType="fade"
+        transparent
+        visible={visible && !isRevealVisible}
+      >
         <View style={styles.overlay}>
           <View style={styles.card}>
             {opened ? (

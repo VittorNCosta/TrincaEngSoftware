@@ -17,19 +17,19 @@ type PowerTone = {
 const POWER_TONES: Record<PowerUpType, PowerTone> = {
   hint: {
     border: '#EAF8FF',
-    face: '#2E9BEE',
+    face: '#1768B5',
     foot: '#0C4C8E',
     label: '#EAF8FF',
   },
   shuffle: {
     border: '#FFE6FB',
-    face: '#C93BBE',
+    face: '#8C2387',
     foot: '#6B1866',
     label: '#FFE6FB',
   },
   undo: {
     border: '#E9FFE2',
-    face: '#45BF28',
+    face: '#087A54',
     foot: '#1B5F0C',
     label: '#E9FFE2',
   },

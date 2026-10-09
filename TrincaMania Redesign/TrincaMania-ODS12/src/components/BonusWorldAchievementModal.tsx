@@ -45,6 +45,8 @@ export function BonusWorldAchievementModal({
 
   return (
     <Modal
+      onRequestClose={onContinueMap}
+      accessibilityLabel="Jardim Renascido desbloqueado"
       animationType="none"
       statusBarTranslucent
       transparent
