@@ -3,6 +3,12 @@ import { WorldArtContext } from '../components/WorldArtContext';
 import { getWorldVisualAssets } from '../data/worldVisualAssets';
 import { IS_E2E_BUILD, E2E_BOARD_SEED } from '../testing/e2eProfile';
 import { updateDiagnosticContext } from '../utils/log';
+import {
+  advanceNaturalCombo,
+  comboLabel,
+  createComboState,
+} from '../utils/combo';
+import { playVoiceReaction } from '../utils/voiceOver';
 import { checkTrayCapacity } from '../observability/runtimeInvariants';
 import {
   createSeededRandom,
@@ -10,6 +16,7 @@ import {
   stableHash,
 } from '../utils/deterministicRandom';
 import { getChapterVisualIdentity } from '../data/chapterVisualIdentity';
+import { getDailyChallengeLevel } from '../challenges/dailyChallenge';
 import { createBoardVariation } from './game/createBoardVariation';
 import {
   PRACTICAL_TUTORIAL_LEVEL_ID,
@@ -119,10 +126,14 @@ import {
 } from '../utils/haptics';
 import {
   playCoinSound,
+  playCombo2Sound,
+  playCombo3Sound,
+  playComboHighSound,
   playConfettiSound,
   playLoseSound,
   playShopBuySound,
   playTapSound,
+  playTileSelectSound,
   playTripleSounds,
   playWhooshSound,
   playWinSound,
@@ -149,6 +160,12 @@ import {
 
 // Keep the actual board seed in diagnostics so a failure can be reproduced.
 const createRoundBoard = (levelId: string, retry = false) => {
+  if (levelId.startsWith('daily-')) {
+    updateDiagnosticContext({ levelId, seed: stableHash(levelId), retry });
+    return revealAvailableMysteryTiles(
+      getDailyChallengeLevel(levelId.slice(6)).tiles,
+    );
+  }
   const chapter = getChapterLevelSummary(levelId);
   const seed =
     chapter && !retry
@@ -220,6 +237,7 @@ type GameScreenProps = {
     levelId: string,
     starsEarned: number,
   ) => Promise<LevelCompletionSummary>;
+  onNaturalTriple?: (eventId: string) => void;
   onLoseLife: () => Promise<LivesState>;
   onMagicTripleRescueSeen: () => Promise<void>;
   onMagicTripleRescueUsed: () => Promise<void>;
@@ -252,6 +270,29 @@ export function GameScreen(props: GameScreenProps) {
   );
 }
 
+const comboStyles = StyleSheet.create({
+  pill: {
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: 42,
+    zIndex: 20,
+    backgroundColor: '#51308F',
+    borderColor: '#FFE6A0',
+    borderWidth: 2,
+    borderBottomColor: '#25124E',
+    borderBottomWidth: 4,
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+  },
+  text: {
+    color: '#FFFFFF',
+    fontWeight: '900',
+    fontSize: 17,
+    textAlign: 'center',
+  },
+});
+
 function GameScreenContent({
   activeTrayCapacity: currentTrayCapacity,
   bestStars,
@@ -274,6 +315,7 @@ function GameScreenContent({
   onBonusWorldAchievementSeen,
   onCoinCounterLayout,
   onLevelComplete,
+  onNaturalTriple,
   onLoseLife,
   onMagicTripleRescueSeen,
   onMagicTripleRescueUsed,
@@ -317,6 +359,10 @@ function GameScreenContent({
   const [roundCoinTraySlotActive, setRoundCoinTraySlotActive] =
     useState(isCoinTraySlotActive);
   const [board, setBoard] = useState<Tile[]>(() => createRoundBoard(level.id));
+  const [comboCount, setComboCount] = useState(0);
+  const comboRef = useRef(createComboState());
+  const comboOpacity = useRef(new Animated.Value(0)).current;
+  const naturalTripleSerialRef = useRef(0);
   const [boardBounds, setBoardBounds] = useState(() => getBoardBounds(board));
   const [boardViewport, setBoardViewport] = useState<BoardViewport>({
     height: 0,
@@ -734,6 +780,11 @@ function GameScreenContent({
       coinSlotActive: isCoinTraySlotActive,
     },
   ) => {
+    comboRef.current = createComboState();
+    naturalTripleSerialRef.current = 0;
+    comboOpacity.stopAnimation();
+    comboOpacity.setValue(0);
+    setComboCount(0);
     const cancelledPowerEffect = activeTileMoveRef.current
       ? undefined
       : tripleCompleteCallbackRef.current;
@@ -1275,7 +1326,11 @@ function GameScreenContent({
     if (practicalTutorialActive) {
       setPracticalTutorialStep('intro');
     }
-    showToast('Nova variação pronta.');
+    showToast(
+      level.id.startsWith('daily-')
+        ? 'Desafio reiniciado.'
+        : 'Nova variação pronta.',
+    );
   };
 
   const handleRetryLevel = () => {
@@ -1956,9 +2011,37 @@ function GameScreenContent({
     );
     setHiddenTrayTileIds(consumeTiles.map(({ tile }) => tile.id));
     mediumImpact();
-    playTripleSounds();
     if (!markActiveTileMoveConsuming(tileMoveQueueRef.current, event.id)) {
       return;
+    }
+    const nextCombo = advanceNaturalCombo(comboRef.current, Date.now());
+    comboRef.current = nextCombo;
+    naturalTripleSerialRef.current += 1;
+    onNaturalTriple?.(
+      `${level.id}:${Date.now()}:${roundGenerationRef.current}:${naturalTripleSerialRef.current}`,
+    );
+    setComboCount(nextCombo.count);
+    if (nextCombo.count === 1) playTripleSounds();
+    else {
+      if (nextCombo.count === 2) playCombo2Sound();
+      else if (nextCombo.count === 3) playCombo3Sound();
+      else playComboHighSound();
+      playVoiceReaction(nextCombo.count);
+      comboOpacity.stopAnimation();
+      comboOpacity.setValue(0);
+      Animated.sequence([
+        Animated.timing(comboOpacity, {
+          toValue: 1,
+          duration: 180,
+          useNativeDriver: true,
+        }),
+        Animated.delay(1250),
+        Animated.timing(comboOpacity, {
+          toValue: 0,
+          duration: 360,
+          useNativeDriver: true,
+        }),
+      ]).start();
     }
     startTripleConsume(
       consumeTiles,
@@ -2039,6 +2122,7 @@ function GameScreenContent({
       boardRef.current = result.board;
       setBoard(result.board);
       setMoveHistory((currentHistory) => [...currentHistory, move.historyItem]);
+      playTileSelectSound();
       playWhooshSound();
       setFlyingTileEvent(event);
 
@@ -2320,6 +2404,29 @@ function GameScreenContent({
           </View>
 
           <View style={styles.meterRow}>
+            {comboCount >= 2 ? (
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  comboStyles.pill,
+                  {
+                    opacity: comboOpacity,
+                    transform: [
+                      {
+                        scale: comboOpacity.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0.88, 1],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              >
+                <Text style={comboStyles.text}>
+                  {comboLabel(comboCount)} ×{comboCount}
+                </Text>
+              </Animated.View>
+            ) : null}
             <Text style={styles.meterTime}>
               {formatSeconds(elapsedSeconds)}
             </Text>

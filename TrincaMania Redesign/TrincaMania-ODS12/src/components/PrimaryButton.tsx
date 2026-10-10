@@ -10,14 +10,11 @@ type PrimaryButtonProps = {
   onPress: () => void;
   disabled?: boolean;
   size?: 'regular' | 'compact' | 'small';
-  /**
-   * Id para teste. Opcional de propósito: só os botões que um fluxo precisa
-   * alcançar ganham um, e aí o id diz o que aquele botão faz naquela tela —
-   * um `testID` em todo botão viraria ruído sem virar cobertura.
-   */
-  testID?: string;
-  variant?: 'primary' | 'secondary' | 'danger' | 'power';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'power';
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
   children?: ReactNode;
+  testID?: string;
 };
 
 export function PrimaryButton({
@@ -25,9 +22,11 @@ export function PrimaryButton({
   onPress,
   disabled = false,
   size = 'regular',
-  testID,
   variant = 'primary',
+  accessibilityLabel,
+  accessibilityHint,
   children,
+  testID,
 }: PrimaryButtonProps) {
   const scale = useRef(new Animated.Value(1)).current;
 
@@ -42,14 +41,11 @@ export function PrimaryButton({
 
   return (
     <AnimatedPressable
-      // Quando o botão traz `children` em vez do texto padrão (ícone, moeda,
-      // contador), o leitor de tela não tinha nome nenhum para anunciar. O
-      // `title` continua sendo a descrição correta nesses casos.
-      accessibilityLabel={title}
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={accessibilityLabel ?? title}
       accessibilityRole="button"
       accessibilityState={{ disabled }}
       disabled={disabled}
-      testID={testID}
       onPress={onPress}
       onPressIn={() => animateTo(0.96)}
       onPressOut={() => animateTo(1)}
@@ -60,8 +56,11 @@ export function PrimaryButton({
         disabled ? styles.disabled : null,
         { transform: [{ scale }] },
       ]}
+      testID={testID}
     >
-      <View pointerEvents="none" style={styles.topHighlight} />
+      {variant !== 'ghost' ? (
+        <View pointerEvents="none" style={styles.topHighlight} />
+      ) : null}
       <View style={styles.content}>
         {children ?? (
           <Text
@@ -70,6 +69,7 @@ export function PrimaryButton({
               size === 'small' ? styles.smallLabel : null,
               variant === 'secondary' ? styles.secondaryLabel : null,
               variant === 'primary' ? styles.primaryLabel : null,
+              disabled ? styles.disabledLabel : null,
             ]}
           >
             {title}
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     borderBottomWidth: 6,
-    borderRadius: radii.pill,
+    borderRadius: radii.button,
     borderWidth: 2,
     justifyContent: 'center',
     overflow: 'hidden',
@@ -101,15 +101,18 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   danger: {
-    backgroundColor: '#F05278',
-    borderBottomColor: '#A9274A',
-    borderColor: '#FFB3C4',
+    backgroundColor: colors.danger,
+    borderBottomColor: colors.dangerDark,
+    borderColor: colors.accentSoft,
   },
   disabled: {
-    backgroundColor: '#A7B1B6',
-    borderBottomColor: '#6D7A81',
-    borderColor: '#D0D9DD',
-    opacity: 0.72,
+    backgroundColor: colors.locked,
+    borderBottomColor: colors.lockedText,
+    borderColor: colors.lockedSurface,
+  },
+  disabledLabel: {
+    color: '#07583E',
+    textShadowColor: 'transparent',
   },
   label: {
     color: colors.inkOnDark,
@@ -121,27 +124,27 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   primary: {
-    backgroundColor: '#28C96F',
-    borderBottomColor: '#087A54',
-    borderColor: '#C7FFD9',
+    backgroundColor: colors.success,
+    borderBottomColor: colors.successDark,
+    borderColor: colors.successSoft,
   },
   primaryLabel: {
-    color: colors.inkOnDark,
+    color: '#07583E',
   },
   power: {
-    backgroundColor: '#7862F5',
-    borderBottomColor: '#3C2D9D',
-    borderColor: '#C8C1FF',
+    backgroundColor: colors.action,
+    borderBottomColor: colors.actionDark,
+    borderColor: colors.surfaceSoft,
   },
   regular: {
-    minHeight: 62,
+    minHeight: 56,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
   },
   secondary: {
-    backgroundColor: '#238DF5',
-    borderBottomColor: '#0A4D95',
-    borderColor: '#C8ECFF',
+    backgroundColor: colors.action,
+    borderBottomColor: colors.actionDark,
+    borderColor: colors.surfaceSoft,
   },
   secondaryLabel: {
     color: colors.inkOnDark,
@@ -150,6 +153,12 @@ const styles = StyleSheet.create({
     minHeight: 48,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderColor: colors.borderSoft,
+    shadowOpacity: 0,
   },
   smallLabel: {
     fontSize: fontSizes.sm,

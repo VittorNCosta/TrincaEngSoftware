@@ -32,6 +32,18 @@ const baselinePath = path.join(__dirname, 'assets-baseline.json');
 
 /** Teto por arquivo. O roadmap (bloco A) fixa 400 KB para PNG de mapa. */
 const LIMITE_BYTES = 400 * 1024;
+// A trilha offline importada tem um orçamento próprio. A exceção é fechada aos
+// seis arquivos usados pelo jogo; o teto de 400 KB continua valendo para o resto.
+const MUSIC_FILES = new Set([
+  'assets/audio/music/menu.mp3',
+  'assets/audio/music/world_01.mp3',
+  'assets/audio/music/world_02.mp3',
+  'assets/audio/music/world_03.mp3',
+  'assets/audio/music/world_04.mp3',
+  'assets/audio/music/world_21.mp3',
+]);
+const MUSIC_FILE_LIMIT_BYTES = 6 * 1024 * 1024;
+const MUSIC_TOTAL_LIMIT_BYTES = 28 * 1024 * 1024;
 
 const walk = (dir, found = []) => {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -107,7 +119,10 @@ const readBaseline = () =>
 
 const main = () => {
   const files = collect();
-  const acima = files.filter((file) => file.bytes > LIMITE_BYTES);
+  const music = files.filter((file) => MUSIC_FILES.has(file.relative));
+  const acima = files.filter(
+    (file) => !MUSIC_FILES.has(file.relative) && file.bytes > LIMITE_BYTES,
+  );
   const orfaos = files.filter((file) => file.orfao);
   // `map_shop.png.png`: a extensão aparece duas vezes seguidas. Sempre erro de
   // exportação, e o arquivo certo é o irmão sem a repetição.
@@ -148,6 +163,16 @@ const main = () => {
 
   const baseline = readBaseline();
   const problemas = [];
+
+  MUSIC_FILES.forEach((relative) => {
+    const file = music.find((entry) => entry.relative === relative);
+    if (!file) problemas.push(`trilha ausente: ${relative}`);
+    else if (file.bytes > MUSIC_FILE_LIMIT_BYTES)
+      problemas.push(`trilha acima do limite: ${relative} (${kb(file.bytes)})`);
+  });
+  const musicBytes = music.reduce((sum, file) => sum + file.bytes, 0);
+  if (musicBytes > MUSIC_TOTAL_LIMIT_BYTES)
+    problemas.push(`trilhas acima do orçamento total: ${kb(musicBytes)}`);
 
   acima.forEach((file) => {
     if (baseline.acimaDoLimite[file.relative] === undefined) {

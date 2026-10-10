@@ -211,6 +211,7 @@ export type WorldChestSummary = {
 };
 
 export type PlayerProgress = {
+  rewardOperationIds?: string[];
   bonusWorldAchievementShown: boolean;
   chestProgressLevelIds: string[];
   claimedWorldChestIds: string[];

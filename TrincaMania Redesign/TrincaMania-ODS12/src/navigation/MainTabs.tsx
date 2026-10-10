@@ -13,6 +13,7 @@ import { BottomNavBar, MAIN_TAB_ITEMS } from '../components/BottomNavBar';
 import { LevelSelectScreen } from '../screens/LevelSelectScreen';
 import { PowersScreen } from '../screens/PowersScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { RoutineSection } from '../components/RoutineModal';
 import { RewardsScreen } from '../screens/RewardsScreen';
 import { LivesState } from '../storage/livesStorage';
 import {
@@ -39,10 +40,14 @@ type MainTabsProps = {
   initialWorldId?: WorldId;
   livesState: LivesState;
   progress: ProgressState;
+  checkInReady: boolean;
+  missionReadyCount: number;
+  challengeDone: boolean;
   trayBoostState: TrayBoostState;
   timeUntilNextLifeMs: number;
   onCoinCounterLayout?: (target: WindowTarget) => void;
   onOpenChapters: () => void;
+  onOpenRoutine: (section: RoutineSection) => void;
   onOpenRestCheckpoint: (
     afterLevelId: string,
   ) => Promise<RestCheckpointRewardResult>;
@@ -68,10 +73,14 @@ export function MainTabs({
   initialWorldId,
   livesState,
   progress,
+  checkInReady,
+  missionReadyCount,
+  challengeDone,
   trayBoostState,
   timeUntilNextLifeMs,
   onCoinCounterLayout,
   onOpenChapters,
+  onOpenRoutine,
   onOpenRestCheckpoint,
   onOpenSettings,
   onOpenShop,
@@ -192,7 +201,13 @@ export function MainTabs({
           <PowersScreen progress={progress} />
         </View>
         <View style={pageSize}>
-          <ProfileScreen progress={progress} />
+          <ProfileScreen
+            progress={progress}
+            checkInReady={checkInReady}
+            missionReadyCount={missionReadyCount}
+            challengeDone={challengeDone}
+            onOpenRoutine={onOpenRoutine}
+          />
         </View>
       </ScrollView>
 

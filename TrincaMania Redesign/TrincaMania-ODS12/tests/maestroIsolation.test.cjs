@@ -9,6 +9,12 @@ const root = path.join(__dirname, '..');
 const runner = path.join(root, 'scripts/rodar-fluxos-maestro.sh');
 
 test('jornadas que limpam dados recusam o pacote normal antes de chamar ADB', (t) => {
+  if (process.platform === 'win32') {
+    t.skip(
+      'Requer Bash e ADB simulável; WSL não está disponível no Windows local.',
+    );
+    return;
+  }
   const dir = fs.mkdtempSync(
     path.join(os.tmpdir(), 'trinca-maestro-isolation-'),
   );

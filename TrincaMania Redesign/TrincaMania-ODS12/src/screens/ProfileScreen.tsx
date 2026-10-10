@@ -2,15 +2,21 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { BOTTOM_NAV_HEIGHT } from '../components/BottomNavBar';
 import { GameIcon, GameIconName, GameIconTone } from '../components/GameIcon';
+import { MenuBadge, MenuCard } from '../components/MenuPrimitives';
 import { ScreenShell } from '../components/ScreenShell';
 import { TabScene } from '../components/TabScene';
 import { LEVELS } from '../data/levels';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 import { ProgressState } from '../types/game';
 import { getCurrentWorldId } from '../utils/worldProgress';
+import { RoutineSection } from '../components/RoutineModal';
 
 type ProfileScreenProps = {
   progress: ProgressState;
+  checkInReady: boolean;
+  missionReadyCount: number;
+  challengeDone: boolean;
+  onOpenRoutine: (section: RoutineSection) => void;
 };
 
 type StatCardProps = {
@@ -43,7 +49,13 @@ function StatCard({ iconName, iconTone, label, value }: StatCardProps) {
  * Aba Perfil: a pílula de jogador que ficava no topo da antiga home, agora com
  * o resumo de progresso da campanha.
  */
-export function ProfileScreen({ progress }: ProfileScreenProps) {
+export function ProfileScreen({
+  progress,
+  checkInReady,
+  missionReadyCount,
+  challengeDone,
+  onOpenRoutine,
+}: ProfileScreenProps) {
   const currentWorldId = getCurrentWorldId(progress);
   const totalStars = Object.values(progress.levelStars).reduce(
     (sum, stars) => sum + stars,
@@ -98,15 +110,53 @@ export function ProfileScreen({ progress }: ProfileScreenProps) {
             />
           </View>
 
-          <View style={styles.notePanel}>
-            <GameIcon name="info" size={32} tone="blue" />
-            <View style={styles.noteCopy}>
-              <Text style={styles.noteTitle}>Perfil</Text>
-              <Text numberOfLines={2} style={styles.noteText}>
-                Perfil completo em breve.
-              </Text>
-            </View>
-          </View>
+          <Text style={styles.routineTitle}>Rotina e desafios</Text>
+          {(
+            [
+              {
+                key: 'checkin',
+                icon: 'calendar',
+                title: 'Check-in diário',
+                detail: 'Sete dias de recompensas',
+                badge: checkInReady ? 'Hoje' : undefined,
+              },
+              {
+                key: 'missions',
+                icon: 'target',
+                title: 'Missões',
+                detail: 'Objetivos diários e semanais',
+                badge:
+                  missionReadyCount > 0
+                    ? `${missionReadyCount} pronta(s)`
+                    : undefined,
+              },
+              {
+                key: 'challenge',
+                icon: 'star',
+                title: 'Desafio diário',
+                detail: 'Um tabuleiro novo por dia',
+                badge: challengeDone ? undefined : 'Novo',
+              },
+            ] as const
+          ).map((entry) => (
+            <MenuCard
+              key={entry.key}
+              accessibilityLabel={entry.title}
+              onPress={() => onOpenRoutine(entry.key)}
+              style={styles.routineCard}
+              variant="interactive"
+            >
+              <GameIcon name={entry.icon} size={40} tone="green" />
+              <View style={styles.noteCopy}>
+                <Text style={styles.routineCardTitle}>{entry.title}</Text>
+                <Text style={styles.noteText}>{entry.detail}</Text>
+              </View>
+              {entry.badge ? (
+                <MenuBadge tone="success">{entry.badge}</MenuBadge>
+              ) : null}
+              <GameIcon name="next" size={24} tone="gold" />
+            </MenuCard>
+          ))}
         </ScrollView>
       </TabScene>
     </ScreenShell>
@@ -114,6 +164,31 @@ export function ProfileScreen({ progress }: ProfileScreenProps) {
 }
 
 const styles = StyleSheet.create({
+  routineTitle: {
+    color: '#FFF4D1',
+    fontSize: fontSizes.lg,
+    fontWeight: '900',
+    marginTop: spacing.sm,
+  },
+  routineCard: {
+    alignItems: 'center',
+    backgroundColor: colors.surfaceWarm,
+    borderColor: '#F5B92F',
+    borderBottomColor: '#A96923',
+    borderBottomWidth: 4,
+    borderRadius: 18,
+    borderWidth: 2,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 70,
+    padding: spacing.sm,
+    ...shadows.card,
+  },
+  routineCardTitle: {
+    color: colors.ink,
+    fontSize: fontSizes.md,
+    fontWeight: '900',
+  },
   avatar: {
     alignItems: 'center',
     backgroundColor: '#5C2A9B',

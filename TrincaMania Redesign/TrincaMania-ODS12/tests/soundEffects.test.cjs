@@ -81,21 +81,25 @@ test('carregar e alternar som não inicia reprodução automática', async () =>
     0,
     'a preferência não deve iniciar música ou efeitos',
   );
-  assert.equal(active.at(-1), true);
+  assert.deepEqual(
+    active,
+    [],
+    'desligar efeitos não interrompe a sessão da música',
+  );
 });
 
 test('ações continuam reproduzindo os 13 efeitos curtos sem loop', async () => {
   const { sounds, players } = await loadSounds();
   const actions = {
-    playTapSound: 'tap.mp3',
+    playTapSound: /^tile_arrive_0[13]\.mp3$/,
     playButtonSound: 'button.mp3',
     playChestOpenSound: 'chest_open.mp3',
     playRewardSparkleSound: 'reward_sparkle.mp3',
-    playTripleSounds: 'match.mp3',
-    playWhooshSound: 'whoosh.wav',
+    playTripleSounds: 'match_03.mp3',
+    playWhooshSound: /^tile_fly_0[12]\.mp3$/,
     playConfettiSound: 'confetti.wav',
-    playWinSound: 'win.mp3',
-    playLoseSound: 'lose.mp3',
+    playWinSound: 'victory_jingle.mp3',
+    playLoseSound: 'defeat_jingle.mp3',
     playCoinSound: 'coin.mp3',
     playBlockedSound: 'blocked.mp3',
     playShopBuySound: 'shop_buy.mp3',
@@ -104,10 +108,15 @@ test('ações continuam reproduzindo os 13 efeitos curtos sem loop', async () =>
   for (const action of Object.keys(actions)) sounds[action]();
   await flush();
   assert.equal(players.length, 13);
-  assert.deepEqual(
-    players.map((player) => path.basename(player.source)).sort(),
-    Object.values(actions).sort(),
-  );
+  const playedNames = players.map((player) => path.basename(player.source));
+  for (const expected of Object.values(actions)) {
+    assert.ok(
+      playedNames.some((name) =>
+        typeof expected === 'string' ? name === expected : expected.test(name),
+      ),
+      `${expected} deve tocar`,
+    );
+  }
   for (const player of players) {
     assert.equal(player.plays, 1);
     assert.equal(player.loop, false);
@@ -161,7 +170,12 @@ test('toques repetidos no mesmo instante não empilham o efeito', async () => {
   sounds.releaseSoundPlayers();
 });
 
-test('falha nativa ao reposicionar não impede tentativa de tocar nem interrompe o fluxo', async () => {
+test('falha nativa ao reposicionar não impede tentativa de tocar nem interrompe o fluxo', async (t) => {
+  const originalRandom = Math.random;
+  Math.random = () => 0;
+  t.after(() => {
+    Math.random = originalRandom;
+  });
   const { sounds, players } = await loadSounds();
   sounds.playTapSound();
   await flush();
@@ -174,7 +188,7 @@ test('falha nativa ao reposicionar não impede tentativa de tocar nem interrompe
     throw new Error('sessão de áudio indisponível');
   };
   // Reutiliza o player fora do intervalo de cooldown.
-  await new Promise((resolve) => setTimeout(resolve, 80));
+  await new Promise((resolve) => setTimeout(resolve, 120));
   sounds.playTapSound();
   await flush();
   assert.equal(players.length, 1);

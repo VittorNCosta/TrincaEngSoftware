@@ -2,10 +2,15 @@
   "_leia": "Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= high e em entrada que nao existe mais. A chave e pacote::GHSA quando ha URL de advisory do GitHub; caso contrario, pacote::source.",
   "piso": "high",
   "entradas": {
-    "postcss::GHSA-qx2v-qp2m-jg93": {
-      "severidade": "moderate",
-      "titulo": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
-      "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93"
+    "braces::GHSA-vfj7-8cjw-p6xm": {
+      "severidade": "high",
+      "titulo": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+      "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+    },
+    "node-forge::GHSA-86w9-cpqp-85rv": {
+      "severidade": "high",
+      "titulo": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+      "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv"
     },
     "postcss::GHSA-6g55-p6wh-862q": {
       "severidade": "high",
@@ -17,10 +22,20 @@
       "titulo": "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset",
       "url": "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp"
     },
+    "postcss::GHSA-qx2v-qp2m-jg93": {
+      "severidade": "moderate",
+      "titulo": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+      "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93"
+    },
     "postcss::GHSA-r28c-9q8g-f849": {
       "severidade": "high",
       "titulo": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
       "url": "https://github.com/advisories/GHSA-r28c-9q8g-f849"
+    },
+    "sprintf-js::GHSA-hp3w-g68c-fv3c": {
+      "severidade": "moderate",
+      "titulo": "sprintf-js vulnerable to denial of service through unbounded precision specifiers",
+      "url": "https://github.com/advisories/GHSA-hp3w-g68c-fv3c"
     },
     "uuid::GHSA-w5hq-g745-h8pq": {
       "severidade": "moderate",

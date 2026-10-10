@@ -12,13 +12,14 @@ import { installNativeErrorHandlers } from './src/observability/nativeErrors';
 import { setDiagnosticContext } from './src/utils/log';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { CampaignResizeNoticeModal } from './src/components/CampaignResizeNoticeModal';
 import { MysteryTutorialModal } from './src/components/MysteryTutorialModal';
 import { NoLivesModal } from './src/components/NoLivesModal';
 import { SettingsModal } from './src/components/SettingsModal';
+import { RoutineModal, RoutineSection } from './src/components/RoutineModal';
 import { TutorialModal } from './src/components/TutorialModal';
 import { WorldChestModal } from './src/components/WorldChestModal';
 import { buildChapterLevel, isChapterMapId } from './src/data/chapters';
@@ -46,6 +47,7 @@ import {
   loadStoredProgressMigrationInfo,
   markBonusWorldAchievementShown,
   normalizeProgress,
+  grantRewardForOperation,
   purchasePowerUpTransaction,
   restorePurchasedPowerUpItem,
   saveCampaignResizeNoticeSeen,
@@ -75,6 +77,7 @@ import {
 import {
   LivesState,
   addLife,
+  applyLifeRewardForOperation,
   canPlayLevel,
   consumeLife,
   createInitialLivesState,
@@ -91,6 +94,47 @@ import {
 } from './src/types/game';
 import { WindowTarget } from './src/types/ui';
 import { getSettings } from './src/storage/settingsStorage';
+import {
+  beginDailyCheckInClaim,
+  completeDailyCheckInClaim,
+  createInitialDailyCheckInState,
+  getDailyCheckInStatus,
+  getLocalDateKey,
+} from './src/dailyCheckIn/dailyCheckIn';
+import { resolveDailyCheckInReward } from './src/dailyCheckIn/dailyCheckInRewards';
+import { DailyCheckInState } from './src/dailyCheckIn/dailyCheckInTypes';
+import {
+  loadDailyCheckInState,
+  resetDailyCheckInState,
+  saveDailyCheckInState,
+} from './src/storage/dailyCheckInStorage';
+import {
+  createMissionState,
+  loadMissionState,
+  markMissionClaimed,
+  recordMissionEvent,
+  resetMissionState,
+  MissionState,
+} from './src/missions/routineMissions';
+import {
+  createInitialDailyChallengeSave,
+  getDailyChallengeLevel,
+  loadDailyChallengeSave,
+  recordDailyChallengeCompletion,
+  resetDailyChallengeSave,
+  DailyChallengeSave,
+} from './src/challenges/dailyChallenge';
+import {
+  playMetaMusic,
+  playWorldMusic,
+  releaseMusicPlayer,
+  setMusicEnabled,
+} from './src/utils/music';
+import {
+  releaseSoundPlayers,
+  playRewardCollectSound,
+} from './src/utils/sounds';
+import { releaseVoiceOverPlayers } from './src/utils/voiceOver';
 import {
   BonusTraySlotActivationResult,
   COIN_TRAY_SLOT_COST,
@@ -156,11 +200,25 @@ export default function App() {
     settings,
     setSettings,
     handleToggleSound,
+    handleToggleMusic,
     handleToggleHaptics,
     handleEnableSilentMode,
   } = useAppSettings();
   const [devMode, setDevMode] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+  const [routineSection, setRoutineSection] =
+    useState<RoutineSection>('checkin');
+  const [isRoutineVisible, setIsRoutineVisible] = useState(false);
+  const [isRoutineBusy, setIsRoutineBusy] = useState(false);
+  const [checkIn, setCheckIn] = useState<DailyCheckInState>(
+    createInitialDailyCheckInState(),
+  );
+  const [missions, setMissions] = useState<MissionState>(createMissionState());
+  const [challenge, setChallenge] = useState<DailyChallengeSave>(
+    createInitialDailyChallengeSave(),
+  );
+  const checkInRef = useRef(checkIn);
+  const routineBusyRef = useRef(false);
   const [coinCollectTarget, setCoinCollectTarget] = useState<
     WindowTarget | undefined
   >();
@@ -185,6 +243,10 @@ export default function App() {
   }, [progress]);
 
   useEffect(() => {
+    checkInRef.current = checkIn;
+  }, [checkIn]);
+
+  useEffect(() => {
     chapterProgressRef.current = chapterProgress;
   }, [chapterProgress]);
 
@@ -207,6 +269,9 @@ export default function App() {
       getSettings(),
       loadStoredProgressMigrationInfo(),
       getCampaignResizeNoticeSeen(),
+      loadDailyCheckInState(),
+      loadMissionState(),
+      loadDailyChallengeSave(),
     ])
       .then(
         ([
@@ -221,6 +286,9 @@ export default function App() {
           storedSettings,
           progressMigrationInfo,
           campaignResizeNoticeSeen,
+          storedCheckIn,
+          storedMissions,
+          storedChallenge,
         ]) => {
           if (isMounted) {
             setProgress(storedProgress);
@@ -228,6 +296,10 @@ export default function App() {
             setLivesState(storedLives);
             setTrayBoostState(storedTrayBoost);
             setSettings(storedSettings);
+            setCheckIn(storedCheckIn);
+            checkInRef.current = storedCheckIn;
+            setMissions(storedMissions);
+            setChallenge(storedChallenge);
             setLivesNow(Date.now());
             setIsTutorialVisible(!tutorialSeen);
             setIsPracticalTutorialSeen(practicalTutorialSeen);
@@ -274,6 +346,137 @@ export default function App() {
     setProgress,
     setChapterProgress,
   });
+
+  const checkInSettlingRef = useRef(false);
+  const missionEventSequenceRef = useRef(0);
+  const settleCheckIn = useCallback(
+    async (state: DailyCheckInState) => {
+      const pending = state.pendingClaim;
+      if (!pending || checkInSettlingRef.current) return;
+      checkInSettlingRef.current = true;
+      try {
+        if (pending.reward.kind === 'life') {
+          const nextLives = await applyLifeRewardForOperation(
+            pending.operationId,
+          );
+          setLivesState(nextLives);
+          setLivesNow(Date.now());
+        } else {
+          await commitProgress(
+            grantRewardForOperation(
+              progressRef.current,
+              pending.operationId,
+              pending.reward.kind === 'coins'
+                ? { coins: pending.reward.amount }
+                : { powerType: pending.reward.powerType },
+            ),
+          );
+        }
+        const settled = completeDailyCheckInClaim(state, pending.operationId);
+        await saveDailyCheckInState(settled);
+        checkInRef.current = settled;
+        setCheckIn(settled);
+        playRewardCollectSound();
+      } finally {
+        checkInSettlingRef.current = false;
+      }
+    },
+    [commitProgress],
+  );
+
+  useEffect(() => {
+    if (!isLoadingProgress && checkIn.pendingClaim) {
+      settleCheckIn(checkIn).catch(() => undefined);
+    }
+  }, [checkIn, isLoadingProgress, settleCheckIn]);
+
+  const handleClaimCheckIn = async () => {
+    if (routineBusyRef.current) return;
+    const current = checkInRef.current;
+    const status = getDailyCheckInStatus(current);
+    if (!status.eligible && !current.pendingClaim) return;
+    routineBusyRef.current = true;
+    setIsRoutineBusy(true);
+    try {
+      if (current.pendingClaim) {
+        await settleCheckIn(current);
+        return;
+      }
+      const pending = beginDailyCheckInClaim(
+        current,
+        status.dateKey,
+        resolveDailyCheckInReward(status.cycleDay),
+        `checkin:${status.dateKey}`,
+      );
+      await saveDailyCheckInState(pending);
+      checkInRef.current = pending;
+      setCheckIn(pending);
+      await settleCheckIn(pending);
+    } catch {
+      Alert.alert(
+        'Resgate pendente',
+        'A recompensa será concluída quando o armazenamento voltar a responder.',
+      );
+    } finally {
+      routineBusyRef.current = false;
+      setIsRoutineBusy(false);
+    }
+  };
+
+  const emitMissionEvent = async (
+    kind: 'levels' | 'triples' | 'stars',
+    value: number,
+    prefix: string,
+  ) => {
+    missionEventSequenceRef.current += 1;
+    const next = await recordMissionEvent({
+      id: `${prefix}:${kind}:${Date.now()}:${missionEventSequenceRef.current}`,
+      kind,
+      value,
+    });
+    setMissions(next);
+  };
+
+  const handleClaimMission = async (missionId: string) => {
+    if (routineBusyRef.current) return;
+    routineBusyRef.current = true;
+    setIsRoutineBusy(true);
+    try {
+      const current = await loadMissionState();
+      const mission = [
+        ...current.daily.missions,
+        ...current.weekly.missions,
+      ].find((item) => item.id === missionId);
+      if (!mission || mission.claimed || mission.progress < mission.target)
+        return;
+      await commitProgress(
+        grantRewardForOperation(progressRef.current, `mission:${mission.id}`, {
+          coins: mission.rewardCoins,
+        }),
+      );
+      setMissions(await markMissionClaimed(mission.id));
+      playRewardCollectSound();
+    } catch {
+      Alert.alert('Não foi possível resgatar', 'Tente novamente em instantes.');
+    } finally {
+      routineBusyRef.current = false;
+      setIsRoutineBusy(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoadingProgress) return;
+    setMusicEnabled(settings.musicEnabled);
+  }, [isLoadingProgress, settings.musicEnabled]);
+
+  useEffect(
+    () => () => {
+      releaseVoiceOverPlayers();
+      releaseMusicPlayer();
+      releaseSoundPlayers();
+    },
+    [],
+  );
 
   const livesStateRef = useRef(livesState);
   const trayBoostStateRef = useRef(trayBoostState);
@@ -337,13 +540,23 @@ export default function App() {
     setLivesNow,
   });
 
+  const isDailyChallengeSelected = selectedLevelId.startsWith('daily-');
   const selectedLevel = useMemo(
     () =>
+      (selectedLevelId.startsWith('daily-')
+        ? getDailyChallengeLevel(selectedLevelId.slice(6))
+        : undefined) ??
       buildChapterLevel(selectedLevelId) ??
       LEVELS.find((level) => level.id === selectedLevelId) ??
       LEVELS[0],
     [selectedLevelId],
   );
+  useEffect(() => {
+    if (isLoadingProgress) return;
+    if (screen === 'game' && selectedLevel)
+      playWorldMusic(selectedLevel.worldId);
+    else playMetaMusic();
+  }, [isLoadingProgress, screen, selectedLevel]);
   // Snapshot before rendering children: a render failure must not inherit the
   // previous screen's domain context while waiting for effects to run.
   setDiagnosticContext({
@@ -433,6 +646,11 @@ export default function App() {
       );
     }
 
+    void emitMissionEvent('levels', 1, mapId).catch(() => undefined);
+    void emitMissionEvent('stars', completionResult.starsEarned, mapId).catch(
+      () => undefined,
+    );
+
     return {
       bonusWorldAchievementUnlocked: false,
       chestProgress: createChestProgressSummary(
@@ -447,6 +665,23 @@ export default function App() {
   };
 
   const handleLevelComplete = async (levelId: string, starsEarned: number) => {
+    if (levelId.startsWith('daily-')) {
+      const saved = await recordDailyChallengeCompletion(
+        levelId.slice(6),
+        starsEarned,
+      );
+      setChallenge(saved);
+      return {
+        bonusWorldAchievementUnlocked: false,
+        chestProgress: createChestProgressSummary(
+          progressRef.current.chestProgressLevelIds.length,
+          false,
+        ),
+        coinsEarned: 0,
+        savedStars: saved.bestStars[levelId.slice(6)] ?? starsEarned,
+        starsEarned,
+      };
+    }
     if (isChapterMapId(levelId)) {
       return handleChapterLevelComplete(levelId, starsEarned);
     }
@@ -490,6 +725,8 @@ export default function App() {
     }
 
     await commitProgress(nextProgress);
+    void emitMissionEvent('levels', 1, levelId).catch(() => undefined);
+    void emitMissionEvent('stars', starsEarned, levelId).catch(() => undefined);
 
     if (shouldGrantCommonChestLife) {
       try {
@@ -646,6 +883,19 @@ export default function App() {
     magicTripleRescueRef.current = freshMagicTripleRescueState;
     setMagicTripleRescueState(freshMagicTripleRescueState);
     setSelectedLevelId(LEVELS[0]?.id ?? '');
+    setIsRoutineVisible(false);
+    resetDailyCheckInState()
+      .then((state) => {
+        checkInRef.current = state;
+        setCheckIn(state);
+      })
+      .catch(() => undefined);
+    resetMissionState()
+      .then(setMissions)
+      .catch(() => undefined);
+    resetDailyChallengeSave()
+      .then(setChallenge)
+      .catch(() => undefined);
     setShopWorldId(1);
     refillLives()
       .then((nextLivesState) => {
@@ -868,6 +1118,33 @@ export default function App() {
     setScreen('game');
   };
 
+  const handleOpenRoutine = (section: RoutineSection) => {
+    setRoutineSection(section);
+    setIsRoutineVisible(true);
+    loadMissionState()
+      .then(setMissions)
+      .catch(() => undefined);
+    loadDailyCheckInState()
+      .then((state) => {
+        checkInRef.current = state;
+        setCheckIn(state);
+      })
+      .catch(() => undefined);
+    loadDailyChallengeSave()
+      .then(setChallenge)
+      .catch(() => undefined);
+  };
+
+  const handleStartDailyChallenge = async () => {
+    if (routineBusyRef.current || !(await ensureCanStartLevel())) return;
+    const day = getLocalDateKey();
+    if (challenge.maxObservedDateKey && day < challenge.maxObservedDateKey)
+      return;
+    setSelectedLevelId(`daily-${day}`);
+    setIsRoutineVisible(false);
+    setScreen('game');
+  };
+
   const handleSelectChapterLevel = async (mapId: string) => {
     if (
       !devMode &&
@@ -909,6 +1186,10 @@ export default function App() {
   };
 
   const handleNextLevel = async () => {
+    if (isDailyChallengeSelected) {
+      setScreen('levels');
+      return;
+    }
     if (isChapterMapId(selectedLevelId)) {
       const nextMapId = getNextChapterMapId(selectedLevelId);
 
@@ -1019,11 +1300,20 @@ export default function App() {
           initialWorldId={campaignInitialWorldId}
           livesState={livesState}
           progress={progress}
+          checkInReady={getDailyCheckInStatus(checkIn).eligible}
+          missionReadyCount={
+            [...missions.daily.missions, ...missions.weekly.missions].filter(
+              (mission) =>
+                !mission.claimed && mission.progress >= mission.target,
+            ).length
+          }
+          challengeDone={Boolean(challenge.bestStars[getLocalDateKey()])}
           trayBoostState={trayBoostState}
           timeUntilNextLifeMs={timeUntilNextLifeMs}
           onCoinCounterLayout={setCoinCollectTarget}
           onOpenRestCheckpoint={handleOpenRestCheckpoint}
           onOpenSettings={openSettings}
+          onOpenRoutine={handleOpenRoutine}
           onOpenShop={openShop}
           onOpenChapters={() => {
             if (devMode || isChapterModeUnlocked(progressRef.current))
@@ -1047,9 +1337,11 @@ export default function App() {
       {isGameMounted && selectedLevel ? (
         <GameScreen
           bestStars={
-            isChapterLevelSelected
-              ? getChapterMapStars(chapterProgress, selectedLevel.id)
-              : (progress.levelStars[selectedLevel.id] ?? 0)
+            isDailyChallengeSelected
+              ? (challenge.bestStars[selectedLevel.id.slice(6)] ?? 0)
+              : isChapterLevelSelected
+                ? getChapterMapStars(chapterProgress, selectedLevel.id)
+                : (progress.levelStars[selectedLevel.id] ?? 0)
           }
           level={selectedLevel}
           coins={progress.coins}
@@ -1080,9 +1372,11 @@ export default function App() {
           onPurchasePowerUp={handlePurchasePowerUp}
           onRestorePurchasedPowerUp={handleRestorePurchasedPowerUp}
           onBack={() =>
-            isChapterLevelSelected
-              ? setScreen('chapters')
-              : openCampaign(selectedLevel.worldId)
+            isDailyChallengeSelected
+              ? setScreen('levels')
+              : isChapterLevelSelected
+                ? setScreen('chapters')
+                : openCampaign(selectedLevel.worldId)
           }
           onBonusWorldAchievementSeen={handleBonusWorldAchievementSeen}
           onCoinCounterLayout={setCoinCollectTarget}
@@ -1094,6 +1388,12 @@ export default function App() {
           onMagicTripleRescueSeen={handleMagicTripleRescueSeen}
           onMagicTripleRescueUsed={handleMagicTripleRescueUsed}
           onLevelComplete={handleLevelComplete}
+          onNaturalTriple={(eventId) => {
+            if (!isDailyChallengeSelected)
+              void emitMissionEvent('triples', 1, eventId).catch(
+                () => undefined,
+              );
+          }}
           onNextLevel={handleNextLevel}
           onOpenShop={() => openShop(selectedLevel.worldId)}
           onPracticalTutorialSeen={handleFinishPracticalTutorial}
@@ -1145,7 +1445,27 @@ export default function App() {
         onResetProgress={handleResetProgress}
         onToggleHaptics={handleToggleHaptics}
         onToggleSound={handleToggleSound}
+        onToggleMusic={handleToggleMusic}
         onUnlockAllForDevMode={handleUnlockAllForDevMode}
+      />
+      <RoutineModal
+        visible={isRoutineVisible && screen === 'levels'}
+        section={routineSection}
+        checkIn={checkIn}
+        missions={missions}
+        challenge={challenge}
+        busy={isRoutineBusy}
+        onClose={() => setIsRoutineVisible(false)}
+        onSection={setRoutineSection}
+        onClaimCheckIn={() => {
+          void handleClaimCheckIn();
+        }}
+        onClaimMission={(id) => {
+          void handleClaimMission(id);
+        }}
+        onStartChallenge={() => {
+          void handleStartDailyChallenge();
+        }}
       />
       <NoLivesModal
         timeUntilNextLifeMs={timeUntilNextLifeMs}

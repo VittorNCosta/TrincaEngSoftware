@@ -11,31 +11,52 @@ export const colors = {
   gold: '#FFD35A',
   goldDark: '#A55D00',
   surface: '#FFF8E8',
+  surfaceRaised: '#FFFFFF',
+  surfaceSoft: '#F3F0FF',
   surfaceTint: '#E6F3EC',
   surfaceWarm: '#FFE6A6',
   ink: '#16262F',
+  textPrimary: '#16262F',
+  textSecondary: '#52636A',
   inkOnDark: '#FFFFFF',
   muted: '#52636A',
   primary: '#FFD35A',
   primaryDark: '#A55D00',
   secondary: '#42E5A7',
   accent: '#FF6D9E',
+  accentSoft: '#FFE5F0',
   action: '#5968FF',
   actionDark: '#2E3499',
   bonusPink: '#FF8BC1',
   mountainBlue: '#5E82DE',
   danger: '#F05278',
   dangerDark: '#A9274A',
+  dangerSoft: '#FFE8ED',
+  warning: '#D58A16',
+  warningSoft: '#FFF1C7',
   success: '#24D889',
   successDark: '#087A54',
+  successSoft: '#E8FFF4',
   border: '#E4D0A0',
   borderStrong: '#D6A744',
+  borderSoft: '#E6E3EE',
   tile: '#FFF1C9',
   tileInner: '#FFFFFF',
   tileBlocked: '#536169',
   tileShadow: '#04131A',
   locked: '#81909A',
+  lockedSurface: '#E7EBEF',
+  lockedText: '#65747C',
   overlay: 'rgba(4, 16, 24, 0.76)',
+  shell: '#122B3A',
+  shellElevated: '#193847',
+  shellBorder: 'rgba(255, 255, 255, 0.16)',
+  shellAccent: 'rgba(255, 211, 90, 0.72)',
+  profileNight: '#0B2532',
+  profileTeal: '#15505A',
+  profileFoliage: '#0E3943',
+  profileCrystal: '#6BE0D0',
+  profileTextMuted: '#B7D7D1',
 };
 
 export const spacing = {
@@ -52,6 +73,8 @@ export const radii = {
   sm: 8,
   md: 10,
   card: 8,
+  menuCard: 18,
+  menuControl: 14,
   button: 22,
   pill: 999,
 };
@@ -64,7 +87,14 @@ export const fontSizes = {
   xl: 22,
   xxl: 32,
   hero: 52,
+  caption: 10,
 };
+
+/** Shared mobile interaction contract for player-facing controls. */
+export const touchTargets = {
+  hitSlop: 8,
+  minimum: 48,
+} as const;
 
 export const shadows = {
   card: {
@@ -73,6 +103,13 @@ export const shadows = {
     shadowOffset: { height: 5, width: 0 },
     shadowOpacity: 0.24,
     shadowRadius: 9,
+  },
+  menuCard: {
+    elevation: 3,
+    shadowColor: colors.backgroundDeep,
+    shadowOffset: { height: 3, width: 0 },
+    shadowOpacity: 0.14,
+    shadowRadius: 7,
   },
   button: {
     elevation: 8,
