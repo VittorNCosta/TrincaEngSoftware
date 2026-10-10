@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '../storage/keyValueStorage';
 import { LEVELS } from '../data/levels';
 import { getLocalDateKey } from '../dailyCheckIn/dailyCheckIn';
 import { createStorageQueue } from '../storage/storageQueue';
