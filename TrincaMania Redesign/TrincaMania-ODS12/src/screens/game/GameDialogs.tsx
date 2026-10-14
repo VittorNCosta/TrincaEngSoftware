@@ -11,6 +11,7 @@ import {
   type PracticalTutorialPopupStep,
 } from './practicalTutorial';
 import { styles } from './styles';
+import { TutorialCoachmark } from '../../components/TutorialCoachmark';
 
 type GameDialogsProps = {
   practicalTutorialPopupStep: PracticalTutorialPopupStep | undefined;
@@ -59,40 +60,14 @@ export function GameDialogs({
 }: GameDialogsProps) {
   return (
     <>
-      <Modal
-        animationType="fade"
-        transparent
-        visible={practicalTutorialPopupStep !== undefined}
-        onRequestClose={() => undefined}
-      >
-        <SafeAreaView
-          edges={['top', 'bottom', 'left', 'right']}
-          style={styles.modalOverlay}
-        >
-          <View style={styles.practicalModalCard}>
-            {practicalTutorialPopupStep ? (
-              <>
-                <Text style={styles.practicalModalTitle}>
-                  {PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].title}
-                </Text>
-                <Text style={styles.practicalModalText}>
-                  {PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].text}
-                </Text>
-                <PrimaryButton
-                  // O rótulo muda a cada passo ("Começar", "Entendi",
-                  // "Continuar", "Jogar"), então texto não serve de
-                  // endereço: o id é o mesmo botão nos quatro.
-                  testID="tutorial-pratico-avancar"
-                  title={
-                    PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep].button
-                  }
-                  onPress={advancePracticalTutorialPopup}
-                />
-              </>
-            ) : null}
-          </View>
-        </SafeAreaView>
-      </Modal>
+      <TutorialCoachmark
+        message={
+          practicalTutorialPopupStep
+            ? PRACTICAL_TUTORIAL_POPUPS[practicalTutorialPopupStep]
+            : undefined
+        }
+        onAdvance={advancePracticalTutorialPopup}
+      />
       <Modal
         animationType="fade"
         transparent
@@ -107,7 +82,8 @@ export function GameDialogs({
             <GameIcon name="powers" size={46} tone="purple" />
             <Text style={styles.purchaseModalTitle}>Quase sem espaço!</Text>
             <Text style={styles.purchaseModalText}>
-              A Trinca Mágica forma uma trinca possível automaticamente.
+              A Trinca automática forma uma combinação possível para liberar
+              espaço.
             </Text>
             <Text style={styles.rescueModalHint}>
               Use uma vez grátis para salvar sua bandeja.
@@ -149,7 +125,7 @@ export function GameDialogs({
             </View>
             <Text style={styles.purchaseModalTitle}>Liberar espaço bônus?</Text>
             <Text style={styles.purchaseModalText}>
-              Ganhe um sétimo espaço na bandeja e jogue com mais segurança.
+              Libere mais um espaço na bandeja por 30 min.
             </Text>
             <View style={styles.bonusBenefitPill}>
               <Text style={styles.bonusBenefitText}>+1 ESPAÇO · 30 MIN</Text>

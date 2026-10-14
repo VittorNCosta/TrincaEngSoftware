@@ -68,7 +68,7 @@ const getWorldChestRewardItems = (
     },
     {
       iconName: 'powers' as const,
-      label: '+1 Trinca Mágica',
+      label: '+1 Trinca automática',
       tone: 'blue' as const,
     },
     {

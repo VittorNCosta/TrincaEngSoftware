@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Animated,
+  AppState,
   Easing,
   Image,
   Pressable,
@@ -9,589 +10,416 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
-import { lightImpact, mediumImpact } from '../utils/haptics';
+import { TileIcon } from '../components/TileIcon';
+import { colors } from '../styles/theme';
+import { mediumImpact } from '../utils/haptics';
+import { playTileSelectSound, playTripleSounds } from '../utils/sounds';
 
-const igrionLogo = require('../../assets/igrion-logo.png');
+const INTRO_BACKGROUND = require('../../assets/map/worlds/w01_parque_game.png');
+const TRINCAMANIA_ODS_LOGO = require('../../assets/icon.png');
+const IGRION_GAMES_LOGO = require('../../assets/igrion-games-cobra-dourada.jpg');
+const INTRO_ROLES = ['residuo', 'lixeira', 'simbolo'] as const;
+const INTRO_LABELS = [
+  'Resíduo de plástico',
+  'Lixeira de plástico',
+  'Reciclagem de plástico',
+];
 
 type SplashIntroScreenProps = {
+  appReady?: boolean;
   onFinish: () => void;
 };
 
-type IntroParticle = {
-  color: string;
-  delay: number;
-  rotate: string;
-  size: number;
-  x: number;
-  y: number;
-};
-
-const INTRO_PARTICLES: IntroParticle[] = [
-  { color: '#FFD500', delay: 0, rotate: '18deg', size: 10, x: -138, y: -194 },
-  { color: '#009640', delay: 0.1, rotate: '-18deg', size: 8, x: 128, y: -166 },
-  { color: '#E30613', delay: 0.18, rotate: '45deg', size: 9, x: -152, y: 86 },
-  { color: '#0055A4', delay: 0.26, rotate: '-45deg', size: 7, x: 148, y: 116 },
-  { color: '#FFF4B8', delay: 0.32, rotate: '10deg', size: 6, x: -72, y: 184 },
-  { color: '#7B3F00', delay: 0.22, rotate: '-10deg', size: 8, x: 76, y: -218 },
-];
-
-export function SplashIntroScreen({ onFinish }: SplashIntroScreenProps) {
+/** A coreografia de três peças do TrincaMania original, com o ciclo ODS 12. */
+export function SplashIntroScreen({
+  appReady = true,
+  onFinish,
+}: SplashIntroScreenProps) {
   const { height, width } = useWindowDimensions();
-  const [logoLoadFailed, setLogoLoadFailed] = useState(false);
+  const compact = height < 680;
+  const tileSize = Math.min(84, Math.max(66, width * 0.22));
+  const tileOffset = Math.min(91, Math.max(76, width * 0.25));
+  const [minimumElapsed, setMinimumElapsed] = useState(false);
   const finishedRef = useRef(false);
+  const onFinishRef = useRef(onFinish);
   const screenOpacity = useRef(new Animated.Value(1)).current;
-  const logoOpacity = useRef(new Animated.Value(0)).current;
-  const logoScale = useRef(new Animated.Value(0.84)).current;
-  const logoShine = useRef(new Animated.Value(0)).current;
-  const presenterOpacity = useRef(new Animated.Value(0)).current;
-  const presenterTranslateY = useRef(new Animated.Value(14)).current;
-  const titleOpacity = useRef(new Animated.Value(0)).current;
-  const titleScale = useRef(new Animated.Value(0.9)).current;
-  const titleGlow = useRef(new Animated.Value(0)).current;
-  const particleFloat = useRef(new Animated.Value(0)).current;
-  const finalFlash = useRef(new Animated.Value(0)).current;
-  const launchOpacity = useRef(new Animated.Value(0)).current;
-
-  const finishIntro = useCallback(
-    (withImpact = true) => {
-      if (finishedRef.current) {
-        return;
-      }
-
-      finishedRef.current = true;
-
-      if (withImpact) {
-        mediumImpact();
-      }
-
-      Animated.timing(screenOpacity, {
-        duration: 300,
-        toValue: 0,
-        useNativeDriver: true,
-      }).start(({ finished }) => {
-        if (finished) {
-          onFinish();
-        }
-      });
-    },
-    [onFinish, screenOpacity],
-  );
+  const backgroundScale = useRef(new Animated.Value(1.025)).current;
+  const tileProgress = useRef(
+    INTRO_ROLES.map(() => new Animated.Value(0)),
+  ).current;
+  const matchPulse = useRef(new Animated.Value(0)).current;
+  const burstProgress = useRef(new Animated.Value(0)).current;
+  const brandOpacity = useRef(new Animated.Value(0)).current;
+  const brandScale = useRef(new Animated.Value(0.8)).current;
+  const signatureOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    const addTimer = (callback: () => void, delay: number) => {
-      const timer = setTimeout(callback, delay);
-      timers.push(timer);
-    };
+    onFinishRef.current = onFinish;
+  }, [onFinish]);
 
-    const logoAnimation = Animated.sequence([
-      Animated.delay(170),
-      Animated.parallel([
-        Animated.timing(logoOpacity, {
-          duration: 480,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-        Animated.spring(logoScale, {
-          friction: 7,
-          tension: 90,
-          toValue: 1,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]);
-    const logoShineAnimation = Animated.sequence([
-      Animated.delay(650),
-      Animated.timing(logoShine, {
-        duration: 760,
+  const finishIntro = useCallback(() => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    Animated.timing(screenOpacity, {
+      duration: 260,
+      easing: Easing.out(Easing.quad),
+      toValue: 0,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) onFinishRef.current();
+    });
+  }, [screenOpacity]);
+
+  useEffect(() => {
+    const visualAnimations = [
+      Animated.timing(backgroundScale, {
+        duration: 2700,
         easing: Easing.out(Easing.cubic),
         toValue: 1,
         useNativeDriver: true,
       }),
-    ]);
-    const copyAnimation = Animated.parallel([
-      Animated.sequence([
-        Animated.delay(980),
-        Animated.parallel([
-          Animated.timing(presenterOpacity, {
-            duration: 360,
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-          Animated.timing(presenterTranslateY, {
-            duration: 360,
-            toValue: 0,
-            useNativeDriver: true,
-          }),
-        ]),
-      ]),
-      Animated.sequence([
-        Animated.delay(1480),
-        Animated.parallel([
-          Animated.timing(titleOpacity, {
-            duration: 330,
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-          Animated.spring(titleScale, {
-            friction: 5,
-            tension: 150,
-            toValue: 1,
-            useNativeDriver: true,
-          }),
-          Animated.timing(titleGlow, {
-            duration: 760,
+      ...tileProgress.map((progress, index) =>
+        Animated.sequence([
+          Animated.delay(110 + index * 135),
+          Animated.timing(progress, {
+            duration: 500,
+            easing: Easing.out(Easing.back(1.12)),
             toValue: 1,
             useNativeDriver: true,
           }),
         ]),
+      ),
+      Animated.sequence([
+        Animated.delay(850),
+        Animated.timing(matchPulse, {
+          duration: 110,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(matchPulse, {
+          duration: 220,
+          toValue: 0,
+          useNativeDriver: true,
+        }),
       ]),
       Animated.sequence([
-        Animated.delay(2100),
-        Animated.timing(launchOpacity, {
-          duration: 420,
+        Animated.delay(835),
+        Animated.timing(burstProgress, {
+          duration: 540,
+          easing: Easing.out(Easing.cubic),
           toValue: 1,
           useNativeDriver: true,
         }),
       ]),
-    ]);
-    const particleAnimation = Animated.timing(particleFloat, {
-      duration: 3350,
-      easing: Easing.out(Easing.cubic),
-      toValue: 1,
-      useNativeDriver: true,
-    });
-    const finalFlashAnimation = Animated.sequence([
-      Animated.delay(2540),
-      Animated.timing(finalFlash, {
-        duration: 240,
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-      Animated.timing(finalFlash, {
-        duration: 460,
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-    ]);
-
-    logoAnimation.start();
-    logoShineAnimation.start();
-    copyAnimation.start();
-    particleAnimation.start();
-    finalFlashAnimation.start();
-
-    addTimer(() => lightImpact(), 360);
-    addTimer(() => lightImpact(), 1580);
-    addTimer(() => finishIntro(true), 3400);
-
+      Animated.sequence([
+        Animated.delay(1080),
+        Animated.parallel([
+          Animated.timing(brandOpacity, {
+            duration: 290,
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+          Animated.spring(brandScale, {
+            friction: 6.5,
+            tension: 125,
+            toValue: 1,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]),
+      Animated.sequence([
+        Animated.delay(1440),
+        Animated.timing(signatureOpacity, {
+          duration: 360,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]),
+    ];
+    visualAnimations.forEach((animation) => animation.start());
+    const soundTimers = [220, 355, 490].map((delay) =>
+      setTimeout(() => {
+        if (AppState.currentState === 'active') void playTileSelectSound();
+      }, delay),
+    );
+    soundTimers.push(
+      setTimeout(() => {
+        if (AppState.currentState === 'active') {
+          void playTripleSounds();
+          mediumImpact();
+        }
+      }, 900),
+    );
+    const finishTimer = setTimeout(() => setMinimumElapsed(true), 2700);
     return () => {
-      timers.forEach(clearTimeout);
-      logoAnimation.stop();
-      logoShineAnimation.stop();
-      copyAnimation.stop();
-      particleAnimation.stop();
-      finalFlashAnimation.stop();
+      clearTimeout(finishTimer);
+      soundTimers.forEach(clearTimeout);
+      visualAnimations.forEach((animation) => animation.stop());
     };
   }, [
-    finalFlash,
-    finishIntro,
-    launchOpacity,
-    logoOpacity,
-    logoScale,
-    logoShine,
-    particleFloat,
-    presenterOpacity,
-    presenterTranslateY,
-    titleGlow,
-    titleOpacity,
-    titleScale,
+    backgroundScale,
+    brandOpacity,
+    brandScale,
+    burstProgress,
+    matchPulse,
+    signatureOpacity,
+    tileProgress,
   ]);
 
-  const logoWidth = Math.min(width * 0.68, 292);
-  const titleWidth = Math.min(width * 0.86, 360);
-  const shineTranslate = logoShine.interpolate({
-    inputRange: [0, 1],
-    outputRange: [-logoWidth * 0.72, logoWidth * 0.82],
+  useEffect(() => {
+    if (appReady && minimumElapsed) finishIntro();
+  }, [appReady, finishIntro, minimumElapsed]);
+
+  const pulseScale = matchPulse.interpolate({
+    inputRange: [0, 0.4, 1],
+    outputRange: [1, 1.06, 1],
   });
-  const titleGlowScale = titleGlow.interpolate({
+  const burstScale = burstProgress.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.72, 1.18],
+    outputRange: [0.4, 1.6],
   });
-  const titleGlowOpacity = titleGlow.interpolate({
-    inputRange: [0, 0.45, 1],
-    outputRange: [0, 0.55, 0.22],
-  });
-  const finalFlashOpacity = finalFlash.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 0.36],
+  const burstOpacity = burstProgress.interpolate({
+    inputRange: [0, 0.18, 0.55, 1],
+    outputRange: [0, 0.9, 0.38, 0],
   });
 
   return (
     <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
-      <Pressable
-        accessibilityLabel="Pular a introdução"
-        accessibilityRole="button"
-        // Primeira tela do app: um teste de aparelho precisa atravessá-la para
-        // chegar em qualquer outra coisa, e esperar a animação inteira acabar
-        // torna todo fluxo E2E refém do tempo dela.
-        testID="splash-skip"
-        onPress={() => finishIntro(true)}
-        style={styles.skipLayer}
+      <Animated.Image
+        accessible={false}
+        resizeMode="cover"
+        source={INTRO_BACKGROUND}
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            width: '100%',
+            height: '100%',
+            transform: [{ scale: backgroundScale }],
+          },
+        ]}
+      />
+      <LinearGradient
+        colors={[
+          'rgba(7, 24, 32, 0.63)',
+          'rgba(7, 24, 32, 0.38)',
+          'rgba(7, 24, 32, 0.8)',
+        ]}
+        locations={[0, 0.42, 1]}
+        pointerEvents="none"
+        style={StyleSheet.absoluteFill}
+      />
+      <LinearGradient
+        colors={['transparent', '#000000', '#000000']}
+        locations={[0, 0.55, 1]}
+        pointerEvents="none"
+        style={styles.publisherBackdrop}
+      />
+      <SafeAreaView
+        edges={['top', 'bottom', 'left', 'right']}
+        style={styles.safeArea}
       >
-        <View pointerEvents="none" style={StyleSheet.absoluteFillObject}>
-          <Animated.Image
-            accessible={false}
-            source={require('../../assets/ui/visuais/splash.png')}
-            resizeMode="cover"
-            style={[
-              StyleSheet.absoluteFillObject,
-              { width: '100%', height: '100%' },
-            ]}
-          />
-          <View style={styles.topWash} />
-          <View style={styles.centerGlow} />
-          <View style={styles.bottomShade} />
-          <View style={styles.diagonalPanel} />
-          <View style={[styles.glowRing, styles.glowRingTop]} />
-          <View style={[styles.glowRing, styles.glowRingBottom]} />
+        <Pressable
+          accessibilityLabel="Pular a introdução"
+          accessibilityRole="button"
+          onPress={finishIntro}
+          style={styles.skipButton}
+          testID="splash-skip"
+        >
+          <Text style={styles.skipText}>Pular</Text>
+        </Pressable>
+        <View style={[styles.content, compact ? styles.contentCompact : null]}>
           <Animated.View
-            style={[styles.finalFlash, { opacity: finalFlashOpacity }]}
-          />
-          <View style={styles.particleLayer}>
-            {INTRO_PARTICLES.map((particle, index) => {
-              const opacity = particleFloat.interpolate({
-                inputRange: [
-                  0,
-                  particle.delay,
-                  Math.min(1, particle.delay + 0.24),
-                  1,
-                ],
-                outputRange: [0, 0, 0.78, 0.34],
-              });
-              const translateY = particleFloat.interpolate({
+            style={[styles.tileStage, { transform: [{ scale: pulseScale }] }]}
+          >
+            {INTRO_ROLES.map((role, index) => {
+              const isLeft = index === 0;
+              const isRight = index === 2;
+              const finalX = isLeft ? -tileOffset : isRight ? tileOffset : 0;
+              const startX = isLeft ? finalX - 76 : isRight ? finalX + 76 : 0;
+              const progress = tileProgress[index];
+              const translateX = progress.interpolate({
                 inputRange: [0, 1],
-                outputRange: [particle.y + 24, particle.y - 18],
+                outputRange: [startX, finalX],
               });
-
+              const translateY = progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [isLeft || isRight ? -78 : -112, 0],
+              });
+              const rotate = progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [
+                  isLeft ? '-20deg' : isRight ? '20deg' : '-8deg',
+                  '0deg',
+                ],
+              });
+              const scale = progress.interpolate({
+                inputRange: [0, 0.72, 1],
+                outputRange: [0.72, 1.06, 1],
+              });
               return (
                 <Animated.View
-                  key={`intro-particle-${index}`}
+                  accessibilityLabel={INTRO_LABELS[index]}
+                  key={role}
                   style={[
-                    styles.particle,
+                    styles.tile,
                     {
-                      backgroundColor: particle.color,
-                      height: particle.size,
-                      opacity,
+                      width: tileSize,
+                      height: tileSize,
+                      marginLeft: -tileSize / 2,
                       transform: [
-                        { translateX: particle.x },
+                        { translateX },
                         { translateY },
-                        { rotate: particle.rotate },
+                        { rotate },
+                        { scale },
                       ],
-                      width: particle.size,
                     },
                   ]}
-                />
+                >
+                  <TileIcon
+                    cardId="plastico:residuo:garrafa-pet"
+                    fallbackEmoji="Garrafa PET"
+                    kind="plastico"
+                    role={role}
+                    size={tileSize * 0.73}
+                  />
+                </Animated.View>
               );
             })}
-          </View>
-        </View>
-
-        <SafeAreaView
-          edges={['top', 'bottom', 'left', 'right']}
-          style={styles.safeArea}
-        >
-          <View
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.matchHalo,
+                { opacity: burstOpacity, transform: [{ scale: burstScale }] },
+              ]}
+            />
+          </Animated.View>
+          <Animated.View
             style={[
-              styles.centerStage,
-              height < 760 ? styles.centerStageCompact : null,
+              styles.brand,
+              { opacity: brandOpacity, transform: [{ scale: brandScale }] },
             ]}
           >
-            <Animated.View
+            <Image
+              accessible={false}
+              source={TRINCAMANIA_ODS_LOGO}
+              style={styles.gameLogo}
+            />
+            <Text
               style={[
-                styles.logoStage,
-                {
-                  opacity: logoOpacity,
-                  transform: [{ scale: logoScale }],
-                },
+                styles.title,
+                { fontSize: Math.min(42, Math.max(31, width * 0.095)) },
               ]}
             >
-              <View
-                accessibilityLabel="Logo IGRION"
-                style={[styles.logoFrame, { width: logoWidth }]}
-              >
-                {logoLoadFailed ? (
-                  <Text style={styles.logoFallback}>IGRION</Text>
-                ) : (
-                  <Image
-                    resizeMode="contain"
-                    source={igrionLogo}
-                    style={styles.logoImage}
-                    onError={() => setLogoLoadFailed(true)}
-                  />
-                )}
-                <Animated.View
-                  pointerEvents="none"
-                  style={[
-                    styles.logoShine,
-                    {
-                      transform: [
-                        { translateX: shineTranslate },
-                        { rotate: '-18deg' },
-                      ],
-                    },
-                  ]}
-                />
-              </View>
-            </Animated.View>
-
-            <Animated.Text
-              style={[
-                styles.presenter,
-                {
-                  opacity: presenterOpacity,
-                  transform: [{ translateY: presenterTranslateY }],
-                },
-              ]}
-            >
-              apresenta
-            </Animated.Text>
-
-            <View style={[styles.titleStage, { width: titleWidth }]}>
-              <Animated.Image
-                accessible={false}
-                source={require('../../assets/adaptive-icon.png')}
-                resizeMode="contain"
-                style={{
-                  width: 110,
-                  height: Math.min(height * 0.13, 110),
-                  opacity: titleOpacity,
-                }}
-              />
-              <Animated.View
-                pointerEvents="none"
-                style={[
-                  styles.titleGlow,
-                  {
-                    opacity: titleGlowOpacity,
-                    transform: [{ scale: titleGlowScale }],
-                  },
-                ]}
-              />
-              <Animated.Text
-                adjustsFontSizeToFit
-                numberOfLines={1}
-                style={[
-                  styles.gameTitle,
-                  {
-                    opacity: titleOpacity,
-                    transform: [{ scale: titleScale }],
-                  },
-                ]}
-              >
-                TileClear - ODS12
-              </Animated.Text>
-            </View>
-          </View>
-
-          <Animated.View
-            style={[styles.launchBlock, { opacity: launchOpacity }]}
-          >
-            <View style={styles.launchTrack}>
-              <View style={styles.launchFill} />
-            </View>
+              Trinca<Text style={styles.titleAccent}>Mania</Text>
+            </Text>
+            <Text style={styles.odsLabel}>ODS 12 · CONSUMO RESPONSÁVEL</Text>
           </Animated.View>
-        </SafeAreaView>
-      </Pressable>
+        </View>
+        <Animated.View
+          style={[styles.publisher, { opacity: signatureOpacity }]}
+        >
+          <Image
+            accessible
+            accessibilityLabel="Igrion Games, cobra dourada"
+            resizeMode="contain"
+            source={IGRION_GAMES_LOGO}
+            style={styles.publisherLogo}
+          />
+        </Animated.View>
+      </SafeAreaView>
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  bottomShade: {
-    backgroundColor: '#050711',
-    bottom: -80,
-    height: 300,
-    left: 0,
-    opacity: 0.9,
-    position: 'absolute',
-    right: 0,
+  screen: { backgroundColor: colors.backgroundDeep, flex: 1 },
+  safeArea: { flex: 1 },
+  skipButton: {
+    alignSelf: 'flex-end',
+    borderColor: '#ffffff7a',
+    borderRadius: 24,
+    borderWidth: 1,
+    marginRight: 20,
+    marginTop: 12,
+    minHeight: 44,
+    minWidth: 72,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
   },
-  centerGlow: {
-    alignSelf: 'center',
-    backgroundColor: 'rgba(255, 211, 90, 0.18)',
-    borderRadius: radii.pill,
-    height: 260,
-    position: 'absolute',
-    top: '31%',
-    width: 260,
-  },
-  centerStage: {
+  skipText: { color: '#fff', fontSize: 13, fontWeight: '800' },
+  content: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: spacing.xl,
+    paddingHorizontal: 20,
+    paddingBottom: 64,
   },
-  centerStageCompact: {
-    paddingTop: spacing.md,
-  },
-  diagonalPanel: {
-    backgroundColor: '#5968FF',
-    height: 170,
-    left: -42,
-    opacity: 0.12,
+  contentCompact: { paddingBottom: 16 },
+  tileStage: { height: 154, width: '100%', maxWidth: 390, marginBottom: 8 },
+  tile: {
+    alignItems: 'center',
+    backgroundColor: colors.creamLight,
+    borderColor: colors.gold,
+    borderRadius: 22,
+    borderWidth: 2,
+    elevation: 8,
+    justifyContent: 'center',
+    left: '50%',
     position: 'absolute',
-    right: -42,
-    top: '39%',
-    transform: [{ rotate: '-12deg' }],
+    shadowColor: '#071820',
+    shadowOffset: { height: 10, width: 0 },
+    shadowOpacity: 0.34,
+    shadowRadius: 12,
+    top: 40,
   },
-  finalFlash: {
-    backgroundColor: '#FFF4B8',
+  matchHalo: {
+    alignSelf: 'center',
+    borderColor: '#ffed9e',
+    borderRadius: 90,
+    borderWidth: 4,
+    height: 140,
+    position: 'absolute',
+    top: 10,
+    width: 140,
+  },
+  brand: { alignItems: 'center', width: '100%' },
+  gameLogo: { borderRadius: 24, height: 120, width: 120 },
+  title: {
+    color: '#fff9e8',
+    fontWeight: '900',
+    letterSpacing: -1.7,
+    marginTop: 12,
+    textAlign: 'center',
+    textShadowColor: '#071820b3',
+    textShadowOffset: { height: 3, width: 0 },
+    textShadowRadius: 12,
+  },
+  titleAccent: { color: colors.gold },
+  odsLabel: {
+    color: '#e1f1dc',
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 1.6,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  publisherBackdrop: {
+    bottom: 0,
+    height: 200,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+  },
+  publisher: {
+    alignItems: 'center',
     bottom: 0,
     left: 0,
     position: 'absolute',
     right: 0,
-    top: 0,
   },
-  gameTitle: {
-    color: colors.primary,
-    fontSize: 37,
-    fontWeight: '900',
-    letterSpacing: 0,
-    textAlign: 'center',
-    textShadowColor: 'rgba(255, 212, 71, 0.52)',
-    textShadowOffset: { height: 0, width: 0 },
-    textShadowRadius: 12,
-  },
-  glowRing: {
-    borderColor: 'rgba(255, 212, 71, 0.18)',
-    borderRadius: 220,
-    borderWidth: 2,
-    height: 300,
-    position: 'absolute',
-    width: 300,
-  },
-  glowRingBottom: {
-    bottom: -130,
-    right: -104,
-  },
-  glowRingTop: {
-    left: -128,
-    top: 70,
-  },
-  launchBlock: {
-    alignItems: 'center',
-    paddingBottom: spacing.xl,
-  },
-  launchFill: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.pill,
-    height: '100%',
-    width: '72%',
-  },
-  launchTrack: {
-    backgroundColor: 'rgba(255, 255, 255, 0.14)',
-    borderColor: 'rgba(255, 211, 90, 0.28)',
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    height: 6,
-    overflow: 'hidden',
-    width: 92,
-  },
-  logoFallback: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.xxl,
-    fontWeight: '900',
-    letterSpacing: 0,
-  },
-  logoFrame: {
-    alignItems: 'center',
-    aspectRatio: 2.05,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderColor: 'rgba(255, 244, 184, 0.28)',
-    borderRadius: radii.card,
-    borderWidth: 2,
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  logoImage: {
-    height: '100%',
-    width: '100%',
-  },
-  logoShine: {
-    backgroundColor: 'rgba(255, 255, 255, 0.44)',
-    bottom: -28,
-    position: 'absolute',
-    top: -28,
-    width: 34,
-  },
-  logoStage: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 212, 71, 0.24)',
-    borderRadius: radii.card,
-    borderWidth: 1,
-    padding: spacing.md,
-    ...shadows.card,
-  },
-  particle: {
-    borderRadius: 3,
-    left: '50%',
-    position: 'absolute',
-    top: '50%',
-  },
-  particleLayer: {
-    alignItems: 'center',
-    height: 1,
-    justifyContent: 'center',
-    left: '50%',
-    position: 'absolute',
-    top: '50%',
-    width: 1,
-  },
-  presenter: {
-    color: colors.surfaceTint,
-    fontSize: fontSizes.sm,
-    fontWeight: '900',
-    letterSpacing: 0,
-    marginTop: spacing.xl,
-    opacity: 0.86,
-    textTransform: 'uppercase',
-  },
-  safeArea: {
-    flex: 1,
-  },
-  screen: {
-    backgroundColor: '#08051B',
-    flex: 1,
-  },
-  skipLayer: {
-    flex: 1,
-  },
-  titleGlow: {
-    backgroundColor: 'rgba(255, 211, 90, 0.52)',
-    borderRadius: radii.pill,
-    height: 82,
-    position: 'absolute',
-    width: '100%',
-  },
-  titleStage: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.sm,
-    minHeight: 74,
-  },
-  topWash: {
-    backgroundColor: '#1B1E58',
-    height: 360,
-    left: -40,
-    opacity: 0.9,
-    position: 'absolute',
-    right: -40,
-    top: -120,
-    transform: [{ rotate: '-8deg' }],
-  },
+  publisherLogo: { height: 86, width: 172 },
 });

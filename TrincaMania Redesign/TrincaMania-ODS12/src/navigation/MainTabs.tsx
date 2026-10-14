@@ -26,6 +26,7 @@ import {
   WorldId,
 } from '../types/game';
 import { WindowTarget } from '../types/ui';
+import { playMetaMusic } from '../utils/music';
 
 const MAP_TAB_INDEX = 0;
 const PROFILE_TAB_INDEX = MAIN_TAB_ITEMS.findIndex(
@@ -94,6 +95,9 @@ export function MainTabs({
   const pagerRef = useRef<ScrollView>(null);
   const activeIndexRef = useRef(MAP_TAB_INDEX);
   const [activeIndex, setActiveIndex] = useState(MAP_TAB_INDEX);
+  useEffect(() => {
+    if (activeIndex !== MAP_TAB_INDEX) playMetaMusic();
+  }, [activeIndex]);
   // A largura da página precisa bater com a do pager, senão o pagingEnabled para
   // entre duas abas. O layout real vale mais do que a janela (insets laterais).
   const [pageSize, setPageSize] = useState({

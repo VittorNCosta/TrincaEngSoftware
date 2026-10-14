@@ -303,7 +303,12 @@ export function RewardsScreen({
                 pressed ? styles.buttonPressed : null,
               ]}
             >
-              <GameIcon name="settings" size={30} tone="blue" />
+              <GameIcon
+                name="settings"
+                size={30}
+                tone="green"
+                variant="plain"
+              />
               <Text style={styles.settingsText}>Menu</Text>
             </Pressable>
           </View>
@@ -438,10 +443,10 @@ const styles = StyleSheet.create({
   },
   hubShortcut: {
     alignItems: 'center',
-    backgroundColor: 'rgba(74, 46, 137, 0.96)',
-    borderBottomColor: '#241052',
-    borderBottomWidth: 4,
-    borderColor: '#FFD35A',
+    backgroundColor: 'rgba(22, 70, 64, 0.96)',
+    borderBottomColor: '#0A3736',
+    borderBottomWidth: 3,
+    borderColor: '#D9EFDC',
     borderRadius: 18,
     borderWidth: 2,
     flex: 1,
@@ -452,7 +457,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     paddingVertical: 4,
     position: 'relative',
-    ...shadows.button,
+    ...shadows.menuCard,
   },
   hubShortcutLabel: {
     color: colors.inkOnDark,
@@ -464,8 +469,8 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   hubShortcutMuted: {
-    backgroundColor: 'rgba(54, 38, 103, 0.9)',
-    borderColor: 'rgba(200, 193, 255, 0.78)',
+    backgroundColor: 'rgba(39, 72, 69, 0.9)',
+    borderColor: 'rgba(199, 225, 208, 0.78)',
     opacity: 0.84,
   },
   hubShortcutRow: {
@@ -505,10 +510,10 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   rewardCard: {
-    backgroundColor: 'rgba(57, 34, 125, 0.94)',
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(255, 211, 90, 0.78)',
+    backgroundColor: 'rgba(21, 65, 62, 0.95)',
+    borderBottomColor: '#0D393A',
+    borderBottomWidth: 3,
+    borderColor: 'rgba(224, 243, 221, 0.68)',
     borderRadius: 16,
     borderWidth: 2,
     flexBasis: '48%',
@@ -519,8 +524,8 @@ const styles = StyleSheet.create({
     ...shadows.card,
   },
   rewardCardBlue: {
-    borderBottomColor: '#0A4D95',
-    borderColor: '#C8ECFF',
+    borderBottomColor: '#6A9DAC',
+    borderColor: '#CDE8F0',
   },
   rewardCardLargeText: {
     flexBasis: '100%',
@@ -529,17 +534,17 @@ const styles = StyleSheet.create({
     opacity: 0.86,
   },
   rewardCardGreen: {
-    borderBottomColor: colors.successDark,
-    borderColor: '#C7FFD9',
+    borderBottomColor: '#63A783',
+    borderColor: '#D8F6E1',
   },
   rewardCardPurple: {
-    borderBottomColor: '#2C0E56',
-    borderColor: '#C8C1FF',
+    borderBottomColor: '#9D8DB8',
+    borderColor: '#E8E2F2',
   },
   rewardCardReady: {
-    backgroundColor: 'rgba(93, 55, 202, 0.98)',
-    borderBottomColor: '#087A54',
-    borderColor: '#42E5A7',
+    backgroundColor: 'rgba(35, 94, 70, 0.98)',
+    borderBottomColor: '#226348',
+    borderColor: '#B9E6C6',
   },
   rewardGrid: {
     flexDirection: 'row',
@@ -560,7 +565,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   rewardStatus: {
-    color: '#FFE9A8',
+    color: '#D9EFDC',
     fontSize: fontSizes.xs,
     fontWeight: '900',
     lineHeight: 14,
@@ -577,12 +582,12 @@ const styles = StyleSheet.create({
     minHeight: 28,
   },
   rewardsSection: {
-    backgroundColor: 'rgba(44, 21, 104, 0.96)',
-    borderBottomColor: '#120932',
-    borderBottomWidth: 6,
-    borderColor: 'rgba(255, 211, 90, 0.48)',
+    backgroundColor: 'rgba(13, 48, 49, 0.96)',
+    borderBottomColor: '#082B30',
+    borderBottomWidth: 4,
+    borderColor: 'rgba(224, 243, 221, 0.5)',
     borderRadius: 18,
-    borderWidth: 3,
+    borderWidth: 2,
     gap: spacing.sm,
     padding: spacing.sm,
     ...shadows.card,
@@ -603,10 +608,10 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 248, 232, 0.95)',
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 4,
-    borderColor: '#FFF4C9',
+    backgroundColor: '#E1F1DE',
+    borderBottomColor: '#78B48F',
+    borderBottomWidth: 3,
+    borderColor: '#FFFFFF',
     borderRadius: 18,
     borderWidth: 2,
     gap: 1,
@@ -616,7 +621,7 @@ const styles = StyleSheet.create({
     ...shadows.card,
   },
   settingsText: {
-    color: colors.ink,
+    color: '#235743',
     fontSize: 9,
     fontWeight: '900',
     textTransform: 'uppercase',

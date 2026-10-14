@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontSizes, radii, shadows, spacing } from '../../styles/theme';
 import { BOTTOM_NAV_HEIGHT } from '../../components/BottomNavBar';
-import { MAP_HEIGHT, MAP_WIDTH, MAP_PARALLAX_TRAVEL } from './mapPresentation';
+import { MAP_HEIGHT, MAP_WIDTH } from './mapPresentation';
 
 export const styles = StyleSheet.create({
   bonusChestPosition: {
@@ -133,20 +133,11 @@ export const styles = StyleSheet.create({
     top: 0,
     zIndex: 2,
   },
-  mapImageAsset: {
-    borderRadius: 0,
-  },
-  // Camada do cenário ancorada na tela. A folga extra fica embaixo porque o parallax
-  // desloca a arte para cima (translateY negativo) conforme o mapa rola.
-  mapParallax: {
-    bottom: -MAP_PARALLAX_TRAVEL,
+  mapContentImage: {
     left: 0,
+    overflow: 'hidden',
     position: 'absolute',
-    right: 0,
     top: 0,
-  },
-  mapParallaxImage: {
-    flex: 1,
   },
   mapLayer: {
     alignSelf: 'center',

@@ -25,8 +25,6 @@ export const VOICE_COOLDOWN_MS = 4500;
 
 const VOICE_SOURCES: Readonly<Record<VoiceReaction, AudioSource>> = {
   good: require('../../assets/audio/03_voice/selected/voice_combo_good_01_Boa.mp3') as AudioSource,
-  perfect:
-    require('../../assets/audio/03_voice/selected/voice_combo_perfect_01_Perfeito.mp3') as AudioSource,
   incredible:
     require('../../assets/audio/03_voice/selected/voice_combo_incredible_01_Incrivel.mp3') as AudioSource,
   greatplay:

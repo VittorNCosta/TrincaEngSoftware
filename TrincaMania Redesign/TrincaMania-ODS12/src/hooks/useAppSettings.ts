@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   type AppSettings,
   createDefaultSettings,
@@ -14,6 +14,7 @@ export function useAppSettings() {
   const [settings, setSettings] = useState<AppSettings>(
     createDefaultSettings(),
   );
+  const settingsBeforeSilentRef = useRef<AppSettings | null>(null);
   const handleToggleSound = () => {
     const nextSoundEnabled = !settings.soundEnabled;
 
@@ -54,17 +55,23 @@ export function useAppSettings() {
     });
   };
 
-  const handleEnableSilentMode = () => {
-    const silentSettings = {
-      ...settings,
-      hapticsEnabled: false,
-      soundEnabled: false,
-      musicEnabled: false,
-    };
-    setSettings(silentSettings);
-    setMusicEnabled(false);
-    setSoundEnabled(false)
-      .then(() => saveSettings(silentSettings))
+  const handleToggleSilentMode = () => {
+    const isSilent =
+      !settings.soundEnabled &&
+      !settings.musicEnabled &&
+      !settings.hapticsEnabled;
+    if (!isSilent) settingsBeforeSilentRef.current = settings;
+    const nextSettings = isSilent
+      ? (settingsBeforeSilentRef.current ?? createDefaultSettings())
+      : {
+          hapticsEnabled: false,
+          soundEnabled: false,
+          musicEnabled: false,
+        };
+    setSettings(nextSettings);
+    setMusicEnabled(nextSettings.musicEnabled);
+    setSoundEnabled(nextSettings.soundEnabled)
+      .then(() => saveSettings(nextSettings))
       .catch(() => {
         getSettings()
           .then(setSettings)
@@ -78,6 +85,6 @@ export function useAppSettings() {
     handleToggleSound,
     handleToggleMusic,
     handleToggleHaptics,
-    handleEnableSilentMode,
+    handleToggleSilentMode,
   };
 }

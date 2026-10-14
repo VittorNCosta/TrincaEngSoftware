@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Svg, { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
 
-import { colors, radii, shadows } from '../styles/theme';
+import { radii, shadows } from '../styles/theme';
 
 export type GameIconName =
   | 'avatar'
@@ -26,6 +26,8 @@ export type GameIconName =
   | 'map'
   | 'mapMarker'
   | 'moon'
+  | 'music-on'
+  | 'music-off'
   | 'nav-map'
   | 'nav-powers'
   | 'nav-profile'
@@ -89,53 +91,53 @@ type IconArtworkProps = {
 
 const TONE_STYLES: Record<GameIconTone, ToneStyle> = {
   blue: {
-    base: '#36AEFF',
-    border: '#D8F1FF',
-    fill: '#FFF8E8',
-    foot: '#075894',
-    ink: '#074D86',
+    base: '#D9EEF5',
+    border: '#F3FCFF',
+    fill: '#F9FEFF',
+    foot: '#6FA8BB',
+    ink: '#18576B',
   },
   danger: {
-    base: '#F05278',
-    border: '#FFD1DC',
-    fill: '#FFF8E8',
-    foot: '#9B1737',
-    ink: '#8F1532',
+    base: '#F8E1DD',
+    border: '#FFF9F5',
+    fill: '#FFFDFC',
+    foot: '#D59890',
+    ink: '#9B413E',
   },
   gold: {
-    base: '#FFD23F',
-    border: '#FFF8D8',
+    base: '#F6E6B3',
+    border: '#FFFAE9',
     fill: '#FFFDF2',
-    foot: colors.goldDark,
-    ink: '#7A4A0C',
+    foot: '#C8A95A',
+    ink: '#71551D',
   },
   green: {
-    base: '#34D99A',
-    border: '#D4FFE9',
-    fill: '#FFF8E8',
-    foot: colors.successDark,
-    ink: '#086244',
+    base: '#D7F0DF',
+    border: '#F5FFF7',
+    fill: '#FBFFFC',
+    foot: '#80BB96',
+    ink: '#216448',
   },
   neutral: {
-    base: '#303B60',
-    border: '#7482AA',
-    fill: '#E7EEFF',
-    foot: '#11182E',
-    ink: '#16203F',
+    base: '#DCE5E7',
+    border: '#F4F8F8',
+    fill: '#FAFCFC',
+    foot: '#9AAEB3',
+    ink: '#405860',
   },
   pink: {
-    base: '#FF79B3',
-    border: '#FFE0EF',
-    fill: '#FFF8E8',
-    foot: '#A92764',
-    ink: '#8F1851',
+    base: '#F6E0E9',
+    border: '#FFF7FB',
+    fill: '#FFFDFE',
+    foot: '#D4A3B7',
+    ink: '#944763',
   },
   purple: {
-    base: '#7E5BFF',
-    border: '#E5DFFF',
-    fill: '#FFF8E8',
-    foot: '#2C0E56',
-    ink: '#382075',
+    base: '#E5E0F4',
+    border: '#FAF8FF',
+    fill: '#FEFDFF',
+    foot: '#A99CCB',
+    ink: '#63528C',
   },
 };
 
@@ -146,10 +148,14 @@ const normalizeIconName = (name: GameIconName): GameIconName => {
     case 'gift':
     case 'specialChest':
       return 'chest';
-    case 'hint':
-    case 'shuffle':
-    case 'undo':
+    case 'nav-map':
+      return 'map';
+    case 'nav-rewards':
+      return 'chest';
+    case 'nav-powers':
       return 'powers';
+    case 'nav-profile':
+      return 'profile';
     case 'mapMarker':
     case 'world':
       return 'map';
@@ -169,28 +175,6 @@ const normalizeIconName = (name: GameIconName): GameIconName => {
       return name;
   }
 };
-
-// Ícones ilustrados que trazem paleta e sombra próprias: ignoram `tone` e não
-// recebem a elipse de sombra padrão do IconArtwork.
-const SELF_PAINTED_NAMES: GameIconName[] = [
-  'avatar',
-  'nav-map',
-  'nav-powers',
-  'nav-profile',
-  'nav-rewards',
-];
-
-const isSelfPaintedIcon = (name: GameIconName) =>
-  SELF_PAINTED_NAMES.includes(name);
-
-const NAV_SPARK_PATH =
-  'M32 6c0 12.4-10.1 22.5-22.5 22.5C21.9 28.5 32 38.6 32 51c0-12.4 10.1-22.5 22.5-22.5C42.1 28.5 32 18.4 32 6z';
-
-function NavShadow() {
-  return (
-    <Ellipse cx={32} cy={55} fill="rgba(20, 10, 4, 0.22)" rx={21} ry={4.5} />
-  );
-}
 
 const STAR_PATH =
   'M32 8l6.7 14.2 15.3 2.2-11.1 10.8 2.6 15.2L32 43.2 18.5 50.4l2.6-15.2L10 24.4l15.3-2.2L32 8z';
@@ -215,7 +199,7 @@ function FillPath({ d, fill, ink }: { d: string; fill: string; ink: string }) {
         fill={ink}
         stroke={ink}
         strokeLinejoin="round"
-        strokeWidth={6}
+        strokeWidth={4}
       />
       <Path d={d} fill={fill} />
     </>
@@ -241,7 +225,7 @@ function StrokePath({
         stroke={ink}
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth={width + 7}
+        strokeWidth={width + 4}
       />
       <Path
         d={d}
@@ -263,16 +247,10 @@ function IconArtwork({
   size,
 }: IconArtworkProps) {
   const name = normalizeIconName(rawName);
-  // Os ilustrados ocupam a caixa inteira: já foram desenhados com respiro interno.
-  const sizeRatio = isSelfPaintedIcon(name)
-    ? 1
-    : name === 'settings' || name === 'ranking'
-      ? 0.82
-      : 0.76;
+  const sizeRatio = name === 'settings' || name === 'avatar' ? 0.84 : 0.8;
   const iconSize = Math.round(size * sizeRatio);
-  const softFill = muted ? '#D8E3FF' : fill;
+  const softFill = muted ? '#DCE5E7' : fill;
   const accent = muted ? '#97A4C6' : '#FFFFFF';
-  const shadow = muted ? 'rgba(4, 10, 24, 0.25)' : 'rgba(71, 34, 8, 0.2)';
   const coinInk = muted ? ink : '#8A5200';
   const coinOuter = muted ? softFill : '#FFE27A';
   const coinInner = muted ? '#C9D5F2' : '#FFC83D';
@@ -281,10 +259,6 @@ function IconArtwork({
 
   return (
     <Svg height={iconSize} viewBox="0 0 64 64" width={iconSize}>
-      {isSelfPaintedIcon(name) ? null : (
-        <Ellipse cx={32} cy={54} fill={shadow} rx={20} ry={5} />
-      )}
-
       {name === 'back' ? (
         <StrokePath d={CHEVRON_BACK} fill={softFill} ink={ink} width={9} />
       ) : null}
@@ -304,12 +278,27 @@ function IconArtwork({
         <FillPath d={PLAY_PATH} fill={softFill} ink={ink} />
       ) : null}
 
-      {name === 'star' || name === 'win' || name === 'ranking' ? (
+      {name === 'star' || name === 'win' ? (
         <>
           <FillPath d={STAR_PATH} fill={softFill} ink={ink} />
-          {name === 'ranking' ? (
-            <Path d="M19 50h26v7H19z" fill={ink} opacity={0.28} />
-          ) : null}
+        </>
+      ) : null}
+      {name === 'ranking' ? (
+        <>
+          <Path
+            d="M10 45h14v9H10zm14-16h16v25H24zm16 10h14v15H40z"
+            fill={softFill}
+            stroke={ink}
+            strokeLinejoin="round"
+            strokeWidth={4}
+          />
+          <Path
+            d="M32 9l3.4 6.8 7.5 1.1-5.4 5.2 1.3 7.4-6.8-3.5-6.8 3.5 1.3-7.4-5.4-5.2 7.5-1.1z"
+            fill={softFill}
+            stroke={ink}
+            strokeLinejoin="round"
+            strokeWidth={3}
+          />
         </>
       ) : null}
 
@@ -323,6 +312,79 @@ function IconArtwork({
             r={4}
             stroke={ink}
             strokeWidth={3}
+          />
+        </>
+      ) : null}
+
+      {name === 'hint' ? (
+        <>
+          <Circle
+            cx={23}
+            cy={38}
+            fill={softFill}
+            r={9}
+            stroke={ink}
+            strokeWidth={4}
+          />
+          <Circle
+            cx={41}
+            cy={38}
+            fill={softFill}
+            r={9}
+            stroke={ink}
+            strokeWidth={4}
+          />
+          <Circle
+            cx={32}
+            cy={22}
+            fill={softFill}
+            r={9}
+            stroke={ink}
+            strokeWidth={4}
+          />
+          <Path
+            d="M32 6v5M47 14l4-3"
+            stroke={ink}
+            strokeLinecap="round"
+            strokeWidth={4}
+          />
+        </>
+      ) : null}
+      {name === 'shuffle' ? (
+        <>
+          <Path
+            d="M10 19h8c12 0 14 26 28 26h8M10 45h8c12 0 14-26 28-26h8"
+            fill="none"
+            stroke={ink}
+            strokeLinecap="round"
+            strokeWidth={5}
+          />
+          <Path
+            d="m47 12 8 7-8 7m0 12 8 7-8 7"
+            fill="none"
+            stroke={ink}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={5}
+          />
+        </>
+      ) : null}
+      {name === 'undo' ? (
+        <>
+          <Path
+            d="M19 22a19 19 0 1 1-4 18"
+            fill="none"
+            stroke={ink}
+            strokeLinecap="round"
+            strokeWidth={5}
+          />
+          <Path
+            d="M19 11v12h12"
+            fill="none"
+            stroke={ink}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={5}
           />
         </>
       ) : null}
@@ -505,7 +567,7 @@ function IconArtwork({
           />
           <Path
             d="M33 25c0-5 4-9 9-9s9 4 9 9c0 7-9 15-9 15s-9-8-9-15z"
-            fill="#FF6D9E"
+            fill="#6CC99A"
             stroke={ink}
             strokeWidth={4}
           />
@@ -515,32 +577,23 @@ function IconArtwork({
 
       {name === 'settings' ? (
         <>
-          {/* Seis dentes grossos: a versão de oito dentes finos virava borrão em 28-30 px. */}
           <G origin="32,32">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <Rect
                 fill={ink}
-                height={17}
+                height={13}
                 key={`gear-${index}`}
-                rx={4}
-                transform={`rotate(${index * 60} 32 32)`}
-                width={12}
-                x={26}
-                y={3}
+                rx={2.5}
+                transform={`rotate(${index * 45} 32 32)`}
+                width={8}
+                x={28}
+                y={6}
               />
             ))}
           </G>
-          <Circle cx={32} cy={32} fill={ink} r={19} />
-          <Circle cx={32} cy={32} fill={softFill} r={14.5} />
-          <Circle cx={32} cy={32} fill={ink} r={5.6} />
-          <Path
-            d="M23 26c2.2-3 5-4.6 8.6-4.8"
-            fill="none"
-            opacity={0.85}
-            stroke={accent}
-            strokeLinecap="round"
-            strokeWidth={3}
-          />
+          <Circle cx={32} cy={32} fill={ink} r={18} />
+          <Circle cx={32} cy={32} fill={softFill} r={13.5} />
+          <Circle cx={32} cy={32} fill={ink} r={6} />
         </>
       ) : null}
 
@@ -597,195 +650,28 @@ function IconArtwork({
 
       {name === 'avatar' ? (
         <>
-          <Circle cx={32} cy={32} fill="#0B3F6B" r={26} />
-          <Circle cx={32} cy={32} fill="#59C2FF" r={23} />
-          <Path
-            d="M10 54c3.4-11.6 11-17.4 22-17.4S51 42.4 54 54z"
-            fill="#0B3F6B"
-          />
-          <Path d="M14 54c3-9 9.4-13.6 18-13.6S47 45 50 54z" fill="#2FA36B" />
-          <Circle cx={32} cy={25} fill="#0B3F6B" r={15.6} />
-          <Circle cx={32} cy={25} fill="#F8CDA1" r={12.6} />
-          <Path
-            d="M19.6 21.2C21 12 26 8 32 8s11 4 12.4 13.2c-3.4-4-7.6-6-12.4-6s-9 2-12.4 6z"
-            fill="#8A5A24"
-          />
-          <Path
-            d="M23.4 13.6C25.8 11 28.8 9.8 32 9.8"
-            fill="none"
-            stroke="#C08A3E"
-            strokeLinecap="round"
+          <Circle
+            cx={32}
+            cy={32}
+            fill={softFill}
+            r={25}
+            stroke={ink}
             strokeWidth={3}
           />
-          <Circle cx={26.8} cy={25.6} fill="#2C1B08" r={2.8} />
-          <Circle cx={37.2} cy={25.6} fill="#2C1B08" r={2.8} />
-          <Circle cx={27.8} cy={24.6} fill="#FFFFFF" r={1} />
-          <Circle cx={38.2} cy={24.6} fill="#FFFFFF" r={1} />
-          <Path
-            d="M27.6 32.6c2.6 2.4 6.2 2.4 8.8 0"
+          <Circle
+            cx={32}
+            cy={25}
             fill="none"
-            stroke="#C4744A"
-            strokeLinecap="round"
-            strokeWidth={2.8}
-          />
-        </>
-      ) : null}
-
-      {name === 'nav-map' ? (
-        <>
-          <NavShadow />
-          <Path
-            d="M8 18 24 12l16 6 16-6v30l-16 6-16-6-16 6z"
-            fill="#3D2A12"
-            stroke="#3D2A12"
-            strokeLinejoin="round"
-            strokeWidth={6}
-          />
-          <Path d="M8 18 24 12l16 6 16-6v30l-16 6-16-6-16 6z" fill="#FFF3D0" />
-          <Path
-            d="M24 12v36M40 18v36"
-            stroke="#3D2A12"
-            strokeLinecap="round"
-            strokeWidth={3.6}
+            r={9}
+            stroke={ink}
+            strokeWidth={4.5}
           />
           <Path
-            d="M15 45c8-6 4-13 12-19 5-3.6 12-1 16-6"
+            d="M16 48c2.5-9 8.4-13 16-13s13.5 4 16 13"
             fill="none"
-            stroke="#3D2A12"
+            stroke={ink}
             strokeLinecap="round"
-            strokeWidth={7.5}
-          />
-          <Path
-            d="M15 45c8-6 4-13 12-19 5-3.6 12-1 16-6"
-            fill="none"
-            stroke="#E8A72E"
-            strokeLinecap="round"
-            strokeWidth={4}
-          />
-          <Path
-            d="M42 36c-4-6.5-6-9.6-6-12.6a6 6 0 0 1 12 0c0 3-2 6.1-6 12.6z"
-            fill="#F1497F"
-            stroke="#3D2A12"
-            strokeLinejoin="round"
-            strokeWidth={4}
-          />
-          <Circle cx={42} cy={23} fill="#FFF3D0" r={2.6} />
-        </>
-      ) : null}
-
-      {name === 'nav-rewards' ? (
-        <>
-          <NavShadow />
-          <Circle cx={13} cy={47} fill="#8A5200" r={7.4} />
-          <Circle cx={51} cy={47} fill="#8A5200" r={7.4} />
-          <Circle cx={13} cy={46} fill="#FFC83D" r={5.6} />
-          <Circle cx={51} cy={46} fill="#FFC83D" r={5.6} />
-          <Circle cx={11.4} cy={44} fill="#FFF8C9" r={1.8} />
-          <Circle cx={49.4} cy={44} fill="#FFF8C9" r={1.8} />
-          <Path
-            d="M12 29h40v22H12z"
-            fill="#4A2A0C"
-            stroke="#4A2A0C"
-            strokeLinejoin="round"
-            strokeWidth={5}
-          />
-          <Rect fill="#D98A34" height={22} rx={3} width={40} x={12} y={29} />
-          <Path
-            d="M12 29c2-9 8-14 20-14s18 5 20 14z"
-            fill="#4A2A0C"
-            stroke="#4A2A0C"
-            strokeLinejoin="round"
-            strokeWidth={5}
-          />
-          <Path d="M12 29c2-9 8-14 20-14s18 5 20 14z" fill="#F0A94E" />
-          <Path
-            d="M17 25c2.4-4.6 7-7 13-7"
-            fill="none"
-            stroke="#FFE3B0"
-            strokeLinecap="round"
-            strokeWidth={3.4}
-          />
-          <Path
-            d="M12 40h40"
-            stroke="#8C4E12"
-            strokeLinecap="round"
-            strokeWidth={3}
-          />
-          <Rect
-            fill="#FFD35A"
-            height={36}
-            stroke="#4A2A0C"
-            strokeWidth={3.4}
-            width={11}
-            x={26.5}
-            y={15}
-          />
-          <Rect
-            fill="#FFF8C9"
-            height={11}
-            rx={2.4}
-            stroke="#4A2A0C"
-            strokeWidth={3.2}
-            width={13}
-            x={25.5}
-            y={31}
-          />
-          <Circle cx={32} cy={36.4} fill="#4A2A0C" r={2} />
-          <Path
-            d="M32 9.5c0 3.4-2.7 6.1-6.1 6.1 3.4 0 6.1 2.7 6.1 6.1 0-3.4 2.7-6.1 6.1-6.1-3.4 0-6.1-2.7-6.1-6.1z"
-            fill="#FFF8C9"
-          />
-        </>
-      ) : null}
-
-      {name === 'nav-powers' ? (
-        <>
-          <NavShadow />
-          <Circle cx={17} cy={41} fill="#2C0E56" r={10.5} />
-          <Circle cx={47} cy={41} fill="#086244" r={10.5} />
-          <Circle cx={17} cy={40} fill="#7E5BFF" r={8} />
-          <Circle cx={47} cy={40} fill="#34D99A" r={8} />
-          <Circle cx={14.6} cy={37} fill="#FFFFFF" opacity={0.7} r={2.4} />
-          <Circle cx={44.6} cy={37} fill="#FFFFFF" opacity={0.7} r={2.4} />
-          <Path
-            d={NAV_SPARK_PATH}
-            fill="#6B3F00"
-            stroke="#6B3F00"
-            strokeLinejoin="round"
-            strokeWidth={5}
-          />
-          <Path d={NAV_SPARK_PATH} fill="#FFD35A" />
-          <Path
-            d="M32 15c0 6-3.6 11-9 13.4 5.4 1 9 5 9 9.6"
-            fill="none"
-            stroke="#FFF8C9"
-            strokeLinecap="round"
-            strokeWidth={3}
-          />
-        </>
-      ) : null}
-
-      {name === 'nav-profile' ? (
-        <>
-          <NavShadow />
-          <Circle cx={32} cy={31} fill="#0B3F6B" r={20} />
-          <Circle cx={32} cy={30} fill="#36AEFF" r={17} />
-          <Path d="M18 45c2.6-8 7.4-12 14-12s11.4 4 14 12z" fill="#0B3F6B" />
-          <Path d="M20 45c2.4-6.6 6.6-10 12-10s9.6 3.4 12 10z" fill="#FFF3D0" />
-          <Circle cx={32} cy={24} fill="#0B3F6B" r={9.4} />
-          <Circle cx={32} cy={24} fill="#FFF3D0" r={7} />
-          <Path
-            d="M22 20c1.6-5 5-7.6 10-7.6"
-            fill="none"
-            stroke="#BFE6FF"
-            strokeLinecap="round"
-            strokeWidth={3}
-          />
-          <Circle cx={48} cy={46} fill="#6B3F00" r={8.6} />
-          <Circle cx={48} cy={45.4} fill="#FFD35A" r={6.4} />
-          <Path
-            d="M48 41.4l1.5 3.1 3.4.5-2.5 2.4.6 3.4-3-1.6-3 1.6.6-3.4-2.5-2.4 3.4-.5z"
-            fill="#FFF8C9"
+            strokeWidth={4.5}
           />
         </>
       ) : null}
@@ -881,14 +767,16 @@ function IconArtwork({
             stroke={ink}
             strokeWidth={7}
           />
-          <Circle
-            cx={32}
-            cy={32}
-            fill="none"
-            r={10}
-            stroke={ink}
-            strokeWidth={5}
-          />
+          {name === 'target' ? (
+            <Circle
+              cx={32}
+              cy={32}
+              fill="none"
+              r={10}
+              stroke={ink}
+              strokeWidth={5}
+            />
+          ) : null}
           {name === 'target' ? (
             <Circle cx={32} cy={32} fill={ink} r={4} />
           ) : null}
@@ -956,6 +844,52 @@ function IconArtwork({
               />
             </>
           )}
+        </>
+      ) : null}
+
+      {name === 'music-on' || name === 'music-off' ? (
+        <>
+          <Path
+            d="M28 19 49 14v28"
+            fill="none"
+            stroke={ink}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={5}
+          />
+          <Path
+            d="M28 19v28"
+            fill="none"
+            stroke={ink}
+            strokeLinecap="round"
+            strokeWidth={5}
+          />
+          <Ellipse
+            cx={20}
+            cy={47}
+            fill={softFill}
+            rx={8}
+            ry={5}
+            stroke={ink}
+            strokeWidth={4}
+          />
+          <Ellipse
+            cx={41}
+            cy={42}
+            fill={softFill}
+            rx={8}
+            ry={5}
+            stroke={ink}
+            strokeWidth={4}
+          />
+          {name === 'music-off' ? (
+            <Path
+              d="M13 13 52 52"
+              stroke={ink}
+              strokeLinecap="round"
+              strokeWidth={6}
+            />
+          ) : null}
         </>
       ) : null}
 
@@ -1029,8 +963,8 @@ function GameIconBase({
   const isMuted =
     muted || disabled || variant === 'disabled' || active === false;
   const toneStyle = isMuted ? TONE_STYLES.neutral : TONE_STYLES[tone];
-  const borderWidth = Math.max(2, Math.round(size * 0.09));
-  const footWidth = Math.max(3, Math.round(size * 0.14));
+  const borderWidth = Math.max(1, Math.round(size * 0.045));
+  const footWidth = Math.max(2, Math.round(size * 0.07));
 
   if (variant === 'plain') {
     return (
@@ -1074,19 +1008,6 @@ function GameIconBase({
         style,
       ]}
     >
-      <View pointerEvents="none" style={styles.innerGlow} />
-      <View
-        pointerEvents="none"
-        style={[
-          styles.shine,
-          {
-            height: Math.max(5, Math.round(size * 0.2)),
-            left: Math.round(size * 0.14),
-            right: Math.round(size * 0.34),
-            top: Math.round(size * 0.08),
-          },
-        ]}
-      />
       <IconArtwork
         fill={toneStyle.fill}
         ink={toneStyle.ink}
@@ -1106,19 +1027,10 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     justifyContent: 'center',
     overflow: 'hidden',
-    ...shadows.button,
+    ...shadows.menuCard,
   },
   active: {
-    shadowOpacity: 0.42,
-  },
-  innerGlow: {
-    backgroundColor: 'rgba(255, 255, 255, 0.13)',
-    borderRadius: radii.pill,
-    bottom: 4,
-    left: 4,
-    position: 'absolute',
-    right: 4,
-    top: 4,
+    shadowOpacity: 0.28,
   },
   muted: {
     opacity: 0.86,
@@ -1126,11 +1038,6 @@ const styles = StyleSheet.create({
   plain: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  shine: {
-    backgroundColor: 'rgba(255, 255, 255, 0.72)',
-    borderRadius: radii.pill,
-    position: 'absolute',
   },
   soft: {
     opacity: 0.94,

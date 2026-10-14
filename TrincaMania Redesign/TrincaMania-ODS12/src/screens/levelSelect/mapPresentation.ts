@@ -1,4 +1,9 @@
-import type { Level, WorldId } from '../../types/game';
+import type { Level, LevelDifficulty, WorldId } from '../../types/game';
+import { getMapRoadCenterFraction } from '../../utils/mapRoad';
+import {
+  MAP_LEVEL_GROUND_POINT,
+  MAP_LEVEL_SIZE,
+} from '../../utils/mapLevelGeometry';
 
 export const MAP_HEIGHT = 1320;
 export const MAP_WIDTH = 320;
@@ -7,11 +12,8 @@ export const MAP_NODE_BOTTOM = 116;
 export const MAP_NODE_STEP = 110;
 // Folga no topo para a bolha mais alta não ficar sob o HUD flutuante.
 export const MAP_NODE_TOP_PADDING = 170;
-export const NODE_PATH_LEFTS = [112, 42, 202, 72, 184, 46, 206, 82, 190, 118];
-// Altura aproximada da área visível do mapa; só alimenta o parallax.
-export const MAP_VIEWPORT_ESTIMATE = 720;
-// Quanto o cenário anda no total: 0,25x o percurso das bolhas.
-export const MAP_PARALLAX_TRAVEL = 260;
+export const MAP_NODE_WIDTH = MAP_LEVEL_SIZE.width;
+export const MAP_NODE_GROUND_OFFSET = MAP_LEVEL_GROUND_POINT.y;
 export const LEGACY_MAP_OPENING_BOTTOM_INSET = 48;
 export const LEGACY_MAP_OPENING_FOCUS_RATIO = 0.45;
 export const LEGACY_MAP_OPENING_TOP_INSET = 170;
@@ -27,21 +29,30 @@ export const getWorldMapHeight = (levelCount: number) =>
 export const getLevelNodePosition = (
   localIndex: number,
   mapHeight: number,
-) => ({
-  left: NODE_PATH_LEFTS[localIndex % NODE_PATH_LEFTS.length],
-  top: mapHeight - MAP_NODE_BOTTOM - localIndex * MAP_NODE_STEP,
-});
+  viewportWidth = MAP_WIDTH,
+) => {
+  const top = mapHeight - MAP_NODE_BOTTOM - localIndex * MAP_NODE_STEP;
+  const roadX =
+    getMapRoadCenterFraction((top + MAP_NODE_GROUND_OFFSET) / mapHeight) *
+    viewportWidth;
+
+  return {
+    left: roadX - MAP_LEVEL_GROUND_POINT.x,
+    top,
+  };
+};
 
 export const getShopMarkerPosition = (
   localIndex: number,
   mapHeight: number,
   hasPortal: boolean,
+  viewportWidth = MAP_WIDTH,
 ) => {
   const levelPosition = getLevelNodePosition(localIndex, mapHeight);
   const sideLeft = levelPosition.left > MAP_WIDTH / 2 ? 18 : 186;
 
   return {
-    left: hasPortal ? 18 : sideLeft,
+    left: (viewportWidth - MAP_WIDTH) / 2 + (hasPortal ? 18 : sideLeft),
     top: Math.max(28, levelPosition.top - 48),
   };
 };
@@ -49,26 +60,42 @@ export const getShopMarkerPosition = (
 export const getPortalMarkerPosition = (
   localIndex: number,
   mapHeight: number,
+  viewportWidth = MAP_WIDTH,
 ) => {
   const levelPosition = getLevelNodePosition(localIndex, mapHeight);
 
   return {
-    left: 186,
+    left: (viewportWidth - MAP_WIDTH) / 2 + 186,
     top: Math.max(20, levelPosition.top - 82),
   };
 };
 
-export const getBonusChestMarkerPosition = (mapHeight: number) => ({
-  left: 88,
+export const getBonusChestMarkerPosition = (
+  mapHeight: number,
+  viewportWidth = MAP_WIDTH,
+) => ({
+  left: (viewportWidth - MAP_WIDTH) / 2 + 88,
   top: Math.max(170, mapHeight - MAP_NODE_BOTTOM - MAP_NODE_STEP * 2 - 56),
 });
 
 export const MAP_OBJECTIVE_SNIPPETS = [
-  'Forme trincas e limpe a mesa.',
+  'Forme trincas e limpe o tabuleiro.',
   'Libere peças e avance.',
   'Observe as camadas.',
   'Complete para continuar.',
 ];
+
+const DIFFICULTY_LABELS: Record<LevelDifficulty, string> = {
+  easy: 'Fácil',
+  normal: 'Normal',
+  hard: 'Difícil',
+  expert: 'Avançado',
+  master: 'Mestre',
+  bonus: 'Bônus',
+};
+
+export const getDifficultyLabel = (difficulty: LevelDifficulty) =>
+  DIFFICULTY_LABELS[difficulty];
 
 export const getShortObjective = (level: Level) =>
   level.worldId === 1

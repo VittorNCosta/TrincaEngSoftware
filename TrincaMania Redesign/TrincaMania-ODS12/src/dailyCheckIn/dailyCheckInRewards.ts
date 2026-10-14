@@ -19,8 +19,8 @@ export const resolveDailyCheckInReward = (
         kind: 'power',
         amount: 1,
         powerType: 'hint',
-        label: 'Trinca Mágica ×1',
-        title: 'Trinca Mágica',
+        label: 'Trinca automática ×1',
+        title: 'Trinca automática',
       };
     case 4:
       return {

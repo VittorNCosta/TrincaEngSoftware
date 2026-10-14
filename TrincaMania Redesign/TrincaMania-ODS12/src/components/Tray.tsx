@@ -24,7 +24,6 @@ type TrayProps = {
   bonusSlotActive?: boolean;
   coinSlotActive?: boolean;
   hiddenTileIds?: string[];
-  poppingTileId?: string;
   tiles: Tile[];
   onSlotLayoutInWindow?: (tileIndex: number, target: WindowTarget) => void;
   onAdSlotPress?: () => void;
@@ -36,7 +35,6 @@ type TraySlotProps = {
   isActiveSlot: boolean;
   isBonusSlot: boolean;
   isCoinSlot: boolean;
-  isPopping: boolean;
   lockedLabel: string;
   tile?: Tile;
   tileIndex: number;
@@ -49,7 +47,6 @@ function TraySlot({
   isActiveSlot,
   isBonusSlot,
   isCoinSlot,
-  isPopping,
   lockedLabel,
   tile,
   tileIndex,
@@ -57,7 +54,6 @@ function TraySlot({
   onSlotPress,
 }: TraySlotProps) {
   const slotRef = useRef<View>(null);
-  const pop = useRef(new Animated.Value(0)).current;
   const activation = useRef(new Animated.Value(0)).current;
   const wasActiveRef = useRef(isActiveSlot);
   const tileHidden = tile ? hiddenTileIds.includes(tile.id) : false;
@@ -74,33 +70,6 @@ function TraySlot({
       });
     });
   }, [onSlotLayoutInWindow, tileIndex]);
-
-  useEffect(() => {
-    if (!isPopping) {
-      pop.setValue(0);
-      return undefined;
-    }
-
-    pop.setValue(0);
-    const animation = Animated.sequence([
-      Animated.timing(pop, {
-        duration: 68,
-        easing: Easing.out(Easing.cubic),
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-      Animated.timing(pop, {
-        duration: 42,
-        easing: Easing.in(Easing.quad),
-        toValue: 0,
-        useNativeDriver: true,
-      }),
-    ]);
-
-    animation.start();
-
-    return () => animation.stop();
-  }, [isPopping, pop]);
 
   useEffect(() => {
     const wasActive = wasActiveRef.current;
@@ -131,14 +100,6 @@ function TraySlot({
     return () => animation.stop();
   }, [activation, isActiveSlot, isBonusSlot]);
 
-  const popScale = pop.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.09],
-  });
-  const popGlowOpacity = pop.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 0.62],
-  });
   const activationScale = activation.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.13],
@@ -187,31 +148,54 @@ function TraySlot({
         </Text>
       </View>
     );
+  const slotIsActionable =
+    Boolean(onSlotPress) && !(isActiveSlot && !isBonusSlot);
+  const slotAccessibilityLabel =
+    isFilled && tile
+      ? `Espaço ${tileIndex + 1}, peça ${tile.emoji}`
+      : isCoinSlot && !isActiveSlot
+        ? `Liberar espaço extra por ${COIN_TRAY_SLOT_COST} moedas`
+        : isBonusSlot && !isActiveSlot
+          ? 'Liberar espaço bônus'
+          : isBonusSlot
+            ? 'Espaço bônus ativo'
+            : `Espaço ${tileIndex + 1} da bandeja`;
 
   return (
     <Animated.View
-      style={[
-        styles.slotShell,
-        { transform: [{ scale: popScale }, { scale: activationScale }] },
-      ]}
+      style={[styles.slotShell, { transform: [{ scale: activationScale }] }]}
     >
       <Pressable
         ref={slotRef}
-        disabled={!onSlotPress || (isActiveSlot && !isBonusSlot)}
+        accessibilityHint={
+          slotIsActionable
+            ? isCoinSlot && !isActiveSlot
+              ? 'Compra um espaço extra para a bandeja.'
+              : isBonusSlot && isActiveSlot
+                ? 'Mostra o tempo restante do bônus.'
+                : 'Mostra como liberar o espaço bônus.'
+            : undefined
+        }
+        accessibilityLabel={slotAccessibilityLabel}
+        accessibilityRole={slotIsActionable ? 'button' : 'text'}
+        accessibilityState={slotIsActionable ? { disabled: false } : undefined}
+        disabled={!slotIsActionable}
+        hitSlop={
+          slotIsActionable
+            ? { top: 8, bottom: 8, left: 2, right: 2 }
+            : undefined
+        }
         onLayout={reportLayout}
-        onPress={onSlotPress}
-        style={[
+        onPress={slotIsActionable ? onSlotPress : undefined}
+        style={({ pressed }) => [
           styles.slot,
           !isActiveSlot ? styles.lockedSlot : null,
           isCoinSlot && !isActiveSlot ? styles.coinLockedSlot : null,
           isBonusSlot && !isActiveSlot ? styles.bonusLockedSlot : null,
           isFilled ? styles.filledSlot : null,
+          pressed && slotIsActionable ? styles.slotPressed : null,
         ]}
       >
-        <Animated.View
-          pointerEvents="none"
-          style={[styles.slotPopGlow, { opacity: popGlowOpacity }]}
-        />
         <Animated.View
           pointerEvents="none"
           style={[
@@ -230,7 +214,6 @@ export function Tray({
   bonusSlotActive,
   coinSlotActive,
   hiddenTileIds = [],
-  poppingTileId,
   tiles,
   onSlotLayoutInWindow,
   onAdSlotPress,
@@ -256,7 +239,6 @@ export function Tray({
       {Array.from({ length: MAX_TRAY_CAPACITY }).map((_, index) => {
         const tileIndex = activeSlotIndexes.indexOf(index);
         const tile = tileIndex >= 0 ? tiles[tileIndex] : undefined;
-        const isPopping = tile?.id === poppingTileId;
         const isActiveSlot = tileIndex >= 0;
         const isCoinSlot = index === BASE_TRAY_CAPACITY;
         const isBonusSlot = index === MAX_TRAY_CAPACITY - 1;
@@ -272,7 +254,6 @@ export function Tray({
             isActiveSlot={isActiveSlot}
             isBonusSlot={isBonusSlot}
             isCoinSlot={isCoinSlot}
-            isPopping={isPopping}
             lockedLabel={lockedLabel}
             tile={tile}
             tileIndex={tileIndex}
@@ -348,18 +329,6 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 1,
   },
-  slotPopGlow: {
-    backgroundColor: 'rgba(255, 190, 80, 0.34)',
-    borderColor: 'rgba(255, 211, 90, 0.48)',
-    borderRadius: 14,
-    borderWidth: 2,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 3,
-  },
   slotActivationGlow: {
     backgroundColor: 'rgba(66, 229, 167, 0.28)',
     borderColor: '#BDFBE4',
@@ -375,6 +344,9 @@ const styles = StyleSheet.create({
   slotShell: {
     aspectRatio: 1,
     flex: 1,
+  },
+  slotPressed: {
+    opacity: 0.75,
   },
   slotInsetShade: {
     backgroundColor: 'rgba(161, 99, 20, 0.22)',

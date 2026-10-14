@@ -12,15 +12,3 @@ export const advanceNaturalCombo = (
       : 1,
   lastTripleAt: now,
 });
-export const comboLabel = (count: number) =>
-  count < 2
-    ? ''
-    : count === 2
-      ? 'Boa sequência!'
-      : count === 3
-        ? 'Combo perfeito!'
-        : count === 4
-          ? 'Incrível!'
-          : count === 5
-            ? 'Que jogada!'
-            : 'Trinca brilhante!';

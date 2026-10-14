@@ -3,13 +3,11 @@
  * este módulo não cria nem altera a mecânica de combo.
  */
 
-export type VoiceReaction =
-  'good' | 'perfect' | 'incredible' | 'greatplay' | 'brilliant';
+export type VoiceReaction = 'good' | 'incredible' | 'greatplay' | 'brilliant';
 
 export const VOICE_REACTION_PRIORITY: Readonly<Record<VoiceReaction, number>> =
   {
     good: 1,
-    perfect: 2,
     incredible: 3,
     greatplay: 4,
     brilliant: 5,
@@ -24,7 +22,7 @@ export const getVoiceReactionForCombo = (
 ): VoiceReaction | undefined => {
   if (comboCount < 2) return undefined;
   if (comboCount === 2) return 'good';
-  if (comboCount === 3) return 'perfect';
+  if (comboCount === 3) return undefined;
   if (comboCount === 4) return 'incredible';
   if (comboCount === 5) return 'greatplay';
   return 'brilliant';

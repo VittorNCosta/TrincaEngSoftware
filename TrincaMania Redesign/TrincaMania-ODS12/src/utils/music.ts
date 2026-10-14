@@ -12,11 +12,8 @@ import { type MusicKey, resolveMusicKeyForWorld } from './musicRouting';
 import { type WorldId } from '../types/game';
 
 /**
- * Música de metajogo (fora de partida) + música temática por mundo, com
- * crossfade entre as duas camadas. Espelha o padrão já usado para o ambiente
- * de fundo em sounds.ts (fade por interval), mas mantém dois players vivos
- * durante a transição para um crossfade real (sobreposto). Cada faixa termina
- * de verdade e o próximo ciclo entra depois de um pequeno respiro.
+ * A faixa de cada mundo acompanha o mapa e a partida. Mantém dois players
+ * durante a troca de mundo para o crossfade e repete a faixa sem silêncio.
  */
 
 export { type MusicKey, resolveMusicKeyForWorld } from './musicRouting';
@@ -37,9 +34,7 @@ export const MUSIC_VOLUME = 0.38;
 // para abrir espaço a voz/SFX, sem fazer a música desaparecer.
 export const MUSIC_DUCK_VOLUME = 0.27;
 export const MUSIC_CROSSFADE_MS = 700;
-// Respiro moderado entre faixas: preserva ambiente/SFX sem deixar o mapa
-// parecer silencioso por tempo excessivo.
-export const MUSIC_GAP_MS = 4200;
+export const MAP_MUSIC_CHANGE_DELAY_MS = 7000;
 
 const sourceForKey = (key: MusicKey): AudioSource =>
   key === 'meta'
@@ -56,22 +51,14 @@ let incomingFade: FadeHandle | undefined;
 let desiredKey: MusicKey | undefined;
 let musicEnabledCache: boolean | undefined;
 let isBackgrounded = false;
-let musicRestartTimer: ReturnType<typeof setTimeout> | undefined;
-let activePlaybackSubscription: { remove: () => void } | undefined;
 let musicDuckRequestCount = 0;
+let pendingMapMusic: ReturnType<typeof setTimeout> | undefined;
 
-const clearMusicRestartTimer = () => {
-  if (!musicRestartTimer) {
-    return;
+export const cancelPendingMapMusic = () => {
+  if (pendingMapMusic) {
+    clearTimeout(pendingMapMusic);
+    pendingMapMusic = undefined;
   }
-
-  clearTimeout(musicRestartTimer);
-  musicRestartTimer = undefined;
-};
-
-const clearActivePlaybackSubscription = () => {
-  activePlaybackSubscription?.remove();
-  activePlaybackSubscription = undefined;
 };
 
 const clearOutgoingFade = () => {
@@ -150,58 +137,11 @@ const removeOutgoing = () => {
   }
 };
 
-const scheduleMusicRestart = (player: AudioPlayer, key: MusicKey) => {
-  if (
-    musicRestartTimer ||
-    isBackgrounded ||
-    desiredKey !== key ||
-    activePlayer !== player ||
-    activeKey !== key
-  ) {
-    return;
-  }
-
-  musicRestartTimer = setTimeout(() => {
-    musicRestartTimer = undefined;
-
-    if (
-      isBackgrounded ||
-      desiredKey !== key ||
-      activePlayer !== player ||
-      activeKey !== key
-    ) {
-      return;
-    }
-
-    try {
-      player.volume = 0;
-      void player.seekTo(0).catch(() => undefined);
-      player.play();
-    } catch {
-      return;
-    }
-
-    clearIncomingFade();
-    fadeVolume(
-      player,
-      0,
-      MUSIC_VOLUME,
-      MUSIC_CROSSFADE_MS,
-      (handle) => {
-        incomingFade = handle;
-      },
-      () => undefined,
-    );
-  }, MUSIC_GAP_MS);
-};
-
 const startKey = (key: MusicKey) => {
   const source = sourceForKey(key);
   const previousPlayer = activePlayer;
   const previousVolume = previousPlayer?.volume ?? 0;
 
-  clearMusicRestartTimer();
-  clearActivePlaybackSubscription();
   removeOutgoing();
 
   let nextPlayer: AudioPlayer;
@@ -211,9 +151,7 @@ const startKey = (key: MusicKey) => {
     return;
   }
 
-  // A faixa termina de verdade; o listener abaixo agenda o próximo ciclo com
-  // respiro, em vez de deixar o player reiniciar imediatamente em loop.
-  nextPlayer.loop = false;
+  nextPlayer.loop = true;
   nextPlayer.volume = 0;
 
   try {
@@ -224,14 +162,6 @@ const startKey = (key: MusicKey) => {
 
   activePlayer = nextPlayer;
   activeKey = key;
-  activePlaybackSubscription = nextPlayer.addListener(
-    'playbackStatusUpdate',
-    (status) => {
-      if (status.didJustFinish) {
-        scheduleMusicRestart(nextPlayer, key);
-      }
-    },
-  );
 
   if (previousPlayer) {
     outgoingPlayer = previousPlayer;
@@ -276,17 +206,9 @@ const readMusicEnabled = async () => {
 const applyDesiredKey = async (key: MusicKey) => {
   desiredKey = key;
 
-  if (activeKey !== key) {
-    clearMusicRestartTimer();
-  }
-
   const enabled = await readMusicEnabled();
 
   if (!enabled || desiredKey !== key || isBackgrounded) {
-    return;
-  }
-
-  if (musicRestartTimer) {
     return;
   }
 
@@ -305,14 +227,32 @@ const applyDesiredKey = async (key: MusicKey) => {
   startKey(key);
 };
 
-/** Música de metajogo: mapa, recompensas, poderes, perfil, loja, modais. */
+/** Música das telas gerais: recompensas, poderes, perfil e loja. */
 export const playMetaMusic = () => {
+  cancelPendingMapMusic();
   void applyDesiredKey('meta');
 };
 
-/** Música de partida: trilha do mundo ou trilha geral quando não houver uma própria. */
+/** Música compartilhada pelo mapa de um mundo e suas partidas. */
 export const playWorldMusic = (worldId: WorldId) => {
+  cancelPendingMapMusic();
   void applyDesiredKey(resolveMusicKeyForWorld(worldId));
+};
+
+/** Aguarda a escolha estabilizar antes de trocar a faixa ao navegar no mapa. */
+export const playMapMusic = (worldId: WorldId) => {
+  cancelPendingMapMusic();
+  const key = resolveMusicKeyForWorld(worldId);
+
+  if (!activePlayer || activeKey === 'meta' || activeKey === key) {
+    void applyDesiredKey(key);
+    return;
+  }
+
+  pendingMapMusic = setTimeout(() => {
+    pendingMapMusic = undefined;
+    void applyDesiredKey(key);
+  }, MAP_MUSIC_CHANGE_DELAY_MS);
 };
 
 export const getActiveMusicKey = () => activeKey;
@@ -371,7 +311,6 @@ export const setMusicEnabled = (enabled: boolean) => {
 
   if (!enabled) {
     musicDuckRequestCount = 0;
-    clearMusicRestartTimer();
     clearIncomingFade();
     if (activePlayer) {
       try {
@@ -391,9 +330,8 @@ export const setMusicEnabled = (enabled: boolean) => {
 };
 
 export const releaseMusicPlayer = () => {
+  cancelPendingMapMusic();
   musicDuckRequestCount = 0;
-  clearMusicRestartTimer();
-  clearActivePlaybackSubscription();
   clearIncomingFade();
   removeOutgoing();
 
@@ -420,7 +358,6 @@ export const releaseMusicPlayer = () => {
 const handleAppStateChange = (nextState: AppStateStatus) => {
   if (nextState === 'background') {
     isBackgrounded = true;
-    clearMusicRestartTimer();
     clearIncomingFade();
 
     if (activePlayer) {

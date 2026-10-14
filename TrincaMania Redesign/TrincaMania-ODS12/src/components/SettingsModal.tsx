@@ -4,6 +4,7 @@ import { DiagnosticReport } from './DiagnosticReport';
 import {
   Linking,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -19,10 +20,11 @@ import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 
 type SettingsModalProps = {
   devMode?: boolean;
+  devModeAvailable?: boolean;
   settings: AppSettings;
   visible: boolean;
   onClose: () => void;
-  onEnableSilentMode: () => void;
+  onToggleSilentMode: () => void;
   onResetProgress: () => void;
   onToggleHaptics: () => void;
   onToggleSound: () => void;
@@ -47,11 +49,11 @@ function SettingsAction({
   tone = 'gold',
   onPress,
 }: SettingsActionProps) {
-  const stateMark = active ? '\u2713' : '\u00D7';
-
   return (
     <Pressable
+      accessibilityLabel={`${label}. ${status ?? ''}`.trim()}
       accessibilityRole="button"
+      accessibilityState={{ checked: active }}
       onPress={onPress}
       style={({ pressed }) => [
         styles.actionButton,
@@ -84,14 +86,9 @@ function SettingsAction({
           active ? styles.activeBadge : styles.inactiveBadge,
         ]}
       >
-        <Text
-          style={[
-            styles.stateBadgeText,
-            active ? styles.activeBadgeText : styles.inactiveBadgeText,
-          ]}
-        >
-          {stateMark}
-        </Text>
+        <View
+          style={[styles.stateKnob, active ? styles.stateKnobActive : null]}
+        />
       </View>
     </Pressable>
   );
@@ -124,10 +121,11 @@ const confirmAction = (
 
 export function SettingsModal({
   devMode = false,
+  devModeAvailable = __DEV__,
   settings,
   visible,
   onClose,
-  onEnableSilentMode,
+  onToggleSilentMode,
   onResetProgress,
   onToggleHaptics,
   onToggleSound,
@@ -153,7 +151,9 @@ export function SettingsModal({
   const handleUnlockAllForDevMode = () =>
     confirmAction(
       devMode ? 'Sair do modo dev?' : 'Liberar todas as fases?',
-      'Liberação temporária nesta sessão. Não altera estrelas nem desbloqueios salvos. Partidas e compras continuam seguindo as regras normais.',
+      Platform.OS === 'web'
+        ? 'Liberação temporária nesta sessão. Não altera estrelas nem desbloqueios salvos. No site, este modo usa um save isolado que desaparece ao fechar a sessão.'
+        : 'Liberação temporária nesta sessão. Não altera estrelas nem desbloqueios salvos. O pacote de QA usa dados separados do jogo normal.',
       devMode ? 'Desativar' : 'Liberar nesta sessão',
       onUnlockAllForDevMode,
       onClose,
@@ -180,8 +180,8 @@ export function SettingsModal({
           <View style={styles.header}>
             <View style={styles.headerCopy}>
               <View style={styles.headerKickerRow}>
-                <GameIcon name="settings" size={32} tone="gold" />
-                <Text style={styles.kicker}>TileClear - ODS12</Text>
+                <GameIcon name="settings" size={32} tone="green" />
+                <Text style={styles.kicker}>TRINCAMANIA · ODS 12</Text>
               </View>
               <Text
                 style={[styles.title, largeText ? styles.titleLargeText : null]}
@@ -199,7 +199,7 @@ export function SettingsModal({
                 pressed ? styles.pressed : null,
               ]}
             >
-              <GameIcon name="close" size={30} tone="danger" />
+              <GameIcon name="close" size={29} tone="neutral" variant="plain" />
             </Pressable>
           </View>
 
@@ -256,7 +256,7 @@ export function SettingsModal({
                 />
                 <SettingsAction
                   active={settings.musicEnabled}
-                  iconName={settings.musicEnabled ? 'sound-on' : 'sound-off'}
+                  iconName={settings.musicEnabled ? 'music-on' : 'music-off'}
                   label={`Música: ${settings.musicEnabled ? 'Ligada' : 'Desligada'}`}
                   status="Trilha de menus e partidas"
                   tone="purple"
@@ -266,9 +266,13 @@ export function SettingsModal({
                   active={silentModeActive}
                   iconName="moon"
                   label="Modo silencioso"
-                  status={silentModeActive ? 'Ativo' : 'Som e vibração off'}
+                  status={
+                    silentModeActive
+                      ? 'Ativo · toque para reativar'
+                      : 'Desliga som, música e vibração'
+                  }
                   tone="purple"
-                  onPress={onEnableSilentMode}
+                  onPress={onToggleSilentMode}
                 />
               </View>
             ) : null}
@@ -284,7 +288,7 @@ export function SettingsModal({
               >
                 <Text style={styles.resetButtonText}>Resetar progresso</Text>
               </Pressable>
-              {__DEV__ ? (
+              {devModeAvailable ? (
                 <Pressable
                   accessibilityRole="button"
                   onPress={handleUnlockAllForDevMode}
@@ -322,57 +326,53 @@ export function SettingsModal({
 const styles = StyleSheet.create({
   actionButton: {
     alignItems: 'center',
-    backgroundColor: '#F2A93B',
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 5,
-    borderColor: '#FFF4C9',
-    borderRadius: 18,
-    borderWidth: 2,
+    backgroundColor: '#F7FBF7',
+    borderBottomColor: '#B9D3C3',
+    borderBottomWidth: 2,
+    borderColor: '#FFFFFF',
+    borderRadius: 15,
+    borderWidth: 1,
     flexDirection: 'row',
     gap: spacing.sm,
-    minHeight: 62,
+    minHeight: 66,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
-    ...shadows.button,
+    ...shadows.menuCard,
   },
   actionButtonActive: {
-    borderColor: '#FFFFFF',
+    borderColor: '#EAF9EB',
   },
   actionButtonInactive: {
-    backgroundColor: '#273256',
-    borderBottomColor: '#11182E',
-    borderColor: '#617098',
+    backgroundColor: '#E7EDEC',
+    borderBottomColor: '#ADBDBA',
+    borderColor: '#D6E1DE',
   },
   actionButtonGreen: {
-    backgroundColor: '#42E5A7',
-    borderBottomColor: '#087A54',
+    borderLeftColor: '#419C6B',
+    borderLeftWidth: 4,
   },
   actionButtonPurple: {
-    backgroundColor: '#8A65FF',
-    borderBottomColor: '#2C0E56',
+    borderLeftColor: '#8B79AD',
+    borderLeftWidth: 4,
   },
   actionButtonPurpleIdle: {
-    backgroundColor: '#4B3A83',
-    borderBottomColor: '#241052',
-    borderColor: '#8B7BE0',
+    borderLeftColor: '#B8ACC9',
+    borderLeftWidth: 4,
   },
   actionCopy: {
     flex: 1,
     minWidth: 0,
   },
   actionLabel: {
-    color: colors.inkOnDark,
+    color: '#163B36',
     fontSize: fontSizes.md,
     fontWeight: '900',
-    textShadowColor: 'rgba(0, 0, 0, 0.22)',
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 1,
   },
   actionList: {
     gap: spacing.sm,
   },
   actionStatus: {
-    color: 'rgba(255, 255, 255, 0.82)',
+    color: '#60736B',
     fontSize: fontSizes.xs,
     fontWeight: '900',
   },
@@ -391,28 +391,27 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   activeBadge: {
-    backgroundColor: '#FFFFFF',
-  },
-  activeBadgeText: {
-    color: colors.successDark,
+    backgroundColor: '#388C65',
   },
   inactiveBadge: {
-    backgroundColor: '#1B2440',
-  },
-  inactiveBadgeText: {
-    color: '#D8E3FF',
+    backgroundColor: '#AAB9B4',
   },
   stateBadge: {
     alignItems: 'center',
     borderRadius: radii.pill,
-    height: 24,
+    height: 26,
     justifyContent: 'center',
-    width: 24,
+    paddingHorizontal: 3,
+    width: 45,
   },
-  stateBadgeText: {
-    fontSize: 15,
-    fontWeight: '900',
-    lineHeight: 17,
+  stateKnob: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: radii.pill,
+    height: 20,
+    width: 20,
+  },
+  stateKnobActive: {
+    alignSelf: 'flex-end',
   },
   backdrop: {
     bottom: 0,
@@ -423,9 +422,11 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignItems: 'center',
-    height: 36,
+    backgroundColor: '#E7F1E9',
+    borderRadius: radii.pill,
+    height: 42,
     justifyContent: 'center',
-    width: 36,
+    width: 42,
   },
   devButton: {
     alignItems: 'center',
@@ -447,10 +448,10 @@ const styles = StyleSheet.create({
   doneButton: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#28C96F',
-    borderBottomColor: '#087A54',
-    borderBottomWidth: 5,
-    borderColor: '#C7FFD9',
+    backgroundColor: '#DBEFDF',
+    borderBottomColor: '#82AF93',
+    borderBottomWidth: 3,
+    borderColor: '#F6FFF7',
     borderRadius: radii.pill,
     borderWidth: 2,
     minHeight: 48,
@@ -459,7 +460,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   doneButtonText: {
-    color: colors.inkOnDark,
+    color: '#164737',
     fontSize: fontSizes.md,
     fontWeight: '900',
   },
@@ -491,12 +492,12 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   panel: {
-    backgroundColor: 'rgba(36, 21, 88, 0.98)',
-    borderBottomColor: '#120932',
-    borderBottomWidth: 7,
-    borderColor: 'rgba(255, 211, 90, 0.74)',
+    backgroundColor: '#153A3D',
+    borderBottomColor: '#09282C',
+    borderBottomWidth: 5,
+    borderColor: 'rgba(225, 241, 222, 0.86)',
     borderRadius: 24,
-    borderWidth: 3,
+    borderWidth: 2,
     gap: spacing.md,
     maxHeight: '100%',
     maxWidth: 360,
@@ -507,7 +508,7 @@ const styles = StyleSheet.create({
     ...shadows.card,
   },
   panelGlow: {
-    backgroundColor: 'rgba(255, 211, 90, 0.18)',
+    backgroundColor: 'rgba(196, 236, 203, 0.13)',
     borderRadius: radii.pill,
     height: 110,
     left: -26,

@@ -78,6 +78,7 @@ function GameBoardBase({
               (allowedTileId !== undefined && tile.id !== allowedTileId)
             }
             highlighted={tile.id === highlightedTileId}
+            tutorialTarget={!disabled && tile.id === allowedTileId}
             key={tile.id}
             onLayoutInWindow={onTileLayoutInWindow}
             onBlockedPress={onBlockedTilePress}

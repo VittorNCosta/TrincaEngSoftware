@@ -71,11 +71,11 @@ export function ProfileScreen({
         >
           <View style={styles.profilePill}>
             <View style={styles.avatar}>
-              <GameIcon name="avatar" size={44} variant="plain" />
+              <GameIcon name="avatar" size={44} tone="green" variant="plain" />
             </View>
             <View style={styles.profileCopy}>
               <Text numberOfLines={1} style={styles.profileName}>
-                TileClear - ODS12
+                TrincaMania · ODS 12
               </Text>
               <Text numberOfLines={1} style={styles.profileSubtitle}>
                 Jornada casual
@@ -154,7 +154,7 @@ export function ProfileScreen({
               {entry.badge ? (
                 <MenuBadge tone="success">{entry.badge}</MenuBadge>
               ) : null}
-              <GameIcon name="next" size={24} tone="gold" />
+              <GameIcon name="next" size={27} tone="green" variant="plain" />
             </MenuCard>
           ))}
         </ScrollView>
@@ -191,12 +191,12 @@ const styles = StyleSheet.create({
   },
   avatar: {
     alignItems: 'center',
-    backgroundColor: '#5C2A9B',
-    borderBottomColor: '#2C0E56',
-    borderBottomWidth: 4,
-    borderColor: '#FFD35A',
+    backgroundColor: '#E1F1DE',
+    borderBottomColor: '#78B48F',
+    borderBottomWidth: 3,
+    borderColor: '#FFFFFF',
     borderRadius: 16,
-    borderWidth: 3,
+    borderWidth: 2,
     height: 54,
     justifyContent: 'center',
     overflow: 'hidden',
@@ -246,10 +246,10 @@ const styles = StyleSheet.create({
   },
   profilePill: {
     alignItems: 'center',
-    backgroundColor: 'rgba(36, 21, 88, 0.86)',
-    borderBottomColor: '#11082E',
-    borderBottomWidth: 4,
-    borderColor: 'rgba(255, 211, 90, 0.36)',
+    backgroundColor: 'rgba(20, 63, 61, 0.94)',
+    borderBottomColor: '#0A3337',
+    borderBottomWidth: 3,
+    borderColor: 'rgba(224, 243, 221, 0.68)',
     borderRadius: radii.pill,
     borderWidth: 2,
     flexDirection: 'row',
@@ -259,17 +259,17 @@ const styles = StyleSheet.create({
     ...shadows.card,
   },
   profileSubtitle: {
-    color: '#FFE9A8',
+    color: '#D9EFDC',
     fontSize: 10,
     fontWeight: '900',
     textTransform: 'uppercase',
   },
   statCard: {
     alignItems: 'center',
-    backgroundColor: 'rgba(57, 34, 125, 0.94)',
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(255, 211, 90, 0.78)',
+    backgroundColor: 'rgba(21, 65, 62, 0.95)',
+    borderBottomColor: '#0D393A',
+    borderBottomWidth: 3,
+    borderColor: 'rgba(224, 243, 221, 0.68)',
     borderRadius: 16,
     borderWidth: 2,
     flexBasis: '48%',
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   statLabel: {
-    color: '#FFE9A8',
+    color: '#D9EFDC',
     fontSize: fontSizes.xs,
     fontWeight: '900',
     textTransform: 'uppercase',

@@ -42,6 +42,7 @@ const missions = require('../src/missions/routineMissions.ts');
 const challenge = require('../src/challenges/dailyChallenge.ts');
 const { LEVELS } = require('../src/data/levels.ts');
 const combo = require('../src/utils/combo.ts');
+const audioFeedback = require('../src/utils/audioFeedback.ts');
 const musicRouting = require('../src/utils/musicRouting.ts');
 
 test('check-in avança uma vez por dia e mantém uma operação pendente recuperável', () => {
@@ -226,11 +227,25 @@ test('combo natural só continua dentro de cinco segundos', () => {
   assert.equal(combo.advanceNaturalCombo(first, 6001).count, 1);
 });
 
-test('música seleciona as cinco trilhas específicas e usa a geral nos demais mundos', () => {
-  for (const world of [1, 2, 3, 4, 21])
-    assert.equal(musicRouting.resolveMusicKeyForWorld(world), world);
-  for (const world of [5, 6, 101])
-    assert.equal(musicRouting.resolveMusicKeyForWorld(world), 'meta');
+test('cada mundo e seu capítulo usam a mesma trilha em todas as fases', () => {
+  const expectedTracks = [1, 2, 3, 4, 21, 21, 21, 21, 2, 3];
+  for (let world = 1; world <= 10; world += 1) {
+    assert.equal(
+      musicRouting.resolveMusicKeyForWorld(world),
+      expectedTracks[world - 1],
+    );
+    assert.equal(
+      musicRouting.resolveMusicKeyForWorld(100 + world),
+      expectedTracks[world - 1],
+    );
+  }
+  assert.equal(musicRouting.resolveMusicKeyForWorld(21), 21);
+});
+
+test('terceiro combo mantém a contagem sem reação de voz', () => {
+  assert.equal(audioFeedback.getVoiceReactionForCombo(2), 'good');
+  assert.equal(audioFeedback.getVoiceReactionForCombo(3), undefined);
+  assert.equal(audioFeedback.getVoiceReactionForCombo(4), 'incredible');
 });
 
 test('preferência de música migra como ligada e salva independente dos efeitos', async () => {

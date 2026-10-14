@@ -3,8 +3,6 @@ import { MapSelectionPanel } from './levelSelect/MapSelectionPanel';
 import type { SelectedTarget } from './levelSelect/types';
 import { isChapterModeUnlocked } from '../utils/chapterAvailability';
 import {
-  MAP_VIEWPORT_ESTIMATE,
-  MAP_PARALLAX_TRAVEL,
   LEGACY_MAP_OPENING_BOTTOM_INSET,
   LEGACY_MAP_OPENING_FOCUS_RATIO,
   LEGACY_MAP_OPENING_TOP_INSET,
@@ -17,9 +15,11 @@ import { styles } from './levelSelect/styles';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
-  ImageBackground,
+  BackHandler,
+  Image,
   type LayoutChangeEvent,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -29,7 +29,6 @@ import {
 import { BOTTOM_NAV_HEIGHT } from '../components/BottomNavBar';
 import { MapHud } from '../components/MapHud';
 import { GameIcon } from '../components/GameIcon';
-import type { TrailPoint } from '../components/MapStoneTrail';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { ScreenShell } from '../components/ScreenShell';
 import {
@@ -48,6 +47,12 @@ import {
 } from '../types/game';
 import { WindowTarget } from '../types/ui';
 import { isShopUnlockedAfterLevel } from '../utils/shop';
+import {
+  getMapRoadImageHeight,
+  getMapRoadTileHeight,
+  MAP_ROAD_TOP_CROP,
+} from '../utils/mapRoad';
+import { cancelPendingMapMusic, playMapMusic } from '../utils/music';
 import {
   getCurrentLevelForWorld,
   getCurrentWorldId,
@@ -118,6 +123,11 @@ export function LevelSelectScreen({
       ? initialWorldId
       : getCurrentWorldId(progress),
   );
+  useEffect(() => {
+    if (!isActive) return;
+    playMapMusic(selectedWorldId);
+    return cancelPendingMapMusic;
+  }, [isActive, selectedWorldId]);
   const [mapViewport, setMapViewport] = useState({ height: 0, width: 0 });
   const [mapContentLayout, setMapContentLayout] = useState<
     { height: number; worldId: WorldId } | undefined
@@ -148,6 +158,10 @@ export function LevelSelectScreen({
     : segmentedMapConfig
       ? segmentedMapConfig.designSize.height
       : getWorldMapHeight(worldLevels.length);
+  const mapImageWidth = mapViewport.width || 320;
+  const mapImageFullHeight = getMapRoadImageHeight(mapImageWidth);
+  const mapImageTileHeight = getMapRoadTileHeight(mapImageWidth);
+  const mapImageTileCount = Math.ceil(selectedMapHeight / mapImageTileHeight);
   // Mundo 1 usa a arte de cena única no lugar dos blocos de floresta
   // ilustrados: os blocos são opacos e cobrem qualquer fundo colocado atrás
   // deles, então a troca precisa desligar os blocos (abaixo) e não só somar
@@ -162,8 +176,10 @@ export function LevelSelectScreen({
   const bonusWorldChestPendingId = bonusWorldChest.available
     ? bonusWorldChest.id
     : undefined;
-  const bonusChestMarkerPosition =
-    getBonusChestMarkerPosition(selectedMapHeight);
+  const bonusChestMarkerPosition = getBonusChestMarkerPosition(
+    selectedMapHeight,
+    mapViewport.width || undefined,
+  );
   const [selectedTarget, setSelectedTarget] = useState<
     SelectedTarget | undefined
   >();
@@ -175,23 +191,6 @@ export function LevelSelectScreen({
   const panelAnim = useRef(new Animated.Value(0)).current;
   const mapFade = useRef(new Animated.Value(0)).current;
   const toastOpacity = useRef(new Animated.Value(0)).current;
-  const mapScrollY = useRef(new Animated.Value(0)).current;
-  const onMapScroll = useMemo(
-    () =>
-      Animated.event([{ nativeEvent: { contentOffset: { y: mapScrollY } } }], {
-        useNativeDriver: true,
-      }),
-    [mapScrollY],
-  );
-  const mapParallaxOffset = useMemo(
-    () =>
-      mapScrollY.interpolate({
-        extrapolate: 'clamp',
-        inputRange: [0, Math.max(1, selectedMapHeight - MAP_VIEWPORT_ESTIMATE)],
-        outputRange: [0, -MAP_PARALLAX_TRAVEL],
-      }),
-    [mapScrollY, selectedMapHeight],
-  );
 
   const onMapViewportLayout = useCallback((event: LayoutChangeEvent) => {
     const { height, width } = event.nativeEvent.layout;
@@ -264,6 +263,7 @@ export function LevelSelectScreen({
       const position = getLevelNodePosition(
         currentLevel.worldLevelNumber - 1,
         selectedMapHeight,
+        mapViewport.width,
       );
       focusY = position.top + 49;
     }
@@ -279,6 +279,7 @@ export function LevelSelectScreen({
         Math.round(mapViewport.height),
         Math.round(mapViewport.width),
         Math.round(selectedMapHeight),
+        Math.floor(mapContentLayout.height / 100),
       ].join(':'),
       y: getCampaignMapOpeningScrollOffset({
         contentHeight: selectedMapHeight,
@@ -329,8 +330,7 @@ export function LevelSelectScreen({
     appliedOpeningKeyRef.current = undefined;
     mapFade.stopAnimation();
     mapFade.setValue(0);
-    mapScrollY.setValue(0);
-  }, [mapFade, mapScrollY, selectedWorldId]);
+  }, [mapFade, selectedWorldId]);
 
   // A aba Mapa continua montada enquanto o jogador navega pelas outras abas.
   // Ao voltar para ela, limpamos a chave aplicada para o mapa reabrir na fase atual.
@@ -361,14 +361,12 @@ export function LevelSelectScreen({
     appliedOpeningKeyRef.current = openingScrollKey;
     mapFade.stopAnimation();
     mapFade.setValue(0);
-    mapScrollY.setValue(openingScrollY);
-    mapScrollRef.current?.scrollTo({
-      animated: false,
-      y: openingScrollY,
-    });
-
     let fadeAnimation: Animated.CompositeAnimation | undefined;
     const frame = requestAnimationFrame(() => {
+      mapScrollRef.current?.scrollTo({
+        animated: false,
+        y: openingScrollY,
+      });
       fadeAnimation = Animated.timing(mapFade, {
         duration: 180,
         toValue: 1,
@@ -381,7 +379,7 @@ export function LevelSelectScreen({
       cancelAnimationFrame(frame);
       fadeAnimation?.stop();
     };
-  }, [isActive, mapFade, mapScrollY, openingScrollKey, openingScrollY]);
+  }, [isActive, mapFade, openingScrollKey, openingScrollY]);
 
   useEffect(() => {
     if (!selectedTarget) {
@@ -475,7 +473,7 @@ export function LevelSelectScreen({
     setSelectedTarget({ type: 'bonusChest' });
   };
 
-  const closePanel = () => {
+  const closePanel = useCallback(() => {
     Animated.timing(panelAnim, {
       duration: 160,
       toValue: 0,
@@ -483,7 +481,23 @@ export function LevelSelectScreen({
     }).start(() => {
       setSelectedTarget(undefined);
     });
-  };
+  }, [panelAnim]);
+
+  useEffect(() => {
+    if (Platform.OS !== 'android' || !isActive || !selectedTarget) {
+      return undefined;
+    }
+
+    const backSubscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        closePanel();
+        return true;
+      },
+    );
+
+    return () => backSubscription.remove();
+  }, [closePanel, isActive, selectedTarget]);
 
   const playSelectedLevel = (levelId: string, locked: boolean) => {
     if (locked) {
@@ -599,18 +613,6 @@ export function LevelSelectScreen({
       ? 'claimed'
       : 'locked';
 
-  const trailPoints: TrailPoint[] = useMemo(
-    () =>
-      worldLevels.map((level) => {
-        const position = getLevelNodePosition(
-          level.worldLevelNumber - 1,
-          selectedMapHeight,
-        );
-
-        return { left: position.left + 44, top: position.top + 35 };
-      }),
-    [selectedMapHeight, worldLevels],
-  );
   // Consulta por fase virava varredura de array dentro do map: com 100+ nós isso
   // era O(n²) em cada render do mapa.
   const completedLevelIdSet = useMemo(
@@ -641,22 +643,6 @@ export function LevelSelectScreen({
             { opacity: mapFade },
           ]}
         >
-          {selectedMapBackground ? (
-            <Animated.View
-              pointerEvents="none"
-              style={[
-                styles.mapParallax,
-                { transform: [{ translateY: mapParallaxOffset }] },
-              ]}
-            >
-              <ImageBackground
-                imageStyle={styles.mapImageAsset}
-                resizeMode="cover"
-                source={selectedMapBackground}
-                style={styles.mapParallaxImage}
-              />
-            </Animated.View>
-          ) : null}
           <Animated.ScrollView
             key={`campaign-map-${selectedWorldId}`}
             ref={mapScrollRef}
@@ -668,11 +654,56 @@ export function LevelSelectScreen({
             ]}
             onContentSizeChange={onMapContentSizeChange}
             onLayout={onMapViewportLayout}
-            onScroll={onMapScroll}
             removeClippedSubviews
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
           >
+            {selectedMapBackground ? (
+              <View
+                pointerEvents="none"
+                style={[
+                  styles.mapContentImage,
+                  {
+                    height: selectedMapHeight,
+                    width: mapImageWidth,
+                  },
+                ]}
+              >
+                {useWorld1SceneBackground ? (
+                  Array.from({ length: mapImageTileCount }, (_, index) => (
+                    <View
+                      key={`map-art-${index}`}
+                      style={{
+                        height: mapImageTileHeight,
+                        left: 0,
+                        overflow: 'hidden',
+                        position: 'absolute',
+                        top: index * mapImageTileHeight,
+                        width: mapImageWidth,
+                      }}
+                    >
+                      <Image
+                        resizeMode="stretch"
+                        source={selectedMapBackground}
+                        style={{
+                          height: mapImageFullHeight,
+                          left: 0,
+                          position: 'absolute',
+                          top: -mapImageFullHeight * MAP_ROAD_TOP_CROP,
+                          width: mapImageWidth,
+                        }}
+                      />
+                    </View>
+                  ))
+                ) : (
+                  <Image
+                    resizeMode="stretch"
+                    source={selectedMapBackground}
+                    style={{ height: selectedMapHeight, width: mapImageWidth }}
+                  />
+                )}
+              </View>
+            ) : null}
             {selectedTarget ? (
               <Pressable
                 accessibilityRole="button"
@@ -694,7 +725,6 @@ export function LevelSelectScreen({
               selectShop={selectShop}
               selectWorldPortal={selectWorldPortal}
               isWorldUnlocked={isWorldUnlocked}
-              trailPoints={trailPoints}
               worldLevels={worldLevels}
               completedLevelIdSet={completedLevelIdSet}
               unlockedLevelIdSet={unlockedLevelIdSet}

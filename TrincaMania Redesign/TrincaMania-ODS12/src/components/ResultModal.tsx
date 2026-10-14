@@ -113,7 +113,7 @@ const getWorldChestRewardItems = (
     },
     {
       iconName: 'powers' as const,
-      label: '+1 Trinca Mágica',
+      label: '+1 Trinca automática',
       tone: 'blue' as const,
     },
     {
@@ -428,7 +428,12 @@ export function ResultModal({
 
   return (
     <>
-      <Modal animationType="none" transparent visible={status !== 'playing'}>
+      <Modal
+        animationType="none"
+        onRequestClose={onBackToLevels}
+        transparent
+        visible={status !== 'playing'}
+      >
         <SafeAreaView
           edges={['top', 'bottom', 'left', 'right']}
           style={styles.overlay}
@@ -637,7 +642,7 @@ export function ResultModal({
                             )}
                           </Text>
                           <Text style={styles.worldChestRewardText}>
-                            +1 Trinca Mágica
+                            +1 Trinca automática
                           </Text>
                           <Text style={styles.worldChestRewardText}>
                             +1 Misturar

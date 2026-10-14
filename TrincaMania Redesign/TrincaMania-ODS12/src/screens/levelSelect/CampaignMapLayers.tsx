@@ -4,7 +4,6 @@ import { BonusWorldChestMarker } from '../../components/BonusWorldChestMarker';
 import { CampaignMapLandmarkMarker } from '../../components/CampaignMapLandmarkMarker';
 import { GameIcon } from '../../components/GameIcon';
 import { MapLevelNode } from '../../components/MapLevelNode';
-import { MapStoneTrail, type TrailPoint } from '../../components/MapStoneTrail';
 import { ShopMapMarker } from '../../components/ShopMapMarker';
 import { getWorldById } from '../../data/worlds';
 import type { getBonusWorldChestProgress } from '../../storage/progressStorage';
@@ -49,7 +48,6 @@ type CampaignMapLayersProps = {
   ) => void;
   selectWorldPortal: (afterLevelId: string, targetWorldId: WorldId) => void;
   isWorldUnlocked: (worldId: WorldId, progress: ProgressState) => boolean;
-  trailPoints: TrailPoint[];
   worldLevels: Level[];
   completedLevelIdSet: ReadonlySet<string>;
   unlockedLevelIdSet: ReadonlySet<string>;
@@ -74,7 +72,6 @@ export function CampaignMapLayers({
   selectShop,
   selectWorldPortal,
   isWorldUnlocked,
-  trailPoints,
   worldLevels,
   completedLevelIdSet,
   unlockedLevelIdSet,
@@ -274,9 +271,14 @@ export function CampaignMapLayers({
       ) : (
         <View
           pointerEvents="box-none"
-          style={[styles.mapLayer, { height: selectedMapHeight }]}
+          style={[
+            styles.mapLayer,
+            {
+              height: selectedMapHeight,
+              width: mapViewport.width || undefined,
+            },
+          ]}
         >
-          <MapStoneTrail points={trailPoints} />
           {worldLevels.map((level) => {
             const localIndex = level.worldLevelNumber - 1;
             const completed = completedLevelIdSet.has(level.id);
@@ -308,19 +310,29 @@ export function CampaignMapLayers({
             const position = getLevelNodePosition(
               localIndex,
               selectedMapHeight,
+              mapViewport.width,
             );
             const portalPosition = showWorldPortal
-              ? getPortalMarkerPosition(localIndex, selectedMapHeight)
+              ? getPortalMarkerPosition(
+                  localIndex,
+                  selectedMapHeight,
+                  mapViewport.width || undefined,
+                )
               : undefined;
             const shopPosition = showShop
               ? getShopMarkerPosition(
                   localIndex,
                   selectedMapHeight,
                   showWorldPortal || showFutureMarker,
+                  mapViewport.width || undefined,
                 )
               : undefined;
             const futurePosition = showFutureMarker
-              ? getPortalMarkerPosition(localIndex, selectedMapHeight)
+              ? getPortalMarkerPosition(
+                  localIndex,
+                  selectedMapHeight,
+                  mapViewport.width || undefined,
+                )
               : undefined;
             const portalSelected =
               selectedTarget?.type === 'worldPortal' &&

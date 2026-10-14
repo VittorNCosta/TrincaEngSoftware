@@ -83,12 +83,12 @@ export function PrimaryButton({
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    borderBottomWidth: 6,
-    borderRadius: radii.button,
-    borderWidth: 2,
+    borderBottomWidth: 3,
+    borderRadius: 16,
+    borderWidth: 1,
     justifyContent: 'center',
     overflow: 'hidden',
-    ...shadows.button,
+    ...shadows.menuCard,
   },
   compact: {
     minHeight: 48,
@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   danger: {
-    backgroundColor: colors.danger,
-    borderBottomColor: colors.dangerDark,
-    borderColor: colors.accentSoft,
+    backgroundColor: '#F6E2DE',
+    borderBottomColor: '#D4A39B',
+    borderColor: '#FFFAF8',
   },
   disabled: {
     backgroundColor: colors.locked,
@@ -111,30 +111,27 @@ const styles = StyleSheet.create({
     borderColor: colors.lockedSurface,
   },
   disabledLabel: {
-    color: '#07583E',
+    color: '#33494B',
     textShadowColor: 'transparent',
   },
   label: {
-    color: colors.inkOnDark,
+    color: '#173E37',
     fontSize: fontSizes.lg,
     fontWeight: '900',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.28)',
-    textShadowOffset: { height: 2, width: 0 },
-    textShadowRadius: 2,
   },
   primary: {
-    backgroundColor: colors.success,
-    borderBottomColor: colors.successDark,
-    borderColor: colors.successSoft,
+    backgroundColor: '#DCEFD9',
+    borderBottomColor: '#8AB999',
+    borderColor: '#F7FFF4',
   },
   primaryLabel: {
     color: '#07583E',
   },
   power: {
-    backgroundColor: colors.action,
-    borderBottomColor: colors.actionDark,
-    borderColor: colors.surfaceSoft,
+    backgroundColor: '#E4E0F2',
+    borderBottomColor: '#A99BC6',
+    borderColor: '#FBF9FF',
   },
   regular: {
     minHeight: 56,
@@ -142,12 +139,12 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   secondary: {
-    backgroundColor: colors.action,
-    borderBottomColor: colors.actionDark,
-    borderColor: colors.surfaceSoft,
+    backgroundColor: '#DAEBF0',
+    borderBottomColor: '#94B8C0',
+    borderColor: '#F7FDFF',
   },
   secondaryLabel: {
-    color: colors.inkOnDark,
+    color: '#1F4D56',
   },
   small: {
     minHeight: 48,
@@ -164,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.sm,
   },
   topHighlight: {
-    backgroundColor: 'rgba(255, 255, 255, 0.34)',
+    backgroundColor: 'rgba(255, 255, 255, 0.28)',
     borderRadius: radii.pill,
     height: '38%',
     left: 8,

@@ -4,10 +4,12 @@ import {
   createVisitorStorage,
 } from './webSessionStorage';
 
-const fairMode =
-  typeof window !== 'undefined' &&
-  new URLSearchParams(window.location.search).get('modo') === 'feira';
+const sessionMode =
+  typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('modo')
+    : null;
+const isolatedMode = sessionMode === 'feira' || sessionMode === 'dev';
 
-export default fairMode
+export default isolatedMode
   ? createVisitorStorage()
   : createBrowserTestStorage(AsyncStorage);

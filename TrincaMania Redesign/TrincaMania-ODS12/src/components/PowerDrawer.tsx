@@ -16,22 +16,22 @@ type PowerTone = {
 
 const POWER_TONES: Record<PowerUpType, PowerTone> = {
   hint: {
-    border: '#EAF8FF',
-    face: '#2E9BEE',
-    foot: '#0C4C8E',
-    label: '#EAF8FF',
+    border: '#F6FCFF',
+    face: '#D9EDF2',
+    foot: '#8FB7C1',
+    label: '#205A69',
   },
   shuffle: {
-    border: '#FFE6FB',
-    face: '#C93BBE',
-    foot: '#6B1866',
-    label: '#FFE6FB',
+    border: '#FDF9FF',
+    face: '#EAE1F2',
+    foot: '#B7A1C7',
+    label: '#624A78',
   },
   undo: {
-    border: '#E9FFE2',
-    face: '#45BF28',
-    foot: '#1B5F0C',
-    label: '#E9FFE2',
+    border: '#F7FFF5',
+    face: '#DFF0DC',
+    foot: '#94BA93',
+    label: '#295F42',
   },
 };
 
@@ -107,7 +107,6 @@ export function PowerDrawer({
           pressed && !isDisabled ? styles.pressed : null,
         ]}
       >
-        <View pointerEvents="none" style={styles.powerShine} />
         <View pointerEvents="none" style={styles.iconWrap}>
           <PowerIcon name={power} size={29} />
         </View>
@@ -202,27 +201,27 @@ const styles = StyleSheet.create({
   },
   powerButton: {
     alignItems: 'center',
-    borderBottomWidth: 4,
-    borderRadius: 16,
-    borderWidth: 3,
+    borderBottomWidth: 3,
+    borderRadius: 14,
+    borderWidth: 2,
     height: 52,
     justifyContent: 'center',
     position: 'relative',
     width: 52,
-    ...shadows.button,
+    ...shadows.menuCard,
   },
   powerButtonDisabled: {
     opacity: 0.68,
   },
   powerButtonPurchasable: {
-    borderColor: '#FFE178',
+    borderColor: '#FFF3CE',
   },
   powerButtonUnavailable: {
     opacity: 0.78,
   },
   powerLabel: {
     bottom: 2,
-    fontSize: 7.5,
+    fontSize: 8,
     fontWeight: '900',
     left: 1,
     letterSpacing: 0.25,
@@ -231,15 +230,6 @@ const styles = StyleSheet.create({
     right: 1,
     textAlign: 'center',
     textTransform: 'uppercase',
-  },
-  powerShine: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: radii.pill,
-    height: 9,
-    left: 6,
-    position: 'absolute',
-    right: 18,
-    top: 4,
   },
   purchasePriceBadge: {
     alignItems: 'center',

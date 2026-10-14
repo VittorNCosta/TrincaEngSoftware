@@ -88,8 +88,8 @@ export function PowersScreen({ progress }: PowersScreenProps) {
             <View style={styles.noteCopy}>
               <Text style={styles.noteTitle}>Onde comprar</Text>
               <Text numberOfLines={3} style={styles.noteText}>
-                A Loja abre dentro da fase — toque no carrinho ao lado das
-                moedas.
+                Abra a Loja pelo carrinho ao lado das moedas, dentro de uma
+                fase.
               </Text>
             </View>
           </View>

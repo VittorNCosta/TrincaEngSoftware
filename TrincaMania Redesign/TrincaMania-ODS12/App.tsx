@@ -12,7 +12,14 @@ import { installNativeErrorHandlers } from './src/observability/nativeErrors';
 import { setDiagnosticContext } from './src/utils/log';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { CampaignResizeNoticeModal } from './src/components/CampaignResizeNoticeModal';
@@ -134,7 +141,6 @@ import {
   releaseSoundPlayers,
   playRewardCollectSound,
 } from './src/utils/sounds';
-import { releaseVoiceOverPlayers } from './src/utils/voiceOver';
 import {
   BonusTraySlotActivationResult,
   COIN_TRAY_SLOT_COST,
@@ -163,10 +169,30 @@ import { getCurrentWorldId } from './src/utils/worldProgress';
 
 type AppScreen = 'splash' | 'levels' | 'game' | 'shop' | 'chapters';
 type ShopReturnScreen = 'levels' | 'game';
+const webDevSession =
+  Platform?.OS === 'web' &&
+  typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).get('modo') === 'dev';
+const webPreviewWorldId = (() => {
+  if (!webDevSession) return undefined;
+  const worldId = Number(
+    new URLSearchParams(window.location.search).get('mundo'),
+  );
+  return (Number.isInteger(worldId) && worldId >= 1 && worldId <= 10) ||
+    worldId === 21
+    ? (worldId as WorldId)
+    : undefined;
+})();
 
 export default function App() {
+  const devModeAvailable =
+    (typeof __DEV__ !== 'undefined' && __DEV__) ||
+    process.env.EXPO_PUBLIC_E2E === 'true' ||
+    webDevSession;
   useEffect(() => installNativeErrorHandlers(), []);
-  const [screen, setScreen] = useState<AppScreen>('splash');
+  const [screen, setScreen] = useState<AppScreen>(
+    webPreviewWorldId ? 'levels' : 'splash',
+  );
   const [progress, setProgress] = useState<ProgressState>(
     createInitialProgress(),
   );
@@ -176,7 +202,7 @@ export default function App() {
   const [isLoadingProgress, setIsLoadingProgress] = useState(true);
   const [campaignInitialWorldId, setCampaignInitialWorldId] = useState<
     WorldId | undefined
-  >();
+  >(webPreviewWorldId);
   const [selectedLevelId, setSelectedLevelId] = useState(LEVELS[0]?.id ?? '');
   const [shopReturnScreen, setShopReturnScreen] =
     useState<ShopReturnScreen>('levels');
@@ -190,6 +216,9 @@ export default function App() {
   );
   const [isNoLivesModalVisible, setIsNoLivesModalVisible] = useState(false);
   const [isTutorialVisible, setIsTutorialVisible] = useState(false);
+  const [tutorialMode, setTutorialMode] = useState<'automatic' | 'manual'>(
+    'automatic',
+  );
   const [isMysteryTutorialSeen, setIsMysteryTutorialSeen] = useState(false);
   const [isPracticalTutorialSeen, setIsPracticalTutorialSeen] = useState(false);
   const [isCampaignResizeNoticeVisible, setIsCampaignResizeNoticeVisible] =
@@ -202,9 +231,9 @@ export default function App() {
     handleToggleSound,
     handleToggleMusic,
     handleToggleHaptics,
-    handleEnableSilentMode,
+    handleToggleSilentMode,
   } = useAppSettings();
-  const [devMode, setDevMode] = useState(false);
+  const [devMode, setDevMode] = useState(webDevSession);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
   const [routineSection, setRoutineSection] =
     useState<RoutineSection>('checkin');
@@ -301,7 +330,8 @@ export default function App() {
             setMissions(storedMissions);
             setChallenge(storedChallenge);
             setLivesNow(Date.now());
-            setIsTutorialVisible(!tutorialSeen);
+            setIsTutorialVisible(!tutorialSeen && !webPreviewWorldId);
+            setTutorialMode('automatic');
             setIsPracticalTutorialSeen(practicalTutorialSeen);
             setIsMysteryTutorialSeen(mysteryTutorialSeen);
             setMagicTripleRescueState(storedMagicTripleRescueState);
@@ -471,7 +501,6 @@ export default function App() {
 
   useEffect(
     () => () => {
-      releaseVoiceOverPlayers();
       releaseMusicPlayer();
       releaseSoundPlayers();
     },
@@ -553,9 +582,12 @@ export default function App() {
   );
   useEffect(() => {
     if (isLoadingProgress) return;
-    if (screen === 'game' && selectedLevel)
+    if (screen === 'game' && selectedLevel) {
       playWorldMusic(selectedLevel.worldId);
-    else playMetaMusic();
+    } else if (screen !== 'levels' && screen !== 'chapters') {
+      // Os mapas controlam a própria faixa conforme o mundo selecionado.
+      playMetaMusic();
+    }
   }, [isLoadingProgress, screen, selectedLevel]);
   // Snapshot before rendering children: a render failure must not inherit the
   // previous screen's domain context while waiting for effects to run.
@@ -911,16 +943,16 @@ export default function App() {
       .catch(() => undefined);
     resetMagicTripleRescueState().catch(() => undefined);
     setIsTutorialVisible(true);
+    setTutorialMode('automatic');
     setIsPracticalTutorialSeen(false);
     saveTutorialSeen(false).catch(() => undefined);
     savePracticalTutorialSeen(false).catch(() => undefined);
   };
 
-  // Só existe em build de desenvolvimento (__DEV__): libera todas as fases da
-  // campanha e todos os mapas de capítulo, sem passar pelo fluxo normal de
-  // conclusão — é o que deixa testar fases avançadas sem jogar as anteriores.
+  // Na web, o modo dev só existe na sessão isolada iniciada pelo simulador.
+  // O override de acesso não grava estrelas nem desbloqueios no save real.
   const handleUnlockAllForDevMode = () => {
-    if (__DEV__) {
+    if (devModeAvailable) {
       setDevMode((current) => !current);
       setScreen('levels');
     }
@@ -928,7 +960,9 @@ export default function App() {
 
   const handleFinishTutorial = () => {
     setIsTutorialVisible(false);
-    saveTutorialSeen(true).catch(() => undefined);
+    if (tutorialMode === 'automatic') {
+      saveTutorialSeen(true).catch(() => undefined);
+    }
   };
 
   const handleFinishMysteryTutorial = () => {
@@ -1271,7 +1305,10 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <StatusBar style="light" />
-        <SplashIntroScreen onFinish={handleSplashFinish} />
+        <SplashIntroScreen
+          appReady={!isLoadingProgress}
+          onFinish={handleSplashFinish}
+        />
       </SafeAreaProvider>
     );
   }
@@ -1323,7 +1360,10 @@ export default function App() {
           onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
           onResetProgress={handleResetProgress}
           onSelectLevel={handleSelectLevel}
-          onShowTutorial={() => setIsTutorialVisible(true)}
+          onShowTutorial={() => {
+            setTutorialMode('manual');
+            setIsTutorialVisible(true);
+          }}
         />
       ) : null}
       {screen === 'chapters' ? (
@@ -1336,6 +1376,7 @@ export default function App() {
       ) : null}
       {isGameMounted && selectedLevel ? (
         <GameScreen
+          isActive={screen === 'game'}
           bestStars={
             isDailyChallengeSelected
               ? (challenge.bestStars[selectedLevel.id.slice(6)] ?? 0)
@@ -1438,10 +1479,11 @@ export default function App() {
       />
       <SettingsModal
         devMode={devMode}
+        devModeAvailable={devModeAvailable}
         settings={settings}
         visible={isSettingsVisible}
         onClose={() => setIsSettingsVisible(false)}
-        onEnableSilentMode={handleEnableSilentMode}
+        onToggleSilentMode={handleToggleSilentMode}
         onResetProgress={handleResetProgress}
         onToggleHaptics={handleToggleHaptics}
         onToggleSound={handleToggleSound}
@@ -1473,6 +1515,7 @@ export default function App() {
         onClose={() => setIsNoLivesModalVisible(false)}
       />
       <TutorialModal
+        mode={tutorialMode}
         visible={isTutorialVisible}
         onFinish={handleFinishTutorial}
       />

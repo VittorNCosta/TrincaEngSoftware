@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 const ts = require('typescript');
+const { PNG } = require('pngjs');
 
 require.extensions['.ts'] = (module, filename) => {
   const source = fs.readFileSync(filename, 'utf8');
@@ -33,6 +34,15 @@ const {
   validateWorldMapConfig,
   validateWorldMapRegistry,
 } = require('../src/utils/campaignMapLayout.ts');
+const {
+  getLevelNodePosition,
+  getWorldMapHeight,
+  MAP_NODE_GROUND_OFFSET,
+} = require('../src/screens/levelSelect/mapPresentation.ts');
+const {
+  getMapRoadTileHeight,
+  MAP_ROAD_TOP_CROP,
+} = require('../src/utils/mapRoad.ts');
 
 const worldOne = WORLDS.find(({ id }) => id === 1);
 const knownWorldIds = new Set(WORLDS.map(({ id }) => id));
@@ -77,16 +87,16 @@ test('dados existentes continuam formando 103 fases canônicas sem lacunas', () 
 
 test('Parque possui as 10 âncoras exatas e bijetivas em ordem de campanha', () => {
   const expectedPoints = [
-    [190, 2945],
-    [188, 2660],
-    [190, 2400],
-    [180, 2115],
-    [200, 1765],
-    [170, 1575],
-    [160, 1225],
-    [150, 940],
-    [180, 685],
-    [180, 415],
+    [165, 2945],
+    [228, 2660],
+    [204, 2400],
+    [163, 2115],
+    [204, 1765],
+    [228, 1575],
+    [177, 1225],
+    [226, 940],
+    [182, 685],
+    [163, 415],
   ];
 
   assert.equal(PARQUE_LEVEL_ANCHORS.length, 10);
@@ -99,6 +109,108 @@ test('Parque possui as 10 âncoras exatas e bijetivas em ordem de campanha', () 
     expectedPoints,
   );
   assert.equal(new Set(PARQUE_LEVEL_ANCHORS.map(({ site }) => site)).size, 5);
+});
+
+test('sombras das fases ficam sobre a rua pintada em todos os mapas', () => {
+  const assets = fs
+    .readdirSync(path.join(__dirname, '../assets/map/worlds'))
+    .filter((file) => /^w\d+_.*_map\.png$/.test(file));
+  assert.equal(assets.length, 10);
+
+  const roadRunAt = (
+    image,
+    xFraction,
+    mapY,
+    mapHeight,
+    viewportWidth,
+    tiled,
+  ) => {
+    const tileHeight = getMapRoadTileHeight(viewportWidth);
+    const tileIndex = tiled ? Math.floor(mapY / tileHeight) : 0;
+    const sourceX = xFraction;
+    const sourceY = tiled
+      ? MAP_ROAD_TOP_CROP +
+        ((mapY - tileIndex * tileHeight) / tileHeight) * (1 - MAP_ROAD_TOP_CROP)
+      : mapY / mapHeight;
+    const x = Math.round(sourceX * (image.width - 1));
+    const y = Math.round(sourceY * (image.height - 1));
+    const isRoad = (atX) => {
+      const pixel = (y * image.width + atX) * 4;
+      const [r, g, b] = image.data.subarray(pixel, pixel + 3);
+      return r > 160 && g > 95 && b < 155 && r > g * 1.12 && g > b * 1.15;
+    };
+    if (!isRoad(x)) return undefined;
+    let left = x;
+    let right = x;
+    while (left > 0 && isRoad(left - 1)) left -= 1;
+    while (right < image.width - 1 && isRoad(right + 1)) right += 1;
+    const center = (left + right) / 2 / (image.width - 1);
+    return center;
+  };
+
+  for (const asset of assets) {
+    const image = PNG.sync.read(
+      fs.readFileSync(path.join(__dirname, '../assets/map/worlds', asset)),
+    );
+    const viewportWidth = 390;
+    const mapHeight = getWorldMapHeight(10);
+    for (let index = 0; index < 10; index += 1) {
+      const { left, top } = getLevelNodePosition(
+        index,
+        mapHeight,
+        viewportWidth,
+      );
+      const x = (left + 44) / viewportWidth;
+      const runCenter = roadRunAt(
+        image,
+        x,
+        top + MAP_NODE_GROUND_OFFSET,
+        mapHeight,
+        viewportWidth,
+        false,
+      );
+      assert.ok(runCenter !== undefined, `${asset}: fase ${index + 1}`);
+      if (asset.startsWith('w01_') || asset.startsWith('w02_')) {
+        assert.ok(
+          Math.abs(runCenter - x) * viewportWidth < 8,
+          `${asset}: fase ${index + 1} fora do centro da rua`,
+        );
+      }
+    }
+    if (asset.startsWith('w01_')) {
+      for (const { levelId, point } of PARQUE_LEVEL_ANCHORS) {
+        const x = point.x / 360;
+        const runCenter = roadRunAt(image, x, point.y, 3160, 360, true);
+        assert.ok(runCenter !== undefined, `${asset}: ${levelId}`);
+        assert.ok(
+          Math.abs(runCenter - x) * 360 < 5,
+          `${asset}: ${levelId} fora do centro da rua (âncora ${x.toFixed(3)}, centro ${runCenter.toFixed(3)})`,
+        );
+      }
+    }
+    if (asset.startsWith('w04_')) {
+      const bonusHeight = getWorldMapHeight(3);
+      for (let index = 0; index < 3; index += 1) {
+        const { left, top } = getLevelNodePosition(
+          index,
+          bonusHeight,
+          viewportWidth,
+        );
+        const x = (left + 44) / viewportWidth;
+        assert.ok(
+          roadRunAt(
+            image,
+            x,
+            top + MAP_NODE_GROUND_OFFSET,
+            bonusHeight,
+            viewportWidth,
+            false,
+          ) !== undefined,
+          `mundo bônus: fase ${index + 1}`,
+        );
+      }
+    }
+  }
 });
 
 test('segmentos seguem a composição e o overlap canônico de 24 unidades', () => {

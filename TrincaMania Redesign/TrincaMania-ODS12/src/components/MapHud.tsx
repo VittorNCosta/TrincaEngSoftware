@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
+import { WorldNavigationIcon } from './WorldNavigationIcon';
 import { radii, shadows } from '../styles/theme';
 import { World, WorldId } from '../types/game';
 import { WindowTarget } from '../types/ui';
@@ -97,7 +98,7 @@ export function MapHud({
           ]}
         >
           <View pointerEvents="none" style={styles.avatarButton}>
-            <GameIcon name="avatar" size={36} variant="plain" />
+            <GameIcon name="avatar" size={36} tone="green" variant="plain" />
           </View>
         </Pressable>
         <Pressable
@@ -113,7 +114,7 @@ export function MapHud({
           ]}
         >
           <View pointerEvents="none" style={styles.settingsButton}>
-            <GameIcon name="settings" size={28} tone="blue" variant="plain" />
+            <GameIcon name="settings" size={31} tone="green" variant="plain" />
           </View>
         </Pressable>
         <View style={styles.topSpacer} />
@@ -193,17 +194,7 @@ export function MapHud({
             pressed && hasPreviousWorld ? styles.pressed : null,
           ]}
         >
-          <View
-            pointerEvents="none"
-            style={[styles.arrow, hasPreviousWorld ? styles.arrowActive : null]}
-          >
-            <GameIcon
-              muted={!hasPreviousWorld}
-              name="back"
-              size={24}
-              tone="gold"
-            />
-          </View>
+          <WorldNavigationIcon direction="back" disabled={!hasPreviousWorld} />
         </Pressable>
 
         <View style={styles.worldPlate}>
@@ -247,12 +238,7 @@ export function MapHud({
             pressed && hasNextWorld ? styles.pressed : null,
           ]}
         >
-          <View
-            pointerEvents="none"
-            style={[styles.arrow, hasNextWorld ? styles.arrowActive : null]}
-          >
-            <GameIcon muted={!hasNextWorld} name="next" size={24} tone="gold" />
-          </View>
+          <WorldNavigationIcon direction="next" disabled={!hasNextWorld} />
         </Pressable>
       </View>
 
@@ -301,20 +287,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     lineHeight: 15,
   },
-  arrow: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(7, 24, 32, 0.55)',
-    borderColor: 'rgba(255, 255, 255, 0.24)',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 28,
-    justifyContent: 'center',
-    width: 28,
-  },
-  arrowActive: {
-    backgroundColor: 'rgba(7, 24, 32, 0.62)',
-    borderColor: 'rgba(255, 211, 90, 0.6)',
-  },
   arrowTouch: {
     alignItems: 'center',
     height: 48,
@@ -341,12 +313,12 @@ const styles = StyleSheet.create({
   },
   avatarButton: {
     alignItems: 'center',
-    backgroundColor: '#5C2A9B',
-    borderBottomColor: '#2C0E56',
-    borderBottomWidth: 5,
-    borderColor: '#FFD35A',
+    backgroundColor: '#E1F1DE',
+    borderBottomColor: '#78B48F',
+    borderBottomWidth: 3,
+    borderColor: '#FFFFFF',
     borderRadius: 14,
-    borderWidth: 3,
+    borderWidth: 2,
     height: 44,
     justifyContent: 'center',
     overflow: 'hidden',
@@ -355,12 +327,12 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     alignItems: 'center',
-    backgroundColor: '#4FBCFF',
-    borderBottomColor: '#185C94',
-    borderBottomWidth: 5,
-    borderColor: '#C8ECFF',
+    backgroundColor: '#E1F1DE',
+    borderBottomColor: '#78B48F',
+    borderBottomWidth: 3,
+    borderColor: '#FFFFFF',
     borderRadius: 13,
-    borderWidth: 3,
+    borderWidth: 2,
     height: 40,
     justifyContent: 'center',
     width: 40,
@@ -434,12 +406,12 @@ const styles = StyleSheet.create({
     width: 0,
   },
   plateNotchLeft: {
-    borderRightColor: '#FFD35A',
+    borderRightColor: '#E1F1DE',
     borderRightWidth: 9,
     left: -10,
   },
   plateNotchRight: {
-    borderLeftColor: '#FFD35A',
+    borderLeftColor: '#E1F1DE',
     borderLeftWidth: 9,
     right: -10,
   },
@@ -498,10 +470,10 @@ const styles = StyleSheet.create({
   },
   worldPlate: {
     alignItems: 'center',
-    backgroundColor: '#5C2A9B',
-    borderBottomColor: '#2C0E56',
+    backgroundColor: '#174D48',
+    borderBottomColor: '#0B3436',
     borderBottomWidth: 4,
-    borderColor: '#FFD35A',
+    borderColor: '#E1F1DE',
     borderRadius: 12,
     borderWidth: 3,
     gap: 2,
