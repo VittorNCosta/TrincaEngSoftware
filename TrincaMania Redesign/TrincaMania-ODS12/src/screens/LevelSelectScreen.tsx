@@ -4,7 +4,7 @@ import type { SelectedTarget } from './levelSelect/types';
 import { isChapterModeUnlocked } from '../utils/chapterAvailability';
 import {
   MAP_VIEWPORT_ESTIMATE,
-  MAP_PARALLAX_TRAVEL,
+  getMapParallaxTravel,
   LEGACY_MAP_OPENING_BOTTOM_INSET,
   LEGACY_MAP_OPENING_FOCUS_RATIO,
   LEGACY_MAP_OPENING_TOP_INSET,
@@ -183,14 +183,16 @@ export function LevelSelectScreen({
       }),
     [mapScrollY],
   );
+  const mapViewportHeight = mapViewport.height || MAP_VIEWPORT_ESTIMATE;
+  const mapParallaxTravel = getMapParallaxTravel(mapViewportHeight);
   const mapParallaxOffset = useMemo(
     () =>
       mapScrollY.interpolate({
         extrapolate: 'clamp',
-        inputRange: [0, Math.max(1, selectedMapHeight - MAP_VIEWPORT_ESTIMATE)],
-        outputRange: [0, -MAP_PARALLAX_TRAVEL],
+        inputRange: [0, Math.max(1, selectedMapHeight - mapViewportHeight)],
+        outputRange: [0, -mapParallaxTravel],
       }),
-    [mapScrollY, selectedMapHeight],
+    [mapScrollY, selectedMapHeight, mapViewportHeight, mapParallaxTravel],
   );
 
   const onMapViewportLayout = useCallback((event: LayoutChangeEvent) => {
@@ -380,6 +382,9 @@ export function LevelSelectScreen({
     return () => {
       cancelAnimationFrame(frame);
       fadeAnimation?.stop();
+      // A transient layout can invalidate the target and then restore the
+      // same key. A canceled reveal must be allowed to start again.
+      appliedOpeningKeyRef.current = undefined;
     };
   }, [isActive, mapFade, mapScrollY, openingScrollKey, openingScrollY]);
 
@@ -646,7 +651,10 @@ export function LevelSelectScreen({
               pointerEvents="none"
               style={[
                 styles.mapParallax,
-                { transform: [{ translateY: mapParallaxOffset }] },
+                {
+                  bottom: -mapParallaxTravel,
+                  transform: [{ translateY: mapParallaxOffset }],
+                },
               ]}
             >
               <ImageBackground

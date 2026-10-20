@@ -1041,6 +1041,18 @@ mk open --title 'A-36 · Integrar cada asset entregue no código' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
+mk open --title 'A-37 · Corrigir enquadramento dos mapas e auditar a apresentação ODS 12' \
+  --body 'Implementação local 20/10/2026: folga do parallax proporcional ao viewport (6%, máximo 48 px), enquadramento 9:16 no simulador e mapas completos no site irmão igrion-ODS-site. Revelação do mapa reiniciada após cancelamento por layout transitório, com regressão reproduzida antes da correção. Regressão de toques sem espera artificial e capturas dos mundos 1–10/bônus no navegador; arte PNG, fases e regras preservadas. Evidências locais em auditoria/2026-10-20/ods-correcoes no workspace. Aceite Android e merge pendentes; sem build nativo nem CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P0
+**Fluxo:** Arte
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'arte,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 
 # --- Som ---
 mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
@@ -2621,4 +2633,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 197 issues (132 já criadas fechadas) =="
+echo "== pronto: 198 issues (132 já criadas fechadas) =="

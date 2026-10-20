@@ -1,0 +1,22 @@
+RETOMADA DA AUDITORIA ODS 12 — 20/10/2026
+
+Aplicativo e site estão na branch fix/ods12-auditoria-visual-20261020.
+Clone também https://github.com/VittorNCosta/igrion-ODS-site.git nessa branch,
+lado a lado com TrincaEngSoftware, para manter a resolução padrão dos scripts.
+
+O guia completo de dependências, Playwright MCP, testes e pendências está em:
+igrion-ODS-site/docs/CONTINUAR-OUTRO-PC-20261020.txt
+O painel, relatórios e capturas estão em:
+igrion-ODS-site/docs/auditoria/2026-10-20/index.html
+
+As branches preservam o estado auditado, sem integração nas bases remotas.
+Antes de um futuro merge, revisar os commits que avançaram em develop/main.
+As correções atuais tratam o enquadramento/parallax e a revelação do mapa;
+o site inclui a exportação web correspondente e testes responsivos.
+O APK permanece anterior; aprovação visual Android e arte do bônus pendentes.
+Os textos truncados do HUD da partida em área estreita precisam de revisão;
+a captura jogo-mobile.png no diretório playwright-mcp do painel registra isso.
+
+Ler as instruções compartilhadas antes de editar. GitHub Actions continua
+bloqueado; validação exclusivamente local. Nenhum PR/merge/release ou novo
+APK faz parte do envio para continuar em outro computador.

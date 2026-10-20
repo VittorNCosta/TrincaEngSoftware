@@ -8,10 +8,11 @@ export const MAP_NODE_STEP = 110;
 // Folga no topo para a bolha mais alta não ficar sob o HUD flutuante.
 export const MAP_NODE_TOP_PADDING = 170;
 export const NODE_PATH_LEFTS = [112, 42, 202, 72, 184, 46, 206, 82, 190, 118];
-// Altura aproximada da área visível do mapa; só alimenta o parallax.
+// Fallback antes da primeira medição do viewport.
 export const MAP_VIEWPORT_ESTIMATE = 720;
-// Quanto o cenário anda no total: 0,25x o percurso das bolhas.
-export const MAP_PARALLAX_TRAVEL = 260;
+// Uma folga grande aumenta o zoom de `cover` e corta as laterais da arte.
+export const getMapParallaxTravel = (viewportHeight: number) =>
+  Math.min(48, Math.max(0, viewportHeight) * 0.06);
 export const LEGACY_MAP_OPENING_BOTTOM_INSET = 48;
 export const LEGACY_MAP_OPENING_FOCUS_RATIO = 0.45;
 export const LEGACY_MAP_OPENING_TOP_INSET = 170;

@@ -94,6 +94,36 @@ const mapOpacity = (screen: ReturnType<typeof render>) => {
   return StyleSheet.flatten(frame.props.style).opacity;
 };
 
+test('a temporary zero-sized viewport can reveal the same map after layout recovers', () => {
+  const frames = controlFrames();
+  const timing = jest.spyOn(Animated, 'timing');
+  try {
+    const screen = render(<LevelSelectScreen {...baseProps()} />);
+    const opacity = mapOpacity(screen);
+    const scroll = screen.UNSAFE_getByType(ScrollView);
+    const layout = (width: number, height: number) =>
+      fireEvent(scroll, 'layout', {
+        nativeEvent: { layout: { x: 0, y: 0, width, height } },
+      });
+    layout(320, 600);
+    fireEvent(scroll, 'contentSizeChange', 320, 2900);
+    // A browser layout can briefly invalidate a pending reveal, then return
+    // the identical opening key. That canceled key must remain retryable.
+    layout(0, 0);
+    layout(320, 600);
+    frames.flush();
+    expect(
+      timing.mock.calls.filter(
+        ([value, config]) => value === opacity && config.toValue === 1,
+      ),
+    ).toHaveLength(1);
+    screen.unmount();
+  } finally {
+    frames.restore();
+    timing.mockRestore();
+  }
+});
+
 test('repeated native content layout before the next frame does not cancel the map reveal', () => {
   const frames = controlFrames();
   const timing = jest.spyOn(Animated, 'timing');
