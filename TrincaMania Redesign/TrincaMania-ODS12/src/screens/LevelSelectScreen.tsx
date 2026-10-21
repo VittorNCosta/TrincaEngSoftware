@@ -1,4 +1,6 @@
 import { CampaignMapLayers } from './levelSelect/CampaignMapLayers';
+import { IllustratedCampaignMap } from './levelSelect/IllustratedCampaignMap';
+import { getIllustratedMapLayout } from './levelSelect/illustratedMapLayout';
 import { MapSelectionPanel } from './levelSelect/MapSelectionPanel';
 import type { SelectedTarget } from './levelSelect/types';
 import { isChapterModeUnlocked } from '../utils/chapterAvailability';
@@ -134,6 +136,10 @@ export function LevelSelectScreen({
   );
   const currentLevel = getCurrentLevelForWorld(selectedWorldId, progress);
   const selectedMapConfig = getWorldMapConfig(selectedWorldId);
+  const illustratedMapLayout = useMemo(
+    () => getIllustratedMapLayout(selectedWorldId, mapViewport.width || 360),
+    [selectedWorldId, mapViewport.width],
+  );
   const segmentedMapConfig =
     selectedMapConfig?.mode === 'segmented' ? selectedMapConfig : undefined;
   const segmentedMapTransform = useMemo(
@@ -143,11 +149,13 @@ export function LevelSelectScreen({
         : undefined,
     [mapViewport.width, segmentedMapConfig],
   );
-  const selectedMapHeight = segmentedMapTransform
-    ? segmentedMapTransform.contentHeight
-    : segmentedMapConfig
-      ? segmentedMapConfig.designSize.height
-      : getWorldMapHeight(worldLevels.length);
+  const selectedMapHeight = illustratedMapLayout
+    ? illustratedMapLayout.height
+    : segmentedMapTransform
+      ? segmentedMapTransform.contentHeight
+      : segmentedMapConfig
+        ? segmentedMapConfig.designSize.height
+        : getWorldMapHeight(worldLevels.length);
   // Mundo 1 usa a arte de cena única no lugar dos blocos de floresta
   // ilustrados: os blocos são opacos e cobrem qualquer fundo colocado atrás
   // deles, então a troca precisa desligar os blocos (abaixo) e não só somar
@@ -244,7 +252,13 @@ export function LevelSelectScreen({
     let focusRatio = LEGACY_MAP_OPENING_FOCUS_RATIO;
     let focusY: number | undefined;
 
-    if (segmentedMapConfig && segmentedMapTransform) {
+    if (illustratedMapLayout) {
+      fixedBottomInset = BOTTOM_NAV_HEIGHT + 24;
+      const localIndex = worldLevels.findIndex(
+        ({ id }) => id === openingFocusLevelId,
+      );
+      focusY = illustratedMapLayout.groundPoints[localIndex]?.y;
+    } else if (segmentedMapConfig && segmentedMapTransform) {
       const anchor = segmentedMapConfig.levelAnchors.find(
         ({ levelId }) => levelId === openingFocusLevelId,
       );
@@ -283,7 +297,8 @@ export function LevelSelectScreen({
         Math.round(selectedMapHeight),
       ].join(':'),
       y: getCampaignMapOpeningScrollOffset({
-        contentHeight: selectedMapHeight,
+        contentHeight:
+          selectedMapHeight + (illustratedMapLayout ? BOTTOM_NAV_HEIGHT : 0),
         fixedBottomInset,
         fixedTopInset,
         focusRatio,
@@ -301,6 +316,8 @@ export function LevelSelectScreen({
     segmentedMapTransform,
     selectedMapHeight,
     selectedWorldId,
+    illustratedMapLayout,
+    worldLevels,
   ]);
 
   useEffect(() => {
@@ -646,7 +663,7 @@ export function LevelSelectScreen({
             { opacity: mapFade },
           ]}
         >
-          {selectedMapBackground ? (
+          {selectedMapBackground && !illustratedMapLayout ? (
             <Animated.View
               pointerEvents="none"
               style={[
@@ -666,6 +683,7 @@ export function LevelSelectScreen({
             </Animated.View>
           ) : null}
           <Animated.ScrollView
+            testID="campaign-map-scroll"
             key={`campaign-map-${selectedWorldId}`}
             ref={mapScrollRef}
             contentContainerStyle={[
@@ -689,30 +707,48 @@ export function LevelSelectScreen({
                 style={styles.mapBackgroundHitArea}
               />
             ) : null}
-            <CampaignMapLayers
-              segmentedMapConfig={segmentedMapConfig}
-              segmentedMapTransform={segmentedMapTransform}
-              selectedMapHeight={selectedMapHeight}
-              mapViewport={mapViewport}
-              worldLevelById={worldLevelById}
-              currentLevel={currentLevel}
-              progress={progress}
-              devMode={devMode}
-              selectedTarget={selectedTarget}
-              selectLevel={selectLevel}
-              selectShop={selectShop}
-              selectWorldPortal={selectWorldPortal}
-              isWorldUnlocked={isWorldUnlocked}
-              trailPoints={trailPoints}
-              worldLevels={worldLevels}
-              completedLevelIdSet={completedLevelIdSet}
-              unlockedLevelIdSet={unlockedLevelIdSet}
-              selectedWorldId={selectedWorldId}
-              bonusChestMarkerPosition={bonusChestMarkerPosition}
-              bonusWorldChest={bonusWorldChest}
-              bonusChestState={bonusChestState}
-              selectBonusChest={selectBonusChest}
-            />
+            {illustratedMapLayout ? (
+              <IllustratedCampaignMap
+                worldId={selectedWorldId}
+                layout={illustratedMapLayout}
+                levels={worldLevels}
+                progress={progress}
+                currentLevelId={currentLevel?.id}
+                devMode={devMode}
+                selectedTarget={selectedTarget}
+                isWorldUnlocked={isWorldUnlocked}
+                selectLevel={selectLevel}
+                selectWorld={selectWorld}
+                selectWorldPortal={selectWorldPortal}
+                selectShop={selectShop}
+                selectBonusChest={selectBonusChest}
+              />
+            ) : (
+              <CampaignMapLayers
+                segmentedMapConfig={segmentedMapConfig}
+                segmentedMapTransform={segmentedMapTransform}
+                selectedMapHeight={selectedMapHeight}
+                mapViewport={mapViewport}
+                worldLevelById={worldLevelById}
+                currentLevel={currentLevel}
+                progress={progress}
+                devMode={devMode}
+                selectedTarget={selectedTarget}
+                selectLevel={selectLevel}
+                selectShop={selectShop}
+                selectWorldPortal={selectWorldPortal}
+                isWorldUnlocked={isWorldUnlocked}
+                trailPoints={trailPoints}
+                worldLevels={worldLevels}
+                completedLevelIdSet={completedLevelIdSet}
+                unlockedLevelIdSet={unlockedLevelIdSet}
+                selectedWorldId={selectedWorldId}
+                bonusChestMarkerPosition={bonusChestMarkerPosition}
+                bonusWorldChest={bonusWorldChest}
+                bonusChestState={bonusChestState}
+                selectBonusChest={selectBonusChest}
+              />
+            )}
           </Animated.ScrollView>
           <View pointerEvents="none" style={styles.mapBottomScrim} />
         </Animated.View>
@@ -724,6 +760,7 @@ export function LevelSelectScreen({
             onPress={onOpenChapters}
             style={({ pressed }) => [
               styles.chaptersButton,
+              illustratedMapLayout ? { left: 12, right: 'auto' } : null,
               pressed ? styles.chaptersButtonPressed : null,
             ]}
           >
@@ -733,6 +770,7 @@ export function LevelSelectScreen({
         ) : null}
 
         <MapHud
+          showWorldNavigation={!illustratedMapLayout}
           coins={progress.coins}
           completedCount={completedCount}
           hasNextWorld={Boolean(nextWorld)}

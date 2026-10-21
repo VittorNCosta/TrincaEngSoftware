@@ -13,6 +13,7 @@ type MapHudProps = {
   completedCount: number;
   hasNextWorld: boolean;
   hasPreviousWorld: boolean;
+  showWorldNavigation?: boolean;
   lives: number;
   livesFooter: string;
   progressPercent: number;
@@ -38,6 +39,7 @@ export function MapHud({
   completedCount,
   hasNextWorld,
   hasPreviousWorld,
+  showWorldNavigation = true,
   lives,
   livesFooter,
   progressPercent,
@@ -179,32 +181,37 @@ export function MapHud({
       </View>
 
       <View style={styles.worldRow}>
-        <Pressable
-          accessibilityLabel="Mundo anterior"
-          accessibilityRole="button"
-          accessibilityState={{ disabled: !hasPreviousWorld }}
-          disabled={!hasPreviousWorld}
-          onPress={() => {
-            playButtonSound();
-            onPreviousWorld();
-          }}
-          style={({ pressed }) => [
-            styles.arrowTouch,
-            pressed && hasPreviousWorld ? styles.pressed : null,
-          ]}
-        >
-          <View
-            pointerEvents="none"
-            style={[styles.arrow, hasPreviousWorld ? styles.arrowActive : null]}
+        {showWorldNavigation ? (
+          <Pressable
+            accessibilityLabel="Mundo anterior"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !hasPreviousWorld }}
+            disabled={!hasPreviousWorld}
+            onPress={() => {
+              playButtonSound();
+              onPreviousWorld();
+            }}
+            style={({ pressed }) => [
+              styles.arrowTouch,
+              pressed && hasPreviousWorld ? styles.pressed : null,
+            ]}
           >
-            <GameIcon
-              muted={!hasPreviousWorld}
-              name="back"
-              size={24}
-              tone="gold"
-            />
-          </View>
-        </Pressable>
+            <View
+              pointerEvents="none"
+              style={[
+                styles.arrow,
+                hasPreviousWorld ? styles.arrowActive : null,
+              ]}
+            >
+              <GameIcon
+                muted={!hasPreviousWorld}
+                name="back"
+                size={24}
+                tone="gold"
+              />
+            </View>
+          </Pressable>
+        ) : null}
 
         <View style={styles.worldPlate}>
           <View
@@ -233,27 +240,34 @@ export function MapHud({
           </View>
         </View>
 
-        <Pressable
-          accessibilityLabel="Próximo mundo"
-          accessibilityRole="button"
-          accessibilityState={{ disabled: !hasNextWorld }}
-          disabled={!hasNextWorld}
-          onPress={() => {
-            playButtonSound();
-            onNextWorld();
-          }}
-          style={({ pressed }) => [
-            styles.arrowTouch,
-            pressed && hasNextWorld ? styles.pressed : null,
-          ]}
-        >
-          <View
-            pointerEvents="none"
-            style={[styles.arrow, hasNextWorld ? styles.arrowActive : null]}
+        {showWorldNavigation ? (
+          <Pressable
+            accessibilityLabel="Próximo mundo"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !hasNextWorld }}
+            disabled={!hasNextWorld}
+            onPress={() => {
+              playButtonSound();
+              onNextWorld();
+            }}
+            style={({ pressed }) => [
+              styles.arrowTouch,
+              pressed && hasNextWorld ? styles.pressed : null,
+            ]}
           >
-            <GameIcon muted={!hasNextWorld} name="next" size={24} tone="gold" />
-          </View>
-        </Pressable>
+            <View
+              pointerEvents="none"
+              style={[styles.arrow, hasNextWorld ? styles.arrowActive : null]}
+            >
+              <GameIcon
+                muted={!hasNextWorld}
+                name="next"
+                size={24}
+                tone="gold"
+              />
+            </View>
+          </Pressable>
+        ) : null}
       </View>
 
       <View pointerEvents="none" style={styles.dots}>

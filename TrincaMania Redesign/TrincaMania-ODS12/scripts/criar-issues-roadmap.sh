@@ -1053,6 +1053,18 @@ mk open --title 'A-37 · Corrigir enquadramento dos mapas e auditar a apresenta�
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Arte'
+mk open --title 'A-38 · Apoiar as fases na trilha com pedestais e placas de passagem' \
+  --body 'Implementação local 20/10/2026: os 103 pedestais da campanha usam âncoras próprias da trilha de cada ilustração e rolam junto com o cenário, sem parallax relativo. Placas de passagem e retorno reutilizam os PNGs do TrincaMania original; as setas do HUD saem da campanha. Estados, estrelas, seleção, descanso e progresso preservados. Evidências em auditoria/2026-10-20/ods-pedestais no workspace. Validação local: 279 testes de domínio, 80 de interface, simulações de campanha/capítulos e 24 E2E do site aprovados; regressão final de layout/navegação e acessibilidade conferida após os ajustes visuais. Aceite Android e merge pendentes, sem build nativo nem CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P0
+**Fluxo:** Arte
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'arte,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 
 # --- Som ---
 mk done --title 'S-11 · Renomear as `AmbientKey` de fantasia' \
@@ -2633,4 +2645,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 198 issues (132 já criadas fechadas) =="
+echo "== pronto: 199 issues (132 já criadas fechadas) =="
