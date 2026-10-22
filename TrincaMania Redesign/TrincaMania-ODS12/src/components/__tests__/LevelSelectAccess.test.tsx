@@ -86,10 +86,7 @@ const controlFrames = () => {
 const mapOpacity = (screen: ReturnType<typeof render>) => {
   const frame = screen
     .UNSAFE_getAllByType(Animated.View)
-    .find(
-      (view) =>
-        StyleSheet.flatten(view.props.style)?.backgroundColor === '#173F2B',
-    );
+    .find((view) => view.props.testID === 'campaign-map-frame');
   if (!frame) throw new Error('Map frame not rendered');
   return StyleSheet.flatten(frame.props.style).opacity;
 };

@@ -118,6 +118,11 @@ stub(projectModule('src/screens/ShopScreen'), { ShopScreen: 'ShopScreen' });
 stub(projectModule('src/screens/SplashIntroScreen'), {
   SplashIntroScreen: 'SplashIntroScreen',
 });
+stub(projectModule('src/utils/music'), {
+  installMusicLifecycle: () => () => undefined,
+  playMetaMusic: () => undefined,
+  setMusicEnabled: () => undefined,
+});
 stub(projectModule('src/utils/sounds'), {
   setSoundEnabled: async () => undefined,
 });
@@ -355,7 +360,7 @@ const bootApp = async () => {
   return app;
 };
 
-test('apagar progresso não é desfeito pelas compras que ainda estavam na fila', async () => {
+test('apagar progresso não é desfeito pela compra pendente e segundo toque é bloqueado', async () => {
   store.clear();
   seedLives(MAX_LIVES);
   await saveProgress({ ...createInitialProgress(), coins: 1000 });
@@ -368,17 +373,20 @@ test('apagar progresso não é desfeito pelas compras que ainda estavam na fila'
   mapProps.onOpenShop();
   app.flush();
 
-  // Duas compras em rajada: a primeira grava, a segunda fica enfileirada.
+  // O contrato async da loja guarda a primeira compra e bloqueia o duplo toque.
   const shopProps = app.props('ShopScreen');
-  assert.equal(shopProps.onBuyItem('undo'), true);
+  const pendingPurchase = shopProps.onPurchasePowerUp('undo', false);
   app.flush();
-  assert.equal(app.props('ShopScreen').onBuyItem('undo'), true);
+  assert.equal(
+    await app.props('ShopScreen').onPurchasePowerUp('undo', false),
+    false,
+  );
   app.flush();
 
-  // Configurações → "Apagar progresso" no meio das gravações em voo.
+  // Configurações → "Apagar progresso" no meio da gravação em voo.
   mapProps.onResetProgress();
   app.flush();
-
+  await pendingPurchase;
   await app.settle(400);
 
   // O que vale é o disco: era daqui que o progresso velho ressuscitava no próximo

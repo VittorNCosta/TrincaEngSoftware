@@ -1,0 +1,32 @@
+ENVIO AUTORIZADO DO SIMULADOR ODS 12 — 22/10/2026
+
+Após a validação local do site e do simulador, o usuário autorizou:
+"pode subir no remoto".
+
+Escopo: commit e push das alterações validadas nos dois repositórios,
+nas branches existentes fix/mapa-pedestais-trilha-20261020.
+Esta autorização não altera o bloqueio permanente de GitHub Actions.
+Não inclui PR, merge em main/develop, release, deploy ou geração de APK.
+
+Este commit reúne a fonte da interface original, intro, músicas, modo DEV
+temporário, ajustes do mapa/HUD/poderes, assets, testes e documentação.
+As regras ODS12 e as 103 fases canônicas foram preservadas; o save DEV
+continua isolado em memória. O APK distribuído pelo site foi preservado.
+
+Verificações locais concluídas em 22/10/2026:
+- Typecheck: PASS.
+- Domínio/storage: 282/282 PASS.
+- Componentes: 94/94 PASS em 24 suítes.
+- Simulações: 103 fases e 1.000 mapas de capítulos, PASS.
+- ESLint: zero erros, três avisos de hooks em GameScreen.tsx.
+- Prettier e git diff --check: PASS.
+- Exportação Expo Web: PASS; os 207 arquivos reproduzidos correspondem
+  byte a byte à exportação do repositório igrion-ODS-site.
+- Site Astro e configuração/exportação: PASS; Playwright 30/30 PASS.
+
+Relatório detalhado no repositório do site:
+docs/auditoria/2026-10-22/VALIDACAO.txt.
+
+A publicação preserva a branch de trabalho. A integração em develop/main
+exige conciliar as bases divergentes. Aprovação visual Android e arte
+própria do bônus continuam pendentes.

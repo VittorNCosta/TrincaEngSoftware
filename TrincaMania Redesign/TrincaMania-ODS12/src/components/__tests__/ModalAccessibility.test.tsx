@@ -11,12 +11,17 @@ it('nomeia configurações, omite o fundo dos controles acessíveis e mantém fe
   const screen = render(
     <SettingsModal
       visible
-      settings={{ soundEnabled: true, hapticsEnabled: true }}
+      settings={{
+        soundEnabled: true,
+        hapticsEnabled: true,
+        musicEnabled: true,
+      }}
       onClose={onClose}
       onEnableSilentMode={jest.fn()}
       onResetProgress={jest.fn()}
       onToggleHaptics={jest.fn()}
       onToggleSound={jest.fn()}
+      onToggleMusic={jest.fn()}
       onUnlockAllForDevMode={jest.fn()}
     />,
   );
@@ -24,10 +29,10 @@ it('nomeia configurações, omite o fundo dos controles acessíveis e mantém fe
     'Configurações',
   );
   expect(
-    screen.getByRole('button', { name: 'Som: Ligado, Efeitos sonoros' }),
+    screen.getByRole('switch', { name: 'Efeitos', checked: true }),
   ).toBeTruthy();
   expect(screen.queryByRole('button', { name: '' })).toBeNull();
-  expect(screen.getByText('TileClear - ODS12')).toBeTruthy();
+  expect(screen.getByText('TrincaMania ODS12')).toBeTruthy();
   fireEvent.press(screen.getByRole('button', { name: 'Fechar configurações' }));
   expect(onClose).toHaveBeenCalledTimes(1);
 });

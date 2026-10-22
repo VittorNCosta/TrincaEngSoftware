@@ -1,4 +1,4 @@
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 
 const SIGN_ART = {
   open: require('../../assets/map/passage/trail_sign_waypost_open.png'),
@@ -9,7 +9,6 @@ export function MapTrailSign({
   returning = false,
   locked,
   selected = false,
-  label,
   accessibilityLabel,
   scale,
   onPress,
@@ -17,7 +16,6 @@ export function MapTrailSign({
   returning?: boolean;
   locked: boolean;
   selected?: boolean;
-  label: string;
   accessibilityLabel: string;
   scale: number;
   onPress: () => void;
@@ -44,34 +42,6 @@ export function MapTrailSign({
           transform: [{ scaleX: returning ? -1 : 1 }],
         }}
       />
-      <View
-        pointerEvents="none"
-        style={{
-          position: 'absolute',
-          top: 24 * scale,
-          left: 12 * scale,
-          width: 88 * scale,
-          backgroundColor: '#F4DFA0',
-          borderRadius: 3 * scale,
-          paddingVertical: 2 * scale,
-        }}
-      >
-        <Text
-          numberOfLines={1}
-          adjustsFontSizeToFit
-          style={{
-            fontSize: 15 * scale,
-            lineHeight: 18 * scale,
-            textAlign: 'center',
-            fontWeight: '900',
-            color: '#56391D',
-          }}
-        >
-          {returning ? '‹ ' : ''}
-          {label}
-          {returning ? '' : ' ›'}
-        </Text>
-      </View>
       <View
         testID={returning ? 'map-sign-ground-previous' : 'map-sign-ground-next'}
         style={{

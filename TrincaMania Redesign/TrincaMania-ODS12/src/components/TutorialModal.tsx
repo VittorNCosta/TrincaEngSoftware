@@ -9,8 +9,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { GameIcon, GameIconName, GameIconTone } from './GameIcon';
-import { PrimaryButton } from './PrimaryButton';
+import {
+  GameIcon,
+  GameIconName,
+  GameIconTone,
+} from '../original/components/GameIcon';
+import { TutorialFrame } from '../original/components/TutorialVisuals';
+import { PrimaryButton } from '../original/components/PrimaryButton';
 import { activeMatchRule } from '../domain/recycling/policies/MatchRuleRegistry';
 import { BASE_TRAY_CAPACITY } from '../storage/trayBoostStorage';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
@@ -120,53 +125,55 @@ export function TutorialModal({ visible, onFinish }: TutorialModalProps) {
         >
           <Animated.View
             style={[
-              styles.card,
+              { width: '100%', maxWidth: 380 },
               {
                 opacity: cardOpacity,
                 transform: [{ scale: cardScale }],
               },
             ]}
           >
-            <Text style={styles.kicker}>Guia da campanha</Text>
-            <GameIcon name={step.iconName} size={68} tone={step.iconTone} />
-            <View style={styles.stepDots}>
-              {TUTORIAL_STEPS.map((_, index) => (
-                <View
-                  key={`tutorial-dot-${index}`}
-                  style={[
-                    styles.stepDot,
-                    index === stepIndex ? styles.activeStepDot : null,
-                  ]}
-                />
-              ))}
-            </View>
-            <Text accessibilityLiveRegion="polite" style={styles.stepCount}>
-              {stepIndex + 1}/{TUTORIAL_STEPS.length}
-            </Text>
-            <Text accessibilityRole="header" style={styles.title}>
-              {step.title}
-            </Text>
-            <Text style={styles.text}>{step.text}</Text>
-
-            <View style={styles.examplePanel}>
-              <Text style={styles.exampleText}>
-                Escolha peças livres para montar trincas e avançar pelo mapa.
+            <TutorialFrame forest>
+              <Text style={styles.kicker}>Guia da campanha</Text>
+              <GameIcon name={step.iconName} size={68} tone={step.iconTone} />
+              <View style={styles.stepDots}>
+                {TUTORIAL_STEPS.map((_, index) => (
+                  <View
+                    key={`tutorial-dot-${index}`}
+                    style={[
+                      styles.stepDot,
+                      index === stepIndex ? styles.activeStepDot : null,
+                    ]}
+                  />
+                ))}
+              </View>
+              <Text accessibilityLiveRegion="polite" style={styles.stepCount}>
+                {stepIndex + 1}/{TUTORIAL_STEPS.length}
               </Text>
-            </View>
+              <Text accessibilityRole="header" style={styles.title}>
+                {step.title}
+              </Text>
+              <Text style={styles.text}>{step.text}</Text>
 
-            <View style={styles.actions}>
-              <PrimaryButton
-                title={isLastStep ? 'Começar' : 'Próximo'}
-                onPress={nextStep}
-              />
-              <PrimaryButton
-                size="compact"
-                testID="tutorial-pular"
-                title="Pular"
-                variant="secondary"
-                onPress={finishTutorial}
-              />
-            </View>
+              <View style={styles.examplePanel}>
+                <Text style={styles.exampleText}>
+                  Escolha peças livres para montar trincas e avançar pelo mapa.
+                </Text>
+              </View>
+
+              <View style={styles.actions}>
+                <PrimaryButton
+                  title={isLastStep ? 'Começar' : 'Próximo'}
+                  onPress={nextStep}
+                />
+                <PrimaryButton
+                  size="compact"
+                  testID="tutorial-pular"
+                  title="Pular"
+                  variant="secondary"
+                  onPress={finishTutorial}
+                />
+              </View>
+            </TutorialFrame>
           </Animated.View>
         </ScrollView>
       </SafeAreaView>

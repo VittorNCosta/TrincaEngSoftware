@@ -96,8 +96,10 @@ const lastPlayedAt: Partial<Record<SoundKey, number>> = {};
 let soundEnabledCache: boolean | undefined;
 let soundGeneration = 0;
 
-const syncAudioActive = (enabled: boolean) => {
-  setIsAudioActiveAsync(enabled).catch(() => undefined);
+// Música e efeitos têm preferências independentes: pausar SFX não desativa
+// a sessão global, pois isso também pausaria a música. O mute pausa os players.
+const syncAudioActive = () => {
+  setIsAudioActiveAsync(true).catch(() => undefined);
 };
 
 const stopAllPlayers = () => {
@@ -120,7 +122,7 @@ export const getSoundEnabled = async () => {
   // A preference changed while storage was being read takes precedence.
   if (soundEnabledCache === undefined)
     soundEnabledCache = settings.soundEnabled;
-  syncAudioActive(soundEnabledCache);
+  syncAudioActive();
   return soundEnabledCache;
 };
 
@@ -134,7 +136,7 @@ export const setSoundEnabled = async (value: boolean) => {
   }
 
   await setSoundEnabledPreference(value);
-  syncAudioActive(value);
+  syncAudioActive();
 };
 
 export const toggleSoundEnabled = async () => {

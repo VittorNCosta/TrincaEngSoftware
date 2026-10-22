@@ -26,3 +26,20 @@ export function createBrowserTestStorage(
     setItem: (key, value) => persistent.setItem(prefix + key, value),
   };
 }
+
+export type BrowserSessionMode = 'feira' | 'teste' | 'dev';
+
+/** Native callers do not use this URL-based simulator contract. */
+export const getBrowserSessionMode = (search: string): BrowserSessionMode => {
+  const mode = new URLSearchParams(search).get('modo');
+  return mode === 'dev' ? 'dev' : mode === 'feira' ? 'feira' : 'teste';
+};
+
+/** DEV and fair sessions are temporary and never access persistent saves. */
+export const createWebSessionStorage = (
+  persistent: KeyValueStorage,
+  search: string,
+): KeyValueStorage =>
+  getBrowserSessionMode(search) === 'teste'
+    ? createBrowserTestStorage(persistent)
+    : createVisitorStorage();

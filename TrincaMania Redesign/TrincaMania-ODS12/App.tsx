@@ -13,12 +13,24 @@ import { installNativeErrorHandlers } from './src/observability/nativeErrors';
 import { setDiagnosticContext } from './src/utils/log';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { getBrowserSessionMode } from './src/storage/webSessionStorage';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { CampaignResizeNoticeModal } from './src/components/CampaignResizeNoticeModal';
 import { MysteryTutorialModal } from './src/components/MysteryTutorialModal';
 import { NoLivesModal } from './src/components/NoLivesModal';
+import {
+  installMusicLifecycle,
+  playMetaMusic,
+  setMusicEnabled,
+} from './src/utils/music';
 import { SettingsModal } from './src/components/SettingsModal';
 import { TutorialModal } from './src/components/TutorialModal';
 import { WorldChestModal } from './src/components/WorldChestModal';
@@ -33,7 +45,6 @@ import { colors } from './src/styles/theme';
 import {
   CHEST_COIN_REWARD,
   applyLevelCompletion,
-  buyPowerUpItem,
   collectRestCheckpoint,
   consumePowerUpItem,
   createChestProgressSummary,
@@ -109,7 +120,6 @@ import {
   purchaseCoinTraySlot,
   resetTrayBoostState,
 } from './src/storage/trayBoostStorage';
-import { POWER_UP_COSTS } from './src/utils/gameLogic';
 import { getRestCheckpointCoinReward } from './src/utils/shop';
 import { getCurrentWorldId } from './src/utils/worldProgress';
 
@@ -118,6 +128,7 @@ type ShopReturnScreen = 'levels' | 'game';
 
 export default function App() {
   useEffect(() => installNativeErrorHandlers(), []);
+  useEffect(() => installMusicLifecycle(), []);
   const [screen, setScreen] = useState<AppScreen>('splash');
   const [progress, setProgress] = useState<ProgressState>(
     createInitialProgress(),
@@ -155,10 +166,19 @@ export default function App() {
     settings,
     setSettings,
     handleToggleSound,
+    handleToggleMusic,
     handleToggleHaptics,
     handleEnableSilentMode,
   } = useAppSettings();
-  const [devMode, setDevMode] = useState(false);
+  useEffect(() => {
+    if (!isLoadingProgress) setMusicEnabled(settings.musicEnabled);
+  }, [isLoadingProgress, settings.musicEnabled]);
+  const [devMode, setDevMode] = useState(
+    () =>
+      Platform.OS === 'web' &&
+      typeof window !== 'undefined' &&
+      getBrowserSessionMode(window.location.search) === 'dev',
+  );
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
   const [coinCollectTarget, setCoinCollectTarget] = useState<
     WindowTarget | undefined
@@ -410,6 +430,7 @@ export default function App() {
   );
 
   const handleSplashFinish = useCallback(() => {
+    playMetaMusic();
     setScreen('levels');
   }, []);
 
@@ -512,24 +533,6 @@ export default function App() {
       unlockedLevelTitle: completionResult.unlockedLevelTitle,
       unlockedWorldId: completionResult.unlockedWorldId,
     };
-  };
-
-  const handleBuyItem = (powerType: PowerUpType) => {
-    if (isProgressMutationInFlightRef.current) {
-      return false;
-    }
-
-    const cost = POWER_UP_COSTS[powerType];
-    const currentProgress = progressRef.current;
-
-    if (currentProgress.coins < cost) {
-      return false;
-    }
-
-    const nextProgress = buyPowerUpItem(currentProgress, powerType, cost);
-    void commitProgress(nextProgress).catch(() => undefined);
-
-    return true;
   };
 
   const handleUseItem = (powerType: PowerUpType) => {
@@ -990,7 +993,10 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <StatusBar style="light" />
-        <SplashIntroScreen onFinish={handleSplashFinish} />
+        <SplashIntroScreen
+          appReady={!isLoadingProgress}
+          onFinish={handleSplashFinish}
+        />
       </SafeAreaProvider>
     );
   }
@@ -1056,6 +1062,7 @@ export default function App() {
           onResetProgress={handleResetProgress}
           onSelectLevel={handleSelectLevel}
           onShowTutorial={() => setIsTutorialVisible(true)}
+          onPurchasePowerUp={handlePurchasePowerUp}
         />
       ) : null}
       {screen === 'chapters' ? (
@@ -1130,7 +1137,9 @@ export default function App() {
             progress={progress}
             worldId={shopWorldId}
             onBack={() => setScreen(shopReturnScreen)}
-            onBuyItem={handleBuyItem}
+            onPurchasePowerUp={handlePurchasePowerUp}
+            livesState={livesState}
+            timeUntilNextLifeMs={timeUntilNextLifeMs}
           />
         </View>
       ) : null}
@@ -1167,6 +1176,7 @@ export default function App() {
         onResetProgress={handleResetProgress}
         onToggleHaptics={handleToggleHaptics}
         onToggleSound={handleToggleSound}
+        onToggleMusic={handleToggleMusic}
         onUnlockAllForDevMode={handleUnlockAllForDevMode}
       />
       <NoLivesModal

@@ -108,6 +108,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
   },
+  mapFrameIllustrated: {
+    // The illustrated campaign uses a neutral canvas, independent of legacy world accents.
+    backgroundColor: colors.backgroundDeep,
+  },
   mapFrameAzulado: {
     backgroundColor: '#89B7CF',
   },

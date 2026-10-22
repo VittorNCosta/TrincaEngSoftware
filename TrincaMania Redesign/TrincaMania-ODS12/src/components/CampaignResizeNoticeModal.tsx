@@ -1,7 +1,7 @@
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { PrimaryButton } from './PrimaryButton';
+import { PrimaryButton } from '../original/components/PrimaryButton';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 
 type CampaignResizeNoticeModalProps = {

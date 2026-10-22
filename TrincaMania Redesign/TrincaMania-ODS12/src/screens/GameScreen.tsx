@@ -1,4 +1,5 @@
 import { ActiveGameClock } from '../utils/activeGameClock';
+import { useGameMusic } from '../hooks/useGameMusic';
 import { useActiveGameClock } from '../hooks/useActiveGameClock';
 import { useRoundAction } from '../hooks/useRoundAction';
 import { GameDialogs } from './game/GameDialogs';
@@ -41,10 +42,10 @@ import {
   type FlyingTileEvent,
 } from '../components/FlyingTileOverlay';
 import { GameBoard } from '../components/GameBoard';
-import { GameIcon } from '../components/GameIcon';
+import { GameIcon } from '../original/components/GameIcon';
 import { PhasePlate } from '../components/PhasePlate';
-import { PowerDrawer } from '../components/PowerDrawer';
-import { ResourcePill } from '../components/ResourcePill';
+import { PowerDrawer } from '../original/components/PowerDrawer';
+import { ResourcePill } from '../original/components/ResourcePill';
 import { ResultModal } from '../components/ResultModal';
 import { ScreenShell } from '../components/ScreenShell';
 import { Tray } from '../components/Tray';
@@ -395,6 +396,7 @@ function GameScreenContent({
   >();
   const [showBonusAchievement, setShowBonusAchievement] = useState(false);
   const [status, setStatus] = useState<GameStatus>('playing');
+  useGameMusic(level.worldId, status, isSettingsMenuVisible);
   const [toast, setToast] = useState<ToastState | undefined>();
   const [tray, setTray] = useState<Tile[]>([]);
   const [unlockedLevelTitle, setUnlockedLevelTitle] = useState<
@@ -2282,6 +2284,7 @@ function GameScreenContent({
             </View>
             <View style={styles.hudRight}>
               <ResourcePill
+                forest
                 addTone="green"
                 footer={
                   livesState.currentLives < livesState.maxLives
@@ -2294,6 +2297,7 @@ function GameScreenContent({
               />
               <View style={styles.coinRow}>
                 <ResourcePill
+                  forest
                   iconName="coin"
                   iconTone="gold"
                   value={`${coins}`}
@@ -2395,6 +2399,24 @@ function GameScreenContent({
           </View>
 
           <View style={styles.trayControlRow}>
+            <PowerDrawer
+              forest
+              disabled={
+                status !== 'playing' ||
+                practicalTutorialControlsLocked ||
+                isBlockingModalVisible ||
+                gameplayModalOpen ||
+                gameplayInteractionPending ||
+                isSettingsMenuVisible
+              }
+              disabledPowers={{
+                hint: !magicTripleRescueMove,
+                shuffle: remainingTiles < 2,
+                undo: !lastUndoMove,
+              }}
+              itemCounts={itemCounts}
+              onUsePower={requestPowerUse}
+            />
             <View style={styles.trayStatus}>
               <Text
                 style={[
@@ -2413,23 +2435,6 @@ function GameScreenContent({
                 </Text>
               ) : null}
             </View>
-            <PowerDrawer
-              disabled={
-                status !== 'playing' ||
-                practicalTutorialControlsLocked ||
-                isBlockingModalVisible ||
-                gameplayModalOpen ||
-                gameplayInteractionPending ||
-                isSettingsMenuVisible
-              }
-              disabledPowers={{
-                hint: !magicTripleRescueMove,
-                shuffle: remainingTiles < 2,
-                undo: !lastUndoMove,
-              }}
-              itemCounts={itemCounts}
-              onUsePower={requestPowerUse}
-            />
           </View>
 
           <Animated.View

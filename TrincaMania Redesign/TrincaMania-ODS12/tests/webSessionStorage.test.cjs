@@ -16,6 +16,8 @@ require.extensions['.ts'] = (module, filename) => {
 const {
   createVisitorStorage,
   createBrowserTestStorage,
+  createWebSessionStorage,
+  getBrowserSessionMode,
 } = require('../src/storage/webSessionStorage.ts');
 test('novo visitante começa sem campanha, capítulos, vidas, preferências ou itens do anterior', async () => {
   const first = createVisitorStorage();
@@ -50,4 +52,19 @@ test('escritas da feira não acessam o save persistente de testes', async () => 
   await visitor.setItem('settings', 'som ligado');
   assert.equal(await tests.getItem('settings'), 'som desligado');
   assert.equal(await visitor.getItem('settings'), 'som ligado');
+});
+
+test('DEV isola qualquer escrita do progresso persistente e reinicia sem desbloqueios gravados', async () => {
+  const persistent = createVisitorStorage();
+  const tests = createWebSessionStorage(persistent, '?modo=teste');
+  await tests.setItem('campaign', 'progresso real de teste');
+  const dev = createWebSessionStorage(persistent, '?modo=dev');
+  assert.equal(await dev.getItem('campaign'), null);
+  await dev.setItem('campaign', 'vitória temporária em fase liberada');
+  assert.equal(await tests.getItem('campaign'), 'progresso real de teste');
+  const reloadedDev = createWebSessionStorage(persistent, '?modo=dev');
+  assert.equal(await reloadedDev.getItem('campaign'), null);
+  assert.equal(getBrowserSessionMode('?modo=dev'), 'dev');
+  assert.equal(getBrowserSessionMode('?modo=feira'), 'feira');
+  assert.equal(getBrowserSessionMode('?modo=teste'), 'teste');
 });

@@ -10,8 +10,10 @@ import {
   createDefaultSettings,
   getSettings,
   setHapticsEnabledPreference,
+  setMusicEnabledPreference,
 } from '../storage/settingsStorage';
 import { setSoundEnabled } from '../utils/sounds';
+import { setMusicEnabled } from '../utils/music';
 
 export function useAppSettings() {
   const [settings, setSettingsState] = useState<AppSettings>(
@@ -50,6 +52,15 @@ export function useAppSettings() {
     );
   };
 
+  const handleToggleMusic = () => {
+    const musicEnabled = !settingsRef.current.musicEnabled;
+    setSettings((current) => ({ ...current, musicEnabled }));
+    setMusicEnabled(musicEnabled);
+    setMusicEnabledPreference(musicEnabled).catch(
+      recoverSettings(settingsVersionRef.current),
+    );
+  };
+
   const handleToggleHaptics = () => {
     const nextHapticsEnabled = !settingsRef.current.hapticsEnabled;
 
@@ -68,9 +79,12 @@ export function useAppSettings() {
       ...currentSettings,
       hapticsEnabled: false,
       soundEnabled: false,
+      musicEnabled: false,
     }));
 
+    setMusicEnabled(false);
     Promise.all([
+      setMusicEnabledPreference(false),
       setSoundEnabled(false),
       setHapticsEnabledPreference(false),
     ]).catch(recoverSettings(settingsVersionRef.current));
@@ -80,6 +94,7 @@ export function useAppSettings() {
     settings,
     setSettings,
     handleToggleSound,
+    handleToggleMusic,
     handleToggleHaptics,
     handleEnableSilentMode,
   };

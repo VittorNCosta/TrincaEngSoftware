@@ -652,14 +652,22 @@ export function LevelSelectScreen({
     <ScreenShell scroll={false}>
       <View style={styles.container}>
         <Animated.View
+          testID="campaign-map-frame"
           style={[
             styles.mapFrame,
-            selectedWorld.theme === 'azulado' ? styles.mapFrameAzulado : null,
-            selectedWorld.theme === 'violeta' ? styles.mapFrameVioleta : null,
-            selectedWorld.theme === 'rosado' ? styles.mapFrameRosado : null,
-            segmentedMapConfig
+            !illustratedMapLayout && selectedWorld.theme === 'azulado'
+              ? styles.mapFrameAzulado
+              : null,
+            !illustratedMapLayout && selectedWorld.theme === 'violeta'
+              ? styles.mapFrameVioleta
+              : null,
+            !illustratedMapLayout && selectedWorld.theme === 'rosado'
+              ? styles.mapFrameRosado
+              : null,
+            !illustratedMapLayout && segmentedMapConfig
               ? { backgroundColor: segmentedMapConfig.backgroundColor }
               : null,
+            illustratedMapLayout ? styles.mapFrameIllustrated : null,
             { opacity: mapFade },
           ]}
         >
@@ -698,6 +706,7 @@ export function LevelSelectScreen({
             removeClippedSubviews
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
+            overScrollMode="never"
           >
             {selectedTarget ? (
               <Pressable

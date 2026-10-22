@@ -4,8 +4,16 @@ const { registrarTypeScript } = require('./lib/typescript.cjs');
 registrarTypeScript();
 const key = '@trinca-mania/settings-v1';
 const legacy = '@trinca-mania/sound-enabled-v1';
-const initial = { hapticsEnabled: true, soundEnabled: true };
-const silent = { hapticsEnabled: false, soundEnabled: false };
+const initial = {
+  hapticsEnabled: true,
+  soundEnabled: true,
+  musicEnabled: true,
+};
+const silent = {
+  hapticsEnabled: false,
+  soundEnabled: false,
+  musicEnabled: false,
+};
 const deferred = () => {
   let resolve;
   const promise = new Promise((done) => {
@@ -41,6 +49,7 @@ for (const reverse of [false, true]) {
     await settings.getSettings();
     const actions = [
       () => settings.setSoundEnabledPreference(false),
+      () => settings.setMusicEnabledPreference(false),
       () => settings.setHapticsEnabledPreference(false),
     ];
     if (reverse) actions.reverse();
@@ -102,6 +111,7 @@ test('falha ao persistir migração mantém som legado desligado', async () => {
   assert.deepEqual(await settings.getSettings(), {
     ...initial,
     soundEnabled: false,
+    musicEnabled: false,
   });
 });
 test('falha de escrita mantém cache e não bloqueia a próxima mutação', async () => {
@@ -115,6 +125,7 @@ test('falha de escrita mantém cache e não bloqueia a próxima mutação', asyn
   assert.equal((await settings.getSettings()).soundEnabled, false);
   storage.setItem = write;
   await settings.setHapticsEnabledPreference(false);
+  await settings.setMusicEnabledPreference(false);
   assert.deepEqual(JSON.parse(store.get(key)), silent);
   assert.equal(store.get(legacy), 'false');
 });
@@ -133,4 +144,24 @@ test('leituras concorrentes compartilham carregamento e preservam cache', async 
   assert.strictEqual(first, second);
   assert.strictEqual(await settings.getSettings(), first);
   assert.equal(reads, 1);
+});
+
+test('configuração antiga silenciada migra com música desligada', async () => {
+  const { settings } = load([
+    [key, JSON.stringify({ soundEnabled: false, hapticsEnabled: true })],
+  ]);
+  assert.equal((await settings.getSettings()).musicEnabled, false);
+});
+test('música e efeitos persistem independentemente, inclusive após recarregar', async () => {
+  const { settings, store } = load();
+  await Promise.all([
+    settings.setMusicEnabledPreference(false),
+    settings.setSoundEnabledPreference(false),
+  ]);
+  await settings.setMusicEnabledPreference(true);
+  const snapshot = JSON.parse(store.get(key));
+  assert.equal(snapshot.soundEnabled, false);
+  assert.equal(snapshot.musicEnabled, true);
+  const reload = load([...store]);
+  assert.deepEqual(await reload.settings.getSettings(), snapshot);
 });

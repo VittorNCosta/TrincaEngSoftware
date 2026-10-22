@@ -1,9 +1,9 @@
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 import { Modal, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { GameIcon } from '../../components/GameIcon';
-import { PowerIcon } from '../../components/PowerIcon';
-import { PrimaryButton } from '../../components/PrimaryButton';
+import { GameIcon } from '../../original/components/GameIcon';
+import { PowerIcon } from '../../original/components/PowerIcon';
+import { PrimaryButton } from '../../original/components/PrimaryButton';
 import { POWER_UP_UI } from '../../data/powerUps';
 import type { PowerUpType } from '../../types/game';
 import {

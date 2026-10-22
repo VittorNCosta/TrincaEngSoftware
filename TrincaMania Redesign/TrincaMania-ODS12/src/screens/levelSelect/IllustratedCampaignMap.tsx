@@ -16,7 +16,6 @@ import {
   MAP_ART_TOP_INSET,
   type IllustratedMapLayout,
 } from './illustratedMapLayout';
-import { getWorldSelectorSubtitle } from './mapPresentation';
 import type { SelectedTarget } from './types';
 
 type Props = {
@@ -56,12 +55,41 @@ export function IllustratedCampaignMap({
   const previous = WORLDS[index - 1];
   const next = WORLDS[index + 1];
   const chest = getBonusWorldChestProgress(progress);
+  const mapArtwork = getWorldVisualAssets(worldId).map;
   return (
     <View
       pointerEvents="box-none"
       testID={`illustrated-map-${worldId}`}
       style={{ width: layout.width, height: layout.height, zIndex: 3 }}
     >
+      {/* Mantém a folga dos controles sem revelar um canvas vazio no topo.
+          A faixa usa a borda da própria arte espelhada, sem esticar o mapa
+          ou deslocar os pedestais; a junção compartilha a mesma linha de pixels. */}
+      <View
+        pointerEvents="none"
+        testID="map-top-art"
+        style={{
+          position: 'absolute',
+          top: 0,
+          width: layout.width,
+          // A arte principal cobre 1 px extra e evita uma linha de composição.
+          height: MAP_ART_TOP_INSET + 1,
+          overflow: 'hidden',
+        }}
+      >
+        <Image
+          accessible={false}
+          source={mapArtwork}
+          resizeMode="contain"
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            height: layout.artHeight,
+            transform: [{ scaleY: -1 }],
+          }}
+        />
+      </View>
       <View
         pointerEvents="none"
         testID="map-trail-art"
@@ -74,7 +102,7 @@ export function IllustratedCampaignMap({
       >
         <Image
           accessible={false}
-          source={getWorldVisualAssets(worldId).map}
+          source={mapArtwork}
           resizeMode="contain"
           style={{ width: '100%', height: '100%' }}
         />
@@ -93,6 +121,9 @@ export function IllustratedCampaignMap({
               position: 'absolute',
               left: point.x - touchWidth / 2,
               top: point.y - 72 * scale,
+              // A área transparente da placa de passagem não deve capturar
+              // o toque da última fase quando as duas ficam próximas.
+              zIndex: 1,
             }}
           >
             <MapLevelPedestal
@@ -153,7 +184,6 @@ export function IllustratedCampaignMap({
           <MapTrailSign
             returning
             locked={!isWorldUnlocked(previous.id, progress)}
-            label={getWorldSelectorSubtitle(previous.id)}
             accessibilityLabel="Mundo anterior"
             scale={scale}
             onPress={() => selectWorld(previous.id)}
@@ -171,7 +201,6 @@ export function IllustratedCampaignMap({
           <MapTrailSign
             locked={!isWorldUnlocked(next.id, progress)}
             selected={selectedTarget?.type === 'worldPortal'}
-            label={getWorldSelectorSubtitle(next.id)}
             accessibilityLabel={`Portal para ${next.label}${isWorldUnlocked(next.id, progress) ? '' : ', bloqueado'}`}
             scale={scale}
             onPress={() =>

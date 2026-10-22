@@ -13,8 +13,8 @@ import Svg, { Path } from 'react-native-svg';
 import { ChestOpeningModal, ChestRewardItem } from './ChestOpeningModal';
 import { ChestProgressCard } from './ChestProgressCard';
 import { ConfettiRain } from './ConfettiRain';
-import { GameIcon } from './GameIcon';
-import { PrimaryButton } from './PrimaryButton';
+import { GameIcon } from '../original/components/GameIcon';
+import { PrimaryButton } from '../original/components/PrimaryButton';
 import {
   CHAPTER_COUNT,
   CHAPTER_MAPS_PER_CHAPTER,

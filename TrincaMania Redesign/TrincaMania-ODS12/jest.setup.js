@@ -31,6 +31,7 @@ jest.mock(
 // `sounds.ts` chama (play/pause/seekTo/remove).
 jest.mock('expo-audio', () => {
   const createFakePlayer = () => ({
+    addListener: jest.fn(() => ({ remove: jest.fn() })),
     loop: false,
     playing: false,
     volume: 1,

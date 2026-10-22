@@ -1282,6 +1282,126 @@ mk done --title 'L-16 · Rodar `/code-review` na limpeza' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Limpeza ODS12'
+mk open --title 'L-17 · Integrar a intro do TrincaMania original no simulador ODS12' \
+  --body 'Solicitado em 21/10/2026. Importar animação e JPEG da fonte df882fb, com ciclo do papel nas peças, título e assinatura originais, espera pelo progresso e saída idempotente. Validação local web; APK, aceite Android e merge pendentes.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-18 · Copiar menu inferior e apresentação das telas do TrincaMania atualizado' \
+  --body 'Solicitado em 21/10/2026. Fonte simulator/main em 7fdc7a3, conferida via fetch. Componentes e artes originais isolados em src/original e assets/original; Mapa/Loja/Missões/Perfil, inventário, recompensas, configurações e controles da partida adaptados aos dados ODS12. Missões mostram objetivos da campanha, sem introduzir a economia diária/semanal do original. Mapa ODS12 e 103 fases preservados. Validação web local; APK e merge pendentes.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-19 · Corrigir faixa roxa e deslocamento lateral ao rolar o mapa' \
+  --body 'Relato de 21/10/2026. Reproduzido na Central de Materiais: a rolagem revela o fundo violeta legado acima da arte. Campanha ilustrada usa canvas neutro; navegação web mantém cenas fixas e recortadas, impedindo que a roda exponha abas vizinhas. Arte, âncoras e progresso preservados. Regressão com roda real, movimento diagonal e onze mapas; validação local, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-20 · Remover nomes visuais das placas de passagem dos mapas' \
+  --body 'Solicitado em 21/10/2026. Remover a faixa/texto sobrepostos às artes das placas, preservando imagens, navegação, bloqueios e rótulos acessíveis. Exportação web local; sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-21 · Restaurar as peças e as cores da intro do TrincaMania original' \
+  --body 'Nova solicitação de 21/10/2026. Três maçãs originais, contorno dourado e tema visual da fonte simulator/main em 7fdc7a3, confirmada por fetch. Substitui a adaptação das peças para papel em L-17. Fundo e animação originais; mantém espera pelo progresso, saída idempotente e recuperação de falha de imagem. Integração web local; sem APK, publicação ou merge.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-22 · Restaurar músicas do TrincaMania original no simulador ODS12' \
+  --body 'Solicitado em 21/10/2026. Cinco MP3 originais da fonte 7fdc7a3, música padrão e faixas dos mundos 1/2/3/bônus; transições e controles independentes Música/Efeitos, mute legado preservado. Pausa em segundo plano e limpeza de players. Integração e validação locais; sem APK, publicação ou merge. Evidências em docs/PORT-MUSICAS-TRINCAMANIA-20261021.txt.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-23 · Adicionar modo DEV temporário e remover moldura do simulador' \
+  --body 'Solicitado em 21/10/2026. DEV no seletor do site libera 103 fases e capítulos por override em memória, com storage temporário sem tocar o progresso persistente de testes. Moldura, cantos arredondados e sombra externa removidos no modo normal e em tela cheia. Validação local, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-24 · Melhorar ícones de vidas, moedas e configurações no topo do mapa' \
+  --body 'Solicitado em 21/10/2026. Coração, moeda e engrenagem ilustrados reutilizados do TrincaMania original; contadores legíveis, áreas de toque de 48 dp e leitura acessível. Mapa e progressão preservados; verificar desktop/mobile e versão estreita. Integração local, sem gerar arte, APK ou publicar.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-25 · Cobrir a faixa vazia acima da arte ao rolar o mapa até o topo' \
+  --body 'Novo relato de 21/10/2026. A folga de 140 px antes da imagem aparecia como faixa escura. Preencher com continuação da borda da própria arte, sem esticar a imagem nem deslocar pedestais/placas. Sobreposição de 1 px elimina emenda de composição. Regressão com roda real, pixels renderizados, onze mapas e 103 apoios. Validação web local, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-26 · Centralizar os três poderes na partida' \
+  --body 'Solicitado em 21/10/2026. O status da bandeja dividia a linha com PowerDrawer e deslocava os controles para a direita, cortando o último botão. Poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar telas estreitas, desktop e tela cheia. Exportação local, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2645,4 +2765,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 199 issues (132 já criadas fechadas) =="
+echo "== pronto: 209 issues (132 já criadas fechadas) =="

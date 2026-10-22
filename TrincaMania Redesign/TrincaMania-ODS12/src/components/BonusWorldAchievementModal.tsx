@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { Animated, Modal, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { GameIcon } from './GameIcon';
-import { PrimaryButton } from './PrimaryButton';
+import { GameIcon } from '../original/components/GameIcon';
+import { PrimaryButton } from '../original/components/PrimaryButton';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 
 type BonusWorldAchievementModalProps = {

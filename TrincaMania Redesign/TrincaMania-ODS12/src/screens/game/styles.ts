@@ -496,9 +496,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   trayControlRow: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
     paddingBottom: 8,
     paddingHorizontal: 4,
   },
@@ -516,8 +516,8 @@ export const styles = StyleSheet.create({
     color: '#FF8BA9',
   },
   trayStatus: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-    minHeight: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 18,
   },
 });

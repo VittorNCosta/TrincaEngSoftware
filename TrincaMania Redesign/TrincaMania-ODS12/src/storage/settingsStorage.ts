@@ -3,6 +3,7 @@ import AsyncStorage from './keyValueStorage';
 export type AppSettings = {
   hapticsEnabled: boolean;
   soundEnabled: boolean;
+  musicEnabled: boolean;
 };
 
 const SETTINGS_STORAGE_KEY = '@trinca-mania/settings-v1';
@@ -11,6 +12,7 @@ const LEGACY_SOUND_ENABLED_STORAGE_KEY = '@trinca-mania/sound-enabled-v1';
 const DEFAULT_SETTINGS: AppSettings = {
   hapticsEnabled: true,
   soundEnabled: true,
+  musicEnabled: true,
 };
 
 let settingsCache: AppSettings | undefined;
@@ -33,6 +35,12 @@ const normalizeSettings = (value: unknown): AppSettings => {
       typeof settings.hapticsEnabled === 'boolean'
         ? settings.hapticsEnabled
         : DEFAULT_SETTINGS.hapticsEnabled,
+    musicEnabled:
+      typeof settings.musicEnabled === 'boolean'
+        ? settings.musicEnabled
+        : typeof settings.soundEnabled === 'boolean'
+          ? settings.soundEnabled
+          : DEFAULT_SETTINGS.musicEnabled,
     soundEnabled:
       typeof settings.soundEnabled === 'boolean'
         ? settings.soundEnabled
@@ -44,7 +52,7 @@ const writeSettings = async (settings: AppSettings) => {
   await AsyncStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
   await AsyncStorage.setItem(
     LEGACY_SOUND_ENABLED_STORAGE_KEY,
-    settings.soundEnabled ? 'true' : 'false',
+    settings.soundEnabled || settings.musicEnabled ? 'true' : 'false',
   );
 };
 
@@ -62,6 +70,10 @@ const readSettings = async () => {
     );
     const migratedSettings = {
       ...DEFAULT_SETTINGS,
+      musicEnabled:
+        legacySoundValue === null
+          ? DEFAULT_SETTINGS.musicEnabled
+          : legacySoundValue !== 'false',
       soundEnabled:
         legacySoundValue === null
           ? DEFAULT_SETTINGS.soundEnabled
@@ -130,3 +142,8 @@ export const getHapticsEnabled = async () => {
   const settings = await getSettings();
   return settings.hapticsEnabled;
 };
+
+export const setMusicEnabledPreference = async (musicEnabled: boolean) =>
+  mutateSettings((currentSettings) => ({ ...currentSettings, musicEnabled }));
+
+export const getMusicEnabled = async () => (await getSettings()).musicEnabled;

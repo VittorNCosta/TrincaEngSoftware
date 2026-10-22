@@ -1,6 +1,5 @@
 import Alert from '../utils/appAlert';
 import { useState } from 'react';
-import { DiagnosticReport } from './DiagnosticReport';
 import {
   Linking,
   Modal,
@@ -8,15 +7,21 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { GameIcon, GameIconName, GameIconTone } from './GameIcon';
+import { DiagnosticReport } from './DiagnosticReport';
+import { GameIcon } from '../original/components/GameIcon';
+import { SettingsPreferenceRow } from '../original/components/SettingsPreferenceRow';
 import { AppSettings } from '../storage/settingsStorage';
-import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
-
+import {
+  colors,
+  fontSizes,
+  forestPolish,
+  radii,
+  shadows,
+  spacing,
+} from '../original/styles/theme';
 type SettingsModalProps = {
   devMode?: boolean;
   settings: AppSettings;
@@ -26,94 +31,10 @@ type SettingsModalProps = {
   onResetProgress: () => void;
   onToggleHaptics: () => void;
   onToggleSound: () => void;
+  onToggleMusic: () => void;
   onUnlockAllForDevMode: () => void;
 };
 
-type SettingsActionProps = {
-  active?: boolean;
-  iconName: GameIconName;
-  label: string;
-  status?: string;
-  tone?: GameIconTone;
-  onPress: () => void;
-};
-
-function SettingsAction({
-  active = false,
-  iconName,
-  label,
-  status,
-  tone = 'gold',
-  onPress,
-}: SettingsActionProps) {
-  const brightBackground = active && (tone === 'gold' || tone === 'green');
-  const stateMark = active ? '\u2713' : '\u00D7';
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${label}${status ? `, ${status}` : ''}`}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.actionButton,
-        active ? styles.actionButtonActive : styles.actionButtonInactive,
-        active && tone === 'green' ? styles.actionButtonGreen : null,
-        active && tone === 'purple' ? styles.actionButtonPurple : null,
-        !active && tone === 'purple' ? styles.actionButtonPurpleIdle : null,
-        pressed ? styles.pressed : null,
-      ]}
-    >
-      <GameIcon
-        muted={!active}
-        name={iconName}
-        size={40}
-        tone={active ? tone : 'neutral'}
-      />
-      <View style={styles.actionCopy}>
-        <Text
-          numberOfLines={2}
-          style={[
-            styles.actionLabel,
-            brightBackground ? styles.darkActionText : null,
-          ]}
-        >
-          {label}
-        </Text>
-        {status ? (
-          <Text
-            numberOfLines={2}
-            style={[
-              styles.actionStatus,
-              brightBackground ? styles.darkActionText : null,
-            ]}
-          >
-            {status}
-          </Text>
-        ) : null}
-      </View>
-      <View
-        style={[
-          styles.stateBadge,
-          active ? styles.activeBadge : styles.inactiveBadge,
-        ]}
-      >
-        <Text
-          style={[
-            styles.stateBadgeText,
-            active ? styles.activeBadgeText : styles.inactiveBadgeText,
-          ]}
-        >
-          {stateMark}
-        </Text>
-      </View>
-    </Pressable>
-  );
-}
-
-/**
- * Confirmação com cancelar + ação, seguida de fechar o modal — mesmo formato
- * para reset de progresso e modo dev, só muda o texto/estilo do botão.
- */
 const confirmAction = (
   title: string,
   message: string,
@@ -144,12 +65,14 @@ export function SettingsModal({
   onResetProgress,
   onToggleHaptics,
   onToggleSound,
+  onToggleMusic,
   onUnlockAllForDevMode,
 }: SettingsModalProps) {
   const [diagnosticsVisible, setDiagnosticsVisible] = useState(false);
-  const { width, fontScale } = useWindowDimensions();
-  const largeText = fontScale >= 1.6;
-  const silentModeActive = !settings.soundEnabled && !settings.hapticsEnabled;
+  const silentModeActive =
+    !settings.soundEnabled &&
+    !settings.musicEnabled &&
+    !settings.hapticsEnabled;
   const handleResetProgress = () =>
     confirmAction(
       'Resetar progresso?',
@@ -179,7 +102,7 @@ export function SettingsModal({
     >
       <SafeAreaView
         edges={['top', 'bottom', 'left', 'right']}
-        style={styles.overlay}
+        style={[styles.overlay, styles.preferencesOverlay]}
       >
         <Pressable
           accessible={false}
@@ -189,20 +112,15 @@ export function SettingsModal({
           style={styles.backdrop}
           onPress={onClose}
         />
-        <View style={styles.panel}>
+        <View style={[styles.panel, styles.preferencesPanel]}>
           <View pointerEvents="none" style={styles.panelGlow} />
           <View style={styles.header}>
+            <GameIcon name="settings" size={32} tone="gold" />
             <View style={styles.headerCopy}>
-              <View style={styles.headerKickerRow}>
-                <GameIcon name="settings" size={32} tone="gold" />
-                <Text style={styles.kicker}>TileClear - ODS12</Text>
-              </View>
+              <Text style={styles.kicker}>TrincaMania ODS12</Text>
               <Text
-                style={[
-                  styles.title,
-                  width < 360 ? styles.titleCompact : null,
-                  largeText ? styles.titleLargeText : null,
-                ]}
+                accessibilityRole="header"
+                style={[styles.title, styles.preferencesTitle]}
               >
                 Configurações
               </Text>
@@ -212,193 +130,159 @@ export function SettingsModal({
               accessibilityRole="button"
               hitSlop={8}
               onPress={onClose}
-              style={({ pressed }) => [
-                styles.closeButton,
-                pressed ? styles.pressed : null,
-              ]}
+              style={styles.closeButton}
             >
-              <GameIcon name="close" size={30} tone="danger" />
+              <GameIcon name="close" size={24} tone="gold" variant="plain" />
             </Pressable>
           </View>
-
           <ScrollView
-            contentContainerStyle={styles.panelContent}
-            style={styles.panelScroll}
+            contentContainerStyle={styles.scrollContent}
+            style={styles.contentScroll}
           >
-            {diagnosticsVisible ? <DiagnosticReport /> : null}
-            <Pressable
-              accessibilityRole="button"
-              style={styles.devButton}
-              onPress={() => setDiagnosticsVisible((value) => !value)}
-            >
-              <Text style={styles.devButtonText}>
-                {diagnosticsVisible ? 'Ocultar diagnóstico' : 'Diagnóstico'}
+            <View style={styles.preferenceSection}>
+              <Text accessibilityRole="header" style={styles.sectionTitle}>
+                Áudio e resposta
               </Text>
-            </Pressable>
-            <Pressable
-              accessibilityRole="link"
-              accessibilityLabel="Política de privacidade, abre no navegador"
-              style={styles.devButton}
-              onPress={() => {
-                Linking.openURL(
-                  'https://vittorncosta.github.io/TrincaEngSoftware/',
-                ).catch(() =>
-                  Alert.alert(
-                    'Não foi possível abrir',
-                    'Tente novamente quando houver conexão.',
-                  ),
-                );
-              }}
-            >
-              <Text style={styles.devButtonText}>Política de privacidade</Text>
-            </Pressable>
-            {!diagnosticsVisible ? (
-              <View style={styles.actionList}>
-                <SettingsAction
-                  active={settings.soundEnabled}
-                  iconName={settings.soundEnabled ? 'sound-on' : 'sound-off'}
-                  label={`Som: ${settings.soundEnabled ? 'Ligado' : 'Desligado'}`}
-                  status="Efeitos sonoros"
-                  tone="gold"
+              <View style={styles.preferenceGroup}>
+                <SettingsPreferenceRow
+                  title="Música"
+                  icon="sound-on"
+                  checked={settings.musicEnabled}
+                  onPress={onToggleMusic}
+                />
+                <SettingsPreferenceRow
+                  title="Efeitos"
+                  icon="sound-on"
+                  checked={settings.soundEnabled}
                   onPress={onToggleSound}
                 />
-                <SettingsAction
-                  active={settings.hapticsEnabled}
-                  iconName={
-                    settings.hapticsEnabled ? 'vibration-on' : 'vibration-off'
-                  }
-                  label={`Vibração: ${settings.hapticsEnabled ? 'Ligada' : 'Desligada'}`}
-                  status="Resposta ao toque"
-                  tone="green"
+                <SettingsPreferenceRow
+                  title="Vibração"
+                  icon="vibration-on"
+                  checked={settings.hapticsEnabled}
                   onPress={onToggleHaptics}
                 />
-                <SettingsAction
-                  active={silentModeActive}
-                  iconName="moon"
-                  label="Modo silencioso"
-                  status={silentModeActive ? 'Ativo' : 'Som e vibração off'}
-                  tone="purple"
+                <SettingsPreferenceRow
+                  title="Modo silencioso"
+                  icon="moon"
+                  checked={silentModeActive}
                   onPress={onEnableSilentMode}
                 />
               </View>
-            ) : null}
-            <View style={styles.advancedPanel}>
-              <Text style={styles.advancedTitle}>Opções avançadas</Text>
-              <Pressable
-                accessibilityRole="button"
-                onPress={handleResetProgress}
-                style={({ pressed }) => [
-                  styles.resetButton,
-                  pressed ? styles.pressed : null,
-                ]}
-              >
-                <Text style={styles.resetButtonText}>Resetar progresso</Text>
-              </Pressable>
-              {__DEV__ ? (
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={handleUnlockAllForDevMode}
-                  style={({ pressed }) => [
-                    styles.devButton,
-                    pressed ? styles.pressed : null,
-                  ]}
-                >
-                  <Text style={styles.devButtonText}>
-                    {devMode
-                      ? 'Modo dev: desativar'
-                      : 'Modo dev: liberar todas as fases'}
-                  </Text>
-                </Pressable>
-              ) : null}
             </View>
+            <View style={styles.preferenceSection}>
+              <Text accessibilityRole="header" style={styles.sectionTitle}>
+                Privacidade e suporte
+              </Text>
+              <View style={styles.preferenceGroup}>
+                <SettingsPreferenceRow
+                  title="Política de privacidade"
+                  icon="lock"
+                  onPress={() => {
+                    void Linking.openURL(
+                      'https://vittorncosta.github.io/TrincaEngSoftware/',
+                    ).catch(() =>
+                      Alert.alert(
+                        'Não foi possível abrir',
+                        'Tente novamente quando houver conexão.',
+                      ),
+                    );
+                  }}
+                />
+                <SettingsPreferenceRow
+                  title="Diagnóstico"
+                  icon="info"
+                  expanded={diagnosticsVisible}
+                  onPress={() => setDiagnosticsVisible((value) => !value)}
+                />
+                <SettingsPreferenceRow
+                  title="Resetar progresso"
+                  icon="reset"
+                  onPress={handleResetProgress}
+                />
+              </View>
+            </View>
+            {diagnosticsVisible ? <DiagnosticReport /> : null}
+            {__DEV__ ? (
+              <View style={styles.preferenceGroup}>
+                <SettingsPreferenceRow
+                  title="Modo Dev"
+                  description="Acesso temporário às fases"
+                  icon="target"
+                  checked={devMode}
+                  onPress={handleUnlockAllForDevMode}
+                />
+              </View>
+            ) : null}
           </ScrollView>
-
-          <Pressable
-            accessibilityRole="button"
-            onPress={onClose}
-            style={({ pressed }) => [
-              styles.doneButton,
-              pressed ? styles.pressed : null,
-            ]}
-          >
-            <Text style={styles.doneButtonText}>Fechar</Text>
-          </Pressable>
         </View>
       </SafeAreaView>
     </Modal>
   );
 }
-
 const styles = StyleSheet.create({
   actionButton: {
     alignItems: 'center',
-    backgroundColor: '#F2A93B',
-    borderBottomColor: colors.goldDark,
+    backgroundColor: forestPolish.cream,
+    borderBottomColor: forestPolish.woodLight,
     borderBottomWidth: 5,
-    borderColor: '#FFF4C9',
-    borderRadius: 18,
+    borderColor: forestPolish.bark,
+    borderRadius: radii.menuControl,
     borderWidth: 2,
     flexDirection: 'row',
     gap: spacing.sm,
-    minHeight: 62,
+    minHeight: 56,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
     ...shadows.button,
   },
   actionButtonActive: {
-    borderColor: '#FFFFFF',
+    borderColor: forestPolish.gold,
   },
-  actionButtonInactive: {
-    backgroundColor: '#273256',
-    borderBottomColor: '#11182E',
-    borderColor: '#617098',
+  actionButtonCompact: {
+    borderBottomWidth: 3,
+    borderRadius: 14,
+    minHeight: 49,
+    paddingVertical: 5,
   },
   actionButtonGreen: {
-    backgroundColor: '#42E5A7',
-    borderBottomColor: '#087A54',
+    backgroundColor: colors.successSoft,
+    borderBottomColor: colors.successDark,
+    borderColor: forestPolish.leaf,
   },
-  actionButtonPurple: {
-    backgroundColor: '#6543C5',
-    borderBottomColor: '#2C0E56',
+  actionButtonInactive: {
+    backgroundColor: colors.lockedSurface,
+    borderBottomColor: colors.lockedText,
+    borderColor: colors.borderSoft,
   },
-  actionButtonPurpleIdle: {
-    backgroundColor: '#4B3A83',
-    borderBottomColor: '#241052',
-    borderColor: '#8B7BE0',
+  actionButtonWarm: {
+    backgroundColor: colors.surfaceWarm,
+    borderBottomColor: forestPolish.woodLight,
+  },
+  actionButtonWarmIdle: {
+    backgroundColor: colors.lockedSurface,
+    borderBottomColor: colors.lockedText,
+    borderColor: colors.borderSoft,
   },
   actionCopy: {
     flex: 1,
     minWidth: 0,
   },
   actionLabel: {
-    color: colors.inkOnDark,
+    color: forestPolish.woodDark,
     fontSize: fontSizes.md,
     fontWeight: '900',
   },
-  darkActionText: {
-    color: colors.ink,
+  actionLabelCompact: {
+    fontSize: fontSizes.sm,
   },
   actionList: {
     gap: spacing.sm,
   },
   actionStatus: {
-    color: colors.inkOnDark,
+    color: colors.textSecondary,
     fontSize: fontSizes.xs,
     fontWeight: '900',
-  },
-  advancedPanel: {
-    backgroundColor: 'rgba(7, 24, 32, 0.32)',
-    borderColor: 'rgba(255, 255, 255, 0.16)',
-    borderRadius: 14,
-    borderWidth: 1,
-    gap: spacing.xs,
-    padding: spacing.sm,
-  },
-  advancedTitle: {
-    color: 'rgba(255, 233, 168, 0.78)',
-    fontSize: 10,
-    fontWeight: '900',
-    textTransform: 'uppercase',
   },
   activeBadge: {
     backgroundColor: '#FFFFFF',
@@ -406,23 +290,12 @@ const styles = StyleSheet.create({
   activeBadgeText: {
     color: colors.successDark,
   },
-  inactiveBadge: {
-    backgroundColor: '#1B2440',
-  },
-  inactiveBadgeText: {
-    color: '#D8E3FF',
-  },
-  stateBadge: {
-    alignItems: 'center',
-    borderRadius: radii.pill,
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
-  },
-  stateBadgeText: {
-    fontSize: 15,
-    fontWeight: '900',
-    lineHeight: 17,
+  advancedPanel: {
+    backgroundColor: forestPolish.cream,
+    borderColor: forestPolish.bark,
+    borderRadius: radii.menuControl,
+    borderWidth: 1,
+    overflow: 'hidden',
   },
   backdrop: {
     bottom: 0,
@@ -437,41 +310,73 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 48,
   },
-  devButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    borderColor: 'rgba(154, 224, 255, 0.42)',
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    minHeight: 48,
-    justifyContent: 'center',
-    maxWidth: '100%',
-    paddingHorizontal: spacing.sm,
+  contentScroll: {
+    flexGrow: 0,
+    flexShrink: 1,
   },
-  devButtonText: {
-    color: '#B9ECFF',
+  continueButton: {
+    alignItems: 'center',
+    backgroundColor: colors.success,
+    borderBottomColor: colors.successDark,
+    borderBottomWidth: 4,
+    borderColor: colors.successSoft,
+    borderRadius: radii.button,
+    borderWidth: 2,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    justifyContent: 'center',
+    minHeight: 50,
+  },
+  continueButtonText: {
+    color: '#07583E',
+    fontSize: fontSizes.md,
+    fontWeight: '900',
+    textTransform: 'uppercase',
+  },
+  devModeBanner: {
+    backgroundColor: '#EFE5CC',
+    borderColor: forestPolish.bark,
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: spacing.xs,
+  },
+  devModeBannerText: {
+    color: forestPolish.wood,
+    fontSize: 10,
+    fontWeight: '700',
+    lineHeight: 14,
+  },
+  exitButton: {
+    backgroundColor: colors.surfaceWarm,
+    borderColor: forestPolish.bark,
+  },
+  gameplayActionButton: {
+    alignItems: 'center',
+    backgroundColor: forestPolish.cream,
+    borderColor: forestPolish.bark,
+    borderRadius: 14,
+    borderWidth: 1,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 5,
+    justifyContent: 'center',
+    minHeight: 48,
+    paddingHorizontal: spacing.xs,
+  },
+  gameplayActions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  gameplayActionText: {
+    color: forestPolish.woodDark,
     fontSize: fontSizes.xs,
     fontWeight: '900',
     textTransform: 'uppercase',
   },
-  doneButton: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: '#087A54',
-    borderBottomColor: '#087A54',
-    borderBottomWidth: 5,
-    borderColor: '#C7FFD9',
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    minHeight: 48,
-    minWidth: 150,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-  },
-  doneButtonText: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.md,
-    fontWeight: '900',
+  gameplayPanel: {
+    gap: spacing.sm,
+    maxWidth: 330,
+    padding: 14,
   },
   header: {
     alignItems: 'center',
@@ -482,42 +387,80 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
-  headerKickerRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.xs,
+  inactiveBadge: {
+    backgroundColor: colors.lockedText,
+  },
+  inactiveBadgeText: {
+    color: colors.surfaceRaised,
   },
   kicker: {
-    color: '#FFE9A8',
+    color: forestPolish.gold,
     fontSize: fontSizes.xs,
     fontWeight: '900',
     textTransform: 'uppercase',
   },
   overlay: {
     alignItems: 'center',
-    backgroundColor: 'rgba(4, 9, 24, 0.62)',
+    backgroundColor: 'rgba(4, 16, 24, 0.65)',
     flex: 1,
     justifyContent: 'center',
     padding: spacing.md,
   },
   panel: {
-    backgroundColor: 'rgba(36, 21, 88, 0.98)',
-    borderBottomColor: '#120932',
+    backgroundColor: forestPolish.wood,
+    borderBottomColor: forestPolish.woodDark,
     borderBottomWidth: 7,
-    borderColor: 'rgba(255, 211, 90, 0.74)',
-    borderRadius: 24,
+    borderColor: forestPolish.bark,
+    borderRadius: radii.menuCard,
     borderWidth: 3,
     gap: spacing.md,
-    maxHeight: '100%',
+    flexShrink: 1,
     maxWidth: 360,
+    maxHeight: '100%',
     overflow: 'hidden',
     padding: spacing.md,
     position: 'relative',
     width: '100%',
     ...shadows.card,
   },
+  preferencesOverlay: { padding: spacing.sm + spacing.xs },
+  preferencesPanel: {
+    maxWidth: 420,
+    padding: spacing.md,
+    borderWidth: 2,
+    borderBottomWidth: 4,
+    gap: spacing.sm,
+  },
+  preferencesTitle: { fontSize: 22, lineHeight: 28 },
+  preferenceSection: { gap: spacing.xs },
+  sectionTitle: {
+    color: forestPolish.cream,
+    fontSize: 11,
+    lineHeight: 16,
+    fontWeight: '900',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    paddingHorizontal: spacing.xs,
+  },
+  preferenceGroup: {
+    backgroundColor: forestPolish.cream,
+    borderColor: forestPolish.bark,
+    borderWidth: 1,
+    borderRadius: radii.menuControl,
+    overflow: 'hidden',
+  },
+  qaSection: {
+    borderTopWidth: 1,
+    borderTopColor: forestPolish.bark,
+    paddingTop: spacing.md,
+    gap: spacing.sm,
+  },
+  qaContent: { gap: spacing.sm },
+  scrollContent: {
+    gap: spacing.md,
+  },
   panelGlow: {
-    backgroundColor: 'rgba(255, 211, 90, 0.18)',
+    backgroundColor: 'rgba(245, 207, 117, 0.16)',
     borderRadius: radii.pill,
     height: 110,
     left: -26,
@@ -525,32 +468,21 @@ const styles = StyleSheet.create({
     right: 80,
     top: -70,
   },
-  panelContent: {
-    gap: spacing.md,
-  },
-  panelScroll: {
-    flexShrink: 1,
-    minHeight: 0,
-  },
   pressed: {
     opacity: 0.92,
     transform: [{ translateY: 1 }, { scale: 0.98 }],
   },
-  resetButton: {
+  stateBadge: {
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    borderColor: 'rgba(255, 192, 206, 0.42)',
     borderRadius: radii.pill,
-    borderWidth: 1,
-    minHeight: 48,
+    height: 24,
     justifyContent: 'center',
-    paddingHorizontal: spacing.sm,
+    width: 24,
   },
-  resetButtonText: {
-    color: '#FFD9E4',
-    fontSize: fontSizes.xs,
+  stateBadgeText: {
+    fontSize: 15,
     fontWeight: '900',
-    textTransform: 'uppercase',
+    lineHeight: 17,
   },
   title: {
     color: colors.inkOnDark,
@@ -560,13 +492,5 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.28)',
     textShadowOffset: { height: 2, width: 0 },
     textShadowRadius: 2,
-  },
-  titleCompact: {
-    fontSize: 20,
-    lineHeight: 24,
-  },
-  titleLargeText: {
-    fontSize: 15,
-    lineHeight: 19,
   },
 });

@@ -1,9 +1,11 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCallback, useRef } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { GameIcon } from './GameIcon';
 import { radii, shadows } from '../styles/theme';
+import { forestPolish } from '../original/styles/theme';
+import { PROFILE_ACTION_ASSETS } from '../original/data/profileActionAssets';
 import { World, WorldId } from '../types/game';
 import { WindowTarget } from '../types/ui';
 import { playButtonSound } from '../utils/sounds';
@@ -115,13 +117,19 @@ export function MapHud({
           ]}
         >
           <View pointerEvents="none" style={styles.settingsButton}>
-            <GameIcon name="settings" size={28} tone="blue" variant="plain" />
+            <Image
+              testID="map-hud-settings-art"
+              accessible={false}
+              resizeMode="contain"
+              source={PROFILE_ACTION_ASSETS.settings}
+              style={styles.settingsArtwork}
+            />
           </View>
         </Pressable>
-        <View style={styles.topSpacer} />
         <View style={styles.pillStack}>
           <Pressable
             accessibilityLabel="Ganhar vidas"
+            accessibilityValue={{ text: `${lives} vidas, ${livesFooter}` }}
             accessibilityRole="button"
             onPress={onAddLives}
             style={({ pressed }) => [
@@ -130,19 +138,29 @@ export function MapHud({
             ]}
           >
             <View pointerEvents="none" style={styles.pill}>
-              <GameIcon name="heart" size={24} tone="pink" />
-              <Text
-                testID="map-lives-count"
-                adjustsFontSizeToFit
-                minimumFontScale={0.72}
-                numberOfLines={1}
-                style={styles.pillValue}
-              >
-                {lives}
-              </Text>
-              <Text style={[styles.pillFooter, styles.pillFooterLives]}>
-                {livesFooter}
-              </Text>
+              <View style={styles.resourceArtworkFrame}>
+                <Image
+                  testID="map-hud-lives-art"
+                  accessible={false}
+                  resizeMode="contain"
+                  source={require('../../assets/original/ui/rewards/optimized/reward_life.png')}
+                  style={styles.resourceArtwork}
+                />
+              </View>
+              <View style={styles.livesCopy}>
+                <Text
+                  testID="map-lives-count"
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.72}
+                  numberOfLines={1}
+                  style={styles.pillValue}
+                >
+                  {lives}
+                </Text>
+                <Text style={[styles.pillFooter, styles.pillFooterLives]}>
+                  {livesFooter}
+                </Text>
+              </View>
               <View style={[styles.addButton, styles.addLives]}>
                 <Text style={styles.addLivesText}>+</Text>
               </View>
@@ -150,6 +168,7 @@ export function MapHud({
           </Pressable>
           <Pressable
             accessibilityLabel="Ganhar moedas"
+            accessibilityValue={{ text: `${coins} moedas` }}
             accessibilityRole="button"
             onPress={onAddCoins}
             style={({ pressed }) => [
@@ -163,8 +182,17 @@ export function MapHud({
               style={styles.pill}
               onLayout={reportCoinCounterLayout}
             >
-              <GameIcon name="coin" size={24} tone="gold" />
+              <View style={styles.resourceArtworkFrame}>
+                <Image
+                  testID="map-hud-coin-art"
+                  accessible={false}
+                  resizeMode="contain"
+                  source={require('../../assets/original/ui/rewards/optimized/reward_coin.png')}
+                  style={styles.resourceArtwork}
+                />
+              </View>
               <Text
+                testID="map-coins-count"
                 adjustsFontSizeToFit
                 minimumFontScale={0.72}
                 numberOfLines={1}
@@ -289,16 +317,16 @@ export function MapHud({
 const styles = StyleSheet.create({
   addButton: {
     alignItems: 'center',
-    borderColor: '#FFFFFF',
+    borderColor: '#FFE9AE',
     borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 20,
+    borderWidth: 1,
+    height: 16,
     justifyContent: 'center',
-    width: 20,
+    width: 16,
   },
   addCoins: {
     backgroundColor: '#F2A93B',
-    marginLeft: 6,
+    marginLeft: 0,
   },
   addCoinsText: {
     color: '#6B3F00',
@@ -369,28 +397,29 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     alignItems: 'center',
-    backgroundColor: '#4FBCFF',
-    borderBottomColor: '#185C94',
+    backgroundColor: 'rgba(255, 243, 206, 0.12)',
+    borderBottomColor: forestPolish.wood,
     borderBottomWidth: 5,
-    borderColor: '#C8ECFF',
-    borderRadius: 13,
-    borderWidth: 3,
+    borderColor: forestPolish.bark,
+    borderRadius: 12,
+    borderWidth: 1,
     height: 40,
     justifyContent: 'center',
     width: 40,
     ...shadows.button,
   },
+  settingsArtwork: { width: 34, height: 34 },
   topButtonTouch: {
     alignItems: 'center',
     height: 48,
     justifyContent: 'center',
-    width: 48,
+    width: 44,
   },
   hud: {
     gap: 6,
     left: 0,
     paddingBottom: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 8,
     paddingTop: 8,
     position: 'absolute',
     right: 0,
@@ -399,42 +428,55 @@ const styles = StyleSheet.create({
   },
   pill: {
     alignItems: 'center',
-    backgroundColor: 'rgba(7, 24, 32, 0.8)',
-    borderColor: 'rgba(255, 255, 255, 0.22)',
+    backgroundColor: '#FFF4D8',
+    borderColor: forestPolish.bark,
     borderRadius: radii.pill,
-    borderWidth: 2,
+    borderWidth: 1,
     flexDirection: 'row',
-    gap: 4,
-    height: 25,
-    paddingLeft: 3,
-    paddingRight: 3,
+    gap: 2,
+    height: 38,
+    paddingLeft: 2,
+    paddingRight: 4,
+    width: '100%',
+    ...shadows.button,
   },
+  resourceArtworkFrame: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    width: 34,
+    height: 34,
+    overflow: 'hidden',
+  },
+  resourceArtwork: { width: 76, height: 76 / 1.5, flexShrink: 0 },
+  livesCopy: { flex: 1, alignItems: 'center', minWidth: 0 },
   pillFooter: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: '900',
-    marginLeft: 4,
-    marginRight: 6,
+    lineHeight: 10,
   },
-  pillFooterLives: {
-    color: '#9FE8CF',
-  },
+  pillFooterLives: { color: forestPolish.moss },
   pillStack: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    flex: 1,
+    minWidth: 0,
     flexDirection: 'row',
-    gap: 4,
+    gap: 6,
   },
   pillTouch: {
-    alignItems: 'flex-end',
+    flex: 1,
+    minWidth: 0,
     height: 48,
     justifyContent: 'center',
   },
   pillValue: {
-    color: '#FFFFFF',
-    fontSize: 13,
+    color: forestPolish.woodDark,
+    flexShrink: 1,
+    flexGrow: 1,
+    fontSize: 14,
     fontWeight: '900',
-    lineHeight: 16,
-    maxWidth: 34,
-    minWidth: 16,
+    lineHeight: 17,
+    minWidth: 0,
     textAlign: 'center',
   },
   plateNotch: {
@@ -497,9 +539,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     gap: 4,
-  },
-  topSpacer: {
-    flex: 1,
   },
   worldName: {
     color: '#FFFFFF',

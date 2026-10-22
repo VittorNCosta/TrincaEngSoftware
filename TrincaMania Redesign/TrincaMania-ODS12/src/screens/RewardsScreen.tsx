@@ -4,15 +4,26 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
+  Image,
+  type ImageSourcePropType,
   View,
 } from 'react-native';
 
-import { BOTTOM_NAV_HEIGHT } from '../components/BottomNavBar';
-import { GameIcon, GameIconName, GameIconTone } from '../components/GameIcon';
-import { PrimaryButton } from '../components/PrimaryButton';
-import { ScreenShell } from '../components/ScreenShell';
-import { TabScene } from '../components/TabScene';
+import { useBottomNavClearance } from '../components/BottomNavBar';
+import {
+  MenuCard,
+  MenuHeader,
+  MenuSectionHeader,
+} from '../original/components/MenuPrimitives';
+import { msg } from '../original/messages';
+import {
+  GameIcon,
+  GameIconName,
+  GameIconTone,
+} from '../original/components/GameIcon';
+import { PrimaryButton } from '../original/components/PrimaryButton';
+import { ScreenShell } from '../original/components/ScreenShell';
+import { TabScene } from '../original/components/TabScene';
 import {
   CHEST_PHASES_REQUIRED,
   getBonusWorldChestProgress,
@@ -24,7 +35,15 @@ import {
   TrayBoostState,
   formatTrayBoostRemaining,
 } from '../storage/trayBoostStorage';
-import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
+import {
+  colors,
+  forestPolish,
+  fontSizes,
+  radii,
+  shadows,
+  spacing,
+  touchTargets,
+} from '../original/styles/theme';
 import { ProgressState } from '../types/game';
 import { playShopBuySound } from '../utils/sounds';
 import { getCurrentWorldId } from '../utils/worldProgress';
@@ -39,6 +58,7 @@ type RewardsScreenProps = {
   onOpenWorldChest: (worldChestId?: string) => void;
   onPurchaseCoinTraySlot: () => Promise<TrayBoostPurchaseResult>;
   onShowTutorial: () => void;
+  onClose?: () => void;
 };
 
 type RewardCardProps = {
@@ -46,10 +66,10 @@ type RewardCardProps = {
   disabled?: boolean;
   iconName: GameIconName;
   iconTone?: GameIconTone;
-  largeText: boolean;
+  imageAccessibilityLabel?: string;
+  imageSource?: ImageSourcePropType;
   progressPercent?: number;
   status: string;
-  tone?: 'gold' | 'green' | 'purple' | 'blue';
   title: string;
   onPress?: () => void;
 };
@@ -59,65 +79,77 @@ function RewardCard({
   disabled = false,
   iconName,
   iconTone = 'gold',
-  largeText,
+  imageAccessibilityLabel,
+  imageSource,
   progressPercent,
   status,
-  tone = 'gold',
   title,
   onPress,
 }: RewardCardProps) {
-  const isInteractive = Boolean(onPress) && !disabled;
-
   return (
-    <Pressable
-      accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityState={onPress ? { disabled } : undefined}
-      disabled={!onPress || disabled}
+    <MenuCard
+      accessibilityHint={
+        onPress && !disabled
+          ? actionLabel
+            ? msg('Ação disponível: {param1}.', { param1: String(actionLabel) })
+            : msg('Abre esta recompensa.')
+          : undefined
+      }
+      accessibilityLabel={onPress ? `${title}. ${status}` : undefined}
+      disabled={disabled}
+      hitSlop={onPress ? touchTargets.hitSlop : undefined}
       onPress={onPress}
-      style={({ pressed }) => [
+      style={[
         styles.rewardCard,
-        largeText ? styles.rewardCardLargeText : null,
-        tone === 'green' ? styles.rewardCardGreen : null,
-        tone === 'purple' ? styles.rewardCardPurple : null,
-        tone === 'blue' ? styles.rewardCardBlue : null,
         actionLabel && !disabled ? styles.rewardCardReady : null,
         disabled ? styles.rewardCardDisabled : null,
-        pressed && isInteractive ? styles.cardPressed : null,
       ]}
+      variant={
+        actionLabel && !disabled ? 'reward' : disabled ? 'locked' : 'standard'
+      }
     >
       <View style={styles.rewardTopRow}>
-        <GameIcon muted={disabled} name={iconName} size={40} tone={iconTone} />
+        {imageSource ? (
+          <Image
+            accessibilityLabel={imageAccessibilityLabel}
+            resizeMode="contain"
+            source={imageSource}
+            style={styles.rewardImage}
+          />
+        ) : (
+          <GameIcon
+            muted={disabled}
+            name={iconName}
+            size={40}
+            tone={iconTone}
+          />
+        )}
         {actionLabel ? (
           <View
             style={[
               styles.rewardActionPill,
-              largeText ? styles.rewardActionPillLargeText : null,
               disabled ? styles.rewardActionPillDisabled : null,
             ]}
           >
-            <Text
-              numberOfLines={largeText ? undefined : 2}
-              style={styles.rewardActionText}
-            >
-              {actionLabel}
-            </Text>
+            <Text style={styles.rewardActionText}>{actionLabel}</Text>
           </View>
         ) : null}
       </View>
-      <Text
-        numberOfLines={largeText ? undefined : 1}
-        style={styles.rewardTitle}
-      >
-        {title}
-      </Text>
-      <Text
-        numberOfLines={largeText ? undefined : 2}
-        style={styles.rewardStatus}
-      >
-        {status}
-      </Text>
+      <Text style={styles.rewardTitle}>{title}</Text>
+      <Text style={styles.rewardStatus}>{status}</Text>
       {progressPercent !== undefined ? (
-        <View style={styles.rewardProgressTrack}>
+        <View
+          accessibilityRole="progressbar"
+          accessibilityLabel={msg('Progresso de {param1}', {
+            param1: String(title),
+          })}
+          accessibilityValue={{
+            min: 0,
+            max: 100,
+            now: Math.max(0, Math.min(100, progressPercent)),
+          }}
+          style={styles.rewardProgressTrack}
+        >
           <View
             style={[
               styles.rewardProgressFill,
@@ -126,7 +158,7 @@ function RewardCard({
           />
         </View>
       ) : null}
-    </Pressable>
+    </MenuCard>
   );
 }
 
@@ -189,8 +221,9 @@ export function RewardsScreen({
   onOpenWorldChest,
   onPurchaseCoinTraySlot,
   onShowTutorial,
+  onClose,
 }: RewardsScreenProps) {
-  const largeText = useWindowDimensions().fontScale >= 1.6;
+  const bottomNavClearance = useBottomNavClearance();
   const currentWorldId = getCurrentWorldId(progress);
   const [message, setMessage] = useState<string | undefined>();
   const [trayBoostMessage, setTrayBoostMessage] = useState<
@@ -284,29 +317,30 @@ export function RewardsScreen({
     <ScreenShell scroll={false}>
       <TabScene worldId={currentWorldId}>
         <ScrollView
-          contentContainerStyle={styles.content}
+          contentContainerStyle={[
+            styles.content,
+            { paddingBottom: bottomNavClearance + spacing.lg },
+          ]}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.topBar}>
-            <View style={styles.titleBlock}>
-              <Text style={styles.sectionKicker}>Recompensas</Text>
-              <Text style={styles.sectionTitle}>Próximos prêmios</Text>
-            </View>
-
-            <Pressable
-              accessibilityLabel="Abrir configurações"
-              accessibilityRole="button"
-              hitSlop={8}
-              onPress={onOpenSettings}
-              style={({ pressed }) => [
-                styles.settingsButton,
-                pressed ? styles.buttonPressed : null,
-              ]}
-            >
-              <GameIcon name="settings" size={30} tone="blue" />
-              <Text style={styles.settingsText}>Menu</Text>
-            </Pressable>
-          </View>
+          <MenuHeader
+            title="Recompensas"
+            eyebrow="Prêmios da jornada"
+            tone="dark"
+            onBack={onClose}
+            backLabel="Voltar ao perfil"
+            right={
+              <Pressable
+                accessibilityLabel="Abrir configurações"
+                accessibilityRole="button"
+                onPress={onOpenSettings}
+                style={styles.settingsButton}
+              >
+                <GameIcon name="settings" size={30} tone="blue" />
+                <Text style={styles.settingsText}>Menu</Text>
+              </Pressable>
+            }
+          />
 
           {message ? (
             <View style={styles.toast}>
@@ -317,6 +351,7 @@ export function RewardsScreen({
           ) : null}
 
           <View style={styles.rewardsSection}>
+            <MenuSectionHeader title="Próximos prêmios" tone="dark" />
             {trayBoostMessage ? (
               <Text numberOfLines={1} style={styles.trayBoostMessage}>
                 {trayBoostMessage}
@@ -327,7 +362,6 @@ export function RewardsScreen({
               <RewardCard
                 iconName="chest"
                 iconTone="gold"
-                largeText={largeText}
                 progressPercent={chestProgressPercent}
                 status={`${chestProgressCount}/${CHEST_PHASES_REQUIRED} - ${commonChestStatus}`}
                 title="Baú Comum"
@@ -337,10 +371,8 @@ export function RewardsScreen({
                 disabled={!pendingWorldChestId}
                 iconName="specialChest"
                 iconTone="purple"
-                largeText={largeText}
                 status={specialChestStatus}
                 title="Baú Especial"
-                tone="purple"
                 onPress={
                   pendingWorldChestId
                     ? () => onOpenWorldChest(pendingWorldChestId)
@@ -350,12 +382,10 @@ export function RewardsScreen({
               <RewardCard
                 iconName="bonus"
                 iconTone="blue"
-                largeText={largeText}
                 status={
                   bonusSlotActive ? bonusSlotStatus : 'Disponível na fase'
                 }
                 title="Espaço Bônus"
-                tone="blue"
               />
               <RewardCard
                 actionLabel={
@@ -368,10 +398,8 @@ export function RewardsScreen({
                 disabled={!trayPlusActive && !canBuyTrayPlus}
                 iconName="tray"
                 iconTone="green"
-                largeText={largeText}
                 status={trayPlusStatus}
                 title={`Bandeja ${activeTrayCapacity}/${MAX_TRAY_CAPACITY}`}
-                tone="green"
                 onPress={trayPlusActive ? undefined : handlePurchaseTrayPlus}
               />
             </View>
@@ -422,13 +450,8 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     transform: [{ translateY: 1 }, { scale: 0.98 }],
   },
-  cardPressed: {
-    opacity: 0.94,
-    transform: [{ translateY: 2 }, { scale: 0.99 }],
-  },
   content: {
-    gap: spacing.sm,
-    paddingBottom: BOTTOM_NAV_HEIGHT + spacing.lg,
+    gap: spacing.lg,
     paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
   },
@@ -438,35 +461,30 @@ const styles = StyleSheet.create({
   },
   hubShortcut: {
     alignItems: 'center',
-    backgroundColor: 'rgba(74, 46, 137, 0.96)',
-    borderBottomColor: '#241052',
-    borderBottomWidth: 4,
-    borderColor: '#FFD35A',
+    backgroundColor: forestPolish.cream,
+    borderColor: colors.border,
     borderRadius: 18,
     borderWidth: 2,
     flex: 1,
-    gap: 1,
+    gap: spacing.sm,
     justifyContent: 'center',
     minHeight: 64,
     minWidth: 0,
-    paddingHorizontal: 3,
-    paddingVertical: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.md,
     position: 'relative',
-    ...shadows.button,
+    ...shadows.menuCard,
   },
   hubShortcutLabel: {
-    color: colors.inkOnDark,
-    fontSize: 9,
+    color: forestPolish.woodDark,
+    fontSize: fontSizes.sm,
     fontWeight: '900',
-    lineHeight: 10,
-    minHeight: 20,
     textAlign: 'center',
     textTransform: 'uppercase',
   },
   hubShortcutMuted: {
-    backgroundColor: 'rgba(54, 38, 103, 0.9)',
-    borderColor: 'rgba(200, 193, 255, 0.78)',
-    opacity: 0.84,
+    backgroundColor: colors.lockedSurface,
+    borderColor: colors.borderSoft,
   },
   hubShortcutRow: {
     flexDirection: 'row',
@@ -481,149 +499,119 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xs,
   },
   rewardActionPill: {
-    backgroundColor: '#28C96F',
-    borderColor: '#C7FFD9',
+    backgroundColor: colors.successDark,
+    borderColor: forestPolish.leaf,
     borderRadius: radii.pill,
     borderWidth: 2,
-    maxWidth: 84,
-    minWidth: 0,
+    flexShrink: 1,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
   rewardActionPillDisabled: {
-    backgroundColor: '#8D9BA0',
-    borderColor: '#D5E0E0',
-  },
-  rewardActionPillLargeText: {
-    maxWidth: '55%',
+    backgroundColor: colors.lockedText,
+    borderColor: colors.lockedSurface,
   },
   rewardActionText: {
     color: colors.inkOnDark,
-    fontSize: 9,
+    fontSize: fontSizes.sm,
     fontWeight: '900',
-    textAlign: 'center',
     textTransform: 'uppercase',
   },
   rewardCard: {
-    backgroundColor: 'rgba(57, 34, 125, 0.94)',
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(255, 211, 90, 0.78)',
-    borderRadius: 16,
-    borderWidth: 2,
-    flexBasis: '48%',
-    flexGrow: 1,
-    gap: 5,
-    minHeight: 102,
-    padding: spacing.sm,
-    ...shadows.card,
-  },
-  rewardCardBlue: {
-    borderBottomColor: '#0A4D95',
-    borderColor: '#C8ECFF',
-  },
-  rewardCardLargeText: {
+    backgroundColor: forestPolish.cream,
+    borderColor: colors.border,
+    borderRadius: radii.menuCard,
+    borderWidth: 1,
     flexBasis: '100%',
+    flexGrow: 1,
+    gap: spacing.sm,
+    minHeight: 112,
+    padding: spacing.lg,
+    ...shadows.menuCard,
   },
   rewardCardDisabled: {
-    opacity: 0.86,
-  },
-  rewardCardGreen: {
-    borderBottomColor: colors.successDark,
-    borderColor: '#C7FFD9',
-  },
-  rewardCardPurple: {
-    borderBottomColor: '#2C0E56',
-    borderColor: '#C8C1FF',
+    backgroundColor: colors.lockedSurface,
+    borderColor: colors.borderSoft,
   },
   rewardCardReady: {
-    backgroundColor: 'rgba(93, 55, 202, 0.98)',
-    borderBottomColor: '#087A54',
-    borderColor: '#42E5A7',
+    borderColor: forestPolish.moss,
   },
   rewardGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
   },
+  rewardImage: { height: 40, width: 40 },
   rewardProgressFill: {
-    backgroundColor: '#42EFAF',
+    backgroundColor: forestPolish.moss,
     borderRadius: radii.pill,
     height: '100%',
   },
   rewardProgressTrack: {
-    backgroundColor: 'rgba(7, 24, 32, 0.45)',
-    borderColor: 'rgba(255, 255, 255, 0.18)',
+    backgroundColor: colors.border,
+    borderColor: colors.border,
     borderRadius: radii.pill,
     borderWidth: 1,
     height: 10,
     overflow: 'hidden',
   },
   rewardStatus: {
-    color: '#FFE9A8',
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    lineHeight: 14,
+    color: forestPolish.wood,
+    fontSize: fontSizes.md,
+    fontWeight: '700',
+    lineHeight: 22,
   },
   rewardTitle: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.sm,
+    color: forestPolish.woodDark,
+    fontSize: fontSizes.lg,
     fontWeight: '900',
   },
   rewardTopRow: {
     alignItems: 'center',
     flexDirection: 'row',
+    gap: spacing.md,
     justifyContent: 'space-between',
     minHeight: 28,
   },
   rewardsSection: {
-    backgroundColor: 'rgba(44, 21, 104, 0.96)',
-    borderBottomColor: '#120932',
-    borderBottomWidth: 6,
-    borderColor: 'rgba(255, 211, 90, 0.48)',
-    borderRadius: 18,
-    borderWidth: 3,
     gap: spacing.sm,
-    padding: spacing.sm,
-    ...shadows.card,
-  },
-  sectionKicker: {
-    color: '#FFE9A8',
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  sectionTitle: {
-    color: colors.inkOnDark,
-    fontSize: 19,
-    fontWeight: '900',
-    textShadowColor: 'rgba(0, 0, 0, 0.28)',
-    textShadowOffset: { height: 2, width: 0 },
-    textShadowRadius: 2,
   },
   settingsButton: {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 248, 232, 0.95)',
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 4,
-    borderColor: '#FFF4C9',
+    // Ver comentário equivalente em PowersScreen.itemCard: borda de cor única +
+    // settingsButtonBevel (faixa sólida, sem borda própria) em vez de
+    // borderBottomColor divergente, para evitar o artefato de recorte no canto
+    // arredondado do Android.
+    borderColor: colors.cream,
     borderRadius: 18,
     borderWidth: 2,
     gap: 1,
-    height: 56,
+    minHeight: 56,
     justifyContent: 'center',
-    width: 58,
+    overflow: 'hidden',
+    position: 'relative',
+    minWidth: 58,
+    padding: spacing.sm,
     ...shadows.card,
+  },
+  settingsButtonBevel: {
+    backgroundColor: colors.goldDark,
+    bottom: 0,
+    height: 4,
+    left: 0,
+    position: 'absolute',
+    right: 0,
   },
   settingsText: {
     color: colors.ink,
-    fontSize: 9,
+    fontSize: fontSizes.sm,
     fontWeight: '900',
     textTransform: 'uppercase',
   },
   shortcutAlert: {
     alignItems: 'center',
-    backgroundColor: '#F05278',
+    backgroundColor: colors.danger,
     borderColor: '#FFC0CE',
     borderRadius: radii.pill,
     borderWidth: 2,
@@ -641,10 +629,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     lineHeight: 14,
   },
-  titleBlock: {
-    flex: 1,
-    minWidth: 0,
-  },
   toast: {
     alignSelf: 'center',
     backgroundColor: colors.surfaceWarm,
@@ -661,11 +645,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.xs,
     fontWeight: '900',
     textAlign: 'center',
-  },
-  topBar: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
   },
   trayBoostMessage: {
     color: '#FFE9A8',

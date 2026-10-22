@@ -1,0 +1,69 @@
+APRESENTAÇÃO DO TRINCAMANIA ORIGINAL NO ODS12 — 21/10/2026
+
+Solicitação: importar intro, menu inferior e demais telas do TrincaMania
+atualizado, preservando o mapa ODS12. Trabalho local, sem publicação web,
+commit, push, workflow remoto ou geração/substituição de APK.
+
+Fonte: https://github.com/mateusHegeto10/TrincaMania
+Branch remota mais recente para navegador: simulator/main
+Commit: 7fdc7a3 (14/10/2026), conferido com git fetch origin.
+A UI é idêntica à main df882fb; a branch do simulador adiciona exportação web
+e reduz a campanha original para 30 fases. Essa campanha NÃO foi importada.
+O worktree de referência está em ../TrincaMania-latest, sem alterações.
+
+Estrutura:
+- src/original: cópia dos componentes de apresentação, tema e helpers.
+- assets/original: imagens referenciadas, copiadas sem editar os pixels.
+- src/components/startup: intro original com três maçãs e contorno dourado, conforme nova
+  solicitação de copiar a abertura original em 21/10/2026 (substitui o ciclo
+  do papel usado na primeira adaptação).
+- MainTabs: Mapa, Loja, Missões, Perfil; Poderes/Recompensas pelo Perfil.
+- Loja: layout/artes do original, transação async existente no App ODS12.
+  Sem introduzir ofertas rotativas ou produtos Max ausentes da economia ODS12.
+- Perfil: layout/artes originais; métricas das 103 fases e 10 mundos ODS12;
+  atalhos apenas para destinos funcionais existentes nesta versão.
+- Missões: apresentação do original adaptada aos objetivos da campanha ODS12;
+  não adiciona missões diárias/semanais nem recompensas novas.
+- Recompensas: cartões originais; baú a cada 5 fases e Jardim Renascido ODS12.
+- Configurações: linhas e controles originais; preferências existentes de
+  som/vibração, modo silencioso, diagnóstico e confirmação de reset preservados.
+- Partida e diálogos: controles e ícones originais, mantendo domínio ODS12,
+  tutorial de reciclagem, tabuleiro, vidas, economia e persistência existentes.
+- Capítulos: trilha específica do ODS12 sem correspondente no original, mantida.
+
+A tela LevelSelectScreen, os componentes do mapa e src/data/levels.ts não
+foram editados. Só a barra inferior compartilhada recebeu a apresentação nova.
+
+Para atualizar a exportação:
+GAME_PROJECT_PATH aponta para a pasta do aplicativo ODS12 neste workspace.
+No site: npm run build:game; npm run build; npm run test:e2e.
+Servir com npm run feira em http://localhost:4322/ e /jogar/?modo=teste.
+O modo feira reinicia o visitante; o modo teste usa armazenamento separado.
+
+Evidências e resultados finais: consultar os logs locais em /tmp/ods12-original-*.log
+e a validação registrada no README do site. Aceite visual Android pendente.
+
+RESULTADOS
+Typecheck: PASS. Lint: zero erros e três avisos já presentes em GameScreen.
+Formatação e git diff --check: PASS. Exportação Expo Web e build Astro: PASS.
+Domínio: 279 PASS; simulações: 2 PASS; componentes: 83 PASS.
+Regressão web ampla: 22 PASS; os quatro cenários de navegação/compra
+foram repetidos e passaram após as correções finais (dois deles já tinham
+passado na rodada ampla). Desktop e mobile, acessibilidade axe-core,
+foco isolado, configurações persistentes e compra confirmados.
+Mapa: 103 pedestais, onze mapas e proporção 9:16 confirmados.
+A intro foi conferida visualmente no navegador e o JPEG coincide por SHA-256
+com a fonte original. O APK aprovado mantém SHA-256
+c44a7324dd282e4bd89c458c296cfdc6157c1339209e171a4e64f410946ff378.
+RTK indisponível: usados comandos nativos; instalação no README da raiz.
+
+RESTAURAÇÃO DA INTRO ORIGINAL — NOVA SOLICITAÇÃO EM 21/10/2026
+Restauradas as três maçãs, o contorno dourado e os tokens visuais do
+original. Fundo e maçã coincidem por SHA-256 com simulator/main em 7fdc7a3.
+Verificações desta alteração: typecheck, ESLint dos arquivos alterados,
+Prettier e git diff --check passaram; dois arquivos Jest, quatro testes PASS
+(espera pelos assets/progresso, falha de imagens e saída idempotente).
+Exportação Expo Web e build Astro locais passaram. Playwright confirmou
+três imagens originais carregadas, animação/título e chegada automática ao
+tutorial/mapa, sem erros JavaScript. Captura no site:
+docs/auditoria/2026-10-21-intro-original.png.
