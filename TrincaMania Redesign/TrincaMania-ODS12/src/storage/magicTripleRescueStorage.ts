@@ -1,4 +1,7 @@
 import AsyncStorage from './keyValueStorage';
+import { createStorageQueue } from './storageQueue';
+
+const enqueue = createStorageQueue();
 
 export const MAGIC_TRIPLE_RESCUE_STORAGE_KEY =
   '@trinca-mania/magic-triple-rescue-v1';
@@ -45,7 +48,7 @@ export const markMagicTripleRescueUsed = (
     tutorialSeenCount: Math.max(1, state.tutorialSeenCount),
   });
 
-export const loadMagicTripleRescueState = async () => {
+const loadMagicTripleRescueStateInternal = async () => {
   const rawState = await AsyncStorage.getItem(MAGIC_TRIPLE_RESCUE_STORAGE_KEY);
 
   if (!rawState) {
@@ -61,7 +64,7 @@ export const loadMagicTripleRescueState = async () => {
   }
 };
 
-export const saveMagicTripleRescueState = async (
+const saveMagicTripleRescueStateInternal = async (
   state: MagicTripleRescueState,
 ) => {
   const normalizedState = normalizeMagicTripleRescueState(state);
@@ -72,5 +75,12 @@ export const saveMagicTripleRescueState = async (
   return normalizedState;
 };
 
-export const resetMagicTripleRescueState = async () =>
-  saveMagicTripleRescueState(createInitialMagicTripleRescueState());
+const resetMagicTripleRescueStateInternal = async () =>
+  saveMagicTripleRescueStateInternal(createInitialMagicTripleRescueState());
+
+export const loadMagicTripleRescueState = () =>
+  enqueue(loadMagicTripleRescueStateInternal);
+export const saveMagicTripleRescueState = (state: MagicTripleRescueState) =>
+  enqueue(() => saveMagicTripleRescueStateInternal(state));
+export const resetMagicTripleRescueState = () =>
+  enqueue(resetMagicTripleRescueStateInternal);

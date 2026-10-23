@@ -1,8 +1,16 @@
-import { RecyclingMarkerArt } from '../components/RecyclingMarkerArt';
-import { useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  BackHandler,
+  FlatList,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
 import { GameIcon } from '../components/GameIcon';
+import { RecyclingMarkerArt } from '../components/RecyclingMarkerArt';
 import { ScreenShell } from '../components/ScreenShell';
 import {
   CHAPTERS,
@@ -16,10 +24,12 @@ import {
   getChapterProgressSummaries,
   isChapterMapUnlocked,
 } from '../storage/chapterProgressStorage';
-import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
-import { ChapterId, ChapterMilestone } from '../types/game';
+import { ChapterId, ChapterMilestone, WorldId } from '../types/game';
+import { playMetaMusic, playWorldMusic } from '../utils/music';
+import { styles } from './chaptersStyles';
 
-const MAP_COLUMNS = 5;
+const MAPS_PER_SECTION = 10;
+const SECTION_COUNT = 10;
 
 const MILESTONE_LABEL: Record<ChapterMilestone, string> = {
   guardian: 'Guardião',
@@ -34,15 +44,7 @@ type ChaptersScreenProps = {
   onSelectChapterLevel: (mapId: string) => void;
 };
 
-/**
- * Navegação dos 1000 mapas em dois níveis: a lista dos 10 capítulos e, dentro
- * de um capítulo, a grade dos 100 mapas. A campanha canônica fica na aba Mapa;
- * daqui o botão de voltar devolve o jogador para lá.
- *
- * A cor de cada capítulo sai de `getChapterVisualIdentity` do primeiro mapa, a
- * mesma identidade determinística que o tabuleiro usa — nenhuma paleta nova é
- * inventada aqui.
- */
+/** Os capítulos são um percurso separado da campanha; o modo dev não grava desbloqueios. */
 export function ChaptersScreen({
   devMode = false,
   chapterProgress,
@@ -50,6 +52,35 @@ export function ChaptersScreen({
   onSelectChapterLevel,
 }: ChaptersScreenProps) {
   const [openChapterId, setOpenChapterId] = useState<ChapterId | undefined>();
+  const [sectionIndex, setSectionIndex] = useState(0);
+  const sectionTabsRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') return undefined;
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (openChapterId) setOpenChapterId(undefined);
+        else onBack();
+        return true;
+      },
+    );
+    return () => subscription.remove();
+  }, [onBack, openChapterId]);
+
+  useEffect(() => {
+    if (!openChapterId) return;
+    sectionTabsRef.current?.scrollTo({
+      x: Math.max(0, sectionIndex - 2) * 50,
+      animated: true,
+    });
+  }, [openChapterId, sectionIndex]);
+
+  useEffect(() => {
+    if (openChapterId) playWorldMusic((100 + openChapterId) as WorldId);
+    else playMetaMusic();
+  }, [openChapterId]);
+
   const chapterSummaries = useMemo(
     () =>
       getChapterProgressSummaries(chapterProgress).map((summary) => ({
@@ -58,145 +89,335 @@ export function ChaptersScreen({
       })),
     [chapterProgress, devMode],
   );
+  const completedTotal = chapterSummaries.reduce(
+    (total, summary) => total + summary.completedCount,
+    0,
+  );
   const openChapter = openChapterId ? getChapter(openChapterId) : undefined;
   const openChapterMaps = useMemo(
     () => (openChapterId ? getChapterLevelSummaries(openChapterId) : []),
     [openChapterId],
   );
+  const openSummary = chapterSummaries.find(
+    (summary) => summary.chapterId === openChapterId,
+  );
+  const nextMap =
+    openChapterMaps.find(
+      (map) =>
+        getChapterMapStars(chapterProgress, map.id) === 0 &&
+        (devMode || isChapterMapUnlocked(map.id, chapterProgress)),
+    ) ?? openChapterMaps[openChapterMaps.length - 1];
+  const visibleMaps = openChapterMaps.slice(
+    sectionIndex * MAPS_PER_SECTION,
+    (sectionIndex + 1) * MAPS_PER_SECTION,
+  );
+  const sectionCompleted = visibleMaps.filter(
+    (map) => getChapterMapStars(chapterProgress, map.id) > 0,
+  ).length;
+
+  const showChapter = (chapterId: ChapterId) => {
+    const maps = getChapterLevelSummaries(chapterId);
+    const nextIndex = maps.findIndex(
+      (map) =>
+        getChapterMapStars(chapterProgress, map.id) === 0 &&
+        (devMode || isChapterMapUnlocked(map.id, chapterProgress)),
+    );
+    setSectionIndex(
+      Math.floor(
+        (nextIndex >= 0 ? nextIndex : maps.length - 1) / MAPS_PER_SECTION,
+      ),
+    );
+    setOpenChapterId(chapterId);
+  };
+
+  const header = (
+    <View style={styles.header}>
+      <Pressable
+        accessibilityLabel={
+          openChapter ? 'Voltar aos capítulos' : 'Voltar ao mapa'
+        }
+        accessibilityRole="button"
+        onPress={openChapter ? () => setOpenChapterId(undefined) : onBack}
+        style={({ pressed }) => [
+          styles.backButton,
+          pressed ? styles.pressed : null,
+        ]}
+      >
+        <GameIcon name="back" size={26} tone="green" variant="plain" />
+      </Pressable>
+      <View style={styles.headerCopy}>
+        <Text style={styles.headerEyebrow}>JORNADA EXTRA · ODS 12</Text>
+        <Text numberOfLines={1} style={styles.headerTitle}>
+          {openChapter
+            ? `Capítulo ${String(openChapter.id).padStart(2, '0')}`
+            : 'Capítulos'}
+        </Text>
+      </View>
+    </View>
+  );
 
   if (openChapter) {
-    const identity = getChapterVisualIdentity(openChapter.levelIds[0]);
-
     return (
       <ScreenShell scroll={false}>
-        <View style={styles.header}>
-          <Pressable
-            accessibilityLabel="Voltar aos capítulos"
-            accessibilityRole="button"
-            onPress={() => setOpenChapterId(undefined)}
-            style={({ pressed }) => [
-              styles.backButton,
-              pressed ? styles.pressed : null,
-            ]}
-          >
-            <GameIcon name="back" size={22} />
-          </Pressable>
-          <View style={styles.headerCopy}>
-            <Text numberOfLines={1} style={styles.headerTitle}>
-              {openChapter.name}
-            </Text>
-            <Text numberOfLines={1} style={styles.headerSubtitle}>
-              {openChapter.subtitle}
-            </Text>
+        {header}
+        <ScrollView
+          contentContainerStyle={styles.detailContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.overviewCard}>
+            <Text style={styles.overviewKicker}>SEU PROGRESSO</Text>
+            <Text style={styles.overviewTitle}>{openChapter.name}</Text>
+            <Text style={styles.overviewSubtitle}>{openChapter.subtitle}</Text>
+            <View style={styles.overviewProgressRow}>
+              <Text style={styles.overviewProgressValue}>
+                {openSummary?.completedCount ?? 0} de 100 mapas
+              </Text>
+              <Text style={styles.overviewProgressPercent}>
+                {openSummary?.completedCount ?? 0}%
+              </Text>
+            </View>
+            <View style={styles.progressTrack}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${openSummary?.completedCount ?? 0}%` },
+                ]}
+              />
+            </View>
           </View>
-        </View>
 
-        <FlatList
-          key={`chapter-maps-${openChapter.id}`}
-          columnWrapperStyle={styles.mapRow}
-          contentContainerStyle={styles.mapList}
-          data={openChapterMaps}
-          initialNumToRender={30}
-          keyExtractor={(summary) => summary.id}
-          numColumns={MAP_COLUMNS}
-          renderItem={({ item }) => {
-            const stars = getChapterMapStars(chapterProgress, item.id);
-            const locked =
-              !devMode && !isChapterMapUnlocked(item.id, chapterProgress);
+          {nextMap ? (
+            <Pressable
+              accessibilityLabel={`${openSummary?.completedCount === 100 ? 'Rejogar' : 'Continuar no'} mapa ${nextMap.chapterMapNumber}: ${nextMap.title}`}
+              accessibilityRole="button"
+              onPress={() => onSelectChapterLevel(nextMap.id)}
+              style={({ pressed }) => [
+                styles.continueCard,
+                pressed ? styles.pressed : null,
+              ]}
+            >
+              <View style={styles.continueIcon}>
+                <GameIcon name="play" size={23} tone="green" variant="plain" />
+              </View>
+              <View style={styles.continueCopy}>
+                <Text style={styles.continueKicker}>
+                  {openSummary?.completedCount === 100
+                    ? 'REJOGAR'
+                    : 'CONTINUAR'}{' '}
+                  · MAPA {nextMap.chapterMapNumber}
+                </Text>
+                <Text numberOfLines={1} style={styles.continueTitle}>
+                  {nextMap.title}
+                </Text>
+              </View>
+              <GameIcon name="next" size={23} tone="green" variant="plain" />
+            </Pressable>
+          ) : null}
 
-            return (
+          <View style={styles.sectionPanel}>
+            <Text style={styles.sectionKicker}>ESCOLHA UM CONJUNTO</Text>
+            <ScrollView
+              contentContainerStyle={styles.sectionTabs}
+              horizontal
+              ref={sectionTabsRef}
+              showsHorizontalScrollIndicator={false}
+            >
+              {Array.from({ length: SECTION_COUNT }, (_, index) => (
+                <Pressable
+                  accessibilityLabel={`Mapas ${index * 10 + 1} a ${(index + 1) * 10}`}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: sectionIndex === index }}
+                  key={`section-${index}`}
+                  onPress={() => setSectionIndex(index)}
+                  style={({ pressed }) => [
+                    styles.sectionTab,
+                    sectionIndex === index ? styles.sectionTabActive : null,
+                    pressed ? styles.pressed : null,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.sectionTabText,
+                      sectionIndex === index
+                        ? styles.sectionTabTextActive
+                        : null,
+                    ]}
+                  >
+                    {String(index + 1).padStart(2, '0')}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+
+            <View style={styles.sectionHeading}>
+              <View>
+                <Text style={styles.sectionTitle}>
+                  Mapas {sectionIndex * 10 + 1} a {(sectionIndex + 1) * 10}
+                </Text>
+                <Text style={styles.sectionSubtitle}>
+                  Toque em um mapa para jogar
+                </Text>
+              </View>
+              <Text style={styles.sectionCount}>{sectionCompleted}/10</Text>
+            </View>
+
+            <View style={styles.mapGrid}>
+              {visibleMaps.map((map) => {
+                const stars = getChapterMapStars(chapterProgress, map.id);
+                const locked =
+                  !devMode && !isChapterMapUnlocked(map.id, chapterProgress);
+                const isNext = map.id === nextMap?.id && stars === 0;
+
+                return (
+                  <Pressable
+                    accessibilityLabel={`Mapa ${map.chapterMapNumber}: ${map.title}`}
+                    accessibilityRole="button"
+                    accessibilityState={{ disabled: locked }}
+                    disabled={locked}
+                    key={map.id}
+                    onPress={() => onSelectChapterLevel(map.id)}
+                    style={({ pressed }) => [
+                      styles.mapTile,
+                      locked ? styles.mapTileLocked : null,
+                      stars > 0 ? styles.mapTileDone : null,
+                      isNext ? styles.mapTileNext : null,
+                      pressed ? styles.pressed : null,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.mapNumber,
+                        locked ? styles.mapNumberLocked : null,
+                      ]}
+                    >
+                      {map.chapterMapNumber}
+                    </Text>
+                    {locked ? (
+                      <GameIcon
+                        muted
+                        name="lock"
+                        size={18}
+                        tone="neutral"
+                        variant="plain"
+                      />
+                    ) : map.milestone ? (
+                      <>
+                        <RecyclingMarkerArt
+                          kind={map.milestone}
+                          style={styles.milestoneArt}
+                        />
+                        <Text numberOfLines={1} style={styles.mapCaption}>
+                          {MILESTONE_LABEL[map.milestone]}
+                        </Text>
+                      </>
+                    ) : stars > 0 ? (
+                      <View style={styles.mapStarsRow}>
+                        {Array.from({ length: stars }, (_, index) => (
+                          <GameIcon
+                            key={`${map.id}-star-${index}`}
+                            name="star"
+                            size={13}
+                            tone="gold"
+                            variant="plain"
+                          />
+                        ))}
+                      </View>
+                    ) : (
+                      <Text
+                        style={[
+                          styles.mapCaption,
+                          isNext ? styles.mapCaptionNext : null,
+                        ]}
+                      >
+                        {isNext ? 'PRÓXIMO' : 'JOGAR'}
+                      </Text>
+                    )}
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            <View style={styles.sectionActions}>
               <Pressable
-                accessibilityLabel={`Mapa ${item.chapterMapNumber}: ${item.title}`}
+                accessibilityLabel="Conjunto anterior"
                 accessibilityRole="button"
-                accessibilityState={{ disabled: locked }}
-                disabled={locked}
-                onPress={() => onSelectChapterLevel(item.id)}
-                style={({ pressed }) => [
-                  styles.mapTile,
-                  locked
-                    ? styles.mapTileLocked
-                    : { borderColor: identity.accentColor },
-                  stars > 0 ? styles.mapTileDone : null,
-                  pressed ? styles.pressed : null,
+                accessibilityState={{ disabled: sectionIndex === 0 }}
+                disabled={sectionIndex === 0}
+                onPress={() => setSectionIndex((index) => index - 1)}
+                style={[
+                  styles.sectionAction,
+                  sectionIndex === 0 ? styles.sectionActionDisabled : null,
                 ]}
               >
-                {locked ? (
-                  <GameIcon muted name="lock" size={18} tone="neutral" />
-                ) : (
-                  <Text style={styles.mapNumber}>{item.chapterMapNumber}</Text>
-                )}
-                <View style={styles.mapStarsRow}>
-                  {Array.from({ length: stars }).map((_, index) => (
-                    <GameIcon
-                      key={`${item.id}-star-${index}`}
-                      name="star"
-                      size={10}
-                      tone="gold"
-                      variant="plain"
-                    />
-                  ))}
-                </View>
-                {item.milestone ? (
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      width: '100%',
-                    }}
-                  >
-                    <RecyclingMarkerArt
-                      kind={item.milestone}
-                      style={{ width: 18, height: 18 }}
-                    />
-                    <Text numberOfLines={1} style={styles.mapMilestone}>
-                      {MILESTONE_LABEL[item.milestone]}
-                    </Text>
-                  </View>
-                ) : null}
+                <Text style={styles.sectionActionText}>Anterior</Text>
               </Pressable>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-        />
+              <Pressable
+                accessibilityLabel="Próximo conjunto"
+                accessibilityRole="button"
+                accessibilityState={{
+                  disabled: sectionIndex === SECTION_COUNT - 1,
+                }}
+                disabled={sectionIndex === SECTION_COUNT - 1}
+                onPress={() => setSectionIndex((index) => index + 1)}
+                style={[
+                  styles.sectionAction,
+                  sectionIndex === SECTION_COUNT - 1
+                    ? styles.sectionActionDisabled
+                    : null,
+                ]}
+              >
+                <Text style={styles.sectionActionText}>Próximos 10</Text>
+              </Pressable>
+            </View>
+          </View>
+        </ScrollView>
       </ScreenShell>
     );
   }
 
   return (
     <ScreenShell scroll={false}>
-      <View style={styles.header}>
-        <Pressable
-          accessibilityLabel="Voltar ao mapa"
-          accessibilityRole="button"
-          onPress={onBack}
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed ? styles.pressed : null,
-          ]}
-        >
-          <GameIcon name="back" size={22} />
-        </Pressable>
-        <View style={styles.headerCopy}>
-          <Text numberOfLines={1} style={styles.headerTitle}>
-            Capítulos
-          </Text>
-          <Text numberOfLines={1} style={styles.headerSubtitle}>
-            10 capítulos · 100 mapas cada
-          </Text>
-        </View>
-      </View>
-
+      {header}
       <FlatList
-        key="chapter-list"
         contentContainerStyle={styles.chapterList}
         data={chapterSummaries}
         keyExtractor={(summary) => `chapter-${summary.chapterId}`}
+        ListHeaderComponent={
+          <View style={styles.listIntro}>
+            <Text style={styles.listIntroTitle}>
+              Explore novos caminhos da reciclagem
+            </Text>
+            <Text style={styles.listIntroBody}>
+              São 10 capítulos. Continue de onde parou ou escolha um tema
+              disponível.
+            </Text>
+            <View style={styles.totalProgressRow}>
+              <Text style={styles.totalProgressLabel}>Jornada completa</Text>
+              <Text style={styles.totalProgressValue}>
+                {completedTotal}/1.000
+              </Text>
+            </View>
+            <View style={styles.progressTrack}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${completedTotal / 10}%` },
+                ]}
+              />
+            </View>
+          </View>
+        }
         renderItem={({ index, item }) => {
-          // `chapterSummaries` sai de `CHAPTERS.map`, então o índice é o mesmo.
           const chapter = CHAPTERS[index];
           const identity = getChapterVisualIdentity(chapter.levelIds[0]);
-          const percent = Math.round(
-            (item.completedCount / item.totalCount) * 100,
-          );
+          const isComplete = item.completedCount === item.totalCount;
+          const status = !item.unlocked
+            ? 'BLOQUEADO'
+            : isComplete
+              ? 'CONCLUÍDO'
+              : item.completedCount > 0 || index === 0
+                ? 'CONTINUAR'
+                : 'DISPONÍVEL';
 
           return (
             <Pressable
@@ -204,55 +425,86 @@ export function ChaptersScreen({
               accessibilityLabel={`Capítulo ${item.chapterId}: ${chapter.name}, ${item.completedCount}/${item.totalCount} mapas concluídos${!item.unlocked ? ', bloqueado' : ''}`}
               accessibilityState={{ disabled: !item.unlocked }}
               disabled={!item.unlocked}
-              onPress={() => setOpenChapterId(item.chapterId)}
+              onPress={() => showChapter(item.chapterId)}
               style={({ pressed }) => [
                 styles.chapterCard,
-                {
-                  borderColor: item.unlocked
-                    ? identity.accentColor
-                    : colors.locked,
-                },
+                !item.unlocked ? styles.chapterCardLocked : null,
                 pressed ? styles.pressed : null,
               ]}
             >
               <View
                 style={[
-                  styles.chapterBadge,
+                  styles.chapterAccent,
                   {
                     backgroundColor: item.unlocked
                       ? identity.baseColor
-                      : colors.locked,
+                      : '#9FAEAA',
                   },
                 ]}
-              >
-                {item.unlocked ? (
-                  <Text style={styles.chapterBadgeText}>{item.chapterId}</Text>
-                ) : (
-                  <GameIcon muted name="lock" size={20} tone="neutral" />
-                )}
-              </View>
-              <View style={styles.chapterCopy}>
-                <Text numberOfLines={1} style={styles.chapterName}>
-                  {chapter.name}
-                </Text>
-                <Text numberOfLines={2} style={styles.chapterSubtitle}>
-                  {item.unlocked ? chapter.subtitle : chapter.lockedText}
-                </Text>
-                <View style={styles.progressTrack}>
-                  <View
-                    style={[
-                      styles.progressFill,
-                      {
-                        backgroundColor: identity.accentColor,
-                        width: `${percent}%`,
-                      },
-                    ]}
-                  />
+              />
+              <View style={styles.chapterCardTop}>
+                <View
+                  style={[
+                    styles.chapterBadge,
+                    {
+                      backgroundColor: item.unlocked
+                        ? identity.baseColor
+                        : '#85938F',
+                    },
+                  ]}
+                >
+                  {item.unlocked ? (
+                    <Text style={styles.chapterBadgeText}>
+                      {String(item.chapterId).padStart(2, '0')}
+                    </Text>
+                  ) : (
+                    <GameIcon
+                      muted
+                      name="lock"
+                      size={20}
+                      tone="neutral"
+                      variant="plain"
+                    />
+                  )}
                 </View>
+                <View style={styles.chapterCopy}>
+                  <Text numberOfLines={2} style={styles.chapterName}>
+                    {chapter.name}
+                  </Text>
+                  <Text numberOfLines={2} style={styles.chapterSubtitle}>
+                    {item.unlocked ? chapter.subtitle : chapter.lockedText}
+                  </Text>
+                </View>
+                {item.unlocked ? (
+                  <GameIcon
+                    name="next"
+                    size={22}
+                    tone="green"
+                    variant="plain"
+                  />
+                ) : null}
               </View>
-              <Text style={styles.chapterCount}>
-                {item.completedCount}/{item.totalCount}
-              </Text>
+              <View style={styles.chapterMeta}>
+                <Text
+                  style={[
+                    styles.chapterStatus,
+                    !item.unlocked ? styles.chapterStatusLocked : null,
+                  ]}
+                >
+                  {status}
+                </Text>
+                <Text style={styles.chapterCount}>
+                  {item.completedCount}/{item.totalCount} mapas
+                </Text>
+              </View>
+              <View style={styles.progressTrack}>
+                <View
+                  style={[
+                    styles.progressFill,
+                    { width: `${item.completedCount}%` },
+                  ]}
+                />
+              </View>
             </Pressable>
           );
         }}
@@ -261,137 +513,3 @@ export function ChaptersScreen({
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  backButton: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
-  },
-  chapterBadge: {
-    alignItems: 'center',
-    borderColor: colors.creamLight,
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-  },
-  chapterBadgeText: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.lg,
-    fontWeight: '900',
-  },
-  chapterCard: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    borderWidth: 3,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-    padding: spacing.sm,
-    ...shadows.card,
-  },
-  chapterCopy: {
-    flex: 1,
-    gap: 3,
-  },
-  chapterCount: {
-    color: colors.primaryDark,
-    fontSize: fontSizes.sm,
-    fontWeight: '900',
-  },
-  chapterList: {
-    paddingBottom: spacing.xl,
-  },
-  chapterName: {
-    color: colors.ink,
-    fontSize: fontSizes.md,
-    fontWeight: '900',
-  },
-  chapterSubtitle: {
-    color: colors.muted,
-    fontSize: fontSizes.xs,
-    fontWeight: '800',
-  },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  headerCopy: {
-    flex: 1,
-  },
-  headerSubtitle: {
-    color: colors.secondary,
-    fontSize: fontSizes.xs,
-    fontWeight: '800',
-  },
-  headerTitle: {
-    color: colors.inkOnDark,
-    fontSize: fontSizes.xl,
-    fontWeight: '900',
-  },
-  mapList: {
-    paddingBottom: spacing.xl,
-  },
-  mapMilestone: {
-    color: colors.primaryDark,
-    fontSize: 8,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  mapNumber: {
-    color: colors.ink,
-    fontSize: fontSizes.sm,
-    fontWeight: '900',
-  },
-  mapRow: {
-    gap: spacing.xs,
-    marginBottom: spacing.xs,
-  },
-  mapStarsRow: {
-    flexDirection: 'row',
-    height: 12,
-  },
-  mapTile: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: radii.sm,
-    borderWidth: 2,
-    flex: 1,
-    justifyContent: 'center',
-    minHeight: 58,
-    paddingVertical: 4,
-  },
-  mapTileDone: {
-    backgroundColor: colors.surfaceWarm,
-  },
-  mapTileLocked: {
-    backgroundColor: colors.panelDark,
-    borderColor: colors.locked,
-  },
-  pressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.97 }],
-  },
-  progressFill: {
-    borderRadius: radii.pill,
-    height: '100%',
-  },
-  progressTrack: {
-    backgroundColor: colors.surfaceTint,
-    borderRadius: radii.pill,
-    height: 6,
-    overflow: 'hidden',
-    width: '100%',
-  },
-});

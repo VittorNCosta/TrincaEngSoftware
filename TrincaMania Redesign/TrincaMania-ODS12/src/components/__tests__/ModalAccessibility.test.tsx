@@ -51,7 +51,7 @@ it('nomeia tutorial e permite fechar por Escape/Voltar, reiniciando a próxima l
 
 it.each([
   ['Sem vidas', NoLivesModal],
-  ['Peças mistério', MysteryTutorialModal],
+  ['Pilha Misteriosa', MysteryTutorialModal],
   ['Atualização da campanha', CampaignResizeNoticeModal],
 ] as const)(
   'nomeia %s e encaminha Escape/Voltar para fechar',

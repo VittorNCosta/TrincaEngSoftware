@@ -1,0 +1,47 @@
+{
+  "advisories": [
+    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "https://github.com/advisories/GHSA-86w9-cpqp-85rv"
+  ],
+  "versions": {
+    "braces": "3.0.3",
+    "node-forge": "1.4.0"
+  },
+  "changes": [
+    {
+      "file": "braces/lib/parse.js",
+      "beforeSha256": "e572166565f15fa6ad9865ae49d678218e32aabfd1b3720f6d0d43d39800d310",
+      "afterSha256": "1fba9bd13c7b30efc4b87f14ee2d4bd2a90f4953df6730927e80ecfd9bb422dc",
+      "before": "      stack.push(block);",
+      "after": "      if (stack.length >= 128) throw new SyntaxError('Brace nesting exceeds security depth limit (128)');\n      stack.push(block);"
+    },
+    {
+      "file": "braces/lib/compile.js",
+      "beforeSha256": "dc98f22eee3d511785d92a00758d5f0d48efed5f5813bdecc2de430c529b5c9f",
+      "afterSha256": "276fb68d987b54947fc8e85701acae5a009f6bc7cc4e507088c5c7bcdf71aacb",
+      "before": "const compile = (ast, options = {}) => {",
+      "after": "const compile = (ast, options = {}) => {\n  require('./audit-depth-guard')(ast);"
+    },
+    {
+      "file": "braces/lib/expand.js",
+      "beforeSha256": "41ccc196ebfa7b7781a634e721eb744e4e7bcb54cba427a7e3d6806a1b9e58f7",
+      "afterSha256": "2877e0bd62aac3ac68768230a03a68601062289d7af2e7cdfc4377f2ddd5a8b6",
+      "before": "const expand = (ast, options = {}) => {",
+      "after": "const expand = (ast, options = {}) => {\n  require('./audit-depth-guard')(ast);"
+    },
+    {
+      "file": "braces/lib/stringify.js",
+      "beforeSha256": "379f22d77bfa1478341ccd49c5e4267464aabcbba03558bab332aac23fc6f23a",
+      "afterSha256": "03e4761ca3720bffc02ace40a34cd464e9ebe517f607b129af38c01a733dec62",
+      "before": "module.exports = (ast, options = {}) => {",
+      "after": "module.exports = (ast, options = {}) => {\n  require('./audit-depth-guard')(ast);"
+    },
+    {
+      "file": "node-forge/lib/rsa.js",
+      "beforeSha256": "fd4740238145ec26470eb3f06a627c72039538ce1307dbdce40521f94dfd0a50",
+      "afterSha256": "10984eadcd630ed65b57a9cf427236e86209b9c968df81c113351d0e1e05bd22",
+      "before": "            obj.value.length !== 2) {",
+      "after": "            obj.value.length !== 2 ||\n            obj.value[0].value.length < 1 ||\n            obj.value[0].value.length > 2 ||\n            (obj.value[0].value.length === 2 &&\n              obj.value[0].value[1].value !== '')) {"
+    }
+  ]
+}

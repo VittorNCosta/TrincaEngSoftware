@@ -412,12 +412,13 @@ export function LevelSelectScreen({
     }
 
     panelAnim.setValue(0);
-    Animated.spring(panelAnim, {
-      friction: 8,
-      tension: 120,
+    const animation = Animated.timing(panelAnim, {
+      duration: 120,
       toValue: 1,
       useNativeDriver: true,
-    }).start();
+    });
+    animation.start();
+    return () => animation.stop();
   }, [panelAnim, selectedTarget]);
 
   useEffect(() => {
@@ -599,7 +600,7 @@ export function LevelSelectScreen({
       : false;
   const panelTranslateY = panelAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [28, 0],
+    outputRange: [0, 0],
   });
   // As 3 abas de mundo viraram ‹ › com pontinhos: a navegação anda pela lista
   // de mundos já desbloqueados, na ordem em que aparecem no WORLDS.

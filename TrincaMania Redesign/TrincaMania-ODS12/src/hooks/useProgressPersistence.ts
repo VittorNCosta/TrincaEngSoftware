@@ -1,27 +1,24 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
+import storage from '../storage/keyValueStorage';
+import { createChapterCompletionTransactions } from '../storage/chapterCompletionTransaction';
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { loadProgress, saveProgress } from '../storage/progressStorage';
 import {
-  createInitialProgress,
-  normalizeProgress,
-  saveProgress,
-} from '../storage/progressStorage';
-import {
-  copyChapterRewardLedger,
-  pendingChapterReward,
-  readChapterRewardLedger,
-  withChapterRewardLedger,
-} from '../storage/chapterRewardJournal';
-import { getIncrementalCoinRewardForLevel } from '../domain/recycling/services/ScoringService';
-import {
-  saveChapterProgress,
   createInitialChapterProgress,
-  applyChapterMapCompletion,
+  loadChapterProgress,
+  saveChapterProgress,
   ChapterProgressState,
 } from '../storage/chapterProgressStorage';
 import { ProgressState } from '../types/game';
 import { checkCampaignIds } from '../observability/runtimeInvariants';
+import {
+  readChapterRewardLedger,
+  pendingChapterReward,
+  withChapterRewardLedger,
+} from '../storage/chapterRewardJournal';
 import { log } from '../utils/log';
 type Inputs = {
+  resetOtherDomains(): Promise<void>;
   progressRef: MutableRefObject<ProgressState>;
   progressGenerationRef: MutableRefObject<number>;
   progressSaveQueueRef: MutableRefObject<Promise<void>>;
@@ -31,6 +28,7 @@ type Inputs = {
   setChapterProgress: Dispatch<SetStateAction<ChapterProgressState>>;
 };
 export function useProgressPersistence({
+  resetOtherDomains,
   progressRef,
   progressGenerationRef,
   progressSaveQueueRef,
@@ -39,235 +37,131 @@ export function useProgressPersistence({
   setProgress,
   setChapterProgress,
 }: Inputs) {
-  const chapterRewardQueue = useRef<Promise<unknown>>(Promise.resolve());
-  const resetOperation = useRef<Promise<void> | undefined>(undefined);
-  const resetTarget = useRef<
-    | {
-        generation: number;
-        wallet: ProgressState;
-        chapter: ChapterProgressState;
-      }
-    | undefined
-  >(undefined);
-
-  const assertGeneration = useCallback(
-    (generation: number, resetting = false) => {
-      if (
-        generation !== progressGenerationRef.current ||
-        (resetTarget.current && !resetting)
-      ) {
-        throw new Error('Progress operation superseded by reset');
-      }
-    },
-    [progressGenerationRef],
-  );
-
   const commitProgress = useCallback(
-    (
-      nextProgress: ProgressState,
-      generation = progressGenerationRef.current,
-      resetting = false,
-    ) => {
-      assertGeneration(generation, resetting);
+    (nextProgress: ProgressState) => {
       checkCampaignIds([
         ...Object.keys(nextProgress.levelStars),
         ...nextProgress.unlockedLevelIds,
       ]);
+      const generation = progressGenerationRef.current;
       progressRef.current = nextProgress;
       setProgress(nextProgress);
       const saveOperation = progressSaveQueueRef.current
         .catch(() => undefined)
-        .then(async () => {
-          assertGeneration(generation, resetting);
-          await saveProgress(nextProgress, 'commitProgress');
-          assertGeneration(generation, resetting);
-        });
+        .then(() =>
+          progressGenerationRef.current === generation
+            ? saveProgress(nextProgress, 'commitProgress')
+            : undefined,
+        );
       progressSaveQueueRef.current = saveOperation.catch((error) => {
         log('error', 'storage', 'campaign-save-failed', error);
       });
       return saveOperation;
     },
-    [
-      assertGeneration,
-      progressRef,
-      progressGenerationRef,
-      progressSaveQueueRef,
-      setProgress,
-    ],
+    [progressRef, progressGenerationRef, progressSaveQueueRef, setProgress],
   );
 
   // Mesma fila de serialização do `commitProgress`, na chave dos capítulos: duas
   // conclusões seguidas não podem gravar fora de ordem.
   const commitChapterProgress = useCallback(
-    (
-      nextProgress: ChapterProgressState,
-      generation = progressGenerationRef.current,
-      resetting = false,
-    ) => {
-      assertGeneration(generation, resetting);
+    (nextProgress: ChapterProgressState) => {
+      const generation = progressGenerationRef.current;
       chapterProgressRef.current = nextProgress;
       setChapterProgress(nextProgress);
       const saveOperation = chapterProgressSaveQueueRef.current
         .catch(() => undefined)
-        .then(async () => {
-          assertGeneration(generation, resetting);
-          await saveChapterProgress(nextProgress, 'commitChapterProgress');
-          assertGeneration(generation, resetting);
-        });
+        .then(() =>
+          progressGenerationRef.current === generation
+            ? saveChapterProgress(nextProgress, 'commitChapterProgress')
+            : undefined,
+        );
       chapterProgressSaveQueueRef.current = saveOperation.catch((error) => {
         log('error', 'storage', 'chapter-save-failed', error);
       });
       return saveOperation;
     },
     [
-      assertGeneration,
-      progressGenerationRef,
       chapterProgressRef,
       chapterProgressSaveQueueRef,
+      progressGenerationRef,
       setChapterProgress,
     ],
   );
 
-  const settleChapterReward = useCallback(
-    async (generation: number) => {
-      assertGeneration(generation);
-      const wallet = progressRef.current;
-      const chapter = chapterProgressRef.current;
-      const pending = pendingChapterReward(wallet, chapter);
-      // Even zero must be written: an earlier failed write may have updated refs.
-      await commitProgress(
-        normalizeProgress(
-          withChapterRewardLedger(
-            {
-              ...wallet,
-              coins: wallet.coins + pending,
-            },
-            readChapterRewardLedger(chapter),
-          ),
-        ),
-        generation,
-      );
-    },
-    [assertGeneration, progressRef, chapterProgressRef, commitProgress],
-  );
-
-  const commitChapterCompletion = useCallback(
-    (
-      mapId: string,
-      stars: number,
-      generation = progressGenerationRef.current,
-    ) => {
-      const operation = chapterRewardQueue.current
-        .catch(() => undefined)
-        .then(async () => {
-          assertGeneration(generation);
-          pendingChapterReward(progressRef.current, chapterProgressRef.current);
-          const before = chapterProgressRef.current;
-          const result = applyChapterMapCompletion(before, mapId, stars);
-          const coinsEarned = getIncrementalCoinRewardForLevel(
-            result.previousStars,
-            result.starsEarned,
-          );
-          const ledger = readChapterRewardLedger(before);
-          await commitChapterProgress(
-            withChapterRewardLedger(result.progress, {
-              epoch: ledger.epoch,
-              total: ledger.total + coinsEarned,
-            }),
-            generation,
-          );
-          assertGeneration(generation);
-          await settleChapterReward(generation);
-          return { ...result, coinsEarned };
-        });
-      chapterRewardQueue.current = operation.catch(() => undefined);
-      return operation;
-    },
+  const transactions = useMemo(
+    () =>
+      createChapterCompletionTransactions({
+        storage,
+        current: () => ({
+          progress: progressRef.current,
+          chapterProgress: chapterProgressRef.current,
+        }),
+        load: async () => {
+          const generation = progressGenerationRef.current;
+          await Promise.all([
+            progressSaveQueueRef.current,
+            chapterProgressSaveQueueRef.current,
+          ]);
+          const [progress, chapterProgress] = await Promise.all([
+            loadProgress(),
+            loadChapterProgress(),
+          ]);
+          if (generation !== progressGenerationRef.current)
+            throw new Error('Progress operation superseded by reset');
+          const paid = readChapterRewardLedger(progress);
+          const earned = readChapterRewardLedger(chapterProgress);
+          if (paid.epoch > earned.epoch && paid.total === 0) {
+            const resetChapter = withChapterRewardLedger(
+              createInitialChapterProgress(),
+              paid,
+            );
+            await commitChapterProgress(resetChapter);
+            if (generation !== progressGenerationRef.current)
+              throw new Error('Progress operation superseded by reset');
+            return { progress, chapterProgress: resetChapter };
+          }
+          const pending = pendingChapterReward(progress, chapterProgress);
+          if (pending > 0) {
+            const recovered = withChapterRewardLedger(
+              { ...progress, coins: progress.coins + pending },
+              earned,
+            );
+            await commitProgress(recovered);
+            if (generation !== progressGenerationRef.current)
+              throw new Error('Progress operation superseded by reset');
+            return { progress: recovered, chapterProgress };
+          }
+          return { progress, chapterProgress };
+        },
+        restore: ({ progress, chapterProgress }) => {
+          progressRef.current = progress;
+          chapterProgressRef.current = chapterProgress;
+          setProgress(progress);
+          setChapterProgress(chapterProgress);
+        },
+        resetOtherDomains,
+        resetEpoch: () =>
+          readChapterRewardLedger(progressRef.current).epoch + 1,
+        commitProgress,
+        commitChapterProgress,
+        generation: () => progressGenerationRef.current,
+        invalidate: () => {
+          progressGenerationRef.current += 1;
+        },
+      }),
     [
-      assertGeneration,
-      progressGenerationRef,
       progressRef,
       chapterProgressRef,
+      progressGenerationRef,
+      progressSaveQueueRef,
+      chapterProgressSaveQueueRef,
+      setProgress,
+      setChapterProgress,
+      resetOtherDomains,
+      commitProgress,
       commitChapterProgress,
-      settleChapterReward,
     ],
   );
 
-  const resetProgressPair = useCallback(() => {
-    if (resetOperation.current) return resetOperation.current;
-    if (!resetTarget.current) {
-      const epoch = readChapterRewardLedger(progressRef.current).epoch + 1;
-      const wallet = withChapterRewardLedger(createInitialProgress(), {
-        epoch,
-        total: 0,
-      });
-      const chapter = withChapterRewardLedger(createInitialChapterProgress(), {
-        epoch,
-        total: 0,
-      });
-      resetTarget.current = {
-        generation: ++progressGenerationRef.current,
-        wallet,
-        chapter,
-      };
-    }
-    const target = resetTarget.current;
-    // Wallet is the durable reset marker. Older chapter epochs are discarded on boot.
-    const operation = (async () => {
-      await commitProgress(target.wallet, target.generation, true);
-      await commitChapterProgress(target.chapter, target.generation, true);
-      resetTarget.current = undefined;
-    })();
-    resetOperation.current = operation;
-    const finish = () => {
-      resetOperation.current = undefined;
-    };
-    void operation.then(finish, finish);
-    return operation;
-  }, [
-    progressRef,
-    progressGenerationRef,
-    commitProgress,
-    commitChapterProgress,
-  ]);
-
-  const recoverChapterReward = useCallback(async () => {
-    if (resetTarget.current) {
-      await resetProgressPair();
-      return;
-    }
-    const generation = progressGenerationRef.current;
-    const paid = readChapterRewardLedger(progressRef.current);
-    const earned = readChapterRewardLedger(chapterProgressRef.current);
-    if (paid.epoch > earned.epoch) {
-      if (paid.total !== 0)
-        throw new Error('Inconsistent chapter reward reset');
-      await commitChapterProgress(
-        {
-          ...createInitialChapterProgress(),
-          ...copyChapterRewardLedger(progressRef.current),
-        },
-        generation,
-      );
-    } else if (
-      pendingChapterReward(progressRef.current, chapterProgressRef.current) > 0
-    ) {
-      await settleChapterReward(generation);
-    }
-  }, [
-    progressRef,
-    chapterProgressRef,
-    progressGenerationRef,
-    commitChapterProgress,
-    settleChapterReward,
-    resetProgressPair,
-  ]);
-
-  return {
-    commitProgress,
-    commitChapterProgress,
-    commitChapterCompletion,
-    recoverChapterReward,
-    resetProgressPair,
-  };
+  return { commitProgress, commitChapterProgress, ...transactions };
 }

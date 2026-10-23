@@ -17,3 +17,5 @@ antigas com som desligado mantêm a música desligada até o jogador ativá-la.
 
 Procedência e hashes: `docs/PORT-MUSICAS-TRINCAMANIA-20261021.txt`.
 Integração local web; APK e validação Android fora desta rodada.
+
+As cinco faixas foram deduplicadas na integração de 23/10/2026. Os arquivos canônicos, byte a byte idênticos, ficam em `assets/audio/music/` e são usados pelo player.

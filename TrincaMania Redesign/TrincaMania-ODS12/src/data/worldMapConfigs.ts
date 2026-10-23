@@ -7,6 +7,7 @@ import type {
   WorldMapConfigRegistry,
 } from '../types/campaignMap';
 import type { ChapterWorldId, WorldId } from '../types/game';
+import { MAP_LEVEL_ORIGIN, MAP_LEVEL_SIZE } from '../utils/mapLevelGeometry';
 
 export const PARQUE_MAP_ASSET_KEYS = [
   'parque-canopy',
@@ -27,16 +28,16 @@ const PARQUE_LEVEL_ANCHOR_DEFINITIONS: readonly Readonly<{
   point: CampaignMapPoint;
   site: CampaignMapSite;
 }>[] = [
-  { point: { x: 190, y: 2945 }, site: 'clearing' },
-  { point: { x: 188, y: 2660 }, site: 'curve' },
-  { point: { x: 190, y: 2400 }, site: 'bridge' },
-  { point: { x: 180, y: 2115 }, site: 'platform' },
-  { point: { x: 200, y: 1765 }, site: 'curve' },
-  { point: { x: 170, y: 1575 }, site: 'crossing' },
-  { point: { x: 160, y: 1225 }, site: 'bridge' },
-  { point: { x: 150, y: 940 }, site: 'crossing' },
-  { point: { x: 180, y: 685 }, site: 'platform' },
-  { point: { x: 180, y: 415 }, site: 'platform' },
+  { point: { x: 165, y: 2945 }, site: 'clearing' },
+  { point: { x: 228, y: 2660 }, site: 'curve' },
+  { point: { x: 204, y: 2400 }, site: 'bridge' },
+  { point: { x: 163, y: 2115 }, site: 'platform' },
+  { point: { x: 204, y: 1765 }, site: 'curve' },
+  { point: { x: 228, y: 1575 }, site: 'crossing' },
+  { point: { x: 177, y: 1225 }, site: 'bridge' },
+  { point: { x: 226, y: 940 }, site: 'crossing' },
+  { point: { x: 182, y: 685 }, site: 'platform' },
+  { point: { x: 163, y: 415 }, site: 'platform' },
 ];
 
 export const PARQUE_LEVEL_ANCHORS: readonly CampaignMapLevelAnchor[] =
@@ -90,8 +91,8 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
     },
   ],
   levelAnchors: PARQUE_LEVEL_ANCHORS,
-  levelNodeOrigin: { x: 0.5, y: 1 },
-  levelNodeSize: { height: 98, width: 88 },
+  levelNodeOrigin: MAP_LEVEL_ORIGIN,
+  levelNodeSize: MAP_LEVEL_SIZE,
   minimumTouchSize: 44,
   mode: 'segmented',
   openingFocusRatio: 0.45,

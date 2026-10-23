@@ -94,7 +94,11 @@ test('nós usam a âncora de contato no solo sem separar arte e hitbox', () => {
   );
   const transformedAnchor = transformCampaignMapPoint(anchor.point, transform);
 
-  closeTo(frames.visual.top + frames.visual.height, transformedAnchor.y);
+  closeTo(
+    frames.visual.top +
+      frames.visual.height * PARQUE_MAP_CONFIG.levelNodeOrigin.y,
+    transformedAnchor.y,
+  );
   closeTo(
     getCampaignMapFrameCenter(frames.touch).x,
     getCampaignMapFrameCenter(frames.visual).x,

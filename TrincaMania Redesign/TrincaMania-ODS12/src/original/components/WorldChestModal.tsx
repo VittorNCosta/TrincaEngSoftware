@@ -8,7 +8,7 @@ import {
   ChestOpeningModal,
   ChestRewardItem,
 } from '../../components/ChestOpeningModal';
-import { GameIcon } from './GameIcon';
+import { GameIcon } from '../../components/GameIcon';
 import { PrimaryButton } from './PrimaryButton';
 import { RewardAssetIcon } from './RewardAssetIcon';
 import { POWER_UP_UI } from '../../data/powerUps';
@@ -186,7 +186,7 @@ export function WorldChestModal({
                     ? msg('Você abriu um Baú Especial!')
                     : isBonusChest
                       ? msg(
-                          'Recompensa do Reino Açucarado. Use uma chave para abrir agora.',
+                          'Recompensa do Jardim Renascido. Use uma chave para abrir agora.',
                         )
                       : msg('Use uma chave para abrir agora ou volte depois.')}
               </Text>
@@ -301,7 +301,7 @@ export function WorldChestModal({
         rewardItems={rewardItems}
         title={
           isBonusChest
-            ? msg('Recompensa do Reino Açucarado')
+            ? msg('Recompensa do Jardim Renascido')
             : msg('Recompensa Especial')
         }
         variant="world"

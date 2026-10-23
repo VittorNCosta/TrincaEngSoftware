@@ -7,6 +7,7 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
+import type { RoutineSection } from '../../components/RoutineModal';
 import { msg } from '../messages';
 import { useBottomNavClearance } from '../components/BottomNavBar';
 import { GameIcon, GameIconName, GameIconTone } from '../components/GameIcon';
@@ -35,6 +36,10 @@ import {
 } from '../../utils/worldProgress';
 type ProfileScreenProps = {
   progress: ProgressState;
+  checkInReady?: boolean;
+  missionReadyCount?: number;
+  challengeDone?: boolean;
+  onOpenRoutine?: (section: RoutineSection) => void;
   onOpenPowers: () => void;
   onOpenRewards: () => void;
   onOpenSettings: () => void;
@@ -153,6 +158,10 @@ function JourneyMetric({
 
 export function ProfileScreen({
   progress,
+  checkInReady,
+  missionReadyCount,
+  challengeDone,
+  onOpenRoutine,
   onOpenPowers,
   onOpenRewards,
   onOpenSettings,
@@ -353,6 +362,30 @@ export function ProfileScreen({
               tone="dark"
             />
             <View style={styles.quickGrid}>
+              {onOpenRoutine ? (
+                <>
+                  <QuickAction
+                    assetKey="checkin"
+                    label="Check-in diário"
+                    badge={checkInReady ? 'Resgatar' : undefined}
+                    onPress={() => onOpenRoutine('checkin')}
+                  />
+                  <QuickAction
+                    assetKey="dailyChallenge"
+                    label="Desafio diário"
+                    badge={challengeDone ? 'Concluído' : undefined}
+                    onPress={() => onOpenRoutine('challenge')}
+                  />
+                  <QuickAction
+                    assetKey="missions"
+                    label="Missões da rotina"
+                    badge={
+                      missionReadyCount ? String(missionReadyCount) : undefined
+                    }
+                    onPress={() => onOpenRoutine('missions')}
+                  />
+                </>
+              ) : null}
               <QuickAction
                 assetKey="missions"
                 label="Missões"

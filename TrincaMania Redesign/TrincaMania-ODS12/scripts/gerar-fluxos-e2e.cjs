@@ -1,4 +1,3 @@
-/* global __dirname */
 // Generates actual UI taps, never a shortcut that grants victory/rewards.
 const fs = require('node:fs');
 const path = require('node:path');

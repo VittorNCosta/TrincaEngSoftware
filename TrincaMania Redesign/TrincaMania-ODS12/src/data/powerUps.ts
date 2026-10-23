@@ -11,20 +11,20 @@ export const POWER_UP_UI: Record<PowerUpType, PowerUpUiInfo> = {
   hint: {
     description: 'Forma uma trinca possível automaticamente.',
     icon: '✨',
-    label: 'Trinca Mágica',
-    shopTitle: 'Trinca Mágica',
+    label: 'Trinca automática',
+    shopTitle: 'Trinca automática',
   },
   shuffle: {
     description: 'Reorganiza as peças restantes.',
     icon: '\u{1F500}',
     label: 'Misturar',
-    shopTitle: 'Saco de brilho',
+    shopTitle: 'Misturar peças',
   },
   undo: {
     description: 'Volta a última jogada.',
     icon: '\u21A9',
     label: 'Voltar',
-    shopTitle: 'Folha do retorno',
+    shopTitle: 'Desfazer jogada',
   },
 };
 

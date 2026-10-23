@@ -34,7 +34,7 @@ export function CampaignResizeNoticeModal({
           <Text style={styles.title}>A campanha mudou de tamanho</Text>
           <Text style={styles.description}>
             {
-              'Cada mundo agora tem 10 fases em vez de 25, então o mapa ficou mais curto. Suas moedas, chaves e itens continuam do jeito que estavam — só o progresso além da fase 10 de um mundo não existe mais no mapa novo.'
+              'Cada mundo agora tem 10 fases. O progresso após a fase 10 não aparece no novo mapa. Suas moedas, chaves e itens continuam salvos.'
             }
           </Text>
 

@@ -23,14 +23,14 @@ import { type WorldId } from '../types/game';
 export { type MusicKey, resolveMusicKeyForWorld } from './musicRouting';
 
 const WORLD_MUSIC_SOURCES: Partial<Record<WorldId, AudioSource>> = {
-  1: require('../../assets/music/world-01.mp3') as AudioSource,
-  2: require('../../assets/music/world-02.mp3') as AudioSource,
-  3: require('../../assets/music/world-03.mp3') as AudioSource,
-  21: require('../../assets/music/world-21.mp3') as AudioSource,
+  1: require('../../assets/audio/music/world_01.mp3') as AudioSource,
+  2: require('../../assets/audio/music/world_02.mp3') as AudioSource,
+  3: require('../../assets/audio/music/world_03.mp3') as AudioSource,
+  21: require('../../assets/audio/music/world_21.mp3') as AudioSource,
 };
 
 const META_MUSIC_SOURCE =
-  require('../../assets/music/menus.mp3') as AudioSource;
+  require('../../assets/audio/music/menu.mp3') as AudioSource;
 
 export const MUSIC_VOLUME = 0.38;
 // Aproximadamente -3 dB em relação ao volume normal: importante o bastante

@@ -1,0 +1,6 @@
+
+> trincamania@1.1.0 auditoria
+> node scripts/auditoria.js
+
+auditoria: 2 advisories | 2 no livro-razao
+✔ nenhuma vulnerabilidade nova acima do piso.

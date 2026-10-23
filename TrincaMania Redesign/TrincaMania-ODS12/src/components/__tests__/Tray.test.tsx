@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 
 import { Tray } from '../Tray';
 import { Tile } from '../../types/game';
@@ -31,15 +31,19 @@ describe('Tray', () => {
       }),
     ];
 
-    const { getByText } = render(
-      <Tray activeCapacity={BASE_TRAY_CAPACITY} tiles={tiles} />,
+    const onBonusPress = jest.fn();
+    const { getByText, getByRole } = render(
+      <Tray
+        activeCapacity={BASE_TRAY_CAPACITY}
+        tiles={tiles}
+        onAdSlotPress={onBonusPress}
+      />,
     );
 
-    // Com a capacidade base (sem slot de moedas nem slot bônus ativos), os
-    // dois encaixes extras aparecem bloqueados com o preço em moedas e o
-    // rótulo "Bônus" — dá pra checar isso sem reimplementar a lógica de
-    // capacidade do componente.
+    // O indicador compacto deve manter nome completo e a ação do bônus.
     expect(getByText(String(COIN_TRAY_SLOT_COST))).toBeTruthy();
-    expect(getByText('Bônus')).toBeTruthy();
+    expect(getByText('+')).toBeTruthy();
+    fireEvent.press(getByRole('button', { name: 'Liberar espaço bônus' }));
+    expect(onBonusPress).toHaveBeenCalledTimes(1);
   });
 });

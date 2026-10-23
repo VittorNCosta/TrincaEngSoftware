@@ -5,7 +5,7 @@ import type { getWorldById } from '../../data/worlds';
 import type { getBonusWorldChestProgress } from '../../storage/progressStorage';
 import type { Level, WorldId } from '../../types/game';
 import { getLevelDisplayLabel } from '../../utils/levelDisplay';
-import { getShortObjective } from './mapPresentation';
+import { getDifficultyLabel, getShortObjective } from './mapPresentation';
 import { styles } from './styles';
 import type { SelectedTarget } from './types';
 
@@ -173,7 +173,7 @@ export function MapSelectionPanel({
                   <View style={styles.panelDifficultyRow}>
                     <View style={styles.difficultyBadge}>
                       <Text style={styles.difficultyText}>
-                        {selectedLevel.difficulty}
+                        {getDifficultyLabel(selectedLevel.difficulty)}
                       </Text>
                     </View>
                   </View>

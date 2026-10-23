@@ -91,6 +91,9 @@ stub('react-native-safe-area-context', {
 
 const projectModule = (relativePath) => path.join(ROOT, relativePath);
 
+stub(projectModule('src/components/PrimaryButton'), {
+  PrimaryButton: 'PrimaryButton',
+});
 stub(projectModule('src/components/CampaignResizeNoticeModal'), {
   CampaignResizeNoticeModal: 'CampaignResizeNoticeModal',
 });
@@ -102,6 +105,9 @@ stub(projectModule('src/components/NoLivesModal'), {
 });
 stub(projectModule('src/components/SettingsModal'), {
   SettingsModal: 'SettingsModal',
+});
+stub(projectModule('src/components/RoutineModal'), {
+  RoutineModal: 'RoutineModal',
 });
 stub(projectModule('src/components/TutorialModal'), {
   TutorialModal: 'TutorialModal',
@@ -118,13 +124,20 @@ stub(projectModule('src/screens/ShopScreen'), { ShopScreen: 'ShopScreen' });
 stub(projectModule('src/screens/SplashIntroScreen'), {
   SplashIntroScreen: 'SplashIntroScreen',
 });
-stub(projectModule('src/utils/music'), {
-  installMusicLifecycle: () => () => undefined,
-  playMetaMusic: () => undefined,
-  setMusicEnabled: () => undefined,
-});
 stub(projectModule('src/utils/sounds'), {
   setSoundEnabled: async () => undefined,
+  playRewardCollectSound: () => undefined,
+  releaseSoundPlayers: () => undefined,
+});
+stub(projectModule('src/utils/music'), {
+  installMusicLifecycle: () => () => undefined,
+  setMusicEnabled: () => undefined,
+  playMetaMusic: () => undefined,
+  playWorldMusic: () => undefined,
+  releaseMusicPlayer: () => undefined,
+});
+stub(projectModule('src/utils/voiceOver'), {
+  releaseVoiceOverPlayers: () => undefined,
 });
 
 // Runtime de hooks mínimo: só o suficiente para o App executar de verdade — os
@@ -334,6 +347,7 @@ const createAppHarness = () => {
     },
     props: (type) => findProps(tree, type),
     recoveryButton: () =>
+      findProps(tree, 'PrimaryButton') ??
       findProps(tree, 'Text', (props) => props.accessibilityRole === 'button'),
   };
 };
@@ -595,7 +609,11 @@ test('recompensa de capítulo recupera carteira após falha entre estrela e moed
   } finally {
     interceptWrite = undefined;
   }
-  assert.equal(JSON.parse(store.get(CHAPTER_KEY)).mapStars[FIRST_MAP], 1);
+  assert.equal(store.has(CHAPTER_KEY), false);
+  assert.equal(
+    JSON.parse(store.get('@trinca-mania/chapter-transaction-v1')).kind,
+    'completion',
+  );
   const reopened = await bootApp();
   assert.equal(reopened.props('MainTabs').progress.coins, 10);
   const again = await bootApp();
@@ -636,7 +654,11 @@ test('recompensa de capítulo recupera falha no write de estrelas sem perder a p
     interceptWrite = undefined;
   }
   assert.equal(store.has(CHAPTER_KEY), false);
-  assert.equal((await loadProgress()).coins, 0);
+  assert.equal((await loadProgress()).coins, 10);
+  assert.equal(
+    JSON.parse(store.get('@trinca-mania/chapter-transaction-v1')).kind,
+    'completion',
+  );
   await complete(FIRST_MAP, 1);
   assert.equal((await loadProgress()).coins, 10);
   assert.equal(JSON.parse(store.get(CHAPTER_KEY)).mapStars[FIRST_MAP], 1);

@@ -9,6 +9,7 @@ import {
   type AppSettings,
   createDefaultSettings,
   getSettings,
+  saveSettings,
   setHapticsEnabledPreference,
   setMusicEnabledPreference,
 } from '../storage/settingsStorage';
@@ -74,6 +75,25 @@ export function useAppSettings() {
     );
   };
 
+  const settingsBeforeSilentRef = useRef<AppSettings | null>(null);
+  const handleToggleSilentMode = () => {
+    const current = settingsRef.current;
+    const silent =
+      !current.soundEnabled && !current.musicEnabled && !current.hapticsEnabled;
+    if (!silent) settingsBeforeSilentRef.current = current;
+    const next = silent
+      ? (settingsBeforeSilentRef.current ?? createDefaultSettings())
+      : {
+          soundEnabled: false,
+          musicEnabled: false,
+          hapticsEnabled: false,
+        };
+    setSettings(next);
+    setMusicEnabled(next.musicEnabled);
+    setSoundEnabled(next.soundEnabled)
+      .then(() => saveSettings(next))
+      .catch(recoverSettings(settingsVersionRef.current));
+  };
   const handleEnableSilentMode = () => {
     setSettings((currentSettings) => ({
       ...currentSettings,
@@ -97,5 +117,6 @@ export function useAppSettings() {
     handleToggleMusic,
     handleToggleHaptics,
     handleEnableSilentMode,
+    handleToggleSilentMode,
   };
 }

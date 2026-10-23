@@ -7,6 +7,7 @@ import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { getMaterial } from '../domain/recycling/value-objects/MaterialType';
 import { getCardRole } from '../domain/recycling/value-objects/CardRole';
 import { TileIcon } from './TileIcon';
+import { TutorialTarget } from './TutorialVisuals';
 import { IS_E2E_BUILD } from '../testing/e2eProfile';
 import { radii } from '../styles/theme';
 import { Tile } from '../types/game';
@@ -23,6 +24,7 @@ type BoardTileProps = {
   boardOriginY: number;
   disabled: boolean;
   highlighted: boolean;
+  tutorialTarget?: boolean;
   onLayoutInWindow?: (tileId: string, target: WindowTarget) => void;
   onBlockedPress?: () => void;
   onPress: (tileId: string) => void;
@@ -35,6 +37,7 @@ function BoardTileBase({
   boardOriginY,
   disabled,
   highlighted,
+  tutorialTarget = false,
   onLayoutInWindow,
   onBlockedPress,
   onPress,
@@ -256,6 +259,7 @@ function BoardTileBase({
           transform: [{ translateX: shakeOffset }, { scale }],
           zIndex: tile.z * 10,
         },
+        tutorialTarget ? styles.tutorialTarget : null,
       ]}
     >
       <Animated.View
@@ -316,6 +320,7 @@ function BoardTileBase({
       {highlighted && !blocked ? (
         <View pointerEvents="none" style={styles.hintGlow} />
       ) : null}
+      {tutorialTarget ? <TutorialTarget /> : null}
     </AnimatedPressable>
   );
 }
@@ -454,6 +459,7 @@ const styles = StyleSheet.create({
     top: 2,
   },
   // Corpo único da peça, sem face aninhada.
+  tutorialTarget: { overflow: 'visible', zIndex: 100 },
   // Faces com a mesma cor de fundo reduziam o contraste do resíduo.
   tile: {
     alignItems: 'center',

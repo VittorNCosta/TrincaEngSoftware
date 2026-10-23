@@ -1,19 +1,25 @@
 import { memo, useEffect, useRef } from 'react';
 import {
   Animated,
+  Image,
   ImageBackground,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path } from './svgPrimitives';
 
 import { GameIcon } from './GameIcon';
 import { IS_E2E_BUILD } from '../testing/e2eProfile';
 import { colors, radii, shadows } from '../styles/theme';
 import { Level } from '../types/game';
 import { getLevelDisplayLabel } from '../utils/levelDisplay';
+import {
+  MAP_LEVEL_SIZE,
+  MAP_LEVEL_GROUND_POINT,
+  MAP_LEVEL_PEDESTAL_FRAME,
+} from '../utils/mapLevelGeometry';
 
 type MapLevelNodeProps = {
   completed: boolean;
@@ -147,7 +153,6 @@ function MapLevelNodeBase({
       ]}
     >
       <View testID={`map-level-frame-${level.id}`} style={styles.nodeWrap}>
-        <View style={styles.groundShadow} />
         {current ? (
           <Animated.View
             pointerEvents="none"
@@ -161,6 +166,24 @@ function MapLevelNodeBase({
           />
         ) : null}
         {selected ? <View style={styles.selectedAura} /> : null}
+        <View pointerEvents="none" style={styles.groundShadow} />
+        <View
+          pointerEvents="none"
+          testID={`map-level-pedestal-${level.id}`}
+          style={styles.pedestal}
+        >
+          <Image
+            accessible={false}
+            source={require('../../assets/ui/visuais/level_pedestal.png')}
+            resizeMode="contain"
+            style={styles.pedestalArt}
+          />
+        </View>
+        <View
+          testID={`map-level-ground-${level.id}`}
+          pointerEvents="none"
+          style={styles.groundPoint}
+        />
         <ImageBackground
           accessible={false}
           source={
@@ -320,7 +343,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 18,
     position: 'absolute',
-    top: 57,
+    top: 75,
     width: 76,
   },
   currentInnerDisc: {
@@ -333,14 +356,6 @@ const styles = StyleSheet.create({
   },
   currentNumber: {
     color: '#7A4A0C',
-  },
-  groundShadow: {
-    backgroundColor: 'rgba(52, 38, 22, 0.34)',
-    borderRadius: radii.pill,
-    height: 9,
-    position: 'absolute',
-    top: 64,
-    width: 54,
   },
   // 50 de 70 mantém a proporção do 3b (80 de 112): o aro colorido precisa
   // desse peso para a bolha ler como verde/dourada de longe.
@@ -402,10 +417,10 @@ const styles = StyleSheet.create({
   },
   nodeWrap: {
     alignItems: 'center',
-    height: 98,
+    height: MAP_LEVEL_SIZE.height,
     justifyContent: 'flex-start',
     position: 'relative',
-    width: 88,
+    width: MAP_LEVEL_SIZE.width,
   },
   number: {
     color: colors.ink,
@@ -439,12 +454,28 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     lineHeight: 14,
   },
+  groundShadow: {
+    backgroundColor: 'rgba(52, 38, 22, 0.34)',
+    borderRadius: radii.pill,
+    height: 9,
+    position: 'absolute',
+    top: MAP_LEVEL_GROUND_POINT.y - 4.5,
+    width: 68,
+  },
+  pedestal: { position: 'absolute', ...MAP_LEVEL_PEDESTAL_FRAME },
+  pedestalArt: { width: '100%', height: '100%' },
+  groundPoint: {
+    position: 'absolute',
+    left: MAP_LEVEL_GROUND_POINT.x,
+    top: MAP_LEVEL_GROUND_POINT.y,
+    width: 0,
+    height: 0,
+  },
   pressable: {
     borderRadius: radii.pill,
   },
   pressed: {
     opacity: 0.9,
-    transform: [{ translateY: 2 }, { scale: 0.98 }],
   },
   selectedAura: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -453,7 +484,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     height: 17,
     position: 'absolute',
-    top: 58,
+    top: 76,
     width: 72,
   },
   selectedNode: {

@@ -109,7 +109,8 @@ export function GameDialogs({
             <GameIcon name="powers" size={46} tone="purple" />
             <Text style={styles.purchaseModalTitle}>Quase sem espaço!</Text>
             <Text style={styles.purchaseModalText}>
-              A Trinca Mágica forma uma trinca possível automaticamente.
+              A Trinca automática forma uma combinação possível para liberar
+              espaço.
             </Text>
             <Text style={styles.rescueModalHint}>
               Use uma vez grátis para salvar sua bandeja.

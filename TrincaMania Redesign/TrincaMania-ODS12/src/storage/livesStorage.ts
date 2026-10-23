@@ -6,6 +6,7 @@ export const MAX_LIVES = 5;
 export const LIFE_REGEN_INTERVAL_MS = 30 * 60 * 1000;
 
 export type LivesState = {
+  appliedRewardOperationIds?: string[];
   currentLives: number;
   maxLives: number;
   lastLifeTimestamp: number;
@@ -15,6 +16,7 @@ const clampLives = (value: number, maxLives = MAX_LIVES) =>
   Math.max(0, Math.min(maxLives, Math.floor(value)));
 
 export const createInitialLivesState = (now = Date.now()): LivesState => ({
+  appliedRewardOperationIds: [],
   currentLives: MAX_LIVES,
   maxLives: MAX_LIVES,
   lastLifeTimestamp: now,
@@ -33,6 +35,16 @@ const normalizeLivesState = (value: unknown, now = Date.now()): LivesState => {
       : now;
 
   return {
+    appliedRewardOperationIds: Array.isArray(rawState.appliedRewardOperationIds)
+      ? [
+          ...new Set(
+            rawState.appliedRewardOperationIds.filter(
+              (id): id is string =>
+                typeof id === 'string' && id.length > 0 && id.length <= 128,
+            ),
+          ),
+        ].slice(-512)
+      : [],
     currentLives: clampLives(
       typeof rawState.currentLives === 'number' &&
         Number.isFinite(rawState.currentLives)
@@ -50,6 +62,7 @@ const applyLifeRegeneration = (
 ): LivesState => {
   if (state.currentLives >= state.maxLives) {
     return {
+      appliedRewardOperationIds: state.appliedRewardOperationIds,
       currentLives: state.maxLives,
       maxLives: state.maxLives,
       lastLifeTimestamp: now,
@@ -69,6 +82,7 @@ const applyLifeRegeneration = (
   );
 
   return {
+    appliedRewardOperationIds: state.appliedRewardOperationIds,
     currentLives,
     maxLives: state.maxLives,
     lastLifeTimestamp:
@@ -153,6 +167,7 @@ export const consumeLife = () =>
     state.currentLives <= 0
       ? state
       : {
+          appliedRewardOperationIds: state.appliedRewardOperationIds,
           currentLives: clampLives(state.currentLives - 1, state.maxLives),
           maxLives: state.maxLives,
           lastLifeTimestamp:
@@ -167,6 +182,7 @@ export const addLife = () =>
     const currentLives = clampLives(state.currentLives + 1, state.maxLives);
 
     return {
+      appliedRewardOperationIds: state.appliedRewardOperationIds,
       currentLives,
       maxLives: state.maxLives,
       lastLifeTimestamp:
@@ -176,3 +192,20 @@ export const addLife = () =>
 
 export const refillLives = () =>
   mutateLives((_state, now) => createInitialLivesState(now));
+
+export const applyLifeRewardForOperation = (operationId: string) =>
+  mutateLives((state, now) => {
+    if (!operationId || state.appliedRewardOperationIds?.includes(operationId))
+      return state;
+    const currentLives = clampLives(state.currentLives + 1, state.maxLives);
+    return {
+      ...state,
+      appliedRewardOperationIds: [
+        ...(state.appliedRewardOperationIds ?? []),
+        operationId,
+      ].slice(-512),
+      currentLives,
+      lastLifeTimestamp:
+        currentLives >= state.maxLives ? now : state.lastLifeTimestamp,
+    };
+  });

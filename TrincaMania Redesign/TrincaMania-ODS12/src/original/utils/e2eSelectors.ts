@@ -25,14 +25,14 @@ export type E2ETabKey = 'map' | 'shop' | 'missions' | 'profile';
 /** Seletores fixos, sem segmento dinâmico. */
 export const E2E_SELECTORS = {
   /** Recompensa cosmética e sua miniatura, sem controle interativo próprio. */
-  candyFinalReward: 'candy-final-reward',
-  candyTrayPreview: 'candy-tray-preview',
+  pieceFinalReward: 'piece-final-reward',
+  pieceTrayPreview: 'piece-tray-preview',
   /** Dica variável de Receita/Jogadas, sem rótulo próprio ou controle interativo. */
-  candyObjectiveCoachmark: 'candy-objective-coachmark',
+  pieceObjectiveCoachmark: 'piece-objective-coachmark',
   /** A mensagem muda por mob; backdrop e X da ajuda compartilham rótulo. */
-  candyMobCoachmark: 'candy-mob-coachmark',
-  candyMobHelpOutside: 'candy-mob-help-outside',
-  candyMobHelpClose: 'candy-mob-help-close',
+  pieceMobCoachmark: 'piece-mob-coachmark',
+  pieceMobHelpOutside: 'piece-mob-help-outside',
+  pieceMobHelpClose: 'piece-mob-help-close',
   /** Resultado e bandeja final: o conteúdo varia com a causa e as peças da derrota. */
   defeatSummary: 'defeat-summary',
   defeatTray: 'defeat-tray',

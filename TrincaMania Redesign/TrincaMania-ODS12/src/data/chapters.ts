@@ -177,7 +177,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
     objectivePatterns: [
       'Abra a camada de cobertura antes de mexer no centro do tabuleiro.',
       'Feche as trincas de plástico e não deixe a bandeja acumular resíduo solto.',
-      'Leia a cor da lixeira antes de recolher a peça — errar o material trava o ciclo.',
+      'Confira a cor da lixeira antes de escolher a peça.',
       'Libere as peças presas nas bordas para destravar o miolo do aterro.',
     ],
   },
@@ -296,7 +296,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
       'O verde é do vidro: confirme a lixeira antes de fechar a trinca.',
       'Abra dois caminhos antes de gastar uma peça livre.',
       'Segure a bandeja limpa até revelar as peças mistério do centro.',
-      'Resolva as pilhas altas primeiro — elas travam o resto do tabuleiro.',
+      'Limpe as pilhas altas primeiro.',
     ],
   },
   {
@@ -384,14 +384,14 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
       'O azul é do papel: papelão, jornal e folha vão todos para a mesma lixeira.',
       'Descubra a ordem das camadas antes de comprometer a bandeja.',
       'Feche as trincas altas primeiro e deixe a base para o final.',
-      'Revele o mistério com bandeja livre — sem espaço, revelar é derrota.',
+      'Deixe espaço na bandeja antes de revelar a peça mistério.',
     ],
   },
   {
     id: 9,
     difficultyCurve: { gamma: 2.0, blockGrowth: 1.26 },
     name: 'Ferro-Velho Renascido',
-    subtitle: 'Sucata que volta a ser matéria-prima',
+    subtitle: 'Sucata que vira novo material',
     theme: 'sucata',
     focusMaterial: 'metal',
     minTileCount: 66,
@@ -421,7 +421,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
       'Cinco materiais em jogo: leia o resíduo antes de escolher a lixeira.',
       'Não abra o centro sem ter saída pelas laterais.',
       'Cada movimento precisa preparar a próxima trinca.',
-      'A bandeja é o recurso escasso — gaste com intenção.',
+      'Use o espaço da bandeja com cuidado.',
     ],
   },
   {
@@ -449,7 +449,7 @@ const CHAPTER_BLUEPRINTS: ChapterBlueprint[] = [
     ],
     objectivePatterns: [
       'O ciclo completo, sem folga: resíduo, lixeira e símbolo em sequência.',
-      'Aqui não existe movimento neutro — cada peça livre tem que valer.',
+      'Pense antes de escolher cada peça.',
       'Guarde os poderes para o bloqueio real, não para o primeiro susto.',
       'Feche a cidade limpando as camadas na ordem que você planejou.',
     ],

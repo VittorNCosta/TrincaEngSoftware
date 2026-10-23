@@ -36,6 +36,8 @@ import {
   TrayBoostPurchaseResult,
   TrayBoostState,
 } from '../storage/trayBoostStorage';
+import type { RoutineSection } from '../components/RoutineModal';
+import { playMetaMusic } from '../utils/music';
 import { WindowTarget } from '../types/ui';
 
 function TabPage({
@@ -85,6 +87,10 @@ type MainTabsProps = {
   initialWorldId?: WorldId;
   livesState: LivesState;
   progress: ProgressState;
+  checkInReady?: boolean;
+  missionReadyCount?: number;
+  challengeDone?: boolean;
+  onOpenRoutine?: (section: RoutineSection) => void;
   trayBoostState: TrayBoostState;
   timeUntilNextLifeMs: number;
   onCoinCounterLayout?: (target: WindowTarget) => void;
@@ -118,6 +124,10 @@ export function MainTabs({
   initialWorldId,
   livesState,
   progress,
+  checkInReady,
+  missionReadyCount,
+  challengeDone,
+  onOpenRoutine,
   trayBoostState,
   timeUntilNextLifeMs,
   onCoinCounterLayout,
@@ -137,6 +147,9 @@ export function MainTabs({
   const pagerRef = useRef<ScrollView>(null);
   const activeIndexRef = useRef(MAP_TAB_INDEX);
   const [activeIndex, setActiveIndex] = useState(MAP_TAB_INDEX);
+  useEffect(() => {
+    if (activeIndex !== MAP_TAB_INDEX) playMetaMusic();
+  }, [activeIndex]);
   const [profilePanel, setProfilePanel] = useState<
     'hub' | 'powers' | 'rewards'
   >('hub');
@@ -245,6 +258,10 @@ export function MainTabs({
         {profilePanel === 'hub' ? (
           <ProfileScreen
             progress={progress}
+            checkInReady={checkInReady}
+            missionReadyCount={missionReadyCount}
+            challengeDone={challengeDone}
+            onOpenRoutine={onOpenRoutine}
             onOpenPowers={() => setProfilePanel('powers')}
             onOpenRewards={() => setProfilePanel('rewards')}
             onOpenSettings={onOpenSettings}

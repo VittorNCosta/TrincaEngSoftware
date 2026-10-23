@@ -24,6 +24,7 @@ import {
 } from '../original/styles/theme';
 type SettingsModalProps = {
   devMode?: boolean;
+  devModeAvailable?: boolean;
   settings: AppSettings;
   visible: boolean;
   onClose: () => void;
@@ -58,6 +59,7 @@ const confirmAction = (
 
 export function SettingsModal({
   devMode = false,
+  devModeAvailable = __DEV__,
   settings,
   visible,
   onClose,
@@ -203,7 +205,7 @@ export function SettingsModal({
               </View>
             </View>
             {diagnosticsVisible ? <DiagnosticReport /> : null}
-            {__DEV__ ? (
+            {devModeAvailable ? (
               <View style={styles.preferenceGroup}>
                 <SettingsPreferenceRow
                   title="Modo Dev"

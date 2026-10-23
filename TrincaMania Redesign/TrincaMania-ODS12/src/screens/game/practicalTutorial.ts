@@ -28,12 +28,12 @@ export const PRACTICAL_TUTORIAL_POPUPS: Record<
   },
   tray: {
     button: 'Entendi',
-    text: 'As peças escolhidas ficam aqui. Junte 3 iguais para formar uma trinca.',
+    text: 'As peças escolhidas ficam aqui. Reúna resíduo, lixeira e símbolo do mesmo material para formar uma trinca.',
     title: 'Bandeja',
   },
   triple: {
     button: 'Continuar',
-    text: 'Quando 3 peças iguais entram na bandeja, elas somem e liberam espaço.',
+    text: 'Você completou o ciclo de um material. A trinca saiu da bandeja e liberou espaço.',
     title: 'Muito bem!',
   },
   warning: {

@@ -1,11 +1,13 @@
 #!/usr/bin/env sh
 # Rejeita mensagem fora de Conventional Commits. Ver commitlint.config.js.
 
-# O caminho da mensagem chega relativo à raiz do repositório e o preâmbulo faz
-# `cd` para o projeto — então vira absoluto antes.
-case "$1" in
-  /*) COMMIT_MSG_FILE="$1" ;;
-  *) COMMIT_MSG_FILE="$PWD/$1" ;;
+# Obtém o caminho pelo próprio Git: no Git for Windows, o argumento do hook
+# pode chegar convertido pelo MSYS e deixar de apontar para o worktree.
+# Resolve antes do preâmbulo mudar para o diretório do projeto.
+COMMIT_MSG_FILE=$(git rev-parse --git-path COMMIT_EDITMSG)
+case "$COMMIT_MSG_FILE" in
+  /* | [A-Za-z]:/*) ;;
+  *) COMMIT_MSG_FILE="$PWD/$COMMIT_MSG_FILE" ;;
 esac
 
 . "$(dirname -- "$0")/common.sh"
