@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     height: 52,
     justifyContent: 'center',
     position: 'relative',
-    width: 52,
+    width: 64,
     ...shadows.menuCard,
   },
   powerButtonDisabled: {
@@ -221,11 +221,11 @@ const styles = StyleSheet.create({
   },
   powerLabel: {
     bottom: 2,
-    fontSize: 8,
+    fontSize: 9,
     fontWeight: '900',
     left: 1,
     letterSpacing: 0.25,
-    lineHeight: 9,
+    lineHeight: 11,
     position: 'absolute',
     right: 1,
     textAlign: 'center',
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   },
   purchasePriceText: {
     color: '#FFF4B8',
-    fontSize: 8,
+    fontSize: 9,
     fontWeight: '900',
     lineHeight: 10,
   },

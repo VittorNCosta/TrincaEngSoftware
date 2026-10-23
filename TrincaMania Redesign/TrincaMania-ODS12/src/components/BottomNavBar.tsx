@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Image,
+  Platform,
   ImageSourcePropType,
   Pressable,
   StyleSheet,
@@ -54,8 +55,10 @@ export function BottomNavBar({ activeIndex, onSelect }: BottomNavBarProps) {
           <Pressable
             accessibilityLabel={item.label}
             accessibilityRole="button"
-            accessibilityState={{ selected: isActive }}
-            aria-selected={isActive}
+            accessibilityState={
+              Platform.OS === 'web' ? undefined : { selected: isActive }
+            }
+            aria-pressed={Platform.OS === 'web' ? isActive : undefined}
             key={item.key}
             testID={`nav-${item.key}`}
             onPress={() => {

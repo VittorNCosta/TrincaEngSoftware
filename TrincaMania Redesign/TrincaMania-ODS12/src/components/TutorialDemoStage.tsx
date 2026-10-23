@@ -34,6 +34,10 @@ export function TutorialDemoStage({
 }) {
   const [practice, setPractice] = useState(() => createTutorialPractice(kind));
   const reducedMotion = useTutorialReducedMotion();
+  const [autoplay, setAutoplay] = useState(false);
+  useEffect(() => {
+    if (reducedMotion) setAutoplay(false);
+  }, [reducedMotion]);
   const action = getTutorialPracticeAction(practice);
   const nextTileId = action && 'tileId' in action ? action.tileId : undefined;
   const power =
@@ -42,9 +46,10 @@ export function TutorialDemoStage({
   const finished = !action;
   useEffect(() => {
     setPractice(createTutorialPractice(kind));
+    setAutoplay(false);
   }, [kind, visible]);
   useEffect(() => {
-    if (!visible || reducedMotion || finished) return;
+    if (!autoplay || !visible || reducedMotion || finished) return;
     const timer = setTimeout(
       () =>
         setPractice((current) => {
@@ -54,7 +59,15 @@ export function TutorialDemoStage({
       2200,
     );
     return () => clearTimeout(timer);
-  }, [finished, kind, nextTileId, powerReady, reducedMotion, visible]);
+  }, [
+    autoplay,
+    finished,
+    kind,
+    nextTileId,
+    powerReady,
+    reducedMotion,
+    visible,
+  ]);
 
   const caption =
     kind === 'tray'
@@ -74,7 +87,9 @@ export function TutorialDemoStage({
   return (
     <View style={styles.stage}>
       <Text accessibilityLiveRegion="polite" style={styles.caption}>
-        {caption}
+        {autoplay && !finished
+          ? 'Demonstração automática em andamento.'
+          : caption}
       </Text>
       {kind !== 'tray' ? (
         <View style={styles.boardViewport}>
@@ -98,7 +113,12 @@ export function TutorialDemoStage({
                     blocked={false}
                     boardOriginX={tile.x}
                     boardOriginY={tile.y}
-                    disabled={finished || powerReady || tile.id !== nextTileId}
+                    disabled={
+                      autoplay ||
+                      finished ||
+                      powerReady ||
+                      tile.id !== nextTileId
+                    }
                     highlighted={false}
                     onPress={(tileId) =>
                       setPractice((current) =>
@@ -123,8 +143,8 @@ export function TutorialDemoStage({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Testar ${powerLabels[power]}`}
-          accessibilityState={{ disabled: !powerReady }}
-          disabled={!powerReady}
+          accessibilityState={{ disabled: autoplay || !powerReady }}
+          disabled={autoplay || !powerReady}
           onPress={() =>
             setPractice((current) =>
               advanceTutorialPractice(current, { power }),
@@ -146,12 +166,32 @@ export function TutorialDemoStage({
           Forme uma trinca para liberar espaço antes que a bandeja encha.
         </Text>
       ) : null}
+      {!reducedMotion && kind !== 'tray' ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={
+            autoplay ? 'Praticar manualmente' : 'Ver demonstração automática'
+          }
+          onPress={() => {
+            setPractice(createTutorialPractice(kind));
+            setAutoplay((current) => !current);
+          }}
+          style={styles.replay}
+        >
+          <Text style={styles.replayText}>
+            {autoplay ? 'Praticar manualmente' : 'Ver demonstração automática'}
+          </Text>
+        </Pressable>
+      ) : null}
       <Pressable
         accessibilityHint="Recomeça a demonstração sem alterar seu progresso."
         accessibilityLabel="Rever demonstração"
         accessibilityRole="button"
         hitSlop={8}
-        onPress={() => setPractice(createTutorialPractice(kind))}
+        onPress={() => {
+          setAutoplay(false);
+          setPractice(createTutorialPractice(kind));
+        }}
         style={({ pressed }) => [
           styles.replay,
           pressed ? styles.pressed : null,

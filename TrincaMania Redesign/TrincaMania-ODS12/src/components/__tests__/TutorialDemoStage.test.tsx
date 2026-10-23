@@ -1,3 +1,4 @@
+import { AccessibilityInfo } from 'react-native';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import { TutorialDemoStage } from '../TutorialDemoStage';
@@ -88,3 +89,76 @@ test.each([
     expect(screen.getByTestId('board-tile-cycle-0')).toBeTruthy();
   },
 );
+
+test('a prática manual mantém o alvo disponível após o antigo intervalo automático', async () => {
+  jest.useFakeTimers();
+  const screen = render(<TutorialDemoStage kind="cycle" />);
+  await act(async () => {
+    await Promise.resolve();
+  });
+  act(() => {
+    jest.advanceTimersByTime(7000);
+  });
+  expect(screen.getByTestId('board-tile-cycle-0')).toBeTruthy();
+  fireEvent.press(screen.getByTestId('board-tile-cycle-0'));
+  expect(screen.queryByTestId('board-tile-cycle-0')).toBeNull();
+  screen.unmount();
+  jest.useRealTimers();
+});
+
+test('autoplay exige escolha explícita e pode voltar à prática sem timers pendentes', async () => {
+  jest.useFakeTimers();
+  const screen = render(<TutorialDemoStage kind="cycle" />);
+  await act(async () => {
+    await Promise.resolve();
+  });
+  fireEvent.press(
+    screen.getByRole('button', { name: 'Ver demonstração automática' }),
+  );
+  act(() => {
+    jest.advanceTimersByTime(2200);
+  });
+  expect(screen.queryByTestId('board-tile-cycle-0')).toBeNull();
+  fireEvent.press(screen.getByRole('button', { name: 'Praticar manualmente' }));
+  act(() => {
+    jest.advanceTimersByTime(7000);
+  });
+  expect(screen.getByTestId('board-tile-cycle-0')).toBeTruthy();
+  screen.unmount();
+  jest.useRealTimers();
+});
+
+test('ativar movimento reduzido durante autoplay devolve o controle manual', async () => {
+  jest.useFakeTimers();
+  const accessibility: {
+    addEventListener(
+      event: 'reduceMotionChanged',
+      listener: (enabled: boolean) => void,
+    ): { remove(): void };
+  } = AccessibilityInfo;
+  const listeners: ((enabled: boolean) => void)[] = [];
+  const subscription = jest
+    .spyOn(accessibility, 'addEventListener')
+    .mockImplementation((_event, listener) => {
+      listeners.push(listener);
+      return { remove: jest.fn() };
+    });
+  const screen = render(<TutorialDemoStage kind="cycle" />);
+  await act(async () => {
+    await Promise.resolve();
+  });
+  fireEvent.press(
+    screen.getByRole('button', { name: 'Ver demonstração automática' }),
+  );
+  act(() => {
+    listeners.forEach((listener) => listener(true));
+  });
+  expect(
+    screen.queryByRole('button', { name: 'Praticar manualmente' }),
+  ).toBeNull();
+  fireEvent.press(screen.getByTestId('board-tile-cycle-0'));
+  expect(screen.queryByTestId('board-tile-cycle-0')).toBeNull();
+  screen.unmount();
+  subscription.mockRestore();
+  jest.useRealTimers();
+});

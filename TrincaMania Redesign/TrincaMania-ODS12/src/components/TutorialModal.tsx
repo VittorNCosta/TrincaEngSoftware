@@ -189,6 +189,7 @@ export function TutorialModal({
 
   return (
     <Modal
+      accessibilityLabel={'Como jogar'}
       animationType="none"
       onRequestClose={finishTutorial}
       transparent

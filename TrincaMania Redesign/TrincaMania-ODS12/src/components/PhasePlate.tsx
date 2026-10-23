@@ -29,7 +29,6 @@ export function PhasePlate({
       <Text
         adjustsFontSizeToFit
         minimumFontScale={0.65}
-        numberOfLines={1}
         style={styles.subtitle}
       >
         {worldName} · {worldLabel}
@@ -84,10 +83,10 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: '#FFE9A8',
-    fontSize: 8.5,
+    fontSize: 10,
     fontWeight: '900',
-    letterSpacing: 1.3,
-    lineHeight: 11,
+    letterSpacing: 0.3,
+    lineHeight: 14,
     textTransform: 'uppercase',
   },
   title: {

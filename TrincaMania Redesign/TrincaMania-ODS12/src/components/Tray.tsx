@@ -177,9 +177,8 @@ function TraySlot({
             : undefined
         }
         accessibilityLabel={slotAccessibilityLabel}
-        accessibilityRole={slotIsActionable ? 'button' : 'text'}
+        accessibilityRole={slotIsActionable ? 'button' : 'image'}
         accessibilityState={slotIsActionable ? { disabled: false } : undefined}
-        disabled={!slotIsActionable}
         hitSlop={
           slotIsActionable
             ? { top: 8, bottom: 8, left: 2, right: 2 }
@@ -242,7 +241,7 @@ export function Tray({
         const isActiveSlot = tileIndex >= 0;
         const isCoinSlot = index === BASE_TRAY_CAPACITY;
         const isBonusSlot = index === MAX_TRAY_CAPACITY - 1;
-        const lockedLabel = isCoinSlot ? `${COIN_TRAY_SLOT_COST}` : 'Bônus';
+        const lockedLabel = isCoinSlot ? `${COIN_TRAY_SLOT_COST}` : '+';
         const onLockedPress = isCoinSlot ? onCoinSlotPress : onAdSlotPress;
         const onSlotPress =
           isActiveSlot && isBonusSlot ? onAdSlotPress : onLockedPress;

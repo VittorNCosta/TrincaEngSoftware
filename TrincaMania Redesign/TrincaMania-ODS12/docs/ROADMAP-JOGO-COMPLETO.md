@@ -1014,3 +1014,27 @@ O site inclui o jogo exportado e APK aprovados; `npm run build` não exige pasta
 irmã. Envios na branch de trabalho do aplicativo e no novo repositório privado
 do site, sem PR, hospedagem ou execução de GitHub Actions.
 CI-40 permanece aberta até integração e aceites.
+
+| ID    | Tarefa                                                               | Quem | Prio | Detalhe                                                                                        | Codex |
+| ----- | -------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------------------------- | ----- |
+| CI-41 | Corrigir auditoria integrada do site e simulador ODS12 de 22/10/2026 | [CC] | P0   | Correções e validação na branch de auditoria; aceites Android e advisories permanecem abertos. | GPT-6 |
+
+## CI-41 — Correções da auditoria integrada (22/10/2026)
+
+Trabalho em branch local isolada do site e da fonte exata do export ODS12.
+Inclui transação recuperável de capítulos, tutorial manual, acessibilidade,
+foco, layout mobile, handshake do iframe, confirmação de troca de modo,
+exportação reproduzível por SHA com rollback, atualizações compatíveis e
+otimizações HTTP. Ver `docs/CORRECOES-PERSISTENCIA-20261022.md` e
+`docs/CORRECOES-UI-20261022.md`; relatório consolidado e plano de integração
+ficam na branch irmã `igrion-ODS-site`.
+
+- [x] Implementar correções em fontes separados, preservando os 103 níveis canônicos.
+- [ ] Concluir validação integrada visual/E2E e conciliar alterações da outra máquina.
+- [ ] Gerar APK atualizado após autorização explícita de build Android na sessão.
+- [ ] Validar assinatura aprovada, permissões efetivas e atualização sobre save existente.
+- [ ] Acompanhar advisories sem patch; nenhuma declaração de risco zero.
+
+Envio da branch de auditoria autorizado em 23/10/2026. Sem merge, publicação
+ou execução de Actions. A tarefa permanece aberta até os aceites e pendências
+acima serem resolvidos. Ver `docs/VALIDACAO-AUDITORIA-20261023.md`.

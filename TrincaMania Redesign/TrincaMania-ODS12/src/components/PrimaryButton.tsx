@@ -1,9 +1,7 @@
-import { ReactNode, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ReactNode } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type PrimaryButtonProps = {
   title: string;
@@ -28,33 +26,20 @@ export function PrimaryButton({
   children,
   testID,
 }: PrimaryButtonProps) {
-  const scale = useRef(new Animated.Value(1)).current;
-
-  const animateTo = (value: number) => {
-    Animated.spring(scale, {
-      friction: 8,
-      tension: 180,
-      toValue: value,
-      useNativeDriver: true,
-    }).start();
-  };
-
   return (
-    <AnimatedPressable
+    <Pressable
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabel ?? title}
       accessibilityRole="button"
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
-      onPressIn={() => animateTo(0.96)}
-      onPressOut={() => animateTo(1)}
-      style={[
+      style={({ pressed }) => [
         styles.button,
         styles[size],
         styles[variant],
         disabled ? styles.disabled : null,
-        { transform: [{ scale }] },
+        pressed ? { opacity: 0.85 } : null,
       ]}
       testID={testID}
     >
@@ -76,7 +61,7 @@ export function PrimaryButton({
           </Text>
         )}
       </View>
-    </AnimatedPressable>
+    </Pressable>
   );
 }
 

@@ -2269,7 +2269,7 @@ function GameScreenContent({
           <View style={[styles.sceneGlow, styles.sceneGlowBottom]} />
         </View>
         <View style={styles.gameContent}>
-          <View style={styles.hud}>
+          <View style={[styles.hud, { justifyContent: 'space-between' }]}>
             <View style={styles.hudNav}>
               <Pressable
                 accessibilityLabel="Voltar ao mapa"
@@ -2312,13 +2312,15 @@ function GameScreenContent({
                 />
               </Pressable>
             </View>
-            <View style={styles.hudTextBlock}>
-              <PhasePlate
-                levelLabel={levelDisplayLabel}
-                worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
-                worldName={chapter ? chapter.name : world.subtitle}
-              />
-            </View>
+            {width >= 480 ? (
+              <View style={styles.hudTextBlock}>
+                <PhasePlate
+                  levelLabel={levelDisplayLabel}
+                  worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
+                  worldName={chapter ? chapter.name : world.subtitle}
+                />
+              </View>
+            ) : null}
             <View style={styles.hudRight}>
               <ResourcePill
                 addTone="green"
@@ -2353,6 +2355,16 @@ function GameScreenContent({
               </View>
             </View>
           </View>
+
+          {width < 480 ? (
+            <View style={{ marginHorizontal: 12, marginBottom: 6 }}>
+              <PhasePlate
+                levelLabel={levelDisplayLabel}
+                worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
+                worldName={chapter ? chapter.name : world.subtitle}
+              />
+            </View>
+          ) : null}
 
           <View style={styles.meterRow}>
             <Text style={styles.meterTime}>

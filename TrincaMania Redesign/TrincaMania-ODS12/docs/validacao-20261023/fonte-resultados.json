@@ -1,0 +1,32 @@
+[
+  {
+    "check": "typecheck",
+    "exit": 0,
+    "seconds": 14.52
+  },
+  {
+    "check": "domain",
+    "exit": 0,
+    "seconds": 18.24
+  },
+  {
+    "check": "ui",
+    "exit": 0,
+    "seconds": 59.35
+  },
+  {
+    "check": "playthrough",
+    "exit": 0,
+    "seconds": 30.43
+  },
+  {
+    "check": "lint",
+    "exit": 0,
+    "seconds": 16.19
+  },
+  {
+    "check": "format",
+    "exit": 0,
+    "seconds": 21.49
+  }
+]

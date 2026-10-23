@@ -76,6 +76,7 @@ stub('@react-native-async-storage/async-storage', {
 });
 stub('expo-status-bar', { StatusBar: 'StatusBar' });
 stub('react-native', {
+  Platform: { OS: 'android' },
   ActivityIndicator: 'ActivityIndicator',
   StyleSheet: { create: (sheet) => sheet, absoluteFillObject: {} },
   Text: 'Text',

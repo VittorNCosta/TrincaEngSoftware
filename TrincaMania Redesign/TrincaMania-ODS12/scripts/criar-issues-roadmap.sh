@@ -2068,6 +2068,18 @@ mk open --title 'CI-40 · Criar site Igrion ODS12 e demonstração web offline p
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
+mk open --title 'CI-41 · Corrigir auditoria integrada do site e simulador ODS12 de 22/10/2026' \
+  --body '**Trabalho local em branch isolada.** Diário recuperável de conclusão de capítulos; tutorial manual; contraste, semântica ARIA, foco e layout mobile; handshake iframe com timeout/retry e confirmação de troca de modo; export por SHA limpo com staging, proveniência e rollback; dependências compatíveis e servidor com cache/compressão/ranges/headers. Evidências em `docs/CORRECOES-PERSISTENCIA-20261022.md`, `docs/CORRECOES-UI-20261022.md` e relatório da branch irmã do site. **Pendências de aceite:** repetir integração visual/E2E, reconciliar trabalho da outra máquina, gerar e validar APK com autorização explícita e certificado adequado; advisories sem patch exigem acompanhamento. Não concluir antes desses aceites; sem push/Actions/merge automático.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Opus 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P0
+**Fluxo:** CI/CD
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'ci-cd,P0,claude-code,modelo-opus,modelo-codex-terra' --milestone 'CI/CD'
 
 # --- DevSecOps ---
 mk done --title 'SEC-01 · Habilitar CodeQL para JS/TS' \
@@ -2621,4 +2633,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 197 issues (132 já criadas fechadas) =="
+echo "== pronto: 198 issues (132 já criadas fechadas) =="

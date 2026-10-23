@@ -306,7 +306,13 @@ export const normalizeProgress = (
                   typeof id === 'string' && id.length > 0 && id.length <= 128,
               ),
             ),
-          ].slice(-512),
+            // Chapter receipts must outlive a pending journal even if other
+            // reward sources generate more than 512 operations before recovery.
+          ].filter(
+            (id, index, ids) =>
+              /^chapter:ch\d{2}-\d{3}:[0-3]:[1-3]$/.test(id) ||
+              index >= ids.length - 512,
+          ),
         }
       : {}),
     bonusWorldAchievementShown: progress.bonusWorldAchievementShown === true,

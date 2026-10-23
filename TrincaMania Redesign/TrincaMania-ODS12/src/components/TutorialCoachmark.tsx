@@ -28,6 +28,7 @@ export function TutorialCoachmark({
   const { height } = useWindowDimensions();
   return (
     <Modal
+      accessibilityLabel={message?.title}
       animationType={reducedMotion ? 'none' : 'fade'}
       transparent
       visible={Boolean(message)}

@@ -1,3 +1,5 @@
+import { connectWebHost } from './src/services/webHostBridge';
+import { PrimaryButton } from './src/components/PrimaryButton';
 import { useAppSettings } from './src/hooks/useAppSettings';
 import { useWorldChestController } from './src/hooks/useWorldChestController';
 import { useProgressPersistence } from './src/hooks/useProgressPersistence';
@@ -50,10 +52,8 @@ import {
   getMysteryTutorialSeen,
   getPracticalTutorialSeen,
   getTutorialSeen,
-  loadProgress,
   loadStoredProgressMigrationInfo,
   markBonusWorldAchievementShown,
-  normalizeProgress,
   grantRewardForOperation,
   purchasePowerUpTransaction,
   restorePurchasedPowerUpItem,
@@ -65,12 +65,10 @@ import {
 } from './src/storage/progressStorage';
 import {
   ChapterProgressState,
-  applyChapterMapCompletion,
   createInitialChapterProgress,
   getChapterMapStars,
   getNextChapterMapId,
   isChapterMapUnlocked,
-  loadChapterProgress,
 } from './src/storage/chapterProgressStorage';
 import {
   MagicTripleRescueState,
@@ -160,10 +158,7 @@ import {
   purchaseCoinTraySlot,
   resetTrayBoostState,
 } from './src/storage/trayBoostStorage';
-import {
-  POWER_UP_COSTS,
-  getIncrementalCoinRewardForLevel,
-} from './src/utils/gameLogic';
+import { POWER_UP_COSTS } from './src/utils/gameLogic';
 import { getRestCheckpointCoinReward } from './src/utils/shop';
 import { getCurrentWorldId } from './src/utils/worldProgress';
 
@@ -283,29 +278,97 @@ export default function App() {
     magicTripleRescueRef.current = magicTripleRescueState;
   }, [magicTripleRescueState]);
 
+  const resetOtherDomains = useCallback(async () => {
+    const results = await Promise.allSettled([
+      resetDailyCheckInState().then((state) => {
+        checkInRef.current = state;
+        setCheckIn(state);
+      }),
+      resetMissionState().then(setMissions),
+      resetDailyChallengeSave().then(setChallenge),
+      refillLives().then((state) => {
+        setLivesState(state);
+        setLivesNow(Date.now());
+      }),
+      resetTrayBoostState().then(setTrayBoostState),
+      resetMagicTripleRescueState().then((state) => {
+        magicTripleRescueRef.current = state;
+        setMagicTripleRescueState(state);
+      }),
+      saveTutorialSeen(false),
+      savePracticalTutorialSeen(false),
+      saveMysteryTutorialSeen(false),
+    ]);
+    const failure = results.find((result) => result.status === 'rejected');
+    if (failure?.status === 'rejected') throw failure.reason;
+  }, []);
+
+  const {
+    commitProgress,
+    commitChapterCompletion,
+    recoverProgress,
+    resetProgress,
+  } = useProgressPersistence({
+    resetOtherDomains,
+    progressRef,
+    progressGenerationRef,
+    progressSaveQueueRef,
+    chapterProgressRef,
+    chapterProgressSaveQueueRef,
+    setProgress,
+    setChapterProgress,
+  });
+
+  const [progressError, setProgressError] = useState<string | null>(null);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  useEffect(() => {
+    if (Platform.OS !== 'web' || isLoadingProgress) return;
+    const frame = requestAnimationFrame(() => {
+      if (!document.querySelector('[role="dialog"]')) {
+        const heading = document.getElementById('simulator-heading');
+        if (heading) {
+          heading.tabIndex = -1;
+          heading.focus({ preventScroll: true });
+        }
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [screen, isLoadingProgress]);
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    return connectWebHost({
+      ready: !isLoadingProgress && !progressError,
+      error: Boolean(progressError),
+      sessionActive: screen === 'game',
+    });
+  }, [isLoadingProgress, progressError, screen]);
+
   useEffect(() => {
     let isMounted = true;
+    setIsLoadingProgress(true);
+    setProgressError(null);
 
-    Promise.all([
-      loadProgress(),
-      loadChapterProgress(),
-      getTutorialSeen(),
-      getPracticalTutorialSeen(),
-      getMysteryTutorialSeen(),
-      loadMagicTripleRescueState(),
-      getLivesState(),
-      getTrayBoostState(),
-      getSettings(),
-      loadStoredProgressMigrationInfo(),
-      getCampaignResizeNoticeSeen(),
-      loadDailyCheckInState(),
-      loadMissionState(),
-      loadDailyChallengeSave(),
-    ])
+    recoverProgress()
+      .then((recovered) =>
+        Promise.all([
+          Promise.resolve(recovered),
+          getTutorialSeen(),
+          getPracticalTutorialSeen(),
+          getMysteryTutorialSeen(),
+          loadMagicTripleRescueState(),
+          getLivesState(),
+          getTrayBoostState(),
+          getSettings(),
+          loadStoredProgressMigrationInfo(),
+          getCampaignResizeNoticeSeen(),
+          loadDailyCheckInState(),
+          loadMissionState(),
+          loadDailyChallengeSave(),
+        ]),
+      )
       .then(
         ([
-          storedProgress,
-          storedChapterProgress,
+          recovered,
           tutorialSeen,
           practicalTutorialSeen,
           mysteryTutorialSeen,
@@ -320,8 +383,8 @@ export default function App() {
           storedChallenge,
         ]) => {
           if (isMounted) {
-            setProgress(storedProgress);
-            setChapterProgress(storedChapterProgress);
+            setProgress(recovered.progress);
+            setChapterProgress(recovered.chapterProgress);
             setLivesState(storedLives);
             setTrayBoostState(storedTrayBoost);
             setSettings(storedSettings);
@@ -342,6 +405,14 @@ export default function App() {
           }
         },
       )
+      .catch((error: unknown) => {
+        if (isMounted)
+          setProgressError(
+            error instanceof Error
+              ? error.message
+              : 'Não foi possível recuperar seu progresso. Tente novamente.',
+          );
+      })
       .finally(() => {
         if (isMounted) {
           setIsLoadingProgress(false);
@@ -351,7 +422,7 @@ export default function App() {
     return () => {
       isMounted = false;
     };
-  }, [setSettings]);
+  }, [setSettings, recoverProgress, loadAttempt]);
 
   const refreshLivesState = useCallback(async () => {
     const nextLivesState = await getLivesState();
@@ -367,20 +438,11 @@ export default function App() {
     return nextTrayBoostState;
   }, []);
 
-  const { commitProgress, commitChapterProgress } = useProgressPersistence({
-    progressRef,
-    progressGenerationRef,
-    progressSaveQueueRef,
-    chapterProgressRef,
-    chapterProgressSaveQueueRef,
-    setProgress,
-    setChapterProgress,
-  });
-
   const checkInSettlingRef = useRef(false);
   const missionEventSequenceRef = useRef(0);
   const settleCheckIn = useCallback(
     async (state: DailyCheckInState) => {
+      const generation = progressGenerationRef.current;
       const pending = state.pendingClaim;
       if (!pending || checkInSettlingRef.current) return;
       checkInSettlingRef.current = true;
@@ -389,6 +451,7 @@ export default function App() {
           const nextLives = await applyLifeRewardForOperation(
             pending.operationId,
           );
+          if (generation !== progressGenerationRef.current) return;
           setLivesState(nextLives);
           setLivesNow(Date.now());
         } else {
@@ -402,8 +465,10 @@ export default function App() {
             ),
           );
         }
+        if (generation !== progressGenerationRef.current) return;
         const settled = completeDailyCheckInClaim(state, pending.operationId);
         await saveDailyCheckInState(settled);
+        if (generation !== progressGenerationRef.current) return;
         checkInRef.current = settled;
         setCheckIn(settled);
         playRewardCollectSound();
@@ -421,6 +486,7 @@ export default function App() {
   }, [checkIn, isLoadingProgress, settleCheckIn]);
 
   const handleClaimCheckIn = async () => {
+    const generation = progressGenerationRef.current;
     if (routineBusyRef.current) return;
     const current = checkInRef.current;
     const status = getDailyCheckInStatus(current);
@@ -439,6 +505,7 @@ export default function App() {
         `checkin:${status.dateKey}`,
       );
       await saveDailyCheckInState(pending);
+      if (generation !== progressGenerationRef.current) return;
       checkInRef.current = pending;
       setCheckIn(pending);
       await settleCheckIn(pending);
@@ -468,11 +535,13 @@ export default function App() {
   };
 
   const handleClaimMission = async (missionId: string) => {
+    const generation = progressGenerationRef.current;
     if (routineBusyRef.current) return;
     routineBusyRef.current = true;
     setIsRoutineBusy(true);
     try {
       const current = await loadMissionState();
+      if (generation !== progressGenerationRef.current) return;
       const mission = [
         ...current.daily.missions,
         ...current.weekly.missions,
@@ -484,7 +553,10 @@ export default function App() {
           coins: mission.rewardCoins,
         }),
       );
-      setMissions(await markMissionClaimed(mission.id));
+      if (generation !== progressGenerationRef.current) return;
+      const claimed = await markMissionClaimed(mission.id);
+      if (generation !== progressGenerationRef.current) return;
+      setMissions(claimed);
       playRewardCollectSound();
     } catch {
       Alert.alert('Não foi possível resgatar', 'Tente novamente em instantes.');
@@ -657,26 +729,8 @@ export default function App() {
     mapId: string,
     starsEarned: number,
   ) => {
-    const completionResult = applyChapterMapCompletion(
-      chapterProgressRef.current,
-      mapId,
-      starsEarned,
-    );
-    const coinsEarned = getIncrementalCoinRewardForLevel(
-      completionResult.previousStars,
-      completionResult.starsEarned,
-    );
-
-    await commitChapterProgress(completionResult.progress);
-
-    if (coinsEarned > 0) {
-      await commitProgress(
-        normalizeProgress({
-          ...progressRef.current,
-          coins: progressRef.current.coins + coinsEarned,
-        }),
-      );
-    }
+    const completionResult = await commitChapterCompletion(mapId, starsEarned);
+    const { coinsEarned } = completionResult;
 
     void emitMissionEvent('levels', 1, mapId).catch(() => undefined);
     void emitMissionEvent('stars', completionResult.starsEarned, mapId).catch(
@@ -904,49 +958,27 @@ export default function App() {
     );
   }, [commitMagicTripleRescueState]);
 
-  const handleResetProgress = () => {
-    const freshProgress = createInitialProgress();
-    const freshMagicTripleRescueState = createInitialMagicTripleRescueState();
-    progressGenerationRef.current += 1;
-    void commitProgress(freshProgress).catch(() => undefined);
-    void commitChapterProgress(createInitialChapterProgress()).catch(
-      () => undefined,
-    );
-    magicTripleRescueRef.current = freshMagicTripleRescueState;
-    setMagicTripleRescueState(freshMagicTripleRescueState);
-    setSelectedLevelId(LEVELS[0]?.id ?? '');
-    setIsRoutineVisible(false);
-    resetDailyCheckInState()
-      .then((state) => {
-        checkInRef.current = state;
-        setCheckIn(state);
-      })
-      .catch(() => undefined);
-    resetMissionState()
-      .then(setMissions)
-      .catch(() => undefined);
-    resetDailyChallengeSave()
-      .then(setChallenge)
-      .catch(() => undefined);
-    setShopWorldId(1);
-    refillLives()
-      .then((nextLivesState) => {
-        setLivesState(nextLivesState);
-        setLivesNow(Date.now());
-      })
-      .catch(() => undefined);
-    resetTrayBoostState()
-      .then((nextTrayBoostState) => {
-        setTrayBoostState(nextTrayBoostState);
-        setLivesNow(Date.now());
-      })
-      .catch(() => undefined);
-    resetMagicTripleRescueState().catch(() => undefined);
-    setIsTutorialVisible(true);
-    setTutorialMode('automatic');
-    setIsPracticalTutorialSeen(false);
-    saveTutorialSeen(false).catch(() => undefined);
-    savePracticalTutorialSeen(false).catch(() => undefined);
+  const handleResetProgress = async () => {
+    setIsLoadingProgress(true);
+    try {
+      await resetProgress();
+      setSelectedLevelId(LEVELS[0]?.id ?? '');
+      setIsRoutineVisible(false);
+      setShopWorldId(1);
+      setScreen('levels');
+      setIsTutorialVisible(true);
+      setTutorialMode('automatic');
+      setIsPracticalTutorialSeen(false);
+      setIsMysteryTutorialSeen(false);
+    } catch (error) {
+      setProgressError(
+        error instanceof Error
+          ? error.message
+          : 'O reinício não terminou. Tente novamente para concluir a recuperação.',
+      );
+    } finally {
+      setIsLoadingProgress(false);
+    }
   };
 
   // Na web, o modo dev só existe na sessão isolada iniciada pelo simulador.
@@ -1301,6 +1333,32 @@ export default function App() {
     };
   }, [refreshLivesState, refreshTrayBoostState]);
 
+  if (progressError) {
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView
+          role={Platform.OS === 'web' ? 'main' : undefined}
+          style={styles.loadingContainer}
+        >
+          <Text
+            role={Platform.OS === 'web' ? 'heading' : undefined}
+            aria-level={1}
+            style={styles.loadingText}
+          >
+            Não foi possível abrir o progresso
+          </Text>
+          <Text accessibilityRole="alert" style={styles.loadingText}>
+            {progressError}
+          </Text>
+          <PrimaryButton
+            title="Tentar novamente"
+            onPress={() => setLoadAttempt((attempt) => attempt + 1)}
+          />
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  }
+
   if (screen === 'splash') {
     return (
       <SafeAreaProvider>
@@ -1327,206 +1385,228 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="light" />
-      {screen === 'levels' ? (
-        <MainTabs
-          devMode={devMode}
-          activeTrayCapacity={activeTrayCapacity}
-          bonusTraySlotRemainingMs={bonusTraySlotRemainingMs}
-          coinTraySlotRemainingMs={coinTraySlotRemainingMs}
-          initialWorldId={campaignInitialWorldId}
-          livesState={livesState}
-          progress={progress}
-          checkInReady={getDailyCheckInStatus(checkIn).eligible}
-          missionReadyCount={
-            [...missions.daily.missions, ...missions.weekly.missions].filter(
-              (mission) =>
-                !mission.claimed && mission.progress >= mission.target,
-            ).length
-          }
-          challengeDone={Boolean(challenge.bestStars[getLocalDateKey()])}
-          trayBoostState={trayBoostState}
-          timeUntilNextLifeMs={timeUntilNextLifeMs}
-          onCoinCounterLayout={setCoinCollectTarget}
-          onOpenRestCheckpoint={handleOpenRestCheckpoint}
-          onOpenSettings={openSettings}
-          onOpenRoutine={handleOpenRoutine}
-          onOpenShop={openShop}
-          onOpenChapters={() => {
-            if (devMode || isChapterModeUnlocked(progressRef.current))
-              setScreen('chapters');
-          }}
-          onOpenWorldChest={showWorldChest}
-          onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
-          onResetProgress={handleResetProgress}
-          onSelectLevel={handleSelectLevel}
-          onShowTutorial={() => {
-            setTutorialMode('manual');
-            setIsTutorialVisible(true);
-          }}
-        />
-      ) : null}
-      {screen === 'chapters' ? (
-        <ChaptersScreen
-          devMode={devMode}
-          chapterProgress={chapterProgress}
-          onBack={() => setScreen('levels')}
-          onSelectChapterLevel={handleSelectChapterLevel}
-        />
-      ) : null}
-      {isGameMounted && selectedLevel ? (
-        <GameScreen
-          isActive={screen === 'game'}
-          bestStars={
-            isDailyChallengeSelected
-              ? (challenge.bestStars[selectedLevel.id.slice(6)] ?? 0)
-              : isChapterLevelSelected
-                ? getChapterMapStars(chapterProgress, selectedLevel.id)
-                : (progress.levelStars[selectedLevel.id] ?? 0)
-          }
-          level={selectedLevel}
+      <View
+        role={Platform.OS === 'web' ? 'main' : undefined}
+        style={{ flex: 1 }}
+      >
+        {Platform.OS === 'web' ? (
+          <Text
+            nativeID="simulator-heading"
+            role="heading"
+            aria-level={1}
+            style={{
+              position: 'absolute',
+              width: 1,
+              height: 1,
+              overflow: 'hidden',
+            }}
+          >
+            {screen === 'game'
+              ? `Fase ${selectedLevel?.id ?? ''} · TrincaMania ODS 12`
+              : 'TrincaMania ODS 12'}
+          </Text>
+        ) : null}
+        <StatusBar style="light" />
+        {screen === 'levels' ? (
+          <MainTabs
+            devMode={devMode}
+            activeTrayCapacity={activeTrayCapacity}
+            bonusTraySlotRemainingMs={bonusTraySlotRemainingMs}
+            coinTraySlotRemainingMs={coinTraySlotRemainingMs}
+            initialWorldId={campaignInitialWorldId}
+            livesState={livesState}
+            progress={progress}
+            checkInReady={getDailyCheckInStatus(checkIn).eligible}
+            missionReadyCount={
+              [...missions.daily.missions, ...missions.weekly.missions].filter(
+                (mission) =>
+                  !mission.claimed && mission.progress >= mission.target,
+              ).length
+            }
+            challengeDone={Boolean(challenge.bestStars[getLocalDateKey()])}
+            trayBoostState={trayBoostState}
+            timeUntilNextLifeMs={timeUntilNextLifeMs}
+            onCoinCounterLayout={setCoinCollectTarget}
+            onOpenRestCheckpoint={handleOpenRestCheckpoint}
+            onOpenSettings={openSettings}
+            onOpenRoutine={handleOpenRoutine}
+            onOpenShop={openShop}
+            onOpenChapters={() => {
+              if (devMode || isChapterModeUnlocked(progressRef.current))
+                setScreen('chapters');
+            }}
+            onOpenWorldChest={showWorldChest}
+            onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
+            onResetProgress={handleResetProgress}
+            onSelectLevel={handleSelectLevel}
+            onShowTutorial={() => {
+              setTutorialMode('manual');
+              setIsTutorialVisible(true);
+            }}
+          />
+        ) : null}
+        {screen === 'chapters' ? (
+          <ChaptersScreen
+            devMode={devMode}
+            chapterProgress={chapterProgress}
+            onBack={() => setScreen('levels')}
+            onSelectChapterLevel={handleSelectChapterLevel}
+          />
+        ) : null}
+        {isGameMounted && selectedLevel ? (
+          <GameScreen
+            isActive={screen === 'game'}
+            bestStars={
+              isDailyChallengeSelected
+                ? (challenge.bestStars[selectedLevel.id.slice(6)] ?? 0)
+                : isChapterLevelSelected
+                  ? getChapterMapStars(chapterProgress, selectedLevel.id)
+                  : (progress.levelStars[selectedLevel.id] ?? 0)
+            }
+            level={selectedLevel}
+            coins={progress.coins}
+            itemCounts={progress.itemCounts}
+            keys={progress.keys}
+            isMysteryTutorialVisible={isMysteryTutorialVisible}
+            isBlockingModalVisible={
+              isTutorialVisible ||
+              activeWorldChestId !== undefined ||
+              isNoLivesModalVisible ||
+              // A Loja cobre a fase sem desmontá-la: o cronômetro e o tabuleiro
+              // ficam parados enquanto o jogador compra.
+              screen === 'shop'
+            }
+            shouldRunPracticalTutorial={
+              !isPracticalTutorialSeen && selectedLevel.id === 'w1-001'
+            }
+            magicTripleRescueState={magicTripleRescueState}
+            livesState={livesState}
+            activeTrayCapacity={activeTrayCapacity}
+            bonusTraySlotRemainingMs={bonusTraySlotRemainingMs}
+            isBonusTraySlotActive={isBonusTraySlotActiveNow}
+            isCoinTraySlotActive={isCoinTraySlotActiveNow}
+            isSettingsMenuVisible={isSettingsVisible}
+            timeUntilNextLifeMs={timeUntilNextLifeMs}
+            onActivateBonusTraySlot={handleActivateBonusTraySlot}
+            onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
+            onPurchasePowerUp={handlePurchasePowerUp}
+            onRestorePurchasedPowerUp={handleRestorePurchasedPowerUp}
+            onBack={() =>
+              isDailyChallengeSelected
+                ? setScreen('levels')
+                : isChapterLevelSelected
+                  ? setScreen('chapters')
+                  : openCampaign(selectedLevel.worldId)
+            }
+            onBonusWorldAchievementSeen={handleBonusWorldAchievementSeen}
+            onCoinCounterLayout={setCoinCollectTarget}
+            onLoseLife={handleLoseLife}
+            onOpenSettings={openSettings}
+            onOpenWorldChest={handleOpenWorldChest}
+            onRetryLevel={handleRetryLevel}
+            onUseItem={handleUseItem}
+            onMagicTripleRescueSeen={handleMagicTripleRescueSeen}
+            onMagicTripleRescueUsed={handleMagicTripleRescueUsed}
+            onLevelComplete={handleLevelComplete}
+            onNaturalTriple={(eventId) => {
+              if (!isDailyChallengeSelected)
+                void emitMissionEvent('triples', 1, eventId).catch(
+                  () => undefined,
+                );
+            }}
+            onNextLevel={handleNextLevel}
+            onOpenShop={() => openShop(selectedLevel.worldId)}
+            onPracticalTutorialSeen={handleFinishPracticalTutorial}
+          />
+        ) : null}
+        {screen === 'shop' ? (
+          <View style={styles.shopOverlay}>
+            <ShopScreen
+              backTitle={
+                shopReturnScreen === 'game' ? 'Voltar à fase' : 'Voltar ao mapa'
+              }
+              progress={progress}
+              worldId={shopWorldId}
+              onBack={() => setScreen(shopReturnScreen)}
+              onBuyItem={handleBuyItem}
+            />
+          </View>
+        ) : null}
+        <WorldChestModal
           coins={progress.coins}
-          itemCounts={progress.itemCounts}
+          isOpening={isOpeningWorldChest}
           keys={progress.keys}
-          isMysteryTutorialVisible={isMysteryTutorialVisible}
-          isBlockingModalVisible={
-            isTutorialVisible ||
-            activeWorldChestId !== undefined ||
-            isNoLivesModalVisible ||
-            // A Loja cobre a fase sem desmontá-la: o cronômetro e o tabuleiro
-            // ficam parados enquanto o jogador compra.
-            screen === 'shop'
-          }
-          shouldRunPracticalTutorial={
-            !isPracticalTutorialSeen && selectedLevel.id === 'w1-001'
-          }
-          magicTripleRescueState={magicTripleRescueState}
-          livesState={livesState}
-          activeTrayCapacity={activeTrayCapacity}
-          bonusTraySlotRemainingMs={bonusTraySlotRemainingMs}
-          isBonusTraySlotActive={isBonusTraySlotActiveNow}
-          isCoinTraySlotActive={isCoinTraySlotActiveNow}
-          isSettingsMenuVisible={isSettingsVisible}
-          timeUntilNextLifeMs={timeUntilNextLifeMs}
-          onActivateBonusTraySlot={handleActivateBonusTraySlot}
-          onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
-          onPurchasePowerUp={handlePurchasePowerUp}
-          onRestorePurchasedPowerUp={handleRestorePurchasedPowerUp}
-          onBack={() =>
-            isDailyChallengeSelected
-              ? setScreen('levels')
-              : isChapterLevelSelected
-                ? setScreen('chapters')
-                : openCampaign(selectedLevel.worldId)
-          }
-          onBonusWorldAchievementSeen={handleBonusWorldAchievementSeen}
-          onCoinCounterLayout={setCoinCollectTarget}
-          onLoseLife={handleLoseLife}
-          onOpenSettings={openSettings}
-          onOpenWorldChest={handleOpenWorldChest}
-          onRetryLevel={handleRetryLevel}
-          onUseItem={handleUseItem}
-          onMagicTripleRescueSeen={handleMagicTripleRescueSeen}
-          onMagicTripleRescueUsed={handleMagicTripleRescueUsed}
-          onLevelComplete={handleLevelComplete}
-          onNaturalTriple={(eventId) => {
-            if (!isDailyChallengeSelected)
-              void emitMissionEvent('triples', 1, eventId).catch(
+          result={worldChestResult}
+          visible={activeWorldChestId !== undefined}
+          worldChestId={activeWorldChestId}
+          coinCollectTarget={coinCollectTarget}
+          onBuyAndOpen={() => {
+            if (activeWorldChestId) {
+              handleOpenWorldChest(activeWorldChestId, 'buy-key').catch(
                 () => undefined,
               );
-          }}
-          onNextLevel={handleNextLevel}
-          onOpenShop={() => openShop(selectedLevel.worldId)}
-          onPracticalTutorialSeen={handleFinishPracticalTutorial}
-        />
-      ) : null}
-      {screen === 'shop' ? (
-        <View style={styles.shopOverlay}>
-          <ShopScreen
-            backTitle={
-              shopReturnScreen === 'game' ? 'Voltar à fase' : 'Voltar ao mapa'
             }
-            progress={progress}
-            worldId={shopWorldId}
-            onBack={() => setScreen(shopReturnScreen)}
-            onBuyItem={handleBuyItem}
-          />
-        </View>
-      ) : null}
-      <WorldChestModal
-        coins={progress.coins}
-        isOpening={isOpeningWorldChest}
-        keys={progress.keys}
-        result={worldChestResult}
-        visible={activeWorldChestId !== undefined}
-        worldChestId={activeWorldChestId}
-        coinCollectTarget={coinCollectTarget}
-        onBuyAndOpen={() => {
-          if (activeWorldChestId) {
-            handleOpenWorldChest(activeWorldChestId, 'buy-key').catch(
-              () => undefined,
-            );
-          }
-        }}
-        onClose={closeWorldChest}
-        onOpenWithKey={() => {
-          if (activeWorldChestId) {
-            handleOpenWorldChest(activeWorldChestId, 'key').catch(
-              () => undefined,
-            );
-          }
-        }}
-      />
-      <SettingsModal
-        devMode={devMode}
-        devModeAvailable={devModeAvailable}
-        settings={settings}
-        visible={isSettingsVisible}
-        onClose={() => setIsSettingsVisible(false)}
-        onToggleSilentMode={handleToggleSilentMode}
-        onResetProgress={handleResetProgress}
-        onToggleHaptics={handleToggleHaptics}
-        onToggleSound={handleToggleSound}
-        onToggleMusic={handleToggleMusic}
-        onUnlockAllForDevMode={handleUnlockAllForDevMode}
-      />
-      <RoutineModal
-        visible={isRoutineVisible && screen === 'levels'}
-        section={routineSection}
-        checkIn={checkIn}
-        missions={missions}
-        challenge={challenge}
-        busy={isRoutineBusy}
-        onClose={() => setIsRoutineVisible(false)}
-        onSection={setRoutineSection}
-        onClaimCheckIn={() => {
-          void handleClaimCheckIn();
-        }}
-        onClaimMission={(id) => {
-          void handleClaimMission(id);
-        }}
-        onStartChallenge={() => {
-          void handleStartDailyChallenge();
-        }}
-      />
-      <NoLivesModal
-        timeUntilNextLifeMs={timeUntilNextLifeMs}
-        visible={isNoLivesModalVisible}
-        onClose={() => setIsNoLivesModalVisible(false)}
-      />
-      <TutorialModal
-        mode={tutorialMode}
-        visible={isTutorialVisible}
-        onFinish={handleFinishTutorial}
-      />
-      <MysteryTutorialModal
-        visible={isMysteryTutorialVisible}
-        onClose={handleFinishMysteryTutorial}
-      />
-      <CampaignResizeNoticeModal
-        visible={isCampaignResizeNoticeVisible}
-        onClose={handleCloseCampaignResizeNotice}
-      />
+          }}
+          onClose={closeWorldChest}
+          onOpenWithKey={() => {
+            if (activeWorldChestId) {
+              handleOpenWorldChest(activeWorldChestId, 'key').catch(
+                () => undefined,
+              );
+            }
+          }}
+        />
+        <SettingsModal
+          devMode={devMode}
+          devModeAvailable={devModeAvailable}
+          settings={settings}
+          visible={isSettingsVisible}
+          onClose={() => setIsSettingsVisible(false)}
+          onToggleSilentMode={handleToggleSilentMode}
+          onResetProgress={handleResetProgress}
+          onToggleHaptics={handleToggleHaptics}
+          onToggleSound={handleToggleSound}
+          onToggleMusic={handleToggleMusic}
+          onUnlockAllForDevMode={handleUnlockAllForDevMode}
+        />
+        <RoutineModal
+          visible={isRoutineVisible && screen === 'levels'}
+          section={routineSection}
+          checkIn={checkIn}
+          missions={missions}
+          challenge={challenge}
+          busy={isRoutineBusy}
+          onClose={() => setIsRoutineVisible(false)}
+          onSection={setRoutineSection}
+          onClaimCheckIn={() => {
+            void handleClaimCheckIn();
+          }}
+          onClaimMission={(id) => {
+            void handleClaimMission(id);
+          }}
+          onStartChallenge={() => {
+            void handleStartDailyChallenge();
+          }}
+        />
+        <NoLivesModal
+          timeUntilNextLifeMs={timeUntilNextLifeMs}
+          visible={isNoLivesModalVisible}
+          onClose={() => setIsNoLivesModalVisible(false)}
+        />
+        <TutorialModal
+          mode={tutorialMode}
+          visible={isTutorialVisible}
+          onFinish={handleFinishTutorial}
+        />
+        <MysteryTutorialModal
+          visible={isMysteryTutorialVisible}
+          onClose={handleFinishMysteryTutorial}
+        />
+        <CampaignResizeNoticeModal
+          visible={isCampaignResizeNoticeVisible}
+          onClose={handleCloseCampaignResizeNotice}
+        />
+      </View>
     </SafeAreaProvider>
   );
 }
