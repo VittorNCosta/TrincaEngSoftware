@@ -2,7 +2,7 @@
 
 Branch: `audit/ods12-site-simulador-20261022`. Base anterior: `584b7db64baa95b9beff151638c7ddfea428d506`. A matriz A01–A25, os resultados dos navegadores e a proveniência do export ficam em `igrion-ODS-site/docs/auditoria/2026-10-23/VALIDACAO.md`, na branch homônima.
 
-As correções locais não encerram os aceites de Android e leitor de tela. Não houve build/instalação de APK, merge, publicação, sincronização de issues ou execução de Actions.
+As correções locais não encerram os aceites de execução Android e leitor de tela. As seções iniciais registram a primeira rodada; a retomada ao final atualiza seus resultados. Houve compilação local de APK na retomada, sem instalação, merge, publicação, sincronização de issues ou execução de Actions.
 
 ## Correções adicionais
 
@@ -48,3 +48,7 @@ O usuário confirmou que o aplicativo é apenas para a faculdade, sem distribui�
 O diálogo “Pilha Misteriosa” recebeu nome acessível, título, fechamento pelo sistema e rolagem para conteúdo ampliado. Sua regressão de componente passou; a suíte agora possui 71 testes em 19 suítes.
 
 A consulta atual ao npm reporta um único advisory distinto, `node-forge::GHSA-86w9-cpqp-85rv`, propagado a 22 pacotes. A entrada de braces foi retirada do livro-razão porque não é mais reportada pelo registry; a mitigação local e seus testes foram preservados. Nenhuma vulnerabilidade nova foi aceita. A matriz e a triagem ficam em [DEPENDENCIAS-AUDITORIA-20261023.md](DEPENDENCIAS-AUDITORIA-20261023.md). O saldo anterior de 2 advisories/60 pacotes acima é histórico.
+
+A compilação Android local concluiu `:app:assembleRelease` com os quatro ABIs e o certificado histórico. A inspeção do artefato confirmou pacote `br.com.mhvtech.trincamania`, versão 1.1.0, minSdk 24, targetSdk 36 e ausência das seis permissões bloqueadas. O validador passou a reconhecer tanto `sdkVersion` quanto `minSdkVersion` emitidos por versões de aapt/aapt2; sete regressões do gate conferem os limites e as duas políticas de assinatura. Nenhum APK foi instalado. O pacote final e sua proveniência ficam no relatório consolidado do site.
+
+Na retomada, domínio passou com 346 testes após a regressão adicional de aapt2; automação local 25, UI 71 em 19 suítes, dois playthroughs, guardas e assets passaram. A execução agregada parou na entrada obsoleta de braces no livro-razão; após removê-la, auditoria, cobertura, orçamento de 2,63 MiB e sincronização dos 198 modelos foram executados separadamente e passaram. Isso não é apresentado como uma execução agregada única posterior à correção.

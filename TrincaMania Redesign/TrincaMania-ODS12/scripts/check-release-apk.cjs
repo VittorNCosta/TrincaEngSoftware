@@ -22,7 +22,9 @@ function validateManifest(output) {
     throw new Error(
       `Permissões bloqueadas presentes no APK: ${forbidden.join(', ')}`,
     );
-  const minSdk = Number(/^sdkVersion:'(\d+)'/m.exec(output)?.[1]);
+  const minSdk = Number(
+    /^(?:sdkVersion|minSdkVersion):'(\d+)'/m.exec(output)?.[1],
+  );
   const targetSdk = Number(/^targetSdkVersion:'(\d+)'/m.exec(output)?.[1]);
   if (minSdk !== 24 || targetSdk < 36)
     throw new Error(

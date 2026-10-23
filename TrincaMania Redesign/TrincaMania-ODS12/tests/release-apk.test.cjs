@@ -25,6 +25,18 @@ test('APK exige identidade, SDKs, release e permissões efetivas adequadas', () 
   ])
     assert.throws(() => validateManifest(invalid));
 });
+test('aapt2 atual informa minSdkVersion e mantém a exigência de API 24', () => {
+  const currentAapt = manifest.replace("sdkVersion:'24'", "minSdkVersion:'24'");
+  assert.equal(validateManifest(currentAapt).minSdk, 24);
+  assert.throws(() =>
+    validateManifest(
+      currentAapt.replace("minSdkVersion:'24'", "minSdkVersion:'23'"),
+    ),
+  );
+  assert.throws(() =>
+    validateManifest(manifest.replace("sdkVersion:'24'", '')),
+  );
+});
 test('release rejects debug even if fingerprint matches', () =>
   assert.throws(
     () =>
