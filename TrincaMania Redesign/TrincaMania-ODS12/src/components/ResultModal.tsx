@@ -8,13 +8,13 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path } from './svgPrimitives';
 
 import { ChestOpeningModal, ChestRewardItem } from './ChestOpeningModal';
 import { ChestProgressCard } from './ChestProgressCard';
 import { ConfettiRain } from './ConfettiRain';
-import { GameIcon } from './GameIcon';
-import { PrimaryButton } from './PrimaryButton';
+import { GameIcon } from '../original/components/GameIcon';
+import { PrimaryButton } from '../original/components/PrimaryButton';
 import {
   CHAPTER_COUNT,
   CHAPTER_MAPS_PER_CHAPTER,
@@ -113,7 +113,7 @@ const getWorldChestRewardItems = (
     },
     {
       iconName: 'powers' as const,
-      label: '+1 Trinca Mágica',
+      label: '+1 Trinca automática',
       tone: 'blue' as const,
     },
     {
@@ -172,11 +172,13 @@ export function ResultModal({
   const canAdvanceDirectly = chapterSummary
     ? chapterSummary.campaignPosition < CHAPTER_COUNT * CHAPTER_MAPS_PER_CHAPTER
     : Boolean(nextLevel && (nextLevel.worldId !== 21 || level.worldId === 21));
-  const nextActionTitle = canAdvanceDirectly
-    ? 'Próxima fase'
-    : world.isBonus || chapterSummary
-      ? 'Voltar ao mapa'
-      : 'Novo mundo em breve';
+  const nextActionTitle = level.id.startsWith('daily-')
+    ? 'Voltar ao mapa'
+    : canAdvanceDirectly
+      ? 'Próxima fase'
+      : world.isBonus || chapterSummary
+        ? 'Voltar ao mapa'
+        : 'Novo mundo em breve';
   const unlockText = unlockedLevelTitle?.includes('desbloqueado')
     ? unlockedLevelTitle
     : unlockedLevelTitle
@@ -426,7 +428,17 @@ export function ResultModal({
 
   return (
     <>
-      <Modal animationType="none" transparent visible={status !== 'playing'}>
+      <Modal
+        accessibilityLabel={isWon ? 'Fase concluída' : 'Fim da partida'}
+        onRequestClose={onBackToLevels}
+        animationType="none"
+        transparent
+        visible={
+          status !== 'playing' &&
+          !isCommonChestOpeningVisible &&
+          !isWorldChestOpeningVisible
+        }
+      >
         <SafeAreaView
           edges={['top', 'bottom', 'left', 'right']}
           style={styles.overlay}
@@ -635,7 +647,7 @@ export function ResultModal({
                             )}
                           </Text>
                           <Text style={styles.worldChestRewardText}>
-                            +1 Trinca Mágica
+                            +1 Trinca automática
                           </Text>
                           <Text style={styles.worldChestRewardText}>
                             +1 Misturar

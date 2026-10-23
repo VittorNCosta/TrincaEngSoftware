@@ -1,0 +1,18 @@
+Ícones e navegação — ODS12 — 13/10/2026
+
+Origem: exportação local do TrincaMania original em igrion-ODS-site/.cache/original-df882fb (commit df882fb).
+Artes copiadas sem redesenho:
+- poderes hint, shuffle e undo, com variantes @2x e @3x;
+- menu: mapa e perfil da navegação original; prêmios e poderes dos atalhos de perfil do original;
+- base ilustrada única do menu inferior.
+A seta usa o mesmo desenho, tamanho e acabamento dourado do botão de troca de mundo do original.
+Os destinos do menu, nomes dos poderes e conteúdo de reciclagem permanecem os do ODS12.
+
+Validação local:
+- TypeScript, ESLint dos quatro componentes e Prettier: passaram.
+- Jest: 18 suítes, 67 testes de interface passaram.
+- Navegação: quatro abas, três imagens de poderes e troca mundo 2 → 3 → 2 passaram em desktop e em viewport iPhone 13/Chromium.
+- Capturas: D:/Codex/temp/ods-icons-desktop-map.png, ods-icons-mobile-map.png, ods-icons-desktop-powers.png, ods-icons-mobile-powers.png.
+- Exportação Expo Web: index-14a8c7808e3e4f2b11180d0608df4f46.js.
+- Astro check/build locais passaram. Simulador servido em http://127.0.0.1:4322/jogar/.
+Não foi gerado APK nesta rodada. A sincronização Git aguarda o fim da fila de ajustes, conforme pedido do usuário.

@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import { ImageBackground, StyleSheet } from 'react-native';
-import { Path } from 'react-native-svg';
+import { Path } from '../svgPrimitives';
 
 import { MapLevelNode } from '../MapLevelNode';
 import { LEVELS } from '../../data/levels';

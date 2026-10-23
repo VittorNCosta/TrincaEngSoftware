@@ -145,3 +145,55 @@ test('falha de persistência não confirma compra nem ativação de bônus', asy
   await assert.rejects(boost.activateBonusTraySlot(), /storage indisponível/);
   assert.equal(store.has(key), false);
 });
+
+test('falha transitória de escrita não apaga boosts válidos', async (t) => {
+  const original = JSON.stringify({
+    coinSlotExpiresAt: now + 86400000,
+    adSlotExpiresAt: now + 1800000,
+  });
+  store.set(key, original);
+  const failure = new Error('falha transitória');
+  let writes = 0;
+  t.mock.method(
+    require.cache[storageId].exports.default,
+    'setItem',
+    async (name, value) => {
+      writes++;
+      if (writes === 1) throw failure;
+      store.set(name, value);
+    },
+  );
+  await assert.rejects(boost.getTrayBoostState(), (error) => error === failure);
+  assert.equal(writes, 1);
+  assert.equal(store.get(key), original);
+  assert.deepEqual(await boost.getTrayBoostState(), JSON.parse(original));
+  assert.equal(writes, 2);
+});
+test('falha de leitura preserva boosts e não escreve', async (t) => {
+  const original = JSON.stringify({
+    coinSlotExpiresAt: now + 86400000,
+    adSlotExpiresAt: now + 1800000,
+  });
+  store.set(key, original);
+  const backend = require.cache[storageId].exports.default;
+  const write = t.mock.method(backend, 'setItem', async () => {});
+  t.mock.method(backend, 'getItem', async () => {
+    throw new Error('leitura indisponível');
+  });
+  await assert.rejects(boost.getTrayBoostState(), /leitura indisponível/);
+  assert.equal(write.mock.callCount(), 0);
+  assert.equal(store.get(key), original);
+});
+test('reparo de JSON inválido falha uma vez sem nova tentativa', async (t) => {
+  store.set(key, '{inválido');
+  const write = t.mock.method(
+    require.cache[storageId].exports.default,
+    'setItem',
+    async () => {
+      throw new Error('I/O');
+    },
+  );
+  await assert.rejects(boost.getTrayBoostState(), /I\/O/);
+  assert.equal(write.mock.callCount(), 1);
+  assert.equal(store.get(key), '{inválido');
+});

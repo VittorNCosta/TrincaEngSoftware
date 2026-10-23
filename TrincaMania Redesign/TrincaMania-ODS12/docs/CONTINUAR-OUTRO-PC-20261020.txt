@@ -1,0 +1,38 @@
+RETOMADA ODS 12 — PEDESTAIS E TRILHA — 20/10/2026
+
+Aplicativo e site estão na branch fix/mapa-pedestais-trilha-20261020.
+Clone também https://github.com/VittorNCosta/igrion-ODS-site.git nessa branch,
+lado a lado com TrincaEngSoftware, para manter a resolução padrão dos scripts.
+
+O guia completo de dependências, Playwright MCP, testes e pendências está em:
+igrion-ODS-site/docs/CONTINUAR-OUTRO-PC-20261020.txt
+O painel, relatórios e capturas estão em:
+igrion-ODS-site/docs/auditoria/2026-10-20/index.html
+
+As branches preservam o estado auditado, sem integração nas bases remotas.
+Antes de um futuro merge, revisar os commits que avançaram em develop/main.
+As correções atuais incluem 103 pedestais nas trilhas das ilustrações,
+cenário e objetos na mesma rolagem e placas do TrincaMania original para
+passagem e retorno entre mundos. O HUD da campanha não tem mais as setas
+flutuantes; o botão Capítulos não cobre a placa. O site leva a exportação
+web correspondente, os assets das placas e as regressões de navegação.
+
+Galeria atual: igrion-ODS-site/docs/auditoria/2026-10-20/pedestais/index.html
+Relatório atual: mesma pasta, VALIDACAO.txt. São 44 capturas finais, além
+de antes/depois e logs de validação. O painel anterior permanece no caminho
+registrado acima.
+
+Verificações locais: 279 testes de domínio, 80 de interface, 2 simulações
+(103 fases/1000 capítulos), 24 E2E completos do site e 10 regressões finais
+de layout/navegação/acessibilidade; typecheck, lint e formatação conferidos.
+
+Autorização de envio nesta sessão: o usuário pediu explicitamente subir
+tudo no remoto para continuar de outro PC. Usar commits com [skip ci],
+sem PR, merge, release ou execução remota de testes.
+O APK permanece anterior; aprovação visual Android e arte do bônus pendentes.
+Os textos truncados do HUD da partida em área estreita precisam de revisão;
+a captura jogo-mobile.png no diretório playwright-mcp do painel registra isso.
+
+Ler as instruções compartilhadas antes de editar. GitHub Actions continua
+bloqueado; validação exclusivamente local. Nenhum PR/merge/release ou novo
+APK faz parte do envio para continuar em outro computador.

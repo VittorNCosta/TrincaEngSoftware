@@ -1,4 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { copyChapterRewardLedger } from './chapterRewardJournal';
+import AsyncStorage from './keyValueStorage';
 import {
   checkChapterIds,
   diagnosePersistenceWrite,
@@ -76,10 +77,14 @@ export const normalizeChapterProgress = (
     typeof storedStars !== 'object' ||
     Array.isArray(storedStars)
   ) {
-    return createInitialChapterProgress();
+    return {
+      ...createInitialChapterProgress(),
+      ...copyChapterRewardLedger(progress),
+    };
   }
 
   return {
+    ...copyChapterRewardLedger(progress),
     mapStars: Object.entries(storedStars).reduce<Record<string, number>>(
       (knownStars, [mapId, value]) => {
         if (
@@ -163,6 +168,7 @@ export const applyChapterMapCompletion = (
   return {
     previousStars,
     progress: normalizeChapterProgress({
+      ...currentProgress,
       mapStars: { ...currentProgress.mapStars, [mapId]: savedStars },
     }),
     savedStars,
@@ -194,7 +200,7 @@ export const unlockAllChapterMapsForDevMode = (
     mapStars[mapId] = Math.max(mapStars[mapId] ?? 0, 1);
   });
 
-  return normalizeChapterProgress({ mapStars });
+  return normalizeChapterProgress({ ...currentProgress, mapStars });
 };
 
 const diagnoseChapterStorageIds = (raw: unknown) => {
@@ -212,13 +218,14 @@ export const loadChapterProgress = async (): Promise<ChapterProgressState> => {
     return createInitialChapterProgress();
   }
 
+  let parsed: unknown;
   try {
-    const parsed: unknown = JSON.parse(rawProgress);
-    diagnoseChapterStorageIds(parsed);
-    return normalizeChapterProgress(parsed as Partial<ChapterProgressState>);
+    parsed = JSON.parse(rawProgress);
   } catch {
     return createInitialChapterProgress();
   }
+  diagnoseChapterStorageIds(parsed);
+  return normalizeChapterProgress(parsed as Partial<ChapterProgressState>);
 };
 
 export const saveChapterProgress = async (

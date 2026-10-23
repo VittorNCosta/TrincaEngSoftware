@@ -1,4 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { copyChapterRewardLedger } from './chapterRewardJournal';
+import AsyncStorage from './keyValueStorage';
 
 import { LEVEL_BY_ID, LEVELS } from '../data/levels';
 import {
@@ -296,6 +297,26 @@ export const normalizeProgress = (
   }
 
   return {
+    ...copyChapterRewardLedger(progress),
+    ...(Array.isArray(progress.rewardOperationIds) &&
+    progress.rewardOperationIds.length > 0
+      ? {
+          rewardOperationIds: [
+            ...new Set(
+              progress.rewardOperationIds.filter(
+                (id): id is string =>
+                  typeof id === 'string' && id.length > 0 && id.length <= 128,
+              ),
+            ),
+            // Chapter receipts must outlive a pending journal even if other
+            // reward sources generate more than 512 operations before recovery.
+          ].filter(
+            (id, index, ids) =>
+              /^chapter:ch\d{2}-\d{3}:[0-3]:[1-3]$/.test(id) ||
+              index >= ids.length - 512,
+          ),
+        }
+      : {}),
     bonusWorldAchievementShown: progress.bonusWorldAchievementShown === true,
     chestProgressLevelIds: LEVEL_IDS.filter((levelId) =>
       chestProgressSet.has(levelId),
@@ -325,6 +346,28 @@ export const normalizeProgress = (
         unlockedSet.has(levelId) && canUnlockLevel(levelId, levelStars),
     ),
   };
+};
+
+/** Ledger and reward share the same progress write, so a retried claim is safe. */
+export const grantRewardForOperation = (
+  progress: ProgressState,
+  operationId: string,
+  reward: { coins?: number; powerType?: PowerUpType },
+): ProgressState => {
+  const current = normalizeProgress(progress);
+  if (!operationId || current.rewardOperationIds?.includes(operationId))
+    return current;
+  return normalizeProgress({
+    ...current,
+    rewardOperationIds: [...(current.rewardOperationIds ?? []), operationId],
+    coins: current.coins + Math.max(0, Math.floor(reward.coins ?? 0)),
+    itemCounts: reward.powerType
+      ? {
+          ...current.itemCounts,
+          [reward.powerType]: current.itemCounts[reward.powerType] + 1,
+        }
+      : current.itemCounts,
+  });
 };
 
 /**
@@ -766,11 +809,19 @@ export const loadProgress = async (): Promise<ProgressState> => {
     return createInitialProgress();
   }
 
+  let parsedProgress: unknown;
   try {
-    const parsedProgress: unknown = JSON.parse(rawProgress);
+    parsedProgress = JSON.parse(rawProgress);
+  } catch {
+    return createInitialProgress();
+  }
+  const rewardMetadata = copyChapterRewardLedger(parsedProgress);
+  try {
     diagnoseCampaignStorageIds(parsedProgress);
     return normalizeProgress(parsedProgress as Partial<ProgressState>);
-  } catch {
+  } catch (error) {
+    // Never replace a journal-bearing save with a fresh wallet.
+    if (rewardMetadata.chapterRewards) throw error;
     return createInitialProgress();
   }
 };

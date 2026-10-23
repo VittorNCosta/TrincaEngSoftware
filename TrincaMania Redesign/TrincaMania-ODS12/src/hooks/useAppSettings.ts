@@ -1,68 +1,122 @@
-import { useState } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 import {
   type AppSettings,
   createDefaultSettings,
   getSettings,
+  saveSettings,
   setHapticsEnabledPreference,
+  setMusicEnabledPreference,
 } from '../storage/settingsStorage';
 import { setSoundEnabled } from '../utils/sounds';
+import { setMusicEnabled } from '../utils/music';
 
 export function useAppSettings() {
-  const [settings, setSettings] = useState<AppSettings>(
+  const [settings, setSettingsState] = useState<AppSettings>(
     createDefaultSettings(),
   );
+  const settingsRef = useRef(settings);
+  const settingsVersionRef = useRef(0);
+  const setSettings = useCallback<Dispatch<SetStateAction<AppSettings>>>(
+    (update) => {
+      const nextSettings =
+        typeof update === 'function' ? update(settingsRef.current) : update;
+      settingsRef.current = nextSettings;
+      settingsVersionRef.current += 1;
+      setSettingsState(nextSettings);
+    },
+    [],
+  );
+  const recoverSettings = (version: number) => () => {
+    getSettings()
+      .then((storedSettings) => {
+        if (settingsVersionRef.current === version) setSettings(storedSettings);
+      })
+      .catch(() => undefined);
+  };
+
   const handleToggleSound = () => {
-    const nextSoundEnabled = !settings.soundEnabled;
+    const nextSoundEnabled = !settingsRef.current.soundEnabled;
 
     setSettings((currentSettings) => ({
       ...currentSettings,
       soundEnabled: nextSoundEnabled,
     }));
 
-    setSoundEnabled(nextSoundEnabled).catch(() => {
-      getSettings()
-        .then(setSettings)
-        .catch(() => undefined);
-    });
+    setSoundEnabled(nextSoundEnabled).catch(
+      recoverSettings(settingsVersionRef.current),
+    );
+  };
+
+  const handleToggleMusic = () => {
+    const musicEnabled = !settingsRef.current.musicEnabled;
+    setSettings((current) => ({ ...current, musicEnabled }));
+    setMusicEnabled(musicEnabled);
+    setMusicEnabledPreference(musicEnabled).catch(
+      recoverSettings(settingsVersionRef.current),
+    );
   };
 
   const handleToggleHaptics = () => {
-    const nextHapticsEnabled = !settings.hapticsEnabled;
+    const nextHapticsEnabled = !settingsRef.current.hapticsEnabled;
 
     setSettings((currentSettings) => ({
       ...currentSettings,
       hapticsEnabled: nextHapticsEnabled,
     }));
 
-    setHapticsEnabledPreference(nextHapticsEnabled).catch(() => {
-      getSettings()
-        .then(setSettings)
-        .catch(() => undefined);
-    });
+    setHapticsEnabledPreference(nextHapticsEnabled).catch(
+      recoverSettings(settingsVersionRef.current),
+    );
   };
 
+  const settingsBeforeSilentRef = useRef<AppSettings | null>(null);
+  const handleToggleSilentMode = () => {
+    const current = settingsRef.current;
+    const silent =
+      !current.soundEnabled && !current.musicEnabled && !current.hapticsEnabled;
+    if (!silent) settingsBeforeSilentRef.current = current;
+    const next = silent
+      ? (settingsBeforeSilentRef.current ?? createDefaultSettings())
+      : {
+          soundEnabled: false,
+          musicEnabled: false,
+          hapticsEnabled: false,
+        };
+    setSettings(next);
+    setMusicEnabled(next.musicEnabled);
+    setSoundEnabled(next.soundEnabled)
+      .then(() => saveSettings(next))
+      .catch(recoverSettings(settingsVersionRef.current));
+  };
   const handleEnableSilentMode = () => {
     setSettings((currentSettings) => ({
       ...currentSettings,
       hapticsEnabled: false,
       soundEnabled: false,
+      musicEnabled: false,
     }));
 
+    setMusicEnabled(false);
     Promise.all([
+      setMusicEnabledPreference(false),
       setSoundEnabled(false),
       setHapticsEnabledPreference(false),
-    ]).catch(() => {
-      getSettings()
-        .then(setSettings)
-        .catch(() => undefined);
-    });
+    ]).catch(recoverSettings(settingsVersionRef.current));
   };
 
   return {
     settings,
     setSettings,
     handleToggleSound,
+    handleToggleMusic,
     handleToggleHaptics,
     handleEnableSilentMode,
+    handleToggleSilentMode,
   };
 }

@@ -6,7 +6,7 @@
  * `src/` + `node_modules`, que decide o tempo de parse/carga no aparelho a
  * cada abertura do app.
  *
- * `npx expo export --platform android` gera exatamente o artefato que o
+ * O CLI local do Expo com `export --platform android` gera exatamente o artefato que o
  * build de produção embarca — mesmo minify, mesmo bytecode Hermes, sem
  * sourcemap (a flag de sourcemap é opt-in, `-s`) — não uma aproximação.
  *
@@ -51,14 +51,22 @@ const medir = () => {
   const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'orcamento-bundle-'));
 
   try {
-    const { status, stdout, stderr } = spawnSync(
-      'npx',
-      ['expo', 'export', '--platform', 'android', '--output-dir', outputDir],
+    const { status, stdout, stderr, error } = spawnSync(
+      process.execPath,
+      [
+        path.join(projectRoot, 'node_modules', 'expo', 'bin', 'cli'),
+        'export',
+        '--platform',
+        'android',
+        '--output-dir',
+        outputDir,
+      ],
       { cwd: projectRoot, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
     );
 
     process.stdout.write(stdout ?? '');
     process.stderr.write(stderr ?? '');
+    if (error) process.stderr.write(`${error.message}\n`);
 
     if (status !== 0) {
       throw new ErroDeMedicao(
@@ -137,7 +145,7 @@ const main = () => {
   const atualizar = process.argv.includes('--atualizar');
   const permitirAlta = process.argv.includes('--permitir-alta');
 
-  console.log('medindo o bundle (npx expo export --platform android)...');
+  console.log('medindo o bundle (expo export --platform android)...');
 
   const atual = medir();
   const teto = lerOrcamento();

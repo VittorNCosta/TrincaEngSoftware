@@ -17,19 +17,19 @@ type PowerTone = {
 const POWER_TONES: Record<PowerUpType, PowerTone> = {
   hint: {
     border: '#EAF8FF',
-    face: '#2E9BEE',
+    face: '#1768B5',
     foot: '#0C4C8E',
     label: '#EAF8FF',
   },
   shuffle: {
     border: '#FFE6FB',
-    face: '#C93BBE',
+    face: '#8C2387',
     foot: '#6B1866',
     label: '#FFE6FB',
   },
   undo: {
     border: '#E9FFE2',
-    face: '#45BF28',
+    face: '#087A54',
     foot: '#1B5F0C',
     label: '#E9FFE2',
   },
@@ -107,7 +107,6 @@ export function PowerDrawer({
           pressed && !isDisabled ? styles.pressed : null,
         ]}
       >
-        <View pointerEvents="none" style={styles.powerShine} />
         <View pointerEvents="none" style={styles.iconWrap}>
           <PowerIcon name={power} size={29} />
         </View>
@@ -202,44 +201,35 @@ const styles = StyleSheet.create({
   },
   powerButton: {
     alignItems: 'center',
-    borderBottomWidth: 4,
-    borderRadius: 16,
-    borderWidth: 3,
+    borderBottomWidth: 3,
+    borderRadius: 14,
+    borderWidth: 2,
     height: 52,
     justifyContent: 'center',
     position: 'relative',
-    width: 52,
-    ...shadows.button,
+    width: 64,
+    ...shadows.menuCard,
   },
   powerButtonDisabled: {
     opacity: 0.68,
   },
   powerButtonPurchasable: {
-    borderColor: '#FFE178',
+    borderColor: '#FFF3CE',
   },
   powerButtonUnavailable: {
     opacity: 0.78,
   },
   powerLabel: {
     bottom: 2,
-    fontSize: 7.5,
+    fontSize: 9,
     fontWeight: '900',
     left: 1,
     letterSpacing: 0.25,
-    lineHeight: 9,
+    lineHeight: 11,
     position: 'absolute',
     right: 1,
     textAlign: 'center',
     textTransform: 'uppercase',
-  },
-  powerShine: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: radii.pill,
-    height: 9,
-    left: 6,
-    position: 'absolute',
-    right: 18,
-    top: 4,
   },
   purchasePriceBadge: {
     alignItems: 'center',
@@ -256,7 +246,7 @@ const styles = StyleSheet.create({
   },
   purchasePriceText: {
     color: '#FFF4B8',
-    fontSize: 8,
+    fontSize: 9,
     fontWeight: '900',
     lineHeight: 10,
   },

@@ -1,8 +1,8 @@
 import { Modal, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { GameIcon } from './GameIcon';
-import { PrimaryButton } from './PrimaryButton';
+import { GameIcon } from '../original/components/GameIcon';
+import { PrimaryButton } from '../original/components/PrimaryButton';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 import { formatLifeTimer } from '../storage/livesStorage';
 
@@ -18,7 +18,13 @@ export function NoLivesModal({
   onClose,
 }: NoLivesModalProps) {
   return (
-    <Modal animationType="fade" transparent visible={visible}>
+    <Modal
+      onRequestClose={onClose}
+      accessibilityLabel="Sem vidas"
+      animationType="fade"
+      transparent
+      visible={visible}
+    >
       <SafeAreaView
         edges={['top', 'bottom', 'left', 'right']}
         style={styles.overlay}

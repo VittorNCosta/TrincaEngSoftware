@@ -1,0 +1,405 @@
+{
+  "total": {
+    "lines": { "total": 3273, "covered": 925, "skipped": 0, "pct": 28.26 },
+    "statements": { "total": 3407, "covered": 959, "skipped": 0, "pct": 28.14 },
+    "functions": { "total": 775, "covered": 257, "skipped": 0, "pct": 33.16 },
+    "branches": { "total": 3168, "covered": 1167, "skipped": 0, "pct": 36.83 },
+    "branchesTrue": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/App.tsx": {
+    "lines": { "total": 560, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 122, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 599, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 315, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/BoardTile.tsx": {
+    "lines": { "total": 69, "covered": 56, "skipped": 0, "pct": 81.15 },
+    "functions": { "total": 15, "covered": 9, "skipped": 0, "pct": 60 },
+    "statements": { "total": 70, "covered": 56, "skipped": 0, "pct": 80 },
+    "branches": { "total": 69, "covered": 48, "skipped": 0, "pct": 69.56 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/BonusWorldAchievementModal.tsx": {
+    "lines": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/BonusWorldChestMarker.tsx": {
+    "lines": { "total": 29, "covered": 4, "skipped": 0, "pct": 13.79 },
+    "functions": { "total": 6, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 30, "covered": 4, "skipped": 0, "pct": 13.33 },
+    "branches": { "total": 45, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/BottomNavBar.tsx": {
+    "lines": { "total": 12, "covered": 5, "skipped": 0, "pct": 41.66 },
+    "functions": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 13, "covered": 5, "skipped": 0, "pct": 38.46 },
+    "branches": { "total": 18, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/CampaignMapLandmarkMarker.tsx": {
+    "lines": { "total": 9, "covered": 6, "skipped": 0, "pct": 66.66 },
+    "functions": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "statements": { "total": 9, "covered": 6, "skipped": 0, "pct": 66.66 },
+    "branches": { "total": 13, "covered": 10, "skipped": 0, "pct": 76.92 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/CampaignResizeNoticeModal.tsx": {
+    "lines": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 1, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ChestArt.tsx": {
+    "lines": { "total": 21, "covered": 4, "skipped": 0, "pct": 19.04 },
+    "functions": { "total": 6, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 21, "covered": 4, "skipped": 0, "pct": 19.04 },
+    "branches": { "total": 31, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ChestOpenReveal.tsx": {
+    "lines": { "total": 51, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 10, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 51, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ChestOpeningModal.tsx": {
+    "lines": { "total": 88, "covered": 57, "skipped": 0, "pct": 64.77 },
+    "functions": { "total": 15, "covered": 9, "skipped": 0, "pct": 60 },
+    "statements": { "total": 89, "covered": 58, "skipped": 0, "pct": 65.16 },
+    "branches": { "total": 116, "covered": 83, "skipped": 0, "pct": 71.55 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ChestProgressCard.tsx": {
+    "lines": { "total": 57, "covered": 2, "skipped": 0, "pct": 3.5 },
+    "functions": { "total": 7, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 57, "covered": 2, "skipped": 0, "pct": 3.5 },
+    "branches": { "total": 47, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/CoinPile.tsx": {
+    "lines": { "total": 27, "covered": 5, "skipped": 0, "pct": 18.51 },
+    "functions": { "total": 12, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 33, "covered": 5, "skipped": 0, "pct": 15.15 },
+    "branches": { "total": 7, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ConfettiRain.tsx": {
+    "lines": { "total": 31, "covered": 24, "skipped": 0, "pct": 77.41 },
+    "functions": { "total": 13, "covered": 11, "skipped": 0, "pct": 84.61 },
+    "statements": { "total": 37, "covered": 29, "skipped": 0, "pct": 78.37 },
+    "branches": { "total": 14, "covered": 9, "skipped": 0, "pct": 64.28 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/DiagnosticReport.tsx": {
+    "lines": { "total": 20, "covered": 15, "skipped": 0, "pct": 75 },
+    "functions": { "total": 9, "covered": 8, "skipped": 0, "pct": 88.88 },
+    "statements": { "total": 20, "covered": 15, "skipped": 0, "pct": 75 },
+    "branches": { "total": 6, "covered": 3, "skipped": 0, "pct": 50 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ErrorBoundary.tsx": {
+    "lines": { "total": 10, "covered": 10, "skipped": 0, "pct": 100 },
+    "functions": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "statements": { "total": 11, "covered": 11, "skipped": 0, "pct": 100 },
+    "branches": { "total": 8, "covered": 6, "skipped": 0, "pct": 75 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/FlyingTileOverlay.tsx": {
+    "lines": { "total": 33, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 34, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 10, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/GameBoard.tsx": {
+    "lines": { "total": 14, "covered": 14, "skipped": 0, "pct": 100 },
+    "functions": { "total": 7, "covered": 7, "skipped": 0, "pct": 100 },
+    "statements": { "total": 15, "covered": 15, "skipped": 0, "pct": 100 },
+    "branches": { "total": 13, "covered": 12, "skipped": 0, "pct": 92.3 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/GameIcon.tsx": {
+    "lines": { "total": 52, "covered": 41, "skipped": 0, "pct": 78.84 },
+    "functions": { "total": 7, "covered": 7, "skipped": 0, "pct": 100 },
+    "statements": { "total": 52, "covered": 41, "skipped": 0, "pct": 78.84 },
+    "branches": { "total": 146, "covered": 107, "skipped": 0, "pct": 73.28 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/LevelCard.tsx": {
+    "lines": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 3, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 40, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/LightRays.tsx": {
+    "lines": { "total": 19, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 20, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 6, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/LivesBadge.tsx": {
+    "lines": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 1, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 24, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/MapHud.tsx": {
+    "lines": { "total": 24, "covered": 11, "skipped": 0, "pct": 45.83 },
+    "functions": { "total": 15, "covered": 8, "skipped": 0, "pct": 53.33 },
+    "statements": { "total": 24, "covered": 11, "skipped": 0, "pct": 45.83 },
+    "branches": { "total": 22, "covered": 12, "skipped": 0, "pct": 54.54 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/MapLevelNode.tsx": {
+    "lines": { "total": 32, "covered": 32, "skipped": 0, "pct": 100 },
+    "functions": { "total": 7, "covered": 7, "skipped": 0, "pct": 100 },
+    "statements": { "total": 33, "covered": 33, "skipped": 0, "pct": 100 },
+    "branches": { "total": 64, "covered": 61, "skipped": 0, "pct": 95.31 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/MapPath.tsx": {
+    "lines": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/MapStoneTrail.tsx": {
+    "lines": { "total": 20, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 22, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/MenuPrimitives.tsx": {
+    "lines": { "total": 17, "covered": 5, "skipped": 0, "pct": 29.41 },
+    "functions": { "total": 9, "covered": 3, "skipped": 0, "pct": 33.33 },
+    "statements": { "total": 17, "covered": 5, "skipped": 0, "pct": 29.41 },
+    "branches": { "total": 55, "covered": 2, "skipped": 0, "pct": 3.63 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/MysteryTutorialModal.tsx": {
+    "lines": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 1, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/NoLivesModal.tsx": {
+    "lines": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 1, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/PhasePlate.tsx": {
+    "lines": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 1, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/PowerDrawer.tsx": {
+    "lines": { "total": 16, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 16, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 34, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/PowerIcon.tsx": {
+    "lines": { "total": 7, "covered": 5, "skipped": 0, "pct": 71.42 },
+    "functions": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "statements": { "total": 7, "covered": 5, "skipped": 0, "pct": 71.42 },
+    "branches": { "total": 10, "covered": 3, "skipped": 0, "pct": 30 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/PrimaryButton.tsx": {
+    "lines": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "functions": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "statements": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "branches": { "total": 21, "covered": 19, "skipped": 0, "pct": 90.47 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/RecyclingMarkerArt.tsx": {
+    "lines": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "functions": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "statements": { "total": 3, "covered": 3, "skipped": 0, "pct": 100 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ResourcePill.tsx": {
+    "lines": { "total": 10, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 5, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 10, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 14, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/RestStopMapMarker.tsx": {
+    "lines": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "functions": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "statements": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "branches": { "total": 33, "covered": 24, "skipped": 0, "pct": 72.72 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ResultModal.tsx": {
+    "lines": { "total": 119, "covered": 73, "skipped": 0, "pct": 61.34 },
+    "functions": { "total": 24, "covered": 11, "skipped": 0, "pct": 45.83 },
+    "statements": { "total": 121, "covered": 74, "skipped": 0, "pct": 61.15 },
+    "branches": { "total": 191, "covered": 70, "skipped": 0, "pct": 36.64 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/RewardAssetIcon.tsx": {
+    "lines": { "total": 3, "covered": 2, "skipped": 0, "pct": 66.66 },
+    "functions": { "total": 1, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 3, "covered": 2, "skipped": 0, "pct": 66.66 },
+    "branches": { "total": 3, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/RewardBurst.tsx": {
+    "lines": { "total": 21, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 22, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 6, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/RewardCollectOverlay.tsx": {
+    "lines": { "total": 76, "covered": 7, "skipped": 0, "pct": 9.21 },
+    "functions": { "total": 13, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 78, "covered": 7, "skipped": 0, "pct": 8.97 },
+    "branches": { "total": 15, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/RoutineModal.tsx": {
+    "lines": { "total": 20, "covered": 19, "skipped": 0, "pct": 95 },
+    "functions": { "total": 10, "covered": 9, "skipped": 0, "pct": 90 },
+    "statements": { "total": 20, "covered": 19, "skipped": 0, "pct": 95 },
+    "branches": { "total": 60, "covered": 47, "skipped": 0, "pct": 78.33 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ScreenShell.tsx": {
+    "lines": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "functions": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "statements": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "branches": { "total": 3, "covered": 2, "skipped": 0, "pct": 66.66 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/SettingsModal.tsx": {
+    "lines": { "total": 22, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 15, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 23, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 76, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/ShopMapMarker.tsx": {
+    "lines": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "functions": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "statements": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "branches": { "total": 31, "covered": 22, "skipped": 0, "pct": 70.96 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/TabScene.tsx": {
+    "lines": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 4, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/TileIcon.tsx": {
+    "lines": { "total": 14, "covered": 14, "skipped": 0, "pct": 100 },
+    "functions": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "statements": { "total": 14, "covered": 14, "skipped": 0, "pct": 100 },
+    "branches": { "total": 13, "covered": 10, "skipped": 0, "pct": 76.92 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/Tray.tsx": {
+    "lines": { "total": 45, "covered": 36, "skipped": 0, "pct": 80 },
+    "functions": { "total": 11, "covered": 7, "skipped": 0, "pct": 63.63 },
+    "statements": { "total": 46, "covered": 36, "skipped": 0, "pct": 78.26 },
+    "branches": { "total": 101, "covered": 88, "skipped": 0, "pct": 87.12 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/TripleConsumeEffect.tsx": {
+    "lines": { "total": 33, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 11, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 35, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 12, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/TutorialCoachmark.tsx": {
+    "lines": { "total": 5, "covered": 4, "skipped": 0, "pct": 80 },
+    "functions": { "total": 2, "covered": 1, "skipped": 0, "pct": 50 },
+    "statements": { "total": 5, "covered": 4, "skipped": 0, "pct": 80 },
+    "branches": { "total": 4, "covered": 4, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/TutorialDemoStage.tsx": {
+    "lines": { "total": 35, "covered": 35, "skipped": 0, "pct": 100 },
+    "functions": { "total": 18, "covered": 18, "skipped": 0, "pct": 100 },
+    "statements": { "total": 40, "covered": 40, "skipped": 0, "pct": 100 },
+    "branches": { "total": 74, "covered": 72, "skipped": 0, "pct": 97.29 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/TutorialModal.tsx": {
+    "lines": { "total": 55, "covered": 51, "skipped": 0, "pct": 92.72 },
+    "functions": { "total": 16, "covered": 15, "skipped": 0, "pct": 93.75 },
+    "statements": { "total": 58, "covered": 54, "skipped": 0, "pct": 93.1 },
+    "branches": { "total": 37, "covered": 33, "skipped": 0, "pct": 89.18 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/TutorialVisuals.tsx": {
+    "lines": { "total": 16, "covered": 15, "skipped": 0, "pct": 93.75 },
+    "functions": { "total": 8, "covered": 7, "skipped": 0, "pct": 87.5 },
+    "statements": { "total": 17, "covered": 16, "skipped": 0, "pct": 94.11 },
+    "branches": { "total": 9, "covered": 9, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/WorldChestModal.tsx": {
+    "lines": { "total": 34, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 6, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 34, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 57, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/WorldNavigationIcon.tsx": {
+    "lines": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "functions": { "total": 1, "covered": 1, "skipped": 0, "pct": 100 },
+    "statements": { "total": 5, "covered": 5, "skipped": 0, "pct": 100 },
+    "branches": { "total": 9, "covered": 8, "skipped": 0, "pct": 88.88 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/components/WorldPortalMapMarker.tsx": {
+    "lines": { "total": 4, "covered": 4, "skipped": 0, "pct": 100 },
+    "functions": { "total": 2, "covered": 2, "skipped": 0, "pct": 100 },
+    "statements": { "total": 4, "covered": 4, "skipped": 0, "pct": 100 },
+    "branches": { "total": 28, "covered": 27, "skipped": 0, "pct": 96.42 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/navigation/MainTabs.tsx": {
+    "lines": { "total": 33, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 9, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 34, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 15, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/ChaptersScreen.tsx": {
+    "lines": { "total": 67, "covered": 62, "skipped": 0, "pct": 92.53 },
+    "functions": { "total": 34, "covered": 27, "skipped": 0, "pct": 79.41 },
+    "statements": { "total": 75, "covered": 68, "skipped": 0, "pct": 90.66 },
+    "branches": { "total": 107, "covered": 91, "skipped": 0, "pct": 85.04 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/GameScreen.tsx": {
+    "lines": { "total": 913, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 137, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 942, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 567, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/LevelSelectScreen.tsx": {
+    "lines": { "total": 224, "covered": 163, "skipped": 0, "pct": 72.76 },
+    "functions": { "total": 60, "covered": 41, "skipped": 0, "pct": 68.33 },
+    "statements": { "total": 230, "covered": 166, "skipped": 0, "pct": 72.17 },
+    "branches": { "total": 171, "covered": 119, "skipped": 0, "pct": 69.59 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/PowersScreen.tsx": {
+    "lines": { "total": 7, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 2, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 7, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 0, "covered": 0, "skipped": 0, "pct": 100 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/ProfileScreen.tsx": {
+    "lines": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 5, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/RewardsScreen.tsx": {
+    "lines": { "total": 52, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 17, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 54, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 102, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/ShopScreen.tsx": {
+    "lines": { "total": 37, "covered": 0, "skipped": 0, "pct": 0 },
+    "functions": { "total": 8, "covered": 0, "skipped": 0, "pct": 0 },
+    "statements": { "total": 38, "covered": 0, "skipped": 0, "pct": 0 },
+    "branches": { "total": 32, "covered": 0, "skipped": 0, "pct": 0 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/SplashIntroScreen.tsx": {
+    "lines": { "total": 61, "covered": 59, "skipped": 0, "pct": 96.72 },
+    "functions": { "total": 16, "covered": 16, "skipped": 0, "pct": 100 },
+    "statements": { "total": 68, "covered": 65, "skipped": 0, "pct": 95.58 },
+    "branches": { "total": 31, "covered": 27, "skipped": 0, "pct": 87.09 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/game/GameDialogs.tsx": {
+    "lines": { "total": 7, "covered": 5, "skipped": 0, "pct": 71.42 },
+    "functions": { "total": 5, "covered": 3, "skipped": 0, "pct": 60 },
+    "statements": { "total": 7, "covered": 5, "skipped": 0, "pct": 71.42 },
+    "branches": { "total": 20, "covered": 19, "skipped": 0, "pct": 95 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/levelSelect/CampaignMapLayers.tsx": {
+    "lines": { "total": 56, "covered": 48, "skipped": 0, "pct": 85.71 },
+    "functions": { "total": 10, "covered": 6, "skipped": 0, "pct": 60 },
+    "statements": { "total": 56, "covered": 48, "skipped": 0, "pct": 85.71 },
+    "branches": { "total": 106, "covered": 85, "skipped": 0, "pct": 80.18 }
+  },
+  "/home/vittor/personal-project/auditoria/2026-10-22/TrincaEngSoftware/TrincaMania Redesign/TrincaMania-ODS12/src/screens/levelSelect/MapSelectionPanel.tsx": {
+    "lines": { "total": 9, "covered": 6, "skipped": 0, "pct": 66.66 },
+    "functions": { "total": 8, "covered": 5, "skipped": 0, "pct": 62.5 },
+    "statements": { "total": 9, "covered": 6, "skipped": 0, "pct": 66.66 },
+    "branches": { "total": 80, "covered": 35, "skipped": 0, "pct": 43.75 }
+  }
+}

@@ -2,7 +2,7 @@ import { memo, useContext } from 'react';
 import { WorldArtContext } from './WorldArtContext';
 import { getResidueVisual } from '../data/residueVisualAssets';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle, Ellipse, G, Path, Polygon, Rect } from 'react-native-svg';
+import Svg, { Circle, Ellipse, G, Path, Polygon, Rect } from './svgPrimitives';
 
 import { CardRole } from '../domain/recycling/value-objects/CardRole';
 import { getMaterial } from '../domain/recycling/value-objects/MaterialType';

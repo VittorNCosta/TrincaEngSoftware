@@ -1,4 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from './keyValueStorage';
+import { createStorageQueue } from './storageQueue';
+
+const enqueue = createStorageQueue();
 
 export const TRAY_BOOST_STORAGE_KEY = '@trinca-mania/tray-boost-v1';
 /**
@@ -76,7 +79,7 @@ const saveTrayBoostState = async (state: TrayBoostState) => {
   await AsyncStorage.setItem(TRAY_BOOST_STORAGE_KEY, JSON.stringify(state));
 };
 
-export const getTrayBoostState = async () => {
+const getTrayBoostStateInternal = async () => {
   const now = Date.now();
   const rawState = await AsyncStorage.getItem(TRAY_BOOST_STORAGE_KEY);
 
@@ -86,15 +89,17 @@ export const getTrayBoostState = async () => {
     return initialState;
   }
 
+  let parsedState: unknown;
   try {
-    const nextState = normalizeTrayBoostState(JSON.parse(rawState), now);
-    await saveTrayBoostState(nextState);
-    return nextState;
+    parsedState = JSON.parse(rawState);
   } catch {
-    const initialState = createInitialTrayBoostState();
-    await saveTrayBoostState(initialState);
-    return initialState;
+    parsedState = null;
   }
+
+  const nextState = normalizeTrayBoostState(parsedState, now);
+  // I/O failure must propagate, never trigger a second write with empty boosts.
+  await saveTrayBoostState(nextState);
+  return nextState;
 };
 
 export const isCoinTraySlotActive = (state: TrayBoostState, now = Date.now()) =>
@@ -158,11 +163,11 @@ export const formatTrayBoostRemaining = (milliseconds: number) => {
   return `${minutes}m`;
 };
 
-export const purchaseCoinTraySlot = async (
+const purchaseCoinTraySlotInternal = async (
   currentCoins: number,
 ): Promise<TrayBoostPurchaseResult> => {
   const now = Date.now();
-  const state = await getTrayBoostState();
+  const state = await getTrayBoostStateInternal();
 
   if (isCoinTraySlotActive(state, now)) {
     return {
@@ -193,10 +198,10 @@ export const purchaseCoinTraySlot = async (
   };
 };
 
-export const activateBonusTraySlot =
+const activateBonusTraySlotInternal =
   async (): Promise<BonusTraySlotActivationResult> => {
     const now = Date.now();
-    const state = await getTrayBoostState();
+    const state = await getTrayBoostStateInternal();
 
     if (isAdTraySlotActive(state, now)) {
       return {
@@ -219,8 +224,8 @@ export const activateBonusTraySlot =
     };
   };
 
-export const unlockAdTraySlotForOneLevel = async () => {
-  const state = await getTrayBoostState();
+const unlockAdTraySlotForOneLevelInternal = async () => {
+  const state = await getTrayBoostStateInternal();
   const nextState: TrayBoostState = {
     ...state,
     adSlotExpiresAt: Number.MAX_SAFE_INTEGER,
@@ -230,8 +235,8 @@ export const unlockAdTraySlotForOneLevel = async () => {
   return nextState;
 };
 
-export const consumeAdTraySlotIfNeeded = async () => {
-  const state = await getTrayBoostState();
+const consumeAdTraySlotIfNeededInternal = async () => {
+  const state = await getTrayBoostStateInternal();
 
   if (!state.adSlotExpiresAt) {
     return state;
@@ -246,8 +251,20 @@ export const consumeAdTraySlotIfNeeded = async () => {
   return nextState;
 };
 
-export const resetTrayBoostState = async () => {
+const resetTrayBoostStateInternal = async () => {
   const nextState = createInitialTrayBoostState();
   await saveTrayBoostState(nextState);
   return nextState;
 };
+
+// Keep each read/modify/write indivisible; reset follows previously queued work.
+export const getTrayBoostState = () => enqueue(getTrayBoostStateInternal);
+export const purchaseCoinTraySlot = (currentCoins: number) =>
+  enqueue(() => purchaseCoinTraySlotInternal(currentCoins));
+export const activateBonusTraySlot = () =>
+  enqueue(activateBonusTraySlotInternal);
+export const unlockAdTraySlotForOneLevel = () =>
+  enqueue(unlockAdTraySlotForOneLevelInternal);
+export const consumeAdTraySlotIfNeeded = () =>
+  enqueue(consumeAdTraySlotIfNeededInternal);
+export const resetTrayBoostState = () => enqueue(resetTrayBoostStateInternal);

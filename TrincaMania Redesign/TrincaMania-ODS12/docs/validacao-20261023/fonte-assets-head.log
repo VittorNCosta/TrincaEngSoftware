@@ -1,0 +1,17 @@
+
+✖ validação de assets:
+
+  asset novo acima do limite: assets/ui/tutorials/tutorial_glow.png (1488 KB > 400 KB)
+  asset novo acima do limite: assets/ui/tutorials/tutorial_guide.png (1663 KB > 400 KB)
+  asset novo acima do limite: assets/ui/tutorials/tutorial_pointer.png (1178 KB > 400 KB)
+  asset novo acima do limite: assets/ui/visuais/level_pedestal.png (1584 KB > 400 KB)
+  asset órfão novo: assets/audio/03_voice/selected/voice_combo_perfect_01_Perfeito.mp3 (37 KB) — nada em src/ referencia
+  asset órfão novo: assets/igrion-logo.png (332 KB) — nada em src/ referencia
+  asset órfão novo: assets/ui/powers/hint@2x.png (36 KB) — nada em src/ referencia
+  asset órfão novo: assets/ui/powers/hint@3x.png (77 KB) — nada em src/ referencia
+  asset órfão novo: assets/ui/powers/shuffle@2x.png (32 KB) — nada em src/ referencia
+  asset órfão novo: assets/ui/powers/shuffle@3x.png (67 KB) — nada em src/ referencia
+  asset órfão novo: assets/ui/powers/undo@2x.png (34 KB) — nada em src/ referencia
+  asset órfão novo: assets/ui/powers/undo@3x.png (70 KB) — nada em src/ referencia
+  asset órfão novo: assets/ui/visuais/splash.png (277 KB) — nada em src/ referencia
+

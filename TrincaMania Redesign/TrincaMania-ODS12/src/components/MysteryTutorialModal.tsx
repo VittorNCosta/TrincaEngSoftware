@@ -1,7 +1,7 @@
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { PrimaryButton } from './PrimaryButton';
+import { PrimaryButton } from '../original/components/PrimaryButton';
 import { colors, fontSizes, radii, shadows, spacing } from '../styles/theme';
 
 type MysteryTutorialModalProps = {
@@ -15,7 +15,9 @@ export function MysteryTutorialModal({
 }: MysteryTutorialModalProps) {
   return (
     <Modal
+      accessibilityLabel="Pilha Misteriosa"
       animationType="fade"
+      onRequestClose={onClose}
       statusBarTranslucent
       transparent
       visible={visible}
@@ -24,7 +26,11 @@ export function MysteryTutorialModal({
         edges={['top', 'bottom', 'left', 'right']}
         style={styles.overlay}
       >
-        <View style={styles.card}>
+        <ScrollView
+          accessibilityViewIsModal
+          contentContainerStyle={styles.card}
+          style={styles.scroll}
+        >
           <View style={styles.tilePreview}>
             <View style={styles.tileFace}>
               <Text style={styles.questionMark}>?</Text>
@@ -32,7 +38,9 @@ export function MysteryTutorialModal({
             <View pointerEvents="none" style={styles.tileGlow} />
           </View>
 
-          <Text style={styles.title}>Pilha Misteriosa</Text>
+          <Text accessibilityRole="header" style={styles.title}>
+            Pilha Misteriosa
+          </Text>
           <Text style={styles.description}>
             {
               'Peças com ? escondem o símbolo real. Elas revelam quando ficam livres.'
@@ -40,7 +48,7 @@ export function MysteryTutorialModal({
           </Text>
 
           <PrimaryButton title="Entendi" onPress={onClose} />
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </Modal>
   );
@@ -56,10 +64,8 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 3,
     gap: spacing.sm,
-    maxWidth: 340,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
-    width: '88%',
     ...shadows.card,
   },
   description: {
@@ -75,6 +81,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: spacing.md,
+  },
+  scroll: {
+    flexGrow: 0,
+    flexShrink: 1,
+    maxWidth: 340,
+    width: '88%',
   },
   questionMark: {
     color: '#F8F2FF',

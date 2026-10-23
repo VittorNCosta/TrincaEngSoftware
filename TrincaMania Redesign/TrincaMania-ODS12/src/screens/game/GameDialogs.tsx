@@ -1,9 +1,9 @@
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 import { Modal, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { GameIcon } from '../../components/GameIcon';
-import { PowerIcon } from '../../components/PowerIcon';
-import { PrimaryButton } from '../../components/PrimaryButton';
+import { GameIcon } from '../../original/components/GameIcon';
+import { PowerIcon } from '../../original/components/PowerIcon';
+import { PrimaryButton } from '../../original/components/PrimaryButton';
 import { POWER_UP_UI } from '../../data/powerUps';
 import type { PowerUpType } from '../../types/game';
 import {
@@ -60,10 +60,11 @@ export function GameDialogs({
   return (
     <>
       <Modal
+        accessibilityLabel="Tutorial da partida"
         animationType="fade"
         transparent
         visible={practicalTutorialPopupStep !== undefined}
-        onRequestClose={() => undefined}
+        onRequestClose={advancePracticalTutorialPopup}
       >
         <SafeAreaView
           edges={['top', 'bottom', 'left', 'right']}
@@ -94,6 +95,7 @@ export function GameDialogs({
         </SafeAreaView>
       </Modal>
       <Modal
+        accessibilityLabel="Ajuda para liberar a bandeja"
         animationType="fade"
         transparent
         visible={isMagicTripleRescueVisible}
@@ -107,7 +109,8 @@ export function GameDialogs({
             <GameIcon name="powers" size={46} tone="purple" />
             <Text style={styles.purchaseModalTitle}>Quase sem espaço!</Text>
             <Text style={styles.purchaseModalText}>
-              A Trinca Mágica forma uma trinca possível automaticamente.
+              A Trinca automática forma uma combinação possível para liberar
+              espaço.
             </Text>
             <Text style={styles.rescueModalHint}>
               Use uma vez grátis para salvar sua bandeja.
@@ -129,6 +132,7 @@ export function GameDialogs({
         </SafeAreaView>
       </Modal>
       <Modal
+        accessibilityLabel="Liberar espaço bônus"
         animationType="fade"
         statusBarTranslucent
         transparent
@@ -149,7 +153,7 @@ export function GameDialogs({
             </View>
             <Text style={styles.purchaseModalTitle}>Liberar espaço bônus?</Text>
             <Text style={styles.purchaseModalText}>
-              Ganhe um sétimo espaço na bandeja e jogue com mais segurança.
+              Ganhe mais um espaço na bandeja e jogue com mais segurança.
             </Text>
             <View style={styles.bonusBenefitPill}>
               <Text style={styles.bonusBenefitText}>+1 ESPAÇO · 30 MIN</Text>
@@ -173,6 +177,7 @@ export function GameDialogs({
         </SafeAreaView>
       </Modal>
       <Modal
+        accessibilityLabel="Comprar poder"
         animationType="fade"
         statusBarTranslucent
         transparent

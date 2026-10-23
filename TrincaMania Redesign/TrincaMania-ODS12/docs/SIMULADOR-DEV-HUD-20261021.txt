@@ -1,0 +1,64 @@
+SIMULADOR SEM MOLDURA, MODO DEV E ÍCONES — 21/10/2026
+
+Solicitação: remover bordas do simulador mostrado na captura, adicionar DEV
+no seletor de modo e melhorar os ícones de vidas, configurações e moedas.
+
+Site: .game-stage sem borda, arredondamento ou sombra externa em desktop,
+mobile e tela cheia; proporção 9:16 preservada. DEV aparece como terceira
+opção em Modo e permite Reiniciar DEV. A interface informa que a sessão é
+temporária e o progresso persistente de testes permanece preservado.
+
+App: em web com modo=dev, inicializa o override devMode já existente.
+Android/iOS mantêm o fluxo anterior. createWebSessionStorage aplica storage
+em memória para feira/DEV e preserva o namespace persistente dos testes.
+Nenhum desbloqueio ou estrela é fabricado no progresso. Partidas continuam
+com as regras ODS12 e as mutações de vidas/economia existentes, somente na
+memória da sessão DEV. A saída ocorre pelo seletor de modo do simulador.
+
+MapHud: mantém a posição dos controles e a trilha ODS12. Coração e moeda
+usam reward_life.png/reward_coin.png do original em 7fdc7a3, copiados sem
+alteração de pixels para assets/original/ui/rewards/optimized. A engrenagem
+já estava disponível em PROFILE_ACTION_ASSETS.settings. Contadores usam
+superfície creme, contraste escuro, alvo de toque com altura 48 dp, leitura
+de quantidade acessível e ajuste à largura disponível. As peças, as âncoras
+e a progressão não foram modificadas. Nenhuma imagem nova foi gerada.
+
+Verificação: testes de storage validam isolamento DEV e reinício. Teste de
+navegador percorre as 103 fases em DEV, abre uma fase avançada, reinicia DEV
+e retorna a testes com bloqueios/progresso preservados. Testes de proporção
+verificam contêiner sem bordas em cinco tamanhos e em tela cheia.
+Logs locais: /tmp/ods12-dev-hud-{ui,domain,browser,storage,export,site}.log
+Capturas no site: docs/auditoria/2026-10-21-dev-hud-*.png
+Sem commit, push, CI remoto, publicação ou geração de APK.
+
+Durante a validação, a placa próxima à fase 100 interceptava o centro do
+pedestal pela área transparente do PNG. Os pedestais agora têm prioridade
+de desenho/toque sobre a placa, sem alterar arte, âncoras ou coordenadas.
+O teste de navegador abre a fase 100 com clique normal (sem force).
+
+RESULTADOS FINAIS
+Typecheck, ESLint direcionado, Prettier e git diff --check: PASS.
+Domínio/storage: 282/282 PASS. Componentes: 94/94 PASS (24 suítes).
+Após ajustar prioridade de toque, regressão LevelSelectAccess: 7/7 PASS.
+Playwright DEV: 2/2 PASS, desktop/mobile; percorreu as 103 fases, abriu a
+fase 100 com clique normal, reiniciou DEV e preservou os testes salvos.
+Playwright proporção/tela cheia: 2/2 PASS em cinco dimensões por cenário,
+com moldura/raio/sombra externos zerados. Fonte sem regressão nesses estilos.
+Em DEV e após reiniciar DEV, snapshot persistente idêntico byte a byte. Ao
+voltar a Testes, quantidades/bloqueios intactos; relógio de vidas cheias é
+atualizado pela hidratação normal existente (lastLifeTimestamp).
+Exportação Expo Web e build Astro locais: PASS, disponível na porta 4322.
+APK aprovado preservado. RTK indisponível; usados comandos nativos.
+
+CENTRALIZAÇÃO DOS PODERES — 21/10/2026 (L-26)
+O status Bandeja e PowerDrawer ocupavam a mesma linha; o grupo ficava
+63 px à direita do centro numa viewport de 420 px, cortando o último botão.
+GameScreen agora coloca os poderes em linha própria e o status centralizado
+abaixo. Alteração apenas de disposição/estilo; ícones, preços e handlers
+preservados. Typecheck, Prettier, diff check e ESLint sem erros passaram
+(três avisos anteriores em GameScreen permanecem). Exportação web e Astro
+locais passaram. No navegador, centros conferidos em 296/366/420 px e em
+tela cheia de 505 px: erro máximo 0,008 px, sem cortes e com espaçamentos
+iguais. Alvos maiores que 44 px e clique em Misturar abre a confirmação
+com preço de 60 moedas. Sem erros JavaScript. Capturas no site:
+docs/auditoria/2026-10-21-powers-centered-*.png. Sem APK ou publicação.

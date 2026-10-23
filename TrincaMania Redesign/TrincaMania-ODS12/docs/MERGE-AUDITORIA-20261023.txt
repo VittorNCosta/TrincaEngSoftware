@@ -1,0 +1,59 @@
+Integração da auditoria com a interface atual — 23/10/2026
+
+Destino solicitado pelo usuário nesta sessão: develop.
+Fonte da auditoria: audit/ods12-site-simulador-20261022, 2900a3b.
+Interface recente: fix/mapa-pedestais-trilha-20261020, ccde03f.
+Base develop consultada e incorporada: 55c486b.
+Commits de integração: ca33edf (auditoria/interface), b2b05de (develop).
+
+Foram resolvidos 31 arquivos em conflito. A interface recente, seus mapas,
+introdução, loja, navegação, música e proteções assíncronas foram preservados.
+As rotinas da auditoria, os patches de segurança, as transações recuperáveis,
+a exclusão mútua do save web e a acessibilidade foram integradas. O carregamento
+concilia também os recibos acumulados da versão anterior; o reset conserva a
+época do save, invalida callbacks antigos e se recupera pelo diário da auditoria.
+O handshake seguro da auditoria mantém compatibilidade com o site local
+anterior: readiness só após hidratação e para a origem explícita do referrer.
+
+Cinco MP3 duplicados foram comparados byte a byte e consolidados em
+assets/audio/music/. A faixa antiga não usada do mundo 4, a marca substituída
+e a base de navegação substituída foram preservadas em
+  docs/arte/arquivo-merge-20261023/assets/.
+As artes da interface recente mantêm os arquivos originais.
+
+Validação local (Node 22.23.2, npm 10.9.8):
+- tipos, lint e formatação: passaram; lint conserva três avisos de hooks em
+  GameScreen, já existentes nas fontes integradas;
+- domínio: 374/374; componentes: 109/109 em 28 suítes;
+- automação: 25/25; playthrough: 2/2 (103 fases e 1.000 mapas);
+- guarda ODS 12: passou; modelos do roadmap: 210 em sincronia;
+- auditoria npm e verificação dos patches locais: passaram, com um advisory
+  conhecido no livro-razão; o patch temporário não remove o aviso upstream;
+- export web: passou;
+- cobertura: domínio 70,48% em linhas/statements, abaixo de 74,18%;
+- assets: 18 PNGs da interface recente excedem os 400 KB por arquivo;
+- bundle Android exportado: 2,91 MB, acima do teto de 2,63 MB.
+
+O resultado não é apresentado como validação completa aprovada. Os pisos de
+cobertura, o orçamento de assets e o teto mais estrito de bundle da interface
+recente foram preservados. A branch ccde03f anterior ao merge também falha:
+assets acima do limite; bundle 2,80 MB > 2,63 MB; cobertura de domínio 70,74%
+< 74,18% e branches 84% < 84,24%. A combinação ainda exige trabalho nesses gates.
+O usuário definiu develop como destino após receber essas pendências.
+
+A verificação agregada completa não passa pelos três gates acima.
+Build web/export Android não comprovam execução Android nem aceite visual.
+Nenhum APK foi gerado ou instalado. GitHub Actions estava desabilitado na
+consulta de permissões; não foi habilitado nem executado nesta entrega.
+Workflows não foram alterados.
+
+Branches substituídas após a incorporação comprovada de seus commits:
+  audit/ods12-site-simulador-20261022
+  feat/ods12-site-atualizado
+  fix/ods12-auditoria-visual-20261020
+  fix/mapa-pedestais-trilha-20261020
+Preservar gh-pages (política de privacidade) e as duas branches Dependabot,
+que têm commits próprios e PRs #313 e #314 abertos.
+
+Evidências locais, manifest.json, logs e export web:
+  /home/vitto/igrion/auditoria/2026-10-23/merge-evidence/

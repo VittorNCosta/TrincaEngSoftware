@@ -55,6 +55,7 @@ const IO_DELAY_MS = 15;
 const store = new Map();
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+let interceptWrite;
 const asyncStorageMock = {
   async getItem(key) {
     await wait(IO_DELAY_MS);
@@ -62,6 +63,7 @@ const asyncStorageMock = {
   },
   async setItem(key, value) {
     await wait(IO_DELAY_MS);
+    if (interceptWrite) await interceptWrite(key, value);
     store.set(key, value);
   },
   async removeItem(key) {
@@ -76,6 +78,7 @@ stub('@react-native-async-storage/async-storage', {
 });
 stub('expo-status-bar', { StatusBar: 'StatusBar' });
 stub('react-native', {
+  Platform: { OS: 'android' },
   ActivityIndicator: 'ActivityIndicator',
   StyleSheet: { create: (sheet) => sheet, absoluteFillObject: {} },
   Text: 'Text',
@@ -88,6 +91,9 @@ stub('react-native-safe-area-context', {
 
 const projectModule = (relativePath) => path.join(ROOT, relativePath);
 
+stub(projectModule('src/components/PrimaryButton'), {
+  PrimaryButton: 'PrimaryButton',
+});
 stub(projectModule('src/components/CampaignResizeNoticeModal'), {
   CampaignResizeNoticeModal: 'CampaignResizeNoticeModal',
 });
@@ -99,6 +105,9 @@ stub(projectModule('src/components/NoLivesModal'), {
 });
 stub(projectModule('src/components/SettingsModal'), {
   SettingsModal: 'SettingsModal',
+});
+stub(projectModule('src/components/RoutineModal'), {
+  RoutineModal: 'RoutineModal',
 });
 stub(projectModule('src/components/TutorialModal'), {
   TutorialModal: 'TutorialModal',
@@ -117,6 +126,18 @@ stub(projectModule('src/screens/SplashIntroScreen'), {
 });
 stub(projectModule('src/utils/sounds'), {
   setSoundEnabled: async () => undefined,
+  playRewardCollectSound: () => undefined,
+  releaseSoundPlayers: () => undefined,
+});
+stub(projectModule('src/utils/music'), {
+  installMusicLifecycle: () => () => undefined,
+  setMusicEnabled: () => undefined,
+  playMetaMusic: () => undefined,
+  playWorldMusic: () => undefined,
+  releaseMusicPlayer: () => undefined,
+});
+stub(projectModule('src/utils/voiceOver'), {
+  releaseVoiceOverPlayers: () => undefined,
 });
 
 // Runtime de hooks mínimo: só o suficiente para o App executar de verdade — os
@@ -252,24 +273,24 @@ const { LIVES_STORAGE_KEY, MAX_LIVES, getLivesState } = require(
 );
 const App = require(projectModule('App.tsx')).default;
 
-const findProps = (node, type) => {
+const findProps = (node, type, predicate = () => true) => {
   if (!node || typeof node !== 'object') {
     return undefined;
   }
 
   if (Array.isArray(node)) {
     return node.reduce(
-      (found, child) => found ?? findProps(child, type),
+      (found, child) => found ?? findProps(child, type, predicate),
       undefined,
     );
   }
 
-  if (node.type === type) {
+  if (node.type === type && predicate(node.props)) {
     return node.props;
   }
 
   return (node.children || []).reduce(
-    (found, child) => found ?? findProps(child, type),
+    (found, child) => found ?? findProps(child, type, predicate),
     undefined,
   );
 };
@@ -325,6 +346,9 @@ const createAppHarness = () => {
       }
     },
     props: (type) => findProps(tree, type),
+    recoveryButton: () =>
+      findProps(tree, 'PrimaryButton') ??
+      findProps(tree, 'Text', (props) => props.accessibilityRole === 'button'),
   };
 };
 
@@ -350,7 +374,7 @@ const bootApp = async () => {
   return app;
 };
 
-test('apagar progresso não é desfeito pelas compras que ainda estavam na fila', async () => {
+test('apagar progresso não é desfeito pela compra pendente e segundo toque é bloqueado', async () => {
   store.clear();
   seedLives(MAX_LIVES);
   await saveProgress({ ...createInitialProgress(), coins: 1000 });
@@ -363,17 +387,20 @@ test('apagar progresso não é desfeito pelas compras que ainda estavam na fila'
   mapProps.onOpenShop();
   app.flush();
 
-  // Duas compras em rajada: a primeira grava, a segunda fica enfileirada.
+  // O contrato async da loja guarda a primeira compra e bloqueia o duplo toque.
   const shopProps = app.props('ShopScreen');
-  assert.equal(shopProps.onBuyItem('undo'), true);
+  const pendingPurchase = shopProps.onPurchasePowerUp('undo', false);
   app.flush();
-  assert.equal(app.props('ShopScreen').onBuyItem('undo'), true);
+  assert.equal(
+    await app.props('ShopScreen').onPurchasePowerUp('undo', false),
+    false,
+  );
   app.flush();
 
-  // Configurações → "Apagar progresso" no meio das gravações em voo.
+  // Configurações → "Apagar progresso" no meio da gravação em voo.
   mapProps.onResetProgress();
   app.flush();
-
+  await pendingPurchase;
   await app.settle(400);
 
   // O que vale é o disco: era daqui que o progresso velho ressuscitava no próximo
@@ -548,4 +575,376 @@ test('controlador de baú mantém saldo e chave quando a abertura não pode prem
   app.props('WorldChestModal').onClose();
   app.flush();
   assert.equal(app.props('WorldChestModal').visible, false);
+});
+
+const CAMPAIGN_KEY = '@trinca-mania/progress-v2';
+const CHAPTER_KEY = '@trinca-mania/chapter-progress-v1';
+const FIRST_MAP = require(projectModule('src/data/chapters.ts'))
+  .CHAPTER_LEVELS[0].id;
+
+const bootChapterGame = async () => {
+  globalThis.__DEV__ = true;
+  const app = await bootApp();
+  app.props('SettingsModal').onUnlockAllForDevMode();
+  app.flush();
+  app.props('MainTabs').onOpenChapters();
+  app.flush();
+  await app.props('ChaptersScreen').onSelectChapterLevel(FIRST_MAP);
+  app.flush();
+  globalThis.__DEV__ = false;
+  return app;
+};
+
+test('recompensa de capítulo recupera carteira após falha entre estrela e moeda', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  interceptWrite = async (key) => {
+    if (key === CAMPAIGN_KEY) throw new Error('injected wallet failure');
+  };
+  try {
+    await assert.rejects(
+      app.props('GameScreen').onLevelComplete(FIRST_MAP, 1),
+      /injected wallet failure/,
+    );
+  } finally {
+    interceptWrite = undefined;
+  }
+  assert.equal(store.has(CHAPTER_KEY), false);
+  assert.equal(
+    JSON.parse(store.get('@trinca-mania/chapter-transaction-v1')).kind,
+    'completion',
+  );
+  const reopened = await bootApp();
+  assert.equal(reopened.props('MainTabs').progress.coins, 10);
+  const again = await bootApp();
+  assert.equal(again.props('MainTabs').progress.coins, 10);
+});
+
+test('recompensa de capítulo repete write falho na mesma sessão sem duplicar', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  const complete = app.props('GameScreen').onLevelComplete;
+  interceptWrite = async (key) => {
+    if (key === CAMPAIGN_KEY) throw new Error('wallet unavailable');
+  };
+  try {
+    await assert.rejects(complete(FIRST_MAP, 1), /wallet unavailable/);
+  } finally {
+    interceptWrite = undefined;
+  }
+  await complete(FIRST_MAP, 1);
+  assert.equal((await loadProgress()).coins, 10);
+  await complete(FIRST_MAP, 3);
+  await complete(FIRST_MAP, 3);
+  await complete(FIRST_MAP, 1);
+  assert.equal((await loadProgress()).coins, 35);
+  assert.equal(JSON.parse(store.get(CHAPTER_KEY)).mapStars[FIRST_MAP], 3);
+});
+
+test('recompensa de capítulo recupera falha no write de estrelas sem perder a pendência em memória', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  const complete = app.props('GameScreen').onLevelComplete;
+  interceptWrite = async (key) => {
+    if (key === CHAPTER_KEY) throw new Error('chapter unavailable');
+  };
+  try {
+    await assert.rejects(complete(FIRST_MAP, 1), /chapter unavailable/);
+  } finally {
+    interceptWrite = undefined;
+  }
+  assert.equal(store.has(CHAPTER_KEY), false);
+  assert.equal((await loadProgress()).coins, 10);
+  assert.equal(
+    JSON.parse(store.get('@trinca-mania/chapter-transaction-v1')).kind,
+    'completion',
+  );
+  await complete(FIRST_MAP, 1);
+  assert.equal((await loadProgress()).coins, 10);
+  assert.equal(JSON.parse(store.get(CHAPTER_KEY)).mapStars[FIRST_MAP], 1);
+});
+
+test('recompensa de capítulo é idempotente se storage gravou mas rejeitou confirmação', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  interceptWrite = async (key, value) => {
+    if (key === CAMPAIGN_KEY) {
+      store.set(key, value);
+      throw new Error('ack lost');
+    }
+  };
+  try {
+    await assert.rejects(
+      app.props('GameScreen').onLevelComplete(FIRST_MAP, 3),
+      /ack lost/,
+    );
+  } finally {
+    interceptWrite = undefined;
+  }
+  assert.equal((await loadProgress()).coins, 35);
+  const reopened = await bootApp();
+  assert.equal(reopened.props('MainTabs').progress.coins, 35);
+});
+
+test('recompensa de capítulo serializa duplo toque e não repõe moedas gastas', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  const complete = app.props('GameScreen').onLevelComplete;
+  const results = await Promise.all([
+    complete(FIRST_MAP, 3),
+    complete(FIRST_MAP, 3),
+  ]);
+  assert.deepEqual(
+    results.map((result) => result.coinsEarned),
+    [35, 0],
+  );
+  const paid = await loadProgress();
+  assert.equal(paid.coins, 35);
+  // Fixture durável de uma compra posterior: recibo acompanha o saldo restante.
+  await saveProgress({ ...paid, coins: 4 });
+  const reopened = await bootApp();
+  assert.equal(reopened.props('MainTabs').progress.coins, 4);
+});
+
+const deferred = () => {
+  let resolve;
+  const promise = new Promise((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+};
+
+test('reset invalida conclusão de capítulo em voo e conclusão ainda enfileirada', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  const started = deferred();
+  const release = deferred();
+  let blocked = false;
+  interceptWrite = async (key) => {
+    if (key === CHAPTER_KEY && !blocked) {
+      blocked = true;
+      started.resolve();
+      await release.promise;
+    }
+  };
+  const complete = app.props('GameScreen').onLevelComplete;
+  const first = assert.rejects(complete(FIRST_MAP, 1), /superseded/);
+  const queued = assert.rejects(complete(FIRST_MAP, 3), /superseded/);
+  try {
+    await started.promise;
+    app.props('SettingsModal').onResetProgress();
+    app.flush();
+    release.resolve();
+    await Promise.all([first, queued]);
+    await app.waitFor(() => app.props('SettingsModal'));
+  } finally {
+    release.resolve();
+    interceptWrite = undefined;
+  }
+  assert.equal((await loadProgress()).coins, 0);
+  assert.deepEqual(JSON.parse(store.get(CHAPTER_KEY)).mapStars, {});
+  const reopened = await bootApp();
+  assert.equal(reopened.props('MainTabs').progress.coins, 0);
+});
+
+test('reset interrompido após carteira não ressuscita estrelas nem recompensa no boot', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  await app.props('GameScreen').onLevelComplete(FIRST_MAP, 3);
+  app.flush();
+  const failed = deferred();
+  interceptWrite = async (key) => {
+    if (key === CHAPTER_KEY) {
+      failed.resolve();
+      throw new Error('reset chapter failed');
+    }
+  };
+  app.props('SettingsModal').onResetProgress();
+  app.flush();
+  await failed.promise;
+  await app.settle(30);
+  interceptWrite = undefined;
+  assert.equal((await loadProgress()).coins, 0);
+  assert.equal(JSON.parse(store.get(CHAPTER_KEY)).mapStars[FIRST_MAP], 3);
+  const reopened = await bootApp();
+  assert.equal(reopened.props('MainTabs').progress.coins, 0);
+  assert.deepEqual(JSON.parse(store.get(CHAPTER_KEY)).mapStars, {});
+});
+
+test('reset cuja carteira falha preserva capítulos duráveis e permite nova tentativa', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  await app.props('GameScreen').onLevelComplete(FIRST_MAP, 3);
+  app.flush();
+  const before = store.get(CHAPTER_KEY);
+  const failed = deferred();
+  interceptWrite = async (key) => {
+    if (key === CAMPAIGN_KEY) {
+      failed.resolve();
+      throw new Error('reset wallet failed');
+    }
+  };
+  const reset = app.props('SettingsModal').onResetProgress;
+  reset();
+  app.flush();
+  await failed.promise;
+  await app.settle(30);
+  interceptWrite = undefined;
+  assert.equal(store.get(CHAPTER_KEY), before);
+  assert.equal((await loadProgress()).coins, 35);
+  app.recoveryButton().onPress();
+  app.flush();
+  await app.waitFor(() => app.props('SettingsModal'));
+  assert.equal((await loadProgress()).coins, 0);
+  assert.deepEqual(JSON.parse(store.get(CHAPTER_KEY)).mapStars, {});
+  assert.equal(JSON.parse(store.get(CAMPAIGN_KEY)).chapterRewards.epoch, 1);
+});
+
+test('save legado de capítulo não recebe pagamento retroativo; melhora recebe só diferença', async () => {
+  store.clear();
+  store.set(CHAPTER_KEY, JSON.stringify({ mapStars: { [FIRST_MAP]: 1 } }));
+  await saveProgress({ ...createInitialProgress(), coins: 7 });
+  const app = await bootChapterGame();
+  assert.equal((await loadProgress()).coins, 7);
+  await app.props('GameScreen').onLevelComplete(FIRST_MAP, 3);
+  assert.equal((await loadProgress()).coins, 32);
+  const reopened = await bootApp();
+  assert.equal(reopened.props('MainTabs').progress.coins, 32);
+});
+
+test('ledger inválido não libera o jogo nem sobrescreve os dados', async () => {
+  store.clear();
+  const invalid = {
+    ...createInitialProgress(),
+    chapterRewards: { epoch: 0, total: -1 },
+  };
+  store.set(CAMPAIGN_KEY, JSON.stringify(invalid));
+  await assert.rejects(loadProgress(), /Invalid chapter reward ledger/);
+  const app = createAppHarness();
+  app.props('SplashIntroScreen').onFinish();
+  app.flush();
+  await app.settle(120);
+  assert.equal(app.props('MainTabs'), undefined);
+  assert.deepEqual(JSON.parse(store.get(CAMPAIGN_KEY)), invalid);
+});
+
+test('callback antigo após reset e duplo reset não premiam na geração nova', async () => {
+  store.clear();
+  const app = await bootChapterGame();
+  const complete = app.props('GameScreen').onLevelComplete;
+  await complete(FIRST_MAP, 1);
+  app.flush();
+  const reset = app.props('SettingsModal').onResetProgress;
+  reset();
+  reset();
+  app.flush();
+  await app.waitFor(() => app.props('SettingsModal'));
+  await assert.rejects(complete(FIRST_MAP, 3), /superseded/);
+  assert.equal((await loadProgress()).coins, 0);
+  assert.equal(JSON.parse(store.get(CAMPAIGN_KEY)).chapterRewards.epoch, 1);
+  assert.deepEqual(JSON.parse(store.get(CHAPTER_KEY)).mapStars, {});
+});
+
+test('recuperação de capítulo rejeita recibo maior ou época futura sem sobrescrever saves', async () => {
+  for (const chapterRewards of [
+    { epoch: 0, total: 5 },
+    { epoch: 2, total: 10 },
+  ]) {
+    store.clear();
+    store.set(
+      CAMPAIGN_KEY,
+      JSON.stringify({
+        ...createInitialProgress(),
+        chapterRewards: { epoch: 0, total: 10 },
+      }),
+    );
+    store.set(
+      CHAPTER_KEY,
+      JSON.stringify({ mapStars: { [FIRST_MAP]: 1 }, chapterRewards }),
+    );
+    const before = [store.get(CAMPAIGN_KEY), store.get(CHAPTER_KEY)];
+    const app = createAppHarness();
+    app.props('SplashIntroScreen').onFinish();
+    app.flush();
+    await app.settle(120);
+    assert.equal(app.props('MainTabs'), undefined);
+    assert.deepEqual([store.get(CAMPAIGN_KEY), store.get(CHAPTER_KEY)], before);
+  }
+});
+
+test('recuperação no boot mantém jogo bloqueado até retry persistir a carteira', async () => {
+  store.clear();
+  store.set(
+    CHAPTER_KEY,
+    JSON.stringify({
+      mapStars: { [FIRST_MAP]: 1 },
+      chapterRewards: { epoch: 0, total: 10 },
+    }),
+  );
+  const failed = deferred();
+  interceptWrite = async (key) => {
+    if (key === CAMPAIGN_KEY) {
+      failed.resolve();
+      throw new Error('recovery wallet failed');
+    }
+  };
+  const app = createAppHarness();
+  app.props('SplashIntroScreen').onFinish();
+  app.flush();
+  try {
+    await failed.promise;
+    await app.waitFor(() => app.recoveryButton());
+    assert.equal(app.props('MainTabs'), undefined);
+    assert.equal(store.has(CAMPAIGN_KEY), false);
+  } finally {
+    interceptWrite = undefined;
+  }
+  app.recoveryButton().onPress();
+  app.flush();
+  await app.waitFor(() => app.props('MainTabs'));
+  assert.equal((await loadProgress()).coins, 10);
+  assert.equal(app.props('MainTabs').progress.coins, 10);
+});
+
+test('ambos storages rejeitam ledger inválido na leitura e escrita sem apagar progresso', async () => {
+  const {
+    loadChapterProgress,
+    saveChapterProgress,
+  } = require('../src/storage/chapterProgressStorage.ts');
+  for (const ledger of [
+    null,
+    { epoch: -1, total: 10 },
+    { epoch: 0, total: '10' },
+  ]) {
+    store.clear();
+    const wallet = {
+      ...createInitialProgress(),
+      coins: 47,
+      chapterRewards: ledger,
+    };
+    const chapter = { mapStars: { [FIRST_MAP]: 3 }, chapterRewards: ledger };
+    const walletRaw = JSON.stringify(wallet);
+    const chapterRaw = JSON.stringify(chapter);
+    store.set(CAMPAIGN_KEY, walletRaw);
+    store.set(CHAPTER_KEY, chapterRaw);
+    await assert.rejects(loadProgress(), /Invalid chapter reward ledger/);
+    await assert.rejects(
+      loadChapterProgress(),
+      /Invalid chapter reward ledger/,
+    );
+    await assert.rejects(saveProgress(wallet), /Invalid chapter reward ledger/);
+    await assert.rejects(
+      saveChapterProgress(chapter),
+      /Invalid chapter reward ledger/,
+    );
+    assert.equal(store.get(CAMPAIGN_KEY), walletRaw);
+    assert.equal(store.get(CHAPTER_KEY), chapterRaw);
+    const app = createAppHarness();
+    app.props('SplashIntroScreen').onFinish();
+    app.flush();
+    await app.settle(120);
+    assert.equal(app.props('MainTabs'), undefined);
+    assert.equal(store.get(CAMPAIGN_KEY), walletRaw);
+    assert.equal(store.get(CHAPTER_KEY), chapterRaw);
+  }
 });

@@ -1,0 +1,27 @@
+[
+  {
+    "check": "guards",
+    "exit": 0,
+    "seconds": 0.46
+  },
+  {
+    "check": "assets",
+    "exit": 1,
+    "seconds": 0.41
+  },
+  {
+    "check": "audit-code",
+    "exit": 1,
+    "seconds": 7.91
+  },
+  {
+    "check": "roadmap",
+    "exit": 1,
+    "seconds": 0.12
+  },
+  {
+    "check": "automation",
+    "exit": 0,
+    "seconds": 8.76
+  }
+]

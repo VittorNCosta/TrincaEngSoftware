@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { colors, fontSizes, radii, shadows, spacing } from '../../styles/theme';
 import { BOTTOM_NAV_HEIGHT } from '../../components/BottomNavBar';
-import { MAP_HEIGHT, MAP_WIDTH, MAP_PARALLAX_TRAVEL } from './mapPresentation';
+import { MAP_HEIGHT, MAP_WIDTH } from './mapPresentation';
 
 export const styles = StyleSheet.create({
   bonusChestPosition: {
@@ -108,6 +108,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
   },
+  mapFrameIllustrated: {
+    // The illustrated campaign uses a neutral canvas, independent of legacy world accents.
+    backgroundColor: colors.backgroundDeep,
+  },
   mapFrameAzulado: {
     backgroundColor: '#89B7CF',
   },
@@ -139,7 +143,6 @@ export const styles = StyleSheet.create({
   // Camada do cenário ancorada na tela. A folga extra fica embaixo porque o parallax
   // desloca a arte para cima (translateY negativo) conforme o mapa rola.
   mapParallax: {
-    bottom: -MAP_PARALLAX_TRAVEL,
     left: 0,
     position: 'absolute',
     right: 0,
@@ -226,7 +229,7 @@ export const styles = StyleSheet.create({
   },
   panelBanner: {
     alignSelf: 'center',
-    backgroundColor: '#F7B91E',
+    backgroundColor: '#884900',
     borderColor: '#FFF2A7',
     borderRadius: radii.pill,
     borderWidth: 2,
@@ -236,15 +239,15 @@ export const styles = StyleSheet.create({
     ...shadows.button,
   },
   panelBannerLocked: {
-    backgroundColor: '#8D9BA0',
+    backgroundColor: '#526166',
     borderColor: '#D5E0E0',
   },
   panelBannerPortal: {
-    backgroundColor: '#5E82DE',
+    backgroundColor: '#3859A8',
     borderColor: '#E7F0FF',
   },
   panelBannerSoon: {
-    backgroundColor: '#6F82D8',
+    backgroundColor: '#4A4C9C',
     borderColor: '#DDE6FF',
   },
   panelBannerText: {
@@ -306,7 +309,7 @@ export const styles = StyleSheet.create({
   },
   portalMarker: {
     alignItems: 'center',
-    backgroundColor: '#5E82DE',
+    backgroundColor: '#3859A8',
     borderBottomColor: '#2E438B',
     borderBottomWidth: 4,
     borderColor: '#E7F0FF',

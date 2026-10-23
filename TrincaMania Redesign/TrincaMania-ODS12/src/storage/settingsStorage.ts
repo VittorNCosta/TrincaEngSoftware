@@ -1,8 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from './keyValueStorage';
 
 export type AppSettings = {
   hapticsEnabled: boolean;
   soundEnabled: boolean;
+  musicEnabled: boolean;
 };
 
 const SETTINGS_STORAGE_KEY = '@trinca-mania/settings-v1';
@@ -11,10 +12,12 @@ const LEGACY_SOUND_ENABLED_STORAGE_KEY = '@trinca-mania/sound-enabled-v1';
 const DEFAULT_SETTINGS: AppSettings = {
   hapticsEnabled: true,
   soundEnabled: true,
+  musicEnabled: true,
 };
 
 let settingsCache: AppSettings | undefined;
 let settingsRequest: Promise<AppSettings> | undefined;
+let settingsMutationQueue: Promise<void> = Promise.resolve();
 
 export const createDefaultSettings = (): AppSettings => ({
   ...DEFAULT_SETTINGS,
@@ -32,6 +35,12 @@ const normalizeSettings = (value: unknown): AppSettings => {
       typeof settings.hapticsEnabled === 'boolean'
         ? settings.hapticsEnabled
         : DEFAULT_SETTINGS.hapticsEnabled,
+    musicEnabled:
+      typeof settings.musicEnabled === 'boolean'
+        ? settings.musicEnabled
+        : typeof settings.soundEnabled === 'boolean'
+          ? settings.soundEnabled
+          : DEFAULT_SETTINGS.musicEnabled,
     soundEnabled:
       typeof settings.soundEnabled === 'boolean'
         ? settings.soundEnabled
@@ -43,7 +52,7 @@ const writeSettings = async (settings: AppSettings) => {
   await AsyncStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
   await AsyncStorage.setItem(
     LEGACY_SOUND_ENABLED_STORAGE_KEY,
-    settings.soundEnabled ? 'true' : 'false',
+    settings.soundEnabled || settings.musicEnabled ? 'true' : 'false',
   );
 };
 
@@ -61,6 +70,10 @@ const readSettings = async () => {
     );
     const migratedSettings = {
       ...DEFAULT_SETTINGS,
+      musicEnabled:
+        legacySoundValue === null
+          ? DEFAULT_SETTINGS.musicEnabled
+          : legacySoundValue !== 'false',
       soundEnabled:
         legacySoundValue === null
           ? DEFAULT_SETTINGS.soundEnabled
@@ -72,7 +85,8 @@ const readSettings = async () => {
 
     return migratedSettings;
   } catch {
-    settingsCache = createDefaultSettings();
+    // A failed migration write must not discard the preference just read.
+    settingsCache ??= createDefaultSettings();
     return settingsCache;
   }
 };
@@ -91,29 +105,45 @@ export const getSettings = async () => {
   return settingsRequest;
 };
 
+const mutateSettings = (
+  update: (current: AppSettings) => AppSettings,
+): Promise<AppSettings> => {
+  const request = settingsMutationQueue.then(async () => {
+    // Migration exposes its cache before completing both storage writes.
+    const currentSettings = await (settingsRequest ?? getSettings());
+    const nextSettings = normalizeSettings(update(currentSettings));
+    settingsCache = nextSettings;
+    try {
+      await writeSettings(nextSettings);
+    } catch {
+      // Keep the in-memory preference for this session if storage is unavailable.
+    }
+    return nextSettings;
+  });
+  settingsMutationQueue = request.then(
+    () => undefined,
+    () => undefined,
+  );
+  return request;
+};
+
 export const saveSettings = async (settings: AppSettings) => {
-  settingsCache = normalizeSettings(settings);
-
-  try {
-    await writeSettings(settingsCache);
-  } catch {
-    // Keep the in-memory preference for this session even if storage is unavailable.
-  }
-
-  return settingsCache;
+  const nextSettings = normalizeSettings(settings);
+  return mutateSettings(() => nextSettings);
 };
 
-export const setSoundEnabledPreference = async (soundEnabled: boolean) => {
-  const currentSettings = await getSettings();
-  return saveSettings({ ...currentSettings, soundEnabled });
-};
+export const setSoundEnabledPreference = async (soundEnabled: boolean) =>
+  mutateSettings((currentSettings) => ({ ...currentSettings, soundEnabled }));
 
-export const setHapticsEnabledPreference = async (hapticsEnabled: boolean) => {
-  const currentSettings = await getSettings();
-  return saveSettings({ ...currentSettings, hapticsEnabled });
-};
+export const setHapticsEnabledPreference = async (hapticsEnabled: boolean) =>
+  mutateSettings((currentSettings) => ({ ...currentSettings, hapticsEnabled }));
 
 export const getHapticsEnabled = async () => {
   const settings = await getSettings();
   return settings.hapticsEnabled;
 };
+
+export const setMusicEnabledPreference = async (musicEnabled: boolean) =>
+  mutateSettings((currentSettings) => ({ ...currentSettings, musicEnabled }));
+
+export const getMusicEnabled = async () => (await getSettings()).musicEnabled;

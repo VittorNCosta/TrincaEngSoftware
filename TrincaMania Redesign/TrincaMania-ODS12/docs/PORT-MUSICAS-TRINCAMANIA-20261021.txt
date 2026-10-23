@@ -1,0 +1,66 @@
+MÚSICAS ORIGINAIS NO ODS12 — 21/10/2026
+
+Solicitação: adicionar as músicas do TrincaMania original ao ODS12.
+Fonte: https://github.com/mateusHegeto10/TrincaMania
+Branch simulator/main, 7fdc7a3 (14/10/2026), conferida por fetch nesta sessão.
+
+Arquivos copiados byte a byte, com nomes de destino neutros para o ODS12:
+
+menus.mp3
+  Fonte: assets/audio/01_music/global/MusicaPadrao.mp3
+  Bytes: 3879168
+  SHA-256: 694aee85b2401a919b505f8450e15eedfbf8b755746ed207107c44f9b03ee58a
+
+world-01.mp3
+  Fonte: assets/audio/01_music/worlds/BosqueDasTrincas.mp3
+  Bytes: 3246707
+  SHA-256: b6dd83eaddf3e21eb99843e8c18805a4009d8b6878152d674a97a7d2cfd1f1c6
+
+world-02.mp3
+  Fonte: assets/audio/01_music/worlds/ValesMontanhosos.mp3
+  Bytes: 5983503
+  SHA-256: dede66cb64c61267f37e1190b103dd941082d5ba8fed31b5d0e6735db71a078e
+
+world-03.mp3
+  Fonte: assets/audio/01_music/worlds/RuinasDeCristal.mp3
+  Bytes: 5382478
+  SHA-256: 4818b5cc665045296343b037323a456756f7eb041b22dc4de7326b2f7c0d52b2
+
+world-21.mp3
+  Fonte: assets/audio/01_music/worlds/MundoDoce.mp3
+  Bytes: 3681384
+  SHA-256: 28d170cb6a0beb5ebcb87f031d0275c10efc968b9e187dfddaf577119337fa0c
+
+music.ts parte da implementação original (volume 0,38; crossfade 700 ms;
+intervalo entre ciclos 4,2 s; redução de volume para 0,27 em modais da partida).
+Integração com ciclo do App, listeners com cleanup, geração para cancelar
+operações pendentes e retomada do fade ao reativar. Hook useGameMusic mantém
+roteamento/ducking fora da tela da partida. Mundos sem faixa própria usam
+música padrão; capítulos seguem a família visual ODS12.
+
+Settings mantém a fila serial de mutações. musicEnabled é independente de
+soundEnabled (efeitos); migração respeita o mute antigo. A sessão global de
+áudio não é desativada por desligar apenas os efeitos. Modo silencioso pausa
+os dois canais imediatamente e persiste preferências. Progresso, moedas,
+vidas, regras, fases, banco de dados e APK não são alterados nesta tarefa.
+
+Verificação local:
+- Jest MusicLifecycle cobre crossfade/limpeza, controles independentes,
+  cancelamento de seek pendente, teardown, background/foreground e ducking.
+- SettingsStorage cobre migração do mute antigo e persistência independente.
+- Playwright music.spec.ts verifica reprodução real com avanço de currentTime,
+  troca menu/partida, redução/restauração de volume, mute e recarregamento.
+- appProgressCommit recebe stub da nova fronteira nativa de música.
+- LevelSelectAccess passa a localizar o frame por testID em vez de depender
+  da cor verde antiga removida na correção da faixa roxa (L-19).
+
+Logs: /tmp/ods12-original-music-{ui,domain,browser,export,site}.log
+Sem commit, push, publicação, CI remoto ou geração de APK.
+
+RESULTADOS FINAIS
+Typecheck, ESLint direcionado, Prettier e git diff --check: PASS.
+Domínio/storage: 281/281 PASS. Componentes: 94/94 PASS (24 suítes).
+Playwright: 2/2 PASS (desktop e mobile), reprodução real e nenhum erro JS.
+Exportação Expo Web e build Astro: PASS. Servidor local ativo na porta 4322.
+APK SHA-256 preservado: c44a7324dd282e4bd89c458c296cfdc6157c1339209e171a4e64f410946ff378.
+RTK indisponível; comandos nativos utilizados, instalação no README da raiz.

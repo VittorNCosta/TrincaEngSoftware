@@ -17,6 +17,15 @@ module.exports = ({ config }) => {
   return {
     ...config,
     version,
+    web: { ...config.web, bundler: 'metro', output: 'single' },
+    ...(process.env.EXPO_WEB_BASE_URL
+      ? {
+          experiments: {
+            ...config.experiments,
+            baseUrl: process.env.EXPO_WEB_BASE_URL,
+          },
+        }
+      : {}),
     name: e2e ? `${config.name} E2E` : config.name,
     android: {
       ...config.android,

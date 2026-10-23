@@ -1,0 +1,31 @@
+FAIXA ESCURA AO ROLAR ATÉ O TOPO — 21/10/2026
+
+Relato: após remover a moldura do simulador, ainda aparece uma faixa escura
+acima do cenário ao rolar para as fases superiores. Reprodução com a roda
+real em modo DEV: 140 px entre o topo do frame e o início da ilustração.
+Essa folga pertence ao conteúdo do mapa e reserva espaço para o HUD.
+
+Correção em IllustratedCampaignMap: preencher a folga com a borda superior
+da própria imagem espelhada verticalmente, recortada por View e sobreposta
+em 1 px pela arte principal para evitar linha de composição. Não altera
+pixels dos assets, escala, âncoras, posições das fases ou regras. O cenário
+agora aparece atrás dos controles também com scrollTop igual a zero.
+
+Regressão em visual-layout.spec.ts:
+- Roda real até o topo e movimento diagonal, com cenas fixas preservadas.
+- Conferência de cobertura e junção das imagens, mesma origem dos assets e
+  amostra dos pixels da captura; conferir só a cor de fundo não era suficiente.
+- Percurso dos onze mapas, com os 103 pedestais e seus apoios preservados.
+- Desktop e mobile. Capturas antes/depois no repositório do site:
+  docs/auditoria/2026-10-21-scroll-top-{before,after}.png.
+
+Logs: /tmp/ods12-scroll-top-{browser,ui,export,site}.log
+Alteração local no simulador, sem commit, push, publicação ou APK.
+
+RESULTADOS
+Typecheck, ESLint direcionado, Prettier e git diff --check: PASS.
+LevelSelectAccess: 7/7 PASS. Playwright: 4/4 PASS em desktop/mobile, roda
+real e percurso dos onze mapas com os 103 apoios. Captura após ajuste
+conferida visualmente; sem faixa lisa e sem linha escura na emenda.
+Exportação Expo Web e build Astro: PASS. Servidor local ativo em 4322.
+APK aprovado preservado. RTK ausente; comandos nativos utilizados.

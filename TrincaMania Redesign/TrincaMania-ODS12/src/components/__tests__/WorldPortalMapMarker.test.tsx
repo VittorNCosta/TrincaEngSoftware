@@ -156,7 +156,13 @@ test.each([false, true])(
       const expectArtwork = () => {
         expect(portal().props.accessibilityState.disabled).toBe(!unlocked);
         const images = portal().findAllByType(Image);
-        expect(images).toHaveLength(unlocked ? 1 : 0);
+        // A passagem da campanha agora é uma placa física, também quando bloqueada.
+        expect(images).toHaveLength(1);
+        expect(images[0].props.source).toEqual(
+          unlocked
+            ? require('../../../assets/map/passage/trail_sign_waypost_open.png')
+            : require('../../../assets/map/passage/trail_sign_waypost_locked.png'),
+        );
         if (unlocked) {
           const nativeImage = images[0].find(
             (node: RenderedNode) => node.type === 'RCTImageView',
@@ -236,9 +242,7 @@ test.each([false, true])(
       });
       expect(returnedPortal.props.accessibilityState.disabled).toBe(!unlocked);
       expect(returnedPortal.props.accessibilityState.selected).toBe(false);
-      expect(returnedPortal.findAllByType(Image)).toHaveLength(
-        unlocked ? 1 : 0,
-      );
+      expect(returnedPortal.findAllByType(Image)).toHaveLength(1);
       returned.unmount();
     } finally {
       jest.useRealTimers();

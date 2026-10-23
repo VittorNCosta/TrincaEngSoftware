@@ -1,8 +1,13 @@
+import { ActiveGameClock } from '../utils/activeGameClock';
+import { useGameMusic } from '../hooks/useGameMusic';
+import { useActiveGameClock } from '../hooks/useActiveGameClock';
+import { useRoundAction } from '../hooks/useRoundAction';
 import { GameDialogs } from './game/GameDialogs';
 import { WorldArtContext } from '../components/WorldArtContext';
 import { getWorldVisualAssets } from '../data/worldVisualAssets';
 import { IS_E2E_BUILD, E2E_BOARD_SEED } from '../testing/e2eProfile';
 import { updateDiagnosticContext } from '../utils/log';
+import { advanceNaturalCombo, createComboState } from '../utils/combo';
 import { checkTrayCapacity } from '../observability/runtimeInvariants';
 import {
   createSeededRandom,
@@ -10,6 +15,7 @@ import {
   stableHash,
 } from '../utils/deterministicRandom';
 import { getChapterVisualIdentity } from '../data/chapterVisualIdentity';
+import { getDailyChallengeLevel } from '../challenges/dailyChallenge';
 import { createBoardVariation } from './game/createBoardVariation';
 import {
   PRACTICAL_TUTORIAL_LEVEL_ID,
@@ -23,8 +29,10 @@ import { styles } from './game/styles';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
+  BackHandler,
   ImageBackground,
   LayoutChangeEvent,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -38,10 +46,10 @@ import {
   type FlyingTileEvent,
 } from '../components/FlyingTileOverlay';
 import { GameBoard } from '../components/GameBoard';
-import { GameIcon } from '../components/GameIcon';
+import { GameIcon } from '../original/components/GameIcon';
 import { PhasePlate } from '../components/PhasePlate';
-import { PowerDrawer } from '../components/PowerDrawer';
-import { ResourcePill } from '../components/ResourcePill';
+import { PowerDrawer } from '../original/components/PowerDrawer';
+import { ResourcePill } from '../original/components/ResourcePill';
 import { ResultModal } from '../components/ResultModal';
 import { ScreenShell } from '../components/ScreenShell';
 import { Tray } from '../components/Tray';
@@ -119,10 +127,14 @@ import {
 } from '../utils/haptics';
 import {
   playCoinSound,
+  playCombo2Sound,
+  playCombo3Sound,
+  playComboHighSound,
   playConfettiSound,
   playLoseSound,
   playShopBuySound,
   playTapSound,
+  playTileSelectSound,
   playTripleSounds,
   playWhooshSound,
   playWinSound,
@@ -149,6 +161,12 @@ import {
 
 // Keep the actual board seed in diagnostics so a failure can be reproduced.
 const createRoundBoard = (levelId: string, retry = false) => {
+  if (levelId.startsWith('daily-')) {
+    updateDiagnosticContext({ levelId, seed: stableHash(levelId), retry });
+    return revealAvailableMysteryTiles(
+      getDailyChallengeLevel(levelId.slice(6)).tiles,
+    );
+  }
   const chapter = getChapterLevelSummary(levelId);
   const seed =
     chapter && !retry
@@ -165,7 +183,6 @@ const createRoundBoard = (levelId: string, retry = false) => {
 
 const TOAST_VISIBLE_MS = 1700;
 const BONUS_FEEDBACK_VISIBLE_MS = 1050;
-const TILE_INSERT_POP_MS = 110;
 
 type LevelCompletionSummary = {
   bonusWorldAchievementUnlocked: boolean;
@@ -196,6 +213,7 @@ type PendingTileMove = {
 };
 
 type GameScreenProps = {
+  isActive: boolean;
   activeTrayCapacity: number;
   bestStars: number;
   bonusTraySlotRemainingMs: number;
@@ -220,6 +238,7 @@ type GameScreenProps = {
     levelId: string,
     starsEarned: number,
   ) => Promise<LevelCompletionSummary>;
+  onNaturalTriple?: (eventId: string) => void;
   onLoseLife: () => Promise<LivesState>;
   onMagicTripleRescueSeen: () => Promise<void>;
   onMagicTripleRescueUsed: () => Promise<void>;
@@ -253,6 +272,7 @@ export function GameScreen(props: GameScreenProps) {
 }
 
 function GameScreenContent({
+  isActive,
   activeTrayCapacity: currentTrayCapacity,
   bestStars,
   bonusTraySlotRemainingMs,
@@ -274,6 +294,7 @@ function GameScreenContent({
   onBonusWorldAchievementSeen,
   onCoinCounterLayout,
   onLevelComplete,
+  onNaturalTriple,
   onLoseLife,
   onMagicTripleRescueSeen,
   onMagicTripleRescueUsed,
@@ -317,6 +338,8 @@ function GameScreenContent({
   const [roundCoinTraySlotActive, setRoundCoinTraySlotActive] =
     useState(isCoinTraySlotActive);
   const [board, setBoard] = useState<Tile[]>(() => createRoundBoard(level.id));
+  const comboRef = useRef(createComboState());
+  const naturalTripleSerialRef = useRef(0);
   const [boardBounds, setBoardBounds] = useState(() => getBoardBounds(board));
   const [boardViewport, setBoardViewport] = useState<BoardViewport>({
     height: 0,
@@ -383,15 +406,13 @@ function GameScreenContent({
     FlyingTileEvent | undefined
   >();
   const [hiddenTrayTileIds, setHiddenTrayTileIds] = useState<string[]>([]);
-  const [poppingTrayTileId, setPoppingTrayTileId] = useState<
-    string | undefined
-  >();
   const [trayTarget, setTrayTarget] = useState<WindowTarget | undefined>();
   const [tripleConsumeEvent, setTripleConsumeEvent] = useState<
     TripleConsumeEvent | undefined
   >();
   const [showBonusAchievement, setShowBonusAchievement] = useState(false);
   const [status, setStatus] = useState<GameStatus>('playing');
+  useGameMusic(level.worldId, status, isSettingsMenuVisible);
   const [toast, setToast] = useState<ToastState | undefined>();
   const [tray, setTray] = useState<Tile[]>([]);
   const [unlockedLevelTitle, setUnlockedLevelTitle] = useState<
@@ -404,15 +425,17 @@ function GameScreenContent({
   const boardRef = useRef(board);
   const trayRef = useRef(tray);
   const elapsedSecondsRef = useRef(0);
+  const elapsedClockRef = useRef(new ActiveGameClock());
+  const updateElapsedClock = useCallback((seconds: number) => {
+    elapsedSecondsRef.current = seconds;
+    setElapsedSeconds(seconds);
+  }, []);
   const boardTileTargetsRef = useRef<Record<string, WindowTarget>>({});
   const traySlotTargetsRef = useRef<Record<number, WindowTarget>>({});
   const gameAreaRef = useRef<View>(null);
   const boardStageRef = useRef<View>(null);
   const boardStageTargetRef = useRef<WindowTarget | undefined>(undefined);
   const trayDockRef = useRef<View>(null);
-  const poppingTrayTimeoutRef = useRef<
-    ReturnType<typeof setTimeout> | undefined
-  >(undefined);
   const completionSoundTimeoutRef = useRef<
     ReturnType<typeof setTimeout> | undefined
   >(undefined);
@@ -734,6 +757,8 @@ function GameScreenContent({
       coinSlotActive: isCoinTraySlotActive,
     },
   ) => {
+    comboRef.current = createComboState();
+    naturalTripleSerialRef.current = 0;
     const cancelledPowerEffect = activeTileMoveRef.current
       ? undefined
       : tripleCompleteCallbackRef.current;
@@ -755,6 +780,7 @@ function GameScreenContent({
     setBoard(nextBoard);
     setBoardBounds(getBoardBounds(nextBoard));
     setBoardLayoutGeneration((currentGeneration) => currentGeneration + 1);
+    elapsedClockRef.current.reset();
     elapsedSecondsRef.current = 0;
     setElapsedSeconds(0);
     setHighlightedTileId(undefined);
@@ -780,7 +806,6 @@ function GameScreenContent({
     setResultWorldChest(undefined);
     setFlyingTileEvent(undefined);
     setHiddenTrayTileIds([]);
-    setPoppingTrayTileId(undefined);
     setTripleConsumeEvent(undefined);
     setShowBonusAchievement(false);
     setStatus('playing');
@@ -797,10 +822,6 @@ function GameScreenContent({
     activeTripleConsumeIdRef.current = undefined;
     tripleCompleteCallbackRef.current = undefined;
     cancelledPowerEffect?.(true);
-    if (poppingTrayTimeoutRef.current) {
-      clearTimeout(poppingTrayTimeoutRef.current);
-      poppingTrayTimeoutRef.current = undefined;
-    }
     boardTileTargetsRef.current = {};
     boardStageTargetRef.current = undefined;
     traySlotTargetsRef.current = {};
@@ -842,9 +863,6 @@ function GameScreenContent({
       const cancelledPowerEffect = activeTileMoveRef.current
         ? undefined
         : tripleCompleteCallbackRef.current;
-      if (poppingTrayTimeoutRef.current) {
-        clearTimeout(poppingTrayTimeoutRef.current);
-      }
       if (completionSoundTimeoutRef.current) {
         clearTimeout(completionSoundTimeoutRef.current);
       }
@@ -884,40 +902,18 @@ function GameScreenContent({
     }
   }, [magicTripleRescueCanShow, trayNearlyFull]);
 
-  useEffect(() => {
-    if (
-      status !== 'playing' ||
-      isBlockingModalVisible ||
-      gameplayModalOpen ||
-      isCoinSlotProcessing ||
-      isMagicTripleRescueVisible ||
-      isMysteryTutorialVisible ||
-      isSettingsMenuVisible ||
-      practicalTutorialActive
-    ) {
-      return undefined;
-    }
-
-    const interval = setInterval(() => {
-      setElapsedSeconds((currentSeconds) => {
-        const nextSeconds = currentSeconds + 1;
-        elapsedSecondsRef.current = nextSeconds;
-        return nextSeconds;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [
-    gameplayModalOpen,
-    isCoinSlotProcessing,
-    isMagicTripleRescueVisible,
-    isBlockingModalVisible,
-    isMysteryTutorialVisible,
-    isSettingsMenuVisible,
-    level.id,
-    practicalTutorialActive,
-    status,
-  ]);
+  useActiveGameClock(
+    elapsedClockRef.current,
+    status === 'playing' &&
+      !isBlockingModalVisible &&
+      !gameplayModalOpen &&
+      !isCoinSlotProcessing &&
+      !isMagicTripleRescueVisible &&
+      !isMysteryTutorialVisible &&
+      !isSettingsMenuVisible &&
+      !practicalTutorialActive,
+    updateElapsedClock,
+  );
 
   useEffect(() => {
     if (!practicalTutorialWaitingForTile) {
@@ -1177,18 +1173,6 @@ function GameScreenContent({
     );
   };
 
-  const triggerTrayPop = (tileId: string) => {
-    if (poppingTrayTimeoutRef.current) {
-      clearTimeout(poppingTrayTimeoutRef.current);
-    }
-
-    setPoppingTrayTileId(tileId);
-    poppingTrayTimeoutRef.current = setTimeout(() => {
-      setPoppingTrayTileId(undefined);
-      poppingTrayTimeoutRef.current = undefined;
-    }, TILE_INSERT_POP_MS);
-  };
-
   const buildConsumeTilesFromTraySnapshot = (
     traySnapshot: Tile[],
     removedKind: TileKind,
@@ -1275,21 +1259,26 @@ function GameScreenContent({
     if (practicalTutorialActive) {
       setPracticalTutorialStep('intro');
     }
-    showToast('Nova variação pronta.');
+    showToast(
+      level.id.startsWith('daily-')
+        ? 'Desafio reiniciado.'
+        : 'Nova variação pronta.',
+    );
   };
 
-  const handleRetryLevel = () => {
-    onRetryLevel()
-      .then((result) => {
-        if (result.canRetry) {
-          resetLevel(result.trayCapacity, {
-            bonusSlotActive: result.bonusSlotActive,
-            coinSlotActive: result.coinSlotActive,
-          });
-        }
-      })
-      .catch(() => undefined);
-  };
+  const handleRetryLevel = useRoundAction(
+    onRetryLevel,
+    (result) => {
+      if (result.canRetry)
+        resetLevel(result.trayCapacity, {
+          bonusSlotActive: result.bonusSlotActive,
+          coinSlotActive: result.coinSlotActive,
+        });
+    },
+    roundGenerationRef,
+    isMountedRef,
+    () => showToast('Não foi possível reiniciar. Tente novamente.'),
+  );
 
   const handleCoinTraySlotPress = async () => {
     if (isCoinSlotProcessingRef.current) {
@@ -1579,7 +1568,9 @@ function GameScreenContent({
         activeTrayCapacityRef.current,
       );
       const terminalElapsedSeconds =
-        result.status === 'won' ? elapsedSecondsRef.current : undefined;
+        result.status === 'won'
+          ? elapsedClockRef.current.readSeconds()
+          : undefined;
 
       if (result.board === currentBoard && result.tray === currentTray) {
         isVisualMoveResolvingRef.current = false;
@@ -1642,7 +1633,9 @@ function GameScreenContent({
           setIsMovePipelineActive(false);
 
           if (result.status === 'won') {
-            startWonRound(terminalElapsedSeconds ?? elapsedSecondsRef.current);
+            startWonRound(
+              terminalElapsedSeconds ?? elapsedClockRef.current.readSeconds(),
+            );
           }
           resolve('applied');
         };
@@ -1855,7 +1848,9 @@ function GameScreenContent({
 
   const finishTerminalMove = (move: PendingTileMove) => {
     if (move.result.status === 'won') {
-      startWonRound(move.terminalElapsedSeconds ?? elapsedSecondsRef.current);
+      startWonRound(
+        move.terminalElapsedSeconds ?? elapsedClockRef.current.readSeconds(),
+      );
       return;
     }
 
@@ -1868,7 +1863,7 @@ function GameScreenContent({
       }
       playLoseSound();
       setResultElapsedSeconds(
-        move.terminalElapsedSeconds ?? elapsedSecondsRef.current,
+        move.terminalElapsedSeconds ?? elapsedClockRef.current.readSeconds(),
       );
     }
   };
@@ -1941,7 +1936,6 @@ function GameScreenContent({
     setFlyingTileEvent(undefined);
     trayRef.current = move.arrivalTray;
     setTray(move.arrivalTray);
-    triggerTrayPop(event.tile.id);
 
     if (!move.result.removedKind) {
       playTapSound();
@@ -1956,9 +1950,20 @@ function GameScreenContent({
     );
     setHiddenTrayTileIds(consumeTiles.map(({ tile }) => tile.id));
     mediumImpact();
-    playTripleSounds();
     if (!markActiveTileMoveConsuming(tileMoveQueueRef.current, event.id)) {
       return;
+    }
+    const nextCombo = advanceNaturalCombo(comboRef.current, Date.now());
+    comboRef.current = nextCombo;
+    naturalTripleSerialRef.current += 1;
+    onNaturalTriple?.(
+      `${level.id}:${Date.now()}:${roundGenerationRef.current}:${naturalTripleSerialRef.current}`,
+    );
+    if (nextCombo.count === 1) playTripleSounds();
+    else {
+      if (nextCombo.count === 2) playCombo2Sound();
+      else if (nextCombo.count === 3) playCombo3Sound();
+      else playComboHighSound();
     }
     startTripleConsume(
       consumeTiles,
@@ -2029,7 +2034,9 @@ function GameScreenContent({
         },
         result,
         terminalElapsedSeconds:
-          result.status === 'playing' ? undefined : elapsedSecondsRef.current,
+          result.status === 'playing'
+            ? undefined
+            : elapsedClockRef.current.readSeconds(),
         tutorialStep: practicalTutorialWaitingForTile
           ? practicalTutorialStep
           : undefined,
@@ -2039,6 +2046,7 @@ function GameScreenContent({
       boardRef.current = result.board;
       setBoard(result.board);
       setMoveHistory((currentHistory) => [...currentHistory, move.historyItem]);
+      playTileSelectSound();
       playWhooshSound();
       setFlyingTileEvent(event);
 
@@ -2134,11 +2142,6 @@ function GameScreenContent({
     activeTripleConsumeIdRef.current = undefined;
     tripleCompleteCallbackRef.current = undefined;
     setHiddenTrayTileIds([]);
-    setPoppingTrayTileId(undefined);
-    if (poppingTrayTimeoutRef.current) {
-      clearTimeout(poppingTrayTimeoutRef.current);
-      poppingTrayTimeoutRef.current = undefined;
-    }
 
     if (activeMove) {
       trayRef.current = activeMove.result.tray;
@@ -2159,7 +2162,7 @@ function GameScreenContent({
     }
   };
 
-  const handleBackToLevels = () => {
+  const handleBackToLevels = useCallback(() => {
     const cancelledPowerEffect = activeTileMoveRef.current
       ? undefined
       : tripleCompleteCallbackRef.current;
@@ -2172,16 +2175,41 @@ function GameScreenContent({
     setFlyingTileEvent(undefined);
     setTripleConsumeEvent(undefined);
     setHiddenTrayTileIds([]);
-    setPoppingTrayTileId(undefined);
-    if (poppingTrayTimeoutRef.current) {
-      clearTimeout(poppingTrayTimeoutRef.current);
-      poppingTrayTimeoutRef.current = undefined;
-    }
     isVisualMoveResolvingRef.current = false;
     setIsMovePipelineActive(false);
     cancelledPowerEffect?.(true);
     onBack();
-  };
+  }, [onBack]);
+
+  useEffect(() => {
+    if (
+      Platform.OS !== 'android' ||
+      !isActive ||
+      status !== 'playing' ||
+      isBlockingModalVisible ||
+      isSettingsMenuVisible ||
+      gameplayModalOpen ||
+      isMysteryTutorialVisible
+    )
+      return undefined;
+
+    const subscription = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        handleBackToLevels();
+        return true;
+      },
+    );
+    return () => subscription.remove();
+  }, [
+    isActive,
+    status,
+    isBlockingModalVisible,
+    isSettingsMenuVisible,
+    gameplayModalOpen,
+    isMysteryTutorialVisible,
+    handleBackToLevels,
+  ]);
 
   useEffect(() => {
     if (
@@ -2239,7 +2267,7 @@ function GameScreenContent({
           <View style={[styles.sceneGlow, styles.sceneGlowBottom]} />
         </View>
         <View style={styles.gameContent}>
-          <View style={styles.hud}>
+          <View style={[styles.hud, { justifyContent: 'space-between' }]}>
             <View style={styles.hudNav}>
               <Pressable
                 accessibilityLabel="Voltar ao mapa"
@@ -2250,7 +2278,7 @@ function GameScreenContent({
                   pressed ? styles.navButtonPressed : null,
                 ]}
               >
-                <GameIcon name="back" size={24} tone="blue" />
+                <GameIcon name="back" size={28} tone="green" variant="plain" />
               </Pressable>
               <Pressable
                 accessibilityLabel="Reiniciar fase"
@@ -2263,7 +2291,7 @@ function GameScreenContent({
                   pressed ? styles.navButtonPressed : null,
                 ]}
               >
-                <GameIcon name="reset" size={24} tone="neutral" />
+                <GameIcon name="reset" size={28} tone="green" variant="plain" />
               </Pressable>
               <Pressable
                 accessibilityLabel="Abrir configurações"
@@ -2274,18 +2302,26 @@ function GameScreenContent({
                   pressed ? styles.navButtonPressed : null,
                 ]}
               >
-                <GameIcon name="settings" size={24} tone="blue" />
+                <GameIcon
+                  name="settings"
+                  size={28}
+                  tone="green"
+                  variant="plain"
+                />
               </Pressable>
             </View>
-            <View style={styles.hudTextBlock}>
-              <PhasePlate
-                levelLabel={levelDisplayLabel}
-                worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
-                worldName={chapter ? chapter.name : world.subtitle}
-              />
-            </View>
+            {width >= 480 ? (
+              <View style={styles.hudTextBlock}>
+                <PhasePlate
+                  levelLabel={levelDisplayLabel}
+                  worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
+                  worldName={chapter ? chapter.name : world.subtitle}
+                />
+              </View>
+            ) : null}
             <View style={styles.hudRight}>
               <ResourcePill
+                forest
                 addTone="green"
                 footer={
                   livesState.currentLives < livesState.maxLives
@@ -2298,6 +2334,7 @@ function GameScreenContent({
               />
               <View style={styles.coinRow}>
                 <ResourcePill
+                  forest
                   iconName="coin"
                   iconTone="gold"
                   value={`${coins}`}
@@ -2318,6 +2355,16 @@ function GameScreenContent({
               </View>
             </View>
           </View>
+
+          {width < 480 ? (
+            <View style={{ marginHorizontal: 12, marginBottom: 6 }}>
+              <PhasePlate
+                levelLabel={levelDisplayLabel}
+                worldLabel={chapter ? `Capítulo ${chapter.id}` : world.label}
+                worldName={chapter ? chapter.name : world.subtitle}
+              />
+            </View>
+          ) : null}
 
           <View style={styles.meterRow}>
             <Text style={styles.meterTime}>
@@ -2399,6 +2446,24 @@ function GameScreenContent({
           </View>
 
           <View style={styles.trayControlRow}>
+            <PowerDrawer
+              forest
+              disabled={
+                status !== 'playing' ||
+                practicalTutorialControlsLocked ||
+                isBlockingModalVisible ||
+                gameplayModalOpen ||
+                gameplayInteractionPending ||
+                isSettingsMenuVisible
+              }
+              disabledPowers={{
+                hint: !magicTripleRescueMove,
+                shuffle: remainingTiles < 2,
+                undo: !lastUndoMove,
+              }}
+              itemCounts={itemCounts}
+              onUsePower={requestPowerUse}
+            />
             <View style={styles.trayStatus}>
               <Text
                 style={[
@@ -2417,23 +2482,6 @@ function GameScreenContent({
                 </Text>
               ) : null}
             </View>
-            <PowerDrawer
-              disabled={
-                status !== 'playing' ||
-                practicalTutorialControlsLocked ||
-                isBlockingModalVisible ||
-                gameplayModalOpen ||
-                gameplayInteractionPending ||
-                isSettingsMenuVisible
-              }
-              disabledPowers={{
-                hint: !magicTripleRescueMove,
-                shuffle: remainingTiles < 2,
-                undo: !lastUndoMove,
-              }}
-              itemCounts={itemCounts}
-              onUsePower={requestPowerUse}
-            />
           </View>
 
           <Animated.View
@@ -2446,7 +2494,6 @@ function GameScreenContent({
               bonusSlotActive={roundBonusTraySlotActive}
               coinSlotActive={roundCoinTraySlotActive}
               hiddenTileIds={hiddenTrayTileIds}
-              poppingTileId={poppingTrayTileId}
               tiles={tray}
               onAdSlotPress={handleAdTraySlotPress}
               onCoinSlotPress={handleCoinTraySlotPress}
