@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   noteTitle: {
-    color: colors.primaryDark,
+    color: colors.ink,
     fontSize: fontSizes.xs,
     fontWeight: '900',
     textTransform: 'uppercase',
