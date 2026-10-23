@@ -1391,7 +1391,7 @@ mk open --title 'L-25 · Cobrir a faixa vazia acima da arte ao rolar o mapa até
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-26 · Centralizar os três poderes na partida' \
-  --body 'Solicitado em 21/10/2026. O status da bandeja dividia a linha com PowerDrawer e deslocava os controles para a direita, cortando o último botão. Poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar telas estreitas, desktop e tela cheia. Exportação local, sem APK ou publicação.
+  --body 'Solicitado em 21/10/2026. O status da bandeja dividia a linha com PowerDrawer e deslocava os controles para a direita, cortando o último botão. Poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar telas estreitas, desktop e tela cheia. Exportação local, sem APK ou publicação. Ajustes solicitados em 23/10/2026: cabeçalho de fase compacto em creme/verde, poderes menores com nomes/preços legíveis e ações do tutorial fixas fora da rolagem. Alvos de toque preservados; revisão no simulador e aceite Android pendente. Evidências em docs/AJUSTES-TUTORIAL-PARTIDA-20261023.txt.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5

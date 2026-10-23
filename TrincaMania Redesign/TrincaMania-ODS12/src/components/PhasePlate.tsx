@@ -1,7 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { radii, shadows, spacing } from '../styles/theme';
-
 type PhasePlateProps = {
   levelLabel: string;
   worldLabel: string;
@@ -14,88 +12,65 @@ export function PhasePlate({
   worldName,
 }: PhasePlateProps) {
   return (
-    <View style={styles.plate}>
-      <View pointerEvents="none" style={[styles.notch, styles.notchLeft]} />
-      <View pointerEvents="none" style={[styles.notch, styles.notchRight]} />
-      <View pointerEvents="none" style={styles.gloss} />
-      <Text
-        adjustsFontSizeToFit
-        minimumFontScale={0.8}
-        numberOfLines={1}
-        style={styles.title}
-      >
-        Fase {levelLabel}
-      </Text>
-      <Text
-        adjustsFontSizeToFit
-        minimumFontScale={0.65}
-        style={styles.subtitle}
-      >
-        {worldName} · {worldLabel}
-      </Text>
+    <View style={styles.plate} testID="phase-plate">
+      <View style={styles.phase}>
+        <Text style={styles.title}>Fase {levelLabel}</Text>
+      </View>
+      <View pointerEvents="none" style={styles.separator} />
+      <View style={styles.location}>
+        <Text numberOfLines={1} style={styles.worldName}>
+          {worldName}
+        </Text>
+        <Text numberOfLines={1} style={styles.subtitle}>
+          {worldLabel}
+        </Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gloss: {
-    backgroundColor: 'rgba(255, 255, 255, 0.16)',
-    borderRadius: radii.pill,
-    height: 9,
-    left: 12,
-    position: 'absolute',
-    right: 12,
-    top: 3,
-  },
-  notch: {
-    borderBottomColor: 'transparent',
-    borderBottomWidth: 8,
-    borderTopColor: 'transparent',
-    borderTopWidth: 8,
-    height: 0,
-    position: 'absolute',
-    top: 11,
-    width: 0,
-  },
-  notchLeft: {
-    borderRightColor: '#FFD35A',
-    borderRightWidth: 10,
-    left: -11,
-  },
-  notchRight: {
-    borderLeftColor: '#FFD35A',
-    borderLeftWidth: 10,
-    right: -11,
-  },
   plate: {
     alignItems: 'center',
-    alignSelf: 'stretch',
-    backgroundColor: '#5C2A9B',
-    borderBottomColor: '#2C0E56',
-    borderBottomWidth: 5,
-    borderColor: '#FFD35A',
-    borderRadius: 13,
-    borderWidth: 3,
-    paddingBottom: 4,
-    paddingHorizontal: spacing.sm,
-    paddingTop: 3,
-    ...shadows.button,
+    alignSelf: 'center',
+    backgroundColor: '#FFF7E5',
+    borderColor: '#C5D3AF',
+    borderRadius: 14,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 10,
+    maxWidth: 280,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    width: '100%',
+    shadowColor: '#142F24',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.16,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  phase: {
+    backgroundColor: '#254B39',
+    borderRadius: 9,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    flexShrink: 0,
+  },
+  title: { color: '#FFF7E5', fontSize: 15, fontWeight: '900', lineHeight: 19 },
+  separator: { width: 1, height: 22, backgroundColor: '#D7DEC7' },
+  location: { flex: 1, minWidth: 0, gap: 1 },
+  worldName: {
+    color: '#284832',
+    fontSize: 12,
+    fontWeight: '800',
+    lineHeight: 15,
   },
   subtitle: {
-    color: '#FFE9A8',
-    fontSize: 10,
-    fontWeight: '900',
-    letterSpacing: 0.3,
-    lineHeight: 14,
+    color: '#53634B',
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 0.8,
+    lineHeight: 12,
     textTransform: 'uppercase',
-  },
-  title: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '900',
-    lineHeight: 23,
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
-    textShadowOffset: { height: 2, width: 0 },
-    textShadowRadius: 1,
   },
 });

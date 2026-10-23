@@ -25,9 +25,9 @@ type PowerTone = {
 };
 
 const POWER_TONES: Record<PowerUpType, PowerTone> = {
-  hint: { border: '#BE9B58', face: '#254335', label: '#FFF0CB' },
-  shuffle: { border: '#BE9B58', face: '#254335', label: '#FFF0CB' },
-  undo: { border: '#BE9B58', face: '#254335', label: '#FFF0CB' },
+  hint: { border: '#BE9B58', face: '#254335', label: '#254B39' },
+  shuffle: { border: '#BE9B58', face: '#254335', label: '#254B39' },
+  undo: { border: '#BE9B58', face: '#254335', label: '#254B39' },
 };
 
 type PowerDrawerProps = {
@@ -155,12 +155,11 @@ function PowerDrawerBase({
               isDisabled ? styles.medallionDisabled : null,
             ]}
           >
-            <View pointerEvents="none" style={styles.medallionSheen} />
             <PowerIcon
               fill={isLocked ? '#E5E9DF' : undefined}
               name={power}
               outline={isLocked ? '#607168' : undefined}
-              size={56}
+              size={34}
             />
             {bossSilenced ? (
               <View pointerEvents="none" style={styles.silenceSeal}>
@@ -266,27 +265,26 @@ export const PowerDrawer = memo(
 const styles = StyleSheet.create({
   badgeText: {
     color: '#4B2A00',
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '900',
-    lineHeight: 11,
+    lineHeight: 13,
   },
   badgeTextPurchasable: {
     color: '#4A2A00',
-    fontSize: 10,
-    lineHeight: 11,
+    fontSize: 11,
+    lineHeight: 13,
   },
   dock: {
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
     alignSelf: 'center',
     backgroundColor: 'transparent',
     flexDirection: 'row',
     gap: 8,
     justifyContent: 'center',
-    minHeight: 88,
-    maxWidth: 350,
-    paddingHorizontal: 8,
-    paddingBottom: 8,
-    paddingTop: 4,
+    maxWidth: 304,
+    paddingHorizontal: 0,
+    paddingBottom: 4,
+    paddingTop: 2,
     width: '94%',
     zIndex: 8,
   },
@@ -298,43 +296,31 @@ const styles = StyleSheet.create({
   },
   powerButton: {
     alignItems: 'center',
-    minHeight: 78,
+    minHeight: 74,
+    backgroundColor: '#FFF7E5',
+    borderColor: '#C5D3AF',
+    borderWidth: 1,
+    borderRadius: 13,
     justifyContent: 'flex-start',
-    paddingTop: 1,
+    paddingHorizontal: 6,
+    paddingVertical: 5,
+    gap: 3,
     position: 'relative',
     width: '100%',
   },
   powerButtonDisabled: {
-    opacity: 0.78,
+    opacity: 1,
   },
   medallion: {
-    alignItems: 'center',
-    borderRadius: 24,
-    borderWidth: 1,
-    height: 56,
+    alignItems: 'flex-start',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    height: 34,
     justifyContent: 'center',
     position: 'relative',
-    shadowColor: '#1C241A',
-    shadowOffset: { height: 3, width: 0 },
-    shadowOpacity: 0.24,
-    shadowRadius: 3,
-    elevation: 1,
-    width: 64,
+    width: '100%',
   },
-  medallionForest: {
-    backgroundColor: '#203B2E',
-    borderColor: '#BE9B58',
-  },
-  medallionSheen: {
-    borderColor: 'rgba(255, 224, 157, 0.18)',
-    borderRadius: 999,
-    borderWidth: 1,
-    bottom: 3,
-    left: 3,
-    position: 'absolute',
-    right: 3,
-    top: 3,
-  },
+  medallionForest: { backgroundColor: 'transparent' },
   medallionDisabled: {
     opacity: 1,
   },
@@ -375,28 +361,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
   },
   powerLabel: {
-    backgroundColor: 'transparent',
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 0.1,
-    lineHeight: 14,
-    marginTop: 5,
-    minHeight: 28,
-    paddingHorizontal: 1,
-    textShadowColor: '#182A21',
-    textShadowOffset: { height: 1, width: 0 },
-    textShadowRadius: 2,
+    fontSize: 11,
+    fontWeight: '800',
+    lineHeight: 13,
+    minHeight: 26,
     textAlignVertical: 'center',
     textAlign: 'center',
     width: '100%',
     zIndex: 50,
   },
-  powerLabelLocked: { color: '#D1C7AC' },
+  powerLabelLocked: { color: '#53634B' },
   contextLabel: {
-    position: 'absolute',
-    top: 42,
-    color: '#FFF0CB',
-    backgroundColor: '#354039',
+    color: '#53634B',
     borderRadius: 6,
     paddingHorizontal: 3,
     fontSize: 9,
@@ -427,8 +403,8 @@ const styles = StyleSheet.create({
     minWidth: 24,
     paddingHorizontal: 4,
     position: 'absolute',
-    right: -3,
-    top: 34,
+    right: 0,
+    top: 8,
     zIndex: 51,
   },
   statusBadgeDisabled: {

@@ -227,13 +227,13 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     textAlign: 'center',
   },
-  roles: { alignSelf: 'center', flexDirection: 'row', gap: 8 },
+  roles: { alignSelf: 'center', flexDirection: 'row', gap: 2 },
   role: {
     color: tutorialPalette.moss,
     fontSize: 9,
     fontWeight: '900',
     textAlign: 'center',
-    width: 60,
+    width: 70,
   },
   tray: { width: '100%', position: 'relative' },
   power: {
