@@ -40,3 +40,11 @@ A execução completa de `npm run validar:local` passou, incluindo cobertura e s
 - A17/A19: o usuário confirmou em 23/10 que a entrega é local/offline. Hospedagem pública e domínio não fazem parte deste aceite; o QR público fica sem configuração.
 
 A tarefa CI-41 permanece aberta. O usuário autorizou correções e push das branches em 23/10. Logs completos, imagens originais e evidências intermediárias foram preservados fora dos repositórios em `auditoria/2026-10-23/correcoes/`.
+
+## Retomada de 23/10 — entrega acadêmica local
+
+O usuário confirmou que o aplicativo é apenas para a faculdade, sem distribuição de produção. O gate padrão continua rejeitando Android Debug. A opção explícita `--academic-local` exige o SHA-256 exato do certificado do APK anterior (`ACADEMIC_CERT_SHA256`), verifica pacote, versão, SDKs, depuração e permissões com os mesmos critérios do gate de release. Não foi criada nem publicada uma chave nova. Preservar o certificado permite uma atualização compatível; a migração efetiva de saves ainda exige teste Android.
+
+O diálogo “Pilha Misteriosa” recebeu nome acessível, título, fechamento pelo sistema e rolagem para conteúdo ampliado. Sua regressão de componente passou; a suíte agora possui 71 testes em 19 suítes.
+
+A consulta atual ao npm reporta um único advisory distinto, `node-forge::GHSA-86w9-cpqp-85rv`, propagado a 22 pacotes. A entrada de braces foi retirada do livro-razão porque não é mais reportada pelo registry; a mitigação local e seus testes foram preservados. Nenhuma vulnerabilidade nova foi aceita. A matriz e a triagem ficam em [DEPENDENCIAS-AUDITORIA-20261023.md](DEPENDENCIAS-AUDITORIA-20261023.md). O saldo anterior de 2 advisories/60 pacotes acima é histórico.

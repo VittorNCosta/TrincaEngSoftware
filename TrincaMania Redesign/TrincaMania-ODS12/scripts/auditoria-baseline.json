@@ -2,11 +2,6 @@
   "_leia": "Livro-razao de vulnerabilidades aceitas, gerado por scripts/auditoria.js --atualizar. Reprova em advisory novo com severidade >= high e em entrada que nao existe mais. A chave e pacote::GHSA quando ha URL de advisory do GitHub; caso contrario, pacote::source.",
   "piso": "high",
   "entradas": {
-    "braces::GHSA-vfj7-8cjw-p6xm": {
-      "severidade": "high",
-      "titulo": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
-      "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
-    },
     "node-forge::GHSA-86w9-cpqp-85rv": {
       "severidade": "high",
       "titulo": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",

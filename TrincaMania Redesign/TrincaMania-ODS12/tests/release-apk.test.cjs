@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   validateSignature,
+  validateAcademicSignature,
   validateManifest,
 } = require('../scripts/check-release-apk.cjs');
 const fingerprint = 'a'.repeat(64);
@@ -43,5 +44,22 @@ test('release rejects missing and multiple signers', () => {
   assert.throws(() => validateSignature('', fingerprint));
   assert.throws(() =>
     validateSignature(valid + '\n' + valid.replaceAll('#1', '#2'), fingerprint),
+  );
+});
+test('academic update preserves the previous signer without weakening release', () => {
+  const debug = valid.replace('CN=Release', 'CN=Android Debug');
+  assert.equal(validateAcademicSignature(debug, fingerprint), fingerprint);
+  assert.throws(() => validateSignature(debug, fingerprint), /Debug/);
+  assert.throws(() => validateAcademicSignature(debug), /ACADEMIC_CERT/);
+  assert.throws(
+    () => validateAcademicSignature(debug, 'b'.repeat(64)),
+    /anterior/,
+  );
+  assert.throws(() => validateAcademicSignature('', fingerprint));
+  assert.throws(() =>
+    validateAcademicSignature(
+      debug + '\n' + debug.replaceAll('#1', '#2'),
+      fingerprint,
+    ),
   );
 });

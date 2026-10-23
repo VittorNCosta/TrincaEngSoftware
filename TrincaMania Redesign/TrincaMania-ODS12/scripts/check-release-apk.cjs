@@ -50,6 +50,24 @@ function validateSignature(output, expected) {
     );
   return fingerprints[0];
 }
+// The local college demo keeps the installed identity. This is an explicit
+// alternative to the release gate, which continues to reject Android Debug.
+function validateAcademicSignature(output, expected) {
+  if (!/^[a-f0-9]{64}$/i.test(expected || ''))
+    throw new Error(
+      'Defina ACADEMIC_CERT_SHA256 com o certificado do APK anterior.',
+    );
+  const fingerprints = [
+    ...output.matchAll(
+      /Signer #\d+ certificate SHA-256 digest:\s*([a-f0-9]{64})/gi,
+    ),
+  ].map((match) => match[1].toLowerCase());
+  if (fingerprints.length !== 1 || fingerprints[0] !== expected.toLowerCase())
+    throw new Error(
+      'Certificado acadêmico diferente do APK anterior; atualização bloqueada.',
+    );
+  return fingerprints[0];
+}
 if (require.main === module) {
   try {
     const file = process.argv[2];
@@ -60,7 +78,10 @@ if (require.main === module) {
       ['verify', '--verbose', '--print-certs', file],
       { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
     );
-    validateSignature(output, process.env.RELEASE_CERT_SHA256);
+    const academic = process.argv.slice(3).includes('--academic-local');
+    if (academic)
+      validateAcademicSignature(output, process.env.ACADEMIC_CERT_SHA256);
+    else validateSignature(output, process.env.RELEASE_CERT_SHA256);
     validateManifest(
       execFileSync(process.env.AAPT2 || 'aapt2', ['dump', 'badging', file], {
         encoding: 'utf8',
@@ -68,11 +89,15 @@ if (require.main === module) {
       }),
     );
     console.log(
-      'APK validado: assinatura aprovada, pacote, versão, SDKs, sem debug e sem permissões bloqueadas. Testes Android e migração de save continuam necessários.',
+      `APK validado (${academic ? 'acadêmico local; assinatura de desenvolvimento preservada' : 'release'}): certificado esperado, pacote, versão, SDKs, sem depuração e sem permissões bloqueadas. Testes Android e migração de save continuam necessários.`,
     );
   } catch (error) {
     console.error(error.message);
     process.exitCode = 1;
   }
 }
-module.exports = { validateSignature, validateManifest };
+module.exports = {
+  validateSignature,
+  validateAcademicSignature,
+  validateManifest,
+};
