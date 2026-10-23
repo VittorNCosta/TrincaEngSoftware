@@ -1,0 +1,26 @@
+Correção da faixa vazia no rodapé do mapa — 23/10/2026
+
+Base: 705b5ac2cf1162d5b0d42d1042f084db76cccfa7.
+Relato: rolar até o fim revela uma faixa escura entre a ilustração e as abas.
+Reprodução na Central de Materiais, iframe 412x832: 18 linhas consecutivas
+(y=722..739) com mais de 90% de pixels do canvas #071820, acima do menu.
+
+Causa e alteração
+A ilustração terminava antes dos 32 px de folga do layout; os 78 px de
+padding para a navegação também não tinham arte. Em viewports mais altos,
+o conteúdo podia terminar antes de preencher a janela.
+
+O conteúdo ilustrado agora preenche pelo menos a altura do viewport.
+Uma camada decorativa não interativa pinta toda a margem inferior usando
+a borda do próprio mapa espelhada, com 1 px de sobreposição. Em janelas muito
+altas, as cópias alternam o espelhamento para manter continuidade e cobrir
+toda a área. A imagem principal, as âncoras, as distâncias, os controles e
+a folga de navegação permanecem iguais. Nenhuma imagem nova foi gerada.
+
+Validação
+Validação agregada exclusivamente local em ods12-map-bottom-validar.log.
+As fases canônicas, os pisos de qualidade e o save não foram alterados.
+Conferência final do export dentro do site, nos mundos 1–10 e bônus, com
+rolagem real e análise dos pixels do fundo. Evidências no workspace em
+auditoria/2026-10-23/map-bottom/. Aceite visual Android pendente.
+Sem APK, release, merge em develop ou execução de GitHub Actions.
