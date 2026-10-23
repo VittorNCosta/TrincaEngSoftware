@@ -257,6 +257,7 @@ const escreverBaseline = (advisories) => {
 };
 
 const main = () => {
+  require('./apply-security-patches.cjs').verifySecurityPatches();
   const advisories = coletarAdvisories(rodarAudit());
 
   if (atualizar) {

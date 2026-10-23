@@ -6,6 +6,7 @@
     "node": ">=22.13.0 <23"
   },
   "scripts": {
+    "postinstall": "node scripts/apply-security-patches.cjs",
     "prepare": "node scripts/instalar-hooks.js",
     "start": "expo start",
     "android": "expo run:android",

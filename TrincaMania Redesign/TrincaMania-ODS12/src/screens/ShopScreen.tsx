@@ -380,7 +380,6 @@ const styles = StyleSheet.create({
   },
   itemCardDisabled: {
     borderColor: '#D5C7A8',
-    opacity: 0.82,
   },
   itemCopy: {
     flex: 1,
@@ -436,9 +435,9 @@ const styles = StyleSheet.create({
   },
   metaLabel: {
     color: colors.muted,
-    fontSize: 9,
+    fontSize: fontSizes.xs,
     fontWeight: '900',
-    lineHeight: 10,
+    lineHeight: 14,
     textTransform: 'uppercase',
   },
   metaPill: {
@@ -474,13 +473,13 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   noteTitle: {
-    color: colors.primaryDark,
+    color: '#754100',
     fontSize: fontSizes.xs,
     fontWeight: '900',
     textTransform: 'uppercase',
   },
   priceText: {
-    color: colors.primaryDark,
+    color: '#754100',
     fontSize: fontSizes.xs,
     fontWeight: '900',
   },

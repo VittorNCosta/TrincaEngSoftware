@@ -885,7 +885,7 @@ Tarefas adicionais, sem duplicar proteção de branches (#115), Dependabot (#149
 | CI-36 | ✅ Migrar ferramentas e CI do Node 20 para LTS suportado            | [CC] | P1         | Verificação local 06/10/2026: engines, .nvmrc, workflows e perfis EAS alinhados com Node 22.23.2. Instalação limpa/doctor e comparação de cobertura documentados em docs/ENTREGA-TERRA-SOL.md e docs/ci-entrega.md. Typecheck, 252 testes de domínio, 56 UI e export passaram. Build Android local de f679d06 passou com JDK 21/SDK 36; a correção de permissão em 13fded5 tem entrega documentada em docs/ENTREGA-ANDROID-20261006.txt. Sem execução remota; auditoria de dependências e aceites Android continuam pendentes próprios. Issue #230 encerrada em 06/10/2026 com o build comprovado. | GPT-5.6 Terra |
 | CI-38 | ✅ Ajustar gatilhos e relatórios do E2E Android                     | [CC] | P1         | **Feito 24/09.** PR #278 executou smoke Android (run #36027719768); run manual #36028204534 em develop concluiu os quatro fluxos, com JUnit e capturas. PR documental #291 não disparou E2E. Filtros, cancelamento por PR, duração e retenção foram confirmados.                                                                                                                                                                                                                                                                                                                                   | GPT-5.6 Terra |
 | CI-39 | Bloquear jobs ao atingir 90% do limite mensal de Actions            | [CC] | P0         | Limite informado em 29/09/2026: 2.000 minutos por mês; corte em 1.800. A API de faturamento pessoal não está disponível para GITHUB_TOKEN. O guard calcula minutos dos jobs deste repositório, aceita piso mensal informado pelo responsável e falha fechada se a API não responder. Piso de setembro: 4.204. O repositório público usa runners padrão gratuitos; o limite controla consumo operacional, não cobrança.                                                                                                                                                                             | GPT-5.6 Terra |
-| CI-40 | Criar site Igrion ODS12 e demonstração web offline para feira       | [CC] | P1         | Entrega local em 07/10/2026: site independente com jogo exportado e APK 7461c48 versionados, build sem pasta irmã, recarga no PC e pacote offline. Usuário testou o site e autorizou envio ao Git. Evidências em docs/ENTREGA-SITE-PC-20261007.md. Integração, hospedagem HTTPS, QR público e uso na feira pendentes; Actions bloqueado.                                                                                                                                                                                                                                                           | Codex         |
+| CI-40 | Criar site Igrion ODS12 e demonstração web offline para feira       | [CC] | P1         | Entrega local em 07/10/2026: site independente com jogo exportado e APK 7461c48 versionados, build sem pasta irmã, recarga no PC e pacote offline. Usuário testou o site e autorizou envio ao Git. Evidências em docs/ENTREGA-SITE-PC-20261007.md. Integração e aceite na feira pendentes; escopo local/offline confirmado em 23/10, sem hospedagem ou QR público; Actions bloqueado.                                                                                                                                                                                                              | GPT-5.6 Terra |
 | G-21  | ✅ Criar ou vincular automaticamente uma issue por PR               | [CC] | P1         | **Feito 24/09.** Automações integradas nas PRs #240 e #259; PRs #266 e #278 comprovaram criação e vínculo de issues. Testes de merge, fork, edição e idempotência passaram.                                                                                                                                                                                                                                                                                                                                                                                                                        | GPT-5.6 Terra |
 | G-22  | ✅ Reconciliar roadmap e issues sem reabertura indevida             | [CC] | P1         | **Feito 24/09.** PR #259 integrada; validação de roadmap no CI e testes de sincronização passaram. Conclusões comprovadas são atualizadas nos dois espelhos por esta PR antes da reconciliação de escrita.                                                                                                                                                                                                                                                                                                                                                                                         | GPT-5.6 Terra |
 | Q-16  | ✅ Medir cobertura de produção separada por domínio e interface     | [CC] | P1         | **Feito 24/09.** Medição separada de produção em c8 e Jest integrada pela PR #240. Baselines e prova de denominador em docs/ci-entrega.md; CI publica relatórios e testes de persistência cobrem concorrência, idempotência e recuperação.                                                                                                                                                                                                                                                                                                                                                         | GPT-5.6 Terra |
@@ -1008,16 +1008,16 @@ estático offline para a feira. Cada visitante usa armazenamento em memória;
 testes no navegador mantêm um namespace próprio, sem acessar o save Android.
 
 Implementação e validação locais registradas em
-`docs/ENTREGA-SITE-PC-20261007.md`. Hospedagem/domínio e aceites de uso na feira
-pendentes. O usuário testou o site no PC e autorizou commit/push em 07/10/2026.
+`docs/ENTREGA-SITE-PC-20261007.md`. Aceites de uso na feira pendentes.
+Em 23/10/2026 o usuário confirmou o escopo local/offline, sem hospedagem pública. O usuário testou o site no PC e autorizou commit/push em 07/10/2026.
 O site inclui o jogo exportado e APK aprovados; `npm run build` não exige pasta
 irmã. Envios na branch de trabalho do aplicativo e no novo repositório privado
 do site, sem PR, hospedagem ou execução de GitHub Actions.
 CI-40 permanece aberta até integração e aceites.
 
-| ID    | Tarefa                                                               | Quem | Prio | Detalhe                                                                                        | Codex |
-| ----- | -------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------------------------- | ----- |
-| CI-41 | Corrigir auditoria integrada do site e simulador ODS12 de 22/10/2026 | [CC] | P0   | Correções e validação na branch de auditoria; aceites Android e advisories permanecem abertos. | GPT-6 |
+| ID    | Tarefa                                                               | Quem | Prio | Detalhe                                                                                                   | Codex         |
+| ----- | -------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------------------------------- | ------------- |
+| CI-41 | Corrigir auditoria integrada do site e simulador ODS12 de 22/10/2026 | [CC] | P0   | Mitigações locais, assets, bundle e integração web; aceites Android, acessibilidade e advisories abertos. | GPT-5.6 Terra |
 
 ## CI-41 — Correções da auditoria integrada (22/10/2026)
 
@@ -1030,10 +1030,11 @@ otimizações HTTP. Ver `docs/CORRECOES-PERSISTENCIA-20261022.md` e
 ficam na branch irmã `igrion-ODS-site`.
 
 - [x] Implementar correções em fontes separados, preservando os 103 níveis canônicos.
-- [ ] Concluir validação integrada visual/E2E e conciliar alterações da outra máquina.
+- [x] Corrigir gates de assets/bundle e adicionar regressões de segurança, release e integridade do export.
+- [ ] Concluir aceites visuais, carreira completa por UI, navegadores e conciliação com a outra máquina.
 - [ ] Gerar APK atualizado após autorização explícita de build Android na sessão.
 - [ ] Validar assinatura aprovada, permissões efetivas e atualização sobre save existente.
-- [ ] Acompanhar advisories sem patch; nenhuma declaração de risco zero.
+- [ ] Substituir mitigações locais por versões upstream corrigidas; validar leitor de tela.
 
 Envio da branch de auditoria autorizado em 23/10/2026. Sem merge, publicação
 ou execução de Actions. A tarefa permanece aberta até os aceites e pendências

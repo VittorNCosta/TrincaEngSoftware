@@ -27,7 +27,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const projectRoot = path.join(__dirname, '..');
-const assetsDir = path.join(projectRoot, 'assets');
 const baselinePath = path.join(__dirname, 'assets-baseline.json');
 
 /** Teto por arquivo. O roadmap (bloco A) fixa 400 KB para PNG de mapa. */
@@ -89,26 +88,36 @@ const kb = (bytes) => `${(bytes / 1024).toFixed(0)} KB`;
  */
 const ehDocumentacao = (relative) => /(^|\/)README\.md$/.test(relative);
 
-const collect = () => {
-  const files = walk(assetsDir)
+const collect = (root = projectRoot) => {
+  const files = walk(path.join(root, 'assets'))
     .map((full) => ({
       bytes: fs.statSync(full).size,
-      relative: path.relative(projectRoot, full).split(path.sep).join('/'),
+      relative: path.relative(root, full).split(path.sep).join('/'),
     }))
     .filter((file) => !ehDocumentacao(file.relative));
 
   // Referência por nome de arquivo. O código usa `require('../../assets/...')`
   // com caminho literal, então o basename aparece cru na fonte.
   const sources = [
-    ...walkSource(path.join(projectRoot, 'src')),
-    path.join(projectRoot, 'app.json'),
+    ...walkSource(path.join(root, 'src')),
+    ...fs
+      .readdirSync(root)
+      .filter(
+        (name) =>
+          /\.(tsx?|jsx?|json)$/.test(name) &&
+          !/^(package|package-lock)\.json$/.test(name),
+      )
+      .map((name) => path.join(root, name)),
   ]
     .map((file) => fs.readFileSync(file, 'utf8'))
     .join('\n');
 
   return files.map((file) => ({
     ...file,
-    orfao: !sources.includes(path.basename(file.relative)),
+    // React Native resolves @2x/@3x files through the base require automatically.
+    orfao: !sources.includes(
+      path.basename(file.relative).replace(/@[23]x(?=\.[^.]+$)/, ''),
+    ),
   }));
 };
 
@@ -229,4 +238,5 @@ const main = () => {
   );
 };
 
-main();
+if (require.main === module) main();
+module.exports = { collect };

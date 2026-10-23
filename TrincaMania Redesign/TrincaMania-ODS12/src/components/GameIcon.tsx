@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import Svg, { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Ellipse, G, Path, Rect } from './svgPrimitives';
 
 import { radii, shadows } from '../styles/theme';
 

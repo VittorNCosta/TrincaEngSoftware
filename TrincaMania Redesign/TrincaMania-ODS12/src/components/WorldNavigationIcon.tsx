@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path } from './svgPrimitives';
 import { radii, shadows } from '../styles/theme';
 /** Seta e acabamento do botão de troca de mundo do TrincaMania original. */
 export function WorldNavigationIcon({

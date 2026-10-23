@@ -1,5 +1,4 @@
 // Inventário local: decodifica PNGs, resolve referências e prepara uma galeria.
-/* global __dirname */
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');

@@ -8,7 +8,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path } from './svgPrimitives';
 
 import { GameIcon } from './GameIcon';
 import { IS_E2E_BUILD } from '../testing/e2eProfile';

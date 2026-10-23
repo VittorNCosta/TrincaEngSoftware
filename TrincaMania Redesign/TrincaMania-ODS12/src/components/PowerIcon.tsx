@@ -1,5 +1,5 @@
 import { Image } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import Svg, { Circle, Path } from './svgPrimitives';
 import { PowerUpType } from '../types/game';
 export type PowerIconName = PowerUpType | 'star';
 type PowerIconProps = {
