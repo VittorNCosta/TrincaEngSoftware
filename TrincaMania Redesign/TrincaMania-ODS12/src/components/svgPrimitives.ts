@@ -2,9 +2,12 @@
 export {
   default,
   Circle,
+  Defs,
   Ellipse,
   G,
+  LinearGradient,
   Path,
   Polygon,
   Rect,
+  Stop,
 } from 'react-native-svg';

@@ -1,6 +1,6 @@
 import { memo, type ComponentProps } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Ellipse, Path } from 'react-native-svg';
+import Svg, { Ellipse, Path } from './svgPrimitives';
 import type { MapLevelNode } from './MapLevelNode';
 import { GameIcon } from './GameIcon';
 import { getLevelDisplayLabel } from '../utils/levelDisplay';

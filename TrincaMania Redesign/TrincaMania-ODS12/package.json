@@ -6,7 +6,7 @@
     "node": ">=22.13.0 <23"
   },
   "scripts": {
-    "postinstall": "node scripts/apply-security-patches.cjs",
+    "postinstall": "node scripts/apply-security-patches.cjs && node scripts/apply-svg-types-patch.cjs",
     "prepare": "node scripts/instalar-hooks.js",
     "start": "expo start",
     "android": "expo run:android",
@@ -42,6 +42,7 @@
     "expo-clipboard": "~8.0.8",
     "expo-haptics": "~15.0.8",
     "expo-linear-gradient": "~15.0.8",
+    "expo-modules-core": "3.0.30",
     "expo-status-bar": "~3.0.9",
     "expo-updates": "~29.0.20",
     "react": "19.1.0",

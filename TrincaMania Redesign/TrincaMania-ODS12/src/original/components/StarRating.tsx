@@ -1,7 +1,7 @@
 import { View, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { msg } from '../messages';
 import { memo } from 'react';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path } from '../../components/svgPrimitives';
 
 import { colors } from '../styles/theme';
 
