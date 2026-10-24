@@ -9,6 +9,7 @@ import {
   ImageSourcePropType,
   Easing,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 import { msg } from '../messages';
 import { useEffect, useRef, useState } from 'react';
@@ -101,7 +102,7 @@ const NAV_IMAGE_SIZES: Record<MainTabKey, ImageStyle> = Object.fromEntries(
 // Altura da faixa interativa (ícone + label), sem contar a folga de área segura.
 // Telas que precisam reservar espaço de scroll pelo total real devem usar
 // useBottomNavClearance(), não esta constante — ela não inclui o inset do aparelho.
-export const BOTTOM_NAV_HEIGHT = 78;
+export const BOTTOM_NAV_HEIGHT = 88;
 
 /**
  * Espaço total (altura interativa + inset real de baixo) ocupado pela barra na
@@ -144,6 +145,8 @@ export function BottomNavBar({
   onSelect,
 }: BottomNavBarProps) {
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const labelSize = Math.min(10, Math.max(8, width / 40));
   const lockedFeedbackOpacity = useRef(new Animated.Value(0)).current;
   const iconMotion = useRef(
     MAIN_TAB_ITEMS.map(() => new Animated.Value(0)),
@@ -221,7 +224,7 @@ export function BottomNavBar({
         styles.bar,
         {
           height: BOTTOM_NAV_HEIGHT + bottomInset,
-          paddingBottom: 8 + bottomInset,
+          paddingBottom: 12 + bottomInset,
         },
       ]}
     >
@@ -235,7 +238,7 @@ export function BottomNavBar({
       <View
         accessible={false}
         pointerEvents="none"
-        style={[styles.railArt, { bottom: bottomInset - 4 }]}
+        style={[styles.railArt, { bottom: bottomInset + 4 }]}
       >
         <Image
           accessible={false}
@@ -383,13 +386,7 @@ export function BottomNavBar({
                   </View>
                 ) : null}
               </View>
-              <View
-                style={[
-                  styles.labelPlate,
-                  isActive ? styles.labelPlateActive : null,
-                  isLockedMission ? styles.labelPlateLocked : null,
-                ]}
-              >
+              <View style={styles.labelPlate}>
                 <Text
                   adjustsFontSizeToFit
                   maxFontSizeMultiplier={1.35}
@@ -397,6 +394,7 @@ export function BottomNavBar({
                   numberOfLines={1}
                   style={[
                     styles.label,
+                    { fontSize: labelSize },
                     isActive ? styles.labelActive : null,
                     isLockedMission ? styles.labelLocked : null,
                   ]}
@@ -422,8 +420,9 @@ const styles = StyleSheet.create({
     left: 0,
     // height/paddingBottom reais vêm de insets.bottom (ver componente) — os
     // valores aqui são só o estado inicial antes do primeiro layout de insets.
-    paddingBottom: 8,
-    paddingHorizontal: 4,
+    paddingBottom: 12,
+    // Centros das quatro placas da arte: aproximadamente 15%, 38%, 62%, 85%.
+    paddingHorizontal: '3.5%',
     paddingTop: 4,
     position: 'absolute',
     right: 0,
@@ -500,28 +499,10 @@ const styles = StyleSheet.create({
   },
   labelPlate: {
     alignItems: 'center',
-    backgroundColor: '#F3DFB8',
-    borderColor: forestPolish.woodLight,
-    borderRadius: 999,
-    borderWidth: 1,
     justifyContent: 'center',
+    height: 18,
     maxWidth: '100%',
-    height: 20,
-    minWidth: 64,
-    paddingHorizontal: 6,
     width: 78,
-  },
-  labelPlateActive: {
-    backgroundColor: '#FFF5D8',
-    borderColor: forestPolish.gold,
-    shadowColor: forestPolish.gold,
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.56,
-    shadowRadius: 5,
-  },
-  labelPlateLocked: {
-    backgroundColor: '#D9C8AB',
-    borderColor: forestPolish.bark,
   },
   label: {
     color: '#59391E',

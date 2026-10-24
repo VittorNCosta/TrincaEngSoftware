@@ -1295,7 +1295,7 @@ mk open --title 'L-17 · Integrar a intro do TrincaMania original no simulador O
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-18 · Copiar menu inferior e apresentação das telas do TrincaMania atualizado' \
-  --body 'Solicitado em 21/10/2026. Fonte simulator/main em 7fdc7a3, conferida via fetch. Componentes e artes originais isolados em src/original e assets/original; Mapa/Loja/Missões/Perfil, inventário, recompensas, configurações e controles da partida adaptados aos dados ODS12. Missões mostram objetivos da campanha, sem introduzir a economia diária/semanal do original. Mapa ODS12 e 103 fases preservados. Validação web local; APK e merge pendentes.
+  --body 'Solicitado em 21/10/2026. Fonte simulator/main em 7fdc7a3, conferida via fetch. Componentes e artes originais isolados em src/original e assets/original; Mapa/Loja/Missões/Perfil, inventário, recompensas, configurações e controles da partida adaptados aos dados ODS12. Missões mostram objetivos da campanha, sem introduzir a economia diária/semanal do original. Mapa ODS12 e 103 fases preservados. Validação web local; APK e merge pendentes. Ajuste de enquadramento em 23/10/2026: rótulos sobre as placas originais da barra, centros alinhados à arte, recuo lateral proporcional e folga inferior maior. Altura compartilhada atualizada para manter a reserva do conteúdo. Evidências em docs/ENQUADRAMENTO-MENU-20261023.txt; aceite Android pendente.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
