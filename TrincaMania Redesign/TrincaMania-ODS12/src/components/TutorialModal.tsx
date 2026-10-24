@@ -10,7 +10,10 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import { GameIcon, GameIconName, GameIconTone } from './GameIcon';
 import { PrimaryButton } from './PrimaryButton';
@@ -103,6 +106,8 @@ export function TutorialModal({
   onFinish,
 }: TutorialModalProps) {
   const { height: windowHeight } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  const contentRef = useRef<ScrollView>(null);
   const [stepIndex, setStepIndex] = useState(0);
   const [manualStepIndex, setManualStepIndex] = useState<number | undefined>();
   const [reducedMotion, setReducedMotion] = useState(true);
@@ -172,6 +177,10 @@ export function TutorialModal({
     visible,
   ]);
 
+  useEffect(() => {
+    contentRef.current?.scrollTo({ y: 0, animated: false });
+  }, [stepIndex, manualStepIndex, mode, visible]);
+
   const finishTutorial = () => {
     setStepIndex(0);
     setManualStepIndex(undefined);
@@ -199,26 +208,70 @@ export function TutorialModal({
         edges={['top', 'bottom', 'left', 'right']}
         style={styles.overlay}
       >
-        <ScrollView
-          contentContainerStyle={styles.overlayContent}
-          keyboardShouldPersistTaps="handled"
-          testID="tutorial-modal"
-        >
+        <View style={styles.overlayContent} testID="tutorial-modal">
           <Animated.View
             accessibilityViewIsModal
             style={[
               styles.card,
-              { maxHeight: windowHeight - spacing.md * 2 },
+              {
+                maxHeight: Math.max(
+                  160,
+                  windowHeight - insets.top - insets.bottom - spacing.md * 2,
+                ),
+              },
               {
                 opacity: cardOpacity,
                 transform: [{ scale: cardScale }],
               },
             ]}
           >
-            <TutorialFrame onClose={finishTutorial}>
+            <TutorialFrame
+              onClose={finishTutorial}
+              footer={
+                showingLibrary ? (
+                  <PrimaryButton
+                    size="small"
+                    title="Fechar"
+                    onPress={finishTutorial}
+                  />
+                ) : step ? (
+                  <View style={styles.actions} testID="tutorial-actions">
+                    <View style={styles.skipAction}>
+                      <PrimaryButton
+                        size="small"
+                        testID="tutorial-pular"
+                        title={mode === 'manual' ? 'Fechar' : 'Pular'}
+                        variant="secondary"
+                        onPress={finishTutorial}
+                      />
+                    </View>
+                    <View style={styles.nextAction}>
+                      <PrimaryButton
+                        size="small"
+                        testID="tutorial-proximo"
+                        title={
+                          mode === 'manual'
+                            ? 'Voltar aos tutoriais'
+                            : isLastStep
+                              ? 'Começar'
+                              : 'Próximo'
+                        }
+                        onPress={
+                          mode === 'manual'
+                            ? () => setManualStepIndex(undefined)
+                            : nextStep
+                        }
+                      />
+                    </View>
+                  </View>
+                ) : undefined
+              }
+            >
               <ScrollView
+                ref={contentRef}
+                style={styles.scrollContent}
                 bounces={false}
-                showsVerticalScrollIndicator={false}
+                showsVerticalScrollIndicator
                 contentContainerStyle={styles.cardContent}
               >
                 {showingLibrary ? (
@@ -273,9 +326,6 @@ export function TutorialModal({
                         })}
                       </View>
                     ))}
-                    <View style={styles.actions}>
-                      <PrimaryButton title="Fechar" onPress={finishTutorial} />
-                    </View>
                   </>
                 ) : step ? (
                   <>
@@ -320,43 +370,24 @@ export function TutorialModal({
                       />
                     ) : null}
                     <Text style={styles.text}>{step.text}</Text>
-
-                    <View style={styles.actions}>
-                      <PrimaryButton
-                        title={
-                          mode === 'manual'
-                            ? 'Voltar aos tutoriais'
-                            : isLastStep
-                              ? 'Começar'
-                              : 'Próximo'
-                        }
-                        onPress={
-                          mode === 'manual'
-                            ? () => setManualStepIndex(undefined)
-                            : nextStep
-                        }
-                      />
-                      <PrimaryButton
-                        size="compact"
-                        testID="tutorial-pular"
-                        title={mode === 'manual' ? 'Fechar' : 'Pular'}
-                        variant="secondary"
-                        onPress={finishTutorial}
-                      />
-                    </View>
                   </>
                 ) : null}
               </ScrollView>
             </TutorialFrame>
           </Animated.View>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContent: { flexShrink: 1, minHeight: 0 },
+  skipAction: { flex: 1, minWidth: 0 },
+  nextAction: { flex: 2, minWidth: 0 },
   actions: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
     gap: spacing.sm,
     width: '100%',
   },
@@ -429,7 +460,7 @@ const styles = StyleSheet.create({
   },
   overlayContent: {
     alignItems: 'center',
-    flexGrow: 1,
+    flex: 1,
     justifyContent: 'center',
     padding: spacing.md,
   },

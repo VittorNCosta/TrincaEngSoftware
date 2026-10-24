@@ -100,7 +100,7 @@ export function MissionsScreen({ progress, onClose }: Props) {
   return (
     <ScreenShell scroll={false}>
       <ImageBackground
-        source={require('../../../assets/original/map/map_world1_bg.png')}
+        source={require('../../../assets/original/map/map_world1_bg.webp')}
         style={{ flex: 1, margin: -spacing.md }}
       >
         <View

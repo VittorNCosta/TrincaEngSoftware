@@ -1,5 +1,8 @@
 import { CampaignMapLayers } from './levelSelect/CampaignMapLayers';
-import { IllustratedCampaignMap } from './levelSelect/IllustratedCampaignMap';
+import {
+  IllustratedCampaignMap,
+  IllustratedMapBottomFill,
+} from './levelSelect/IllustratedCampaignMap';
 import { getIllustratedMapLayout } from './levelSelect/illustratedMapLayout';
 import { MapSelectionPanel } from './levelSelect/MapSelectionPanel';
 import type { SelectedTarget } from './levelSelect/types';
@@ -699,7 +702,14 @@ export function LevelSelectScreen({
               styles.mapScrollContent,
               // O minHeight é do border box: soma a folga da barra de abas para o
               // mapa em si continuar com a altura desenhada.
-              { minHeight: selectedMapHeight + BOTTOM_NAV_HEIGHT },
+              {
+                minHeight: illustratedMapLayout
+                  ? Math.max(
+                      selectedMapHeight + BOTTOM_NAV_HEIGHT,
+                      mapViewport.height,
+                    )
+                  : selectedMapHeight + BOTTOM_NAV_HEIGHT,
+              },
             ]}
             onContentSizeChange={onMapContentSizeChange}
             onLayout={onMapViewportLayout}
@@ -709,6 +719,16 @@ export function LevelSelectScreen({
             showsVerticalScrollIndicator={false}
             overScrollMode="never"
           >
+            {illustratedMapLayout ? (
+              <IllustratedMapBottomFill
+                worldId={selectedWorldId}
+                layout={illustratedMapLayout}
+                contentHeight={Math.max(
+                  selectedMapHeight + BOTTOM_NAV_HEIGHT,
+                  mapViewport.height,
+                )}
+              />
+            ) : null}
             {selectedTarget ? (
               <Pressable
                 accessibilityLabel="Fechar seleção de fase"

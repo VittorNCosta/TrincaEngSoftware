@@ -1,7 +1,13 @@
 import { View, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { msg } from '../messages';
 import { memo } from 'react';
-import Svg, { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
+import Svg, {
+  Circle,
+  Ellipse,
+  G,
+  Path,
+  Rect,
+} from '../../components/svgPrimitives';
 
 import { colors, radii, shadows } from '../styles/theme';
 import { ForestObjectIcon } from './ForestObjectIcon';

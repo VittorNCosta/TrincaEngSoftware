@@ -1,3 +1,4 @@
+import './src/bootstrapExpo';
 import { registerRootComponent } from 'expo';
 import { createElement } from 'react';
 
