@@ -50,6 +50,8 @@ const NAV_BASE =
 // Medidas dos PNGs de runtime: bounds e centro ponderado pelo alpha > 8,
 // usando readImageMetadata(..., { includeAlphaCentroid: true }) do analyzer.
 // A compensação fica só na imagem; frames, labels e hitboxes são compartilhados.
+// O centro de massa não coincide com o apoio visual: loja, prancheta e perfil
+// mantêm compensações próprias para apoiar a ilustração sobre o pedestal.
 const NAV_ICON_METRICS = {
   map: {
     width: 256,
@@ -57,6 +59,8 @@ const NAV_ICON_METRICS = {
     visibleHeight: 231,
     centerX: 128.922,
     centerY: 117.589,
+    displayHeight: 40,
+    opticalOffsetY: 0,
   },
   shop: {
     width: 256,
@@ -64,6 +68,8 @@ const NAV_ICON_METRICS = {
     visibleHeight: 236,
     centerX: 134.641,
     centerY: 136.525,
+    displayHeight: 36,
+    opticalOffsetY: -3,
   },
   missions: {
     width: 256,
@@ -71,6 +77,8 @@ const NAV_ICON_METRICS = {
     visibleHeight: 235,
     centerX: 129.314,
     centerY: 133.73,
+    displayHeight: 36,
+    opticalOffsetY: -3,
   },
   profile: {
     width: 256,
@@ -78,13 +86,23 @@ const NAV_ICON_METRICS = {
     visibleHeight: 221,
     centerX: 128.046,
     centerY: 137.118,
+    displayHeight: 36,
+    opticalOffsetY: -4.5,
   },
 };
-const NAV_ICON_VISIBLE_HEIGHT = 40;
+// Centros das bases e placas na arte de 861 × 209. As posições usam a mesma
+// referência da imagem, sem depender do padding ou do tamanho do texto.
+const NAV_ART_HEIGHT = 88;
+// A elipse fica aparente abaixo do ícone, como a superfície de um pedestal.
+const NAV_ICON_LIFT = 12;
+const NAV_ART_CENTERS = [132, 329, 534, 731];
+const NAV_ITEM_WIDTH_PERCENT = 23;
+const NAV_ICON_CENTER_Y = (67 / 209) * NAV_ART_HEIGHT - NAV_ICON_LIFT;
+const NAV_LABEL_CENTER_Y = (145 / 209) * NAV_ART_HEIGHT;
 const NAV_IMAGE_SIZES: Record<MainTabKey, ImageStyle> = Object.fromEntries(
   MAIN_TAB_ITEMS.map(({ key }): [MainTabKey, ImageStyle] => {
     const metrics = NAV_ICON_METRICS[key];
-    const scale = NAV_ICON_VISIBLE_HEIGHT / metrics.visibleHeight;
+    const scale = metrics.displayHeight / metrics.visibleHeight;
     return [
       key,
       {
@@ -92,7 +110,11 @@ const NAV_IMAGE_SIZES: Record<MainTabKey, ImageStyle> = Object.fromEntries(
         width: metrics.width * scale,
         transform: [
           { translateX: (metrics.width / 2 - metrics.centerX) * scale },
-          { translateY: (metrics.height / 2 - metrics.centerY) * scale },
+          {
+            translateY:
+              (metrics.height / 2 - metrics.centerY) * scale +
+              metrics.opticalOffsetY,
+          },
         ],
       },
     ];
@@ -224,7 +246,6 @@ export function BottomNavBar({
         styles.bar,
         {
           height: BOTTOM_NAV_HEIGHT + bottomInset,
-          paddingBottom: 12 + bottomInset,
         },
       ]}
     >
@@ -317,6 +338,10 @@ export function BottomNavBar({
             }}
             style={({ pressed }) => [
               styles.item,
+              {
+                bottom: bottomInset + 4,
+                left: `${(NAV_ART_CENTERS[index] / 861) * 100 - NAV_ITEM_WIDTH_PERCENT / 2}%`,
+              },
               isActive ? styles.itemActive : styles.itemInactive,
               pressed ? styles.itemPressed : null,
             ]}
@@ -415,15 +440,8 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     backgroundColor: 'transparent',
     bottom: 0,
-    flexDirection: 'row',
     height: BOTTOM_NAV_HEIGHT,
     left: 0,
-    // height/paddingBottom reais vêm de insets.bottom (ver componente) — os
-    // valores aqui são só o estado inicial antes do primeiro layout de insets.
-    paddingBottom: 12,
-    // Centros das quatro placas da arte: aproximadamente 15%, 38%, 62%, 85%.
-    paddingHorizontal: '3.5%',
-    paddingTop: 4,
     position: 'absolute',
     right: 0,
     zIndex: 12,
@@ -433,7 +451,7 @@ const styles = StyleSheet.create({
     top: -14,
   },
   railArt: {
-    height: 88,
+    height: NAV_ART_HEIGHT,
     left: 0,
     position: 'absolute',
     right: 0,
@@ -450,9 +468,9 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   itemContent: {
+    ...StyleSheet.absoluteFillObject,
+    top: NAV_ICON_LIFT,
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
   },
   activeHalo: {
     backgroundColor: 'rgba(255, 224, 144, 0.38)',
@@ -473,20 +491,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 44,
     justifyContent: 'center',
-    position: 'relative',
+    position: 'absolute',
+    top: NAV_ICON_CENTER_Y - 22,
     width: 48,
   },
   item: {
     alignItems: 'center',
     backgroundColor: 'transparent',
-    flex: 1,
-    justifyContent: 'center',
+    // Inclui a parte elevada do ícone na área de toque.
+    height: NAV_ART_HEIGHT + NAV_ICON_LIFT,
+    position: 'absolute',
+    width: `${NAV_ITEM_WIDTH_PERCENT}%`,
     // Legacy QA contract: minHeight: CAMPAIGN_TOUCH_TARGET_SIZE; the shared
     // mobile minimum remains enforced by the max expression below.
     minHeight: Math.max(CAMPAIGN_TOUCH_TARGET_SIZE, touchTargets.minimum),
-    paddingBottom: 1,
-    paddingHorizontal: 2,
-    paddingTop: 1,
   },
   itemInactive: {
     opacity: 0.98,
@@ -498,6 +516,8 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   labelPlate: {
+    position: 'absolute',
+    top: NAV_LABEL_CENTER_Y - 9,
     alignItems: 'center',
     justifyContent: 'center',
     height: 18,
@@ -515,6 +535,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'transparent',
     textShadowOffset: { height: 0, width: 0 },
     textShadowRadius: 0,
+    textAlign: 'center',
     textTransform: 'uppercase',
   },
   labelActive: {
