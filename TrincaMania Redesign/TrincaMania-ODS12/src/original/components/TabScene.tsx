@@ -11,13 +11,13 @@ import { colors, spacing } from '../styles/theme';
 import { WorldId } from '../../types/game';
 
 const tabWorld1Bg =
-  require('../../../assets/original/map/map_world1_bg.png') as ImageSourcePropType;
+  require('../../../assets/original/map/map_world1_bg.webp') as ImageSourcePropType;
 const tabWorld2Bg =
-  require('../../../assets/original/map/map_world2_bg.png') as ImageSourcePropType;
+  require('../../../assets/original/map/map_world2_bg.webp') as ImageSourcePropType;
 const tabWorld3Bg =
-  require('../../../assets/original/map/map_world3_home_bg.png') as ImageSourcePropType;
+  require('../../../assets/original/map/map_world3_home_bg.webp') as ImageSourcePropType;
 const tabBonusBg =
-  require('../../../assets/original/map/map_bonus_bg.png') as ImageSourcePropType;
+  require('../../../assets/original/map/map_bonus_bg.webp') as ImageSourcePropType;
 
 const getTabBackground = (worldId: WorldId) => {
   switch (worldId) {

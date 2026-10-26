@@ -1,0 +1,45 @@
+Ajustes de tutorial e partida — 23/10/2026
+
+Solicitação: ações do guia sem rolar para baixo; cabeçalho de fase menor e
+mais elaborado; poderes menores com nomes e preços mais legíveis.
+Base: c443ca303d128d4717ce21d1774e3c8f9ebf822c.
+
+Tutorial
+- Pular e Próximo/Começar ficam no rodapé do painel, fora do ScrollView.
+- O fechamento e a biblioteca manual mantêm ações próprias no mesmo rodapé.
+- A altura considera a janela e as áreas seguras. Só o conteúdo interno rola;
+  trocar de assunto/etapa retorna esse conteúdo ao topo.
+- Alvos de toque de 48 px. A barra de rolagem indica conteúdo adicional.
+- Espaço dos rótulos do ciclo ampliado para não quebrar Reciclagem.
+
+Partida
+- PhasePlate em creme e verde, com Fase em um selo, separador e identificação
+  do mundo/capítulo em duas linhas. Altura padrão de 41 px; largura até 280 px.
+- Ícones dos poderes de 56 para 34 px, em botões claros com nome e preço/
+  quantidade separados. Botões padrão de 75 px de altura, mantendo o alvo de
+  toque e o nome acessível completo. Mensagens transitórias ficam no fluxo,
+  sem sobrepor preço ou nome. Artes existentes reutilizadas.
+- Preços, inventário, handlers, estados de bloqueio e confirmação preservados.
+
+Verificação no navegador
+- Todas as quatro etapas do guia em 390x693, 320x568 e 568x320:
+  Pular e Próximo/Começar dentro da janela, sem rolar o conteúdo.
+- Ciclo praticado até concluir, com movimento normal, em 320x568 e 390x693:
+  as ações permaneceram visíveis após formar a trinca.
+- Roda real em 320x568: o conteúdo rolou e o rodapé permaneceu em y=494,
+  com 48 px de altura; Pular fechou o guia.
+- Poderes presentes e dentro da tela em 320x568, 390x693, 430x764 e 760x700;
+  no menor tamanho, cada botão media aproximadamente 85x75 px.
+- Compra de Trinca automática abriu a confirmação com preço 120 e saldo 0.
+- Capturas/medidas em auditoria/2026-10-23/ui-tutorial-partida no workspace.
+
+Validação local
+TypeScript, 109 testes UI, 396 testes de domínio/storage e as duas simulações
+completas de campanha/capítulos aprovados. Validação agregada registrada no
+log externo ods12-ui-validar-local.log. Nenhum piso de qualidade, fase canônica,
+regra, storage ou áudio foi alterado. Na automação sem gesto inicial houve
+bloqueio de autoplay do navegador; esta rodada não constitui aceite de áudio.
+
+Aceite visual no simulador é do usuário. Sem geração/instalação de APK e sem
+aceite Android. GitHub Actions permanece desabilitado. L-26 segue registrada
+no roadmap; nenhuma issue foi encerrada ou release publicada.

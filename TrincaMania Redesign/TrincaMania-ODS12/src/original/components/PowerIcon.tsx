@@ -1,4 +1,4 @@
-import Svg, { Circle, Path } from 'react-native-svg';
+import Svg, { Circle, Path } from '../../components/svgPrimitives';
 
 import { PowerUpType } from '../../types/game';
 import { ForestObjectIcon } from './ForestObjectIcon';

@@ -34,6 +34,51 @@ type Props = {
   selectBonusChest: () => void;
 };
 
+/** Pinta também a folga de rolagem e a área sob a barra de navegação. */
+export function IllustratedMapBottomFill({
+  worldId,
+  layout,
+  contentHeight,
+}: {
+  worldId: WorldId;
+  layout: IllustratedMapLayout;
+  contentHeight: number;
+}) {
+  const top = MAP_ART_TOP_INSET + layout.artHeight - 1;
+  const slices = Math.max(
+    1,
+    Math.ceil((contentHeight - top) / layout.artHeight),
+  );
+  return (
+    <View
+      pointerEvents="none"
+      testID="map-bottom-art"
+      style={{
+        position: 'absolute',
+        top,
+        bottom: 0,
+        width: layout.width,
+        overflow: 'hidden',
+      }}
+    >
+      {Array.from({ length: slices }, (_, index) => (
+        <Image
+          key={index}
+          accessible={false}
+          source={getWorldVisualAssets(worldId).map}
+          resizeMode="contain"
+          style={{
+            width: '100%',
+            height: layout.artHeight,
+            flexShrink: 0,
+            transform: [{ scaleY: index % 2 === 0 ? -1 : 1 }],
+          }}
+        />
+      ))}
+    </View>
+  );
+}
+
 /** Uma só superfície de rolagem mantém a arte e os objetos no mesmo chão. */
 export function IllustratedCampaignMap({
   worldId,

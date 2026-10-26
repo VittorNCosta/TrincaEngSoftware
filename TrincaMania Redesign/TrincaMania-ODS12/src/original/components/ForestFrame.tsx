@@ -1,6 +1,12 @@
 import { View, StyleSheet } from 'react-native';
 import { memo, useId } from 'react';
-import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
+import Svg, {
+  Defs,
+  LinearGradient,
+  Path,
+  Rect,
+  Stop,
+} from '../../components/svgPrimitives';
 
 import { forestPolish } from '../styles/theme';
 

@@ -1,0 +1,25 @@
+{
+  "package": "react-native-svg",
+  "version": "15.12.1",
+  "file": "src/lib/extract/extractGradient.ts",
+  "beforeSha256": "aa461478cc497eeb12c69cb2e68a22304fde71476eec57ec8a6b38e7015db8bd",
+  "afterSha256": "2cd9e0d41f1bf35bf7055d088b291c3f1b26756fdc478f704bb499ff11abf57e",
+  "changes": [
+    {
+      "before": "import type { ReactElement } from 'react';",
+      "after": "import type { ReactElement } from 'react';\nimport type { StopProps } from '../../elements/Stop';"
+    },
+    {
+      "before": "  parent: unknown\n",
+      "after": "  parent: StopProps['parent']\n"
+    },
+    {
+      "before": "React.cloneElement(child, {",
+      "after": "React.cloneElement(child as ReactElement<StopProps & { style?: StopProps }>, {"
+    },
+    {
+      "before": "`\"${stopColor}\" is not a valid color or \"${offset}\" is not a valid offset`",
+      "after": "`\"${String(stopColor)}\" is not a valid color or \"${offset}\" is not a valid offset`"
+    }
+  ]
+}

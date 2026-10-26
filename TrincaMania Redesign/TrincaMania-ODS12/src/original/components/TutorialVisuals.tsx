@@ -28,10 +28,10 @@ export function useTutorialReducedMotion() {
 }
 
 export const TUTORIAL_ASSETS = {
-  frame: require('../../../assets/original/ui/tutorials/power_tutorial_modal_frame.png'),
-  guide: require('../../../assets/original/ui/tutorials/power_tutorial_luma_guide.png'),
-  pointer: require('../../../assets/original/ui/tutorials/power_tutorial_pointer_hand.png'),
-  glow: require('../../../assets/original/ui/tutorials/power_tutorial_highlight_glow.png'),
+  frame: require('../../../assets/original/ui/tutorials/power_tutorial_modal_frame.webp'),
+  guide: require('../../../assets/original/ui/tutorials/power_tutorial_luma_guide.webp'),
+  pointer: require('../../../assets/original/ui/tutorials/power_tutorial_pointer_hand.webp'),
+  glow: require('../../../assets/original/ui/tutorials/power_tutorial_highlight_glow.webp'),
 };
 
 /** Shared artwork for campaign, practice and replay; never owns completion state. */

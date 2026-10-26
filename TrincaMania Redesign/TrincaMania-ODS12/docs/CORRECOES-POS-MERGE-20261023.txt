@@ -1,0 +1,96 @@
+Correções pós-merge ODS 12 — 23/10/2026
+
+Base: origin/develop 6c3f0a6d7fb4963616f8bc6ac4f01841e74bb619.
+Branch: fix/ods12-anomalias-20261023.
+Escopo: três gates reprovados no relatório MERGE-AUDITORIA-20261023.txt.
+
+Resultado local
+- Assets: 18 excessos -> zero; zero órfãos, limite mantido em 400 KiB.
+- Bundle Android/Hermes: 2,91 -> 2,56 MiB, teto mantido em 2,63 MiB.
+- Cobertura de domínio: 70,48 -> 75,58% de linhas/statements; piso 74,18%.
+  Branches 85,23% (piso 84,24%); funções 80,39% (piso 76,20%).
+- Cobertura UI: linhas 31,04%; statements 30,92%; branches 36,73%;
+  funções 34,89%. Todos os pisos existentes atendidos.
+
+Imagens
+18 PNGs foram codificados como WebP: 31.348.103 -> 6.064.838 bytes,
+economia de 25.283.265 bytes (80,65%). Dimensões e alpha decodificado
+idênticos aos originais. RGB usa compressão com perdas: qualidade 75–95,
+alphaQuality 100, esforço 6, smartSubsample. SSIM de luminância mínimo
+medido 0,985053 (blocos 8x8, composição em branco); não equivale a aceite
+visual. Inspeção do personagem Ravi antes/depois e carregamento da loja
+no navegador realizados. As 18 imagens exportadas decodificaram no Chromium.
+O template Android do Expo instalado habilita expo.webp.enabled=true.
+Nenhum desenho novo, recorte ou redimensionamento foi introduzido.
+
+Manifesto com hashes, parâmetros e métricas por imagem:
+docs/arte/compressao-pos-merge-20261023.json.
+Os PNGs de origem continuam no histórico da base; cópia externa preservada em
+/home/vitto/igrion/auditoria/2026-10-23/pos-merge/original-assets/.
+A ferramenta Sharp 0.35.5 foi usada apenas em diretório temporário externo;
+não virou dependência do aplicativo.
+
+Bundle e inicialização
+Imports SVG da interface original e dos gradientes do pedestal passaram
+pelo wrapper de primitivas existente. Na web, a implementação pública de
+react-native-svg é preservada. No nativo, só as primitivas usadas são
+carregadas, sem parsers XML/CSS e filtros desnecessários.
+A versão 15.12.1 permanece fixada. Um patch idempotente, validado por versão
+e SHA-256 no postinstall, corrige a tipagem React 19 de extractGradient;
+a única mudança JS emitida é String(stopColor) no diagnóstico de cor inválida.
+Fontes inesperadas são recusadas antes de escrever. Dois testes verificam
+idempotência, equivalência do JS e recusa de fonte/versão divergentes.
+
+Tree shaking de produção do Expo foi habilitado no metro.config.js com
+EXPO_UNSTABLE_TREE_SHAKING e EXPO_UNSTABLE_METRO_OPTIMIZE_GRAPH. A mesma
+configuração é usada no app e no orçamento; não existe ajuste exclusivo
+para deixar a medição verde. A otimização é experimental no SDK instalado:
+exige validação Android antes de release. Para investigar problemas, é
+possível desativar ambas as flags com 0; isso restaura o bundle maior.
+Referência: https://docs.expo.dev/guides/tree-shaking/.
+
+O primeiro smoke web reproduziu falha SharedObject após a otimização.
+bootstrapExpo.web.ts agora inicializa explicitamente o polyfill do Expo
+antes das dependências de App. expo-modules-core 3.0.30, já transitiva no
+lockfile, tornou-se dependência direta sem trocar versões da árvore.
+O caminho exportado de inicialização é interno ao Expo e deve ser revisto
+num upgrade. O bootstrap nativo não modifica o runtime.
+
+Áudio e cobertura
+Foram adicionados 20 testes comportamentais de música/locução: pedidos
+concorrentes, crossfade, intervalo entre faixas, cooldown, ducking com
+múltiplos donos, autoplay web, mute, foreground/background/inactive,
+liberação, falhas nativas e callbacks atrasados.
+Quatro regressões de locução falhavam na base: seek pendente podia disparar
+play após liberação, background, inactive ou mute. A guarda de geração e a
+checagem posterior ao await impedem isso. Eventos de player liberado não
+encerram uma locução substituta; o duck só é adquirido após play bem-sucedido.
+A cobertura cresce exercitando produção, mantendo o denominador e os pisos.
+
+Validação executada localmente
+- npm ci: instalação limpa e patches aplicados; sem upgrade de dependências.
+- npm run validar:local: exit 0.
+  Formatação, lint (zero erros; três avisos preexistentes em GameScreen),
+  TypeScript, 396 testes de domínio/storage, 25 testes da automação local,
+  109 testes UI, duas simulações completas (103 fases e 1000 mapas),
+  guarda ODS 12, assets, auditoria, cobertura e bundle passaram.
+- Auditoria: um advisory conhecido no livro-razão; nenhum novo acima do piso.
+  As mitigações e a pendência upstream anteriores continuam registradas.
+- Expo export web em produção: aprovado. Smoke Chromium em 390x844:
+  introdução, mapa, loja, abertura da fase 1, tutorial e envio de peça à
+  bandeja; sem erro JavaScript após o bootstrap. O servidor simples recebeu
+  apenas um 404 de favicon; não constitui teste completo da carreira na UI.
+- 103 fases canônicas e baselines de assets/cobertura/bundle inalterados.
+- Roadmap A-33/CI-41 e script de issues regenerados; CI-41 segue aberta.
+
+Evidências completas fora do repositório:
+/home/vitto/igrion/auditoria/2026-10-23/pos-merge/.
+
+Limites e aceites pendentes
+Sem APK gerado/instalado e sem aceite visual Android. A compilação do bundle
+Hermes não comprova execução no aparelho. A compressão e o tree shaking
+precisam desse aceite antes de release. Persistem os outros aceites da CI-41:
+carreira completa por UI, matriz de navegadores, leitor de tela, conciliação
+com outra máquina e substituição das mitigações por correções upstream.
+GitHub Actions foi confirmado desabilitado no repositório e não foi acionado.
+Não houve merge desta correção em develop nem publicação de release/site.

@@ -43,8 +43,10 @@ export function useTutorialReducedMotion() {
 export function TutorialFrame({
   children,
   onClose,
+  footer,
 }: {
   children: ReactNode;
+  footer?: ReactNode;
   onClose?: () => void;
 }) {
   return (
@@ -62,6 +64,7 @@ export function TutorialFrame({
       <View style={[styles.content, onClose ? styles.closeSpacing : null]}>
         {children}
       </View>
+      {footer ? <View style={styles.footer}>{footer}</View> : null}
     </View>
   );
 }
@@ -111,6 +114,14 @@ const styles = StyleSheet.create({
     borderRadius: radii.menuCard,
     padding: spacing.md,
     flexShrink: 1,
+    minHeight: 0,
+  },
+  footer: {
+    borderTopWidth: 1,
+    borderTopColor: '#613B1C26',
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
+    flexShrink: 0,
   },
   close: {
     position: 'absolute',
@@ -123,7 +134,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   closeText: { color: tutorialPalette.woodDark, fontSize: 28 },
-  content: { flexShrink: 1 },
+  content: { flexShrink: 1, minHeight: 0 },
   closeSpacing: { paddingTop: 32 },
   guide: { width: 70, height: 88 },
   target: { zIndex: 40 },

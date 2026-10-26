@@ -1,0 +1,25 @@
+Enquadramento do menu inferior — 23/10/2026
+
+Base: d4ab3f72d8b4ed56bd4cd3b8005bf655256a6dc8.
+Relato: botões/rótulos fora do enquadramento da barra ilustrada.
+
+As placas desenhadas por cima da arte tinham largura fixa de 78 px e os
+centros dos botões seguiam quatro colunas quase sem recuo. As placas da
+imagem têm centros aproximados em 15%, 38%, 62% e 85% da largura; as colunas
+anteriores deslocavam os elementos das extremidades para fora desses apoios.
+
+Alteração
+- Remover o fundo duplicado dos rótulos, usando as placas da arte original.
+- Recuo horizontal de 3,5% para alinhar ícones e texto à ilustração.
+- Barra com 88 px e 12 px de folga inferior, mais a área segura do aparelho.
+  A arte também sobe 8 px, acompanhando o conteúdo. A constante compartilhada
+  mantém as reservas das telas coerentes com a nova altura.
+- Remover a largura mínima das placas de texto; fonte ajustada à janela
+  entre 8 e 10 px, com nomes acessíveis completos e alvos mínimos preservados.
+- Estados ativo/bloqueado continuam nos ícones e no texto, além da semântica.
+
+Validação exclusivamente local registrada em ods12-nav-frame-validar.log.
+Conferência visual dentro do site, limites das quatro abas e navegação em
+tamanhos estreitos, desktop e tela cheia. Evidências no workspace:
+auditoria/2026-10-23/nav-frame/. Regras, preços, save e assets preservados.
+Sem APK ou aceite Android; sem merge em develop, release ou GitHub Actions.

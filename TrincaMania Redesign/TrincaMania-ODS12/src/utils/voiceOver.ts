@@ -39,6 +39,7 @@ const players: Partial<Record<VoiceReaction, AudioPlayer>> = {};
 // }
 let reactionState: VoiceReactionState = createVoiceReactionState();
 let isBackgrounded = false;
+let voiceGeneration = 0;
 let pendingReactionTimer: ReturnType<typeof setTimeout> | undefined;
 let voiceDuckTimeout: ReturnType<typeof setTimeout> | undefined;
 let activeVoicePlaybackSubscription: { remove: () => void } | undefined;
@@ -132,27 +133,40 @@ const startSpecificVoice = async (
   reaction: VoiceReaction,
   player: AudioPlayer,
 ) => {
+  const generation = voiceGeneration;
+  const isCurrent = () =>
+    generation === voiceGeneration &&
+    !isBackgrounded &&
+    players[reaction] === player;
   try {
-    if (!(await getSfxEnabled()) || isBackgrounded) {
+    const enabled = await getSfxEnabled();
+    if (!isCurrent()) return;
+    if (!enabled) {
       reactionState = finishVoiceReaction(reactionState);
       return;
     }
 
-    activeReaction = reaction;
     clearVoicePlaybackSubscription();
     await player.seekTo(0).catch(() => undefined);
+    const stillEnabled = await getSfxEnabled();
+    if (!isCurrent()) return;
+    if (!stillEnabled) {
+      finishVoicePlayback();
+      return;
+    }
     player.play();
+    activeReaction = reaction;
     duckMusic(200);
     clearVoiceDuckTimeout();
     activeVoicePlaybackSubscription = player.addListener(
       'playbackStatusUpdate',
       (status) => {
-        if (status.didJustFinish) finishVoicePlayback();
+        if (isCurrent() && status.didJustFinish) finishVoicePlayback();
       },
     );
     voiceDuckTimeout = setTimeout(finishVoicePlayback, 2200);
   } catch {
-    finishVoicePlayback();
+    if (isCurrent()) finishVoicePlayback();
   }
 };
 
@@ -190,6 +204,7 @@ export const playVoiceReaction = (comboCount: number) => {
 export const playComboHighVoice = () => playVoiceReaction(4);
 
 export const releaseVoiceOverPlayers = () => {
+  voiceGeneration += 1;
   const isPlaying = activeReaction !== undefined;
   clearPendingReactionTimer();
   clearVoicePlaybackSubscription();
@@ -213,7 +228,7 @@ export const releaseVoiceOverPlayers = () => {
 };
 
 AppState.addEventListener('change', (nextState: AppStateStatus) => {
-  if (nextState === 'background') {
+  if (nextState === 'background' || nextState === 'inactive') {
     isBackgrounded = true;
     releaseVoiceOverPlayers();
     return;
