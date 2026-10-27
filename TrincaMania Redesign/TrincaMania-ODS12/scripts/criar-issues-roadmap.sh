@@ -1402,6 +1402,18 @@ mk open --title 'L-26 · Centralizar os três poderes na partida' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-27 · Melhorar ícones de lixeiras, reciclagem e resíduos' \
+  --body 'Solicitado em 26/10/2026. Evoluir os SVGs existentes com silhueta de lixeira reconhecível, setas separadas e marca de compostagem; ampliar os resíduos e seu contraste. Manter cores, rótulos acessíveis e regras. Mesma geometria no site e no jogo. Implementação e prévia locais; aceite visual Android e integração pendentes. Commit e push em branch própria autorizados em 27/10/2026; sem APK ou aceite Android.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2777,4 +2789,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 210 issues (132 já criadas fechadas) =="
+echo "== pronto: 211 issues (132 já criadas fechadas) =="

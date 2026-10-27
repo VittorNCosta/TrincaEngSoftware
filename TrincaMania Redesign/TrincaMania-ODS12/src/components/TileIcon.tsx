@@ -2,7 +2,10 @@ import { memo, useContext } from 'react';
 import { WorldArtContext } from './WorldArtContext';
 import { getResidueVisual } from '../data/residueVisualAssets';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle, Ellipse, G, Path, Polygon, Rect } from './svgPrimitives';
+import {
+  CollectionBinArtwork,
+  RecyclingSymbolArtwork,
+} from './RecyclingArtwork';
 
 import { CardRole } from '../domain/recycling/value-objects/CardRole';
 import { getMaterial } from '../domain/recycling/value-objects/MaterialType';
@@ -34,117 +37,12 @@ type ArtworkProps = {
   size: number;
 };
 
-/** Lixeira da coleta seletiva, pintada com a cor oficial do material. */
-function BinArtwork({ color, colorDark, colorLight, size }: ArtworkProps) {
-  const artSize = size * 0.92;
-
-  return (
-    <View style={{ height: artSize, width: artSize }}>
-      <Svg height={artSize} viewBox="0 0 72 72" width={artSize}>
-        <Ellipse cx={36} cy={62} fill="rgba(38, 24, 8, 0.18)" rx={19} ry={4} />
-        <Path
-          d="M20 24h32l-3.4 33.2c-.2 2.1-2 3.8-4.2 3.8H27.6c-2.2 0-4-1.7-4.2-3.8z"
-          fill={color}
-          stroke={colorDark}
-          strokeLinejoin="round"
-          strokeWidth={3.2}
-        />
-        <Path d="M24.6 28.5h7.2l-2.4 28h-2z" fill={colorLight} opacity={0.55} />
-        <Path
-          d="M44.4 28.5h3.2l-2.6 28h-3.2z"
-          fill={colorDark}
-          opacity={0.35}
-        />
-        <Rect
-          fill={colorLight}
-          height={9}
-          rx={4.5}
-          stroke={colorDark}
-          strokeWidth={3.2}
-          width={44}
-          x={14}
-          y={15}
-        />
-        <Rect fill={colorDark} height={5} rx={2.5} width={14} x={29} y={8} />
-        <Polygon
-          fill="#FFFFFF"
-          opacity={0.92}
-          points="36,34 41.5,44 30.5,44"
-          stroke={colorDark}
-          strokeLinejoin="round"
-          strokeWidth={1.4}
-        />
-      </Svg>
-    </View>
-  );
-}
-
-const RECYCLE_VERTICES: { rotation: number; x: number; y: number }[] = [
-  { rotation: 60, x: 36, y: 16 },
-  { rotation: 180, x: 53.3, y: 46 },
-  { rotation: -60, x: 18.7, y: 46 },
-];
-
-/** Símbolo de reciclagem: as três setas em ciclo, na cor do material. */
-function RecycleSymbolArtwork({
-  color,
-  colorDark,
-  colorLight,
-  size,
-}: ArtworkProps) {
-  const artSize = size * 0.92;
-
-  return (
-    <View style={{ height: artSize, width: artSize }}>
-      <Svg height={artSize} viewBox="0 0 72 72" width={artSize}>
-        <Ellipse
-          cx={36}
-          cy={62}
-          fill="rgba(38, 24, 8, 0.18)"
-          rx={17}
-          ry={3.6}
-        />
-        <Circle cx={36} cy={37} fill={colorLight} opacity={0.28} r={25} />
-        <Path
-          d="M36 16 53.3 46 18.7 46Z"
-          fill="none"
-          stroke={colorDark}
-          strokeLinejoin="round"
-          strokeWidth={10}
-        />
-        <Path
-          d="M36 16 53.3 46 18.7 46Z"
-          fill="none"
-          stroke={color}
-          strokeLinejoin="round"
-          strokeWidth={6}
-        />
-        {RECYCLE_VERTICES.map((vertex) => (
-          <G
-            key={`${vertex.x}-${vertex.y}`}
-            transform={`translate(${vertex.x}, ${vertex.y}) rotate(${vertex.rotation})`}
-          >
-            <Polygon
-              fill={color}
-              points="1,-7.5 12,0 1,7.5"
-              stroke={colorDark}
-              strokeLinejoin="round"
-              strokeWidth={2.2}
-            />
-          </G>
-        ))}
-      </Svg>
-    </View>
-  );
-}
-
 /**
  * Resíduo: o objeto descartado. O emoji vem da carta (garrafa PET, jornal…), e
  * a moldura carrega a cor do material para o jogador conseguir parear sem
  * precisar saber de cor a que lixeira aquele objeto pertence.
  */
 function ResidueArtwork({
-  color,
   colorDark,
   colorLight,
   emoji,
@@ -164,12 +62,12 @@ function ResidueArtwork({
         style={[
           styles.residuePlate,
           {
-            backgroundColor: colorLight,
+            backgroundColor: '#FFFCF0',
             borderColor: colorDark,
             borderRadius: size * 0.3,
-            borderWidth: Math.max(2, size * 0.06),
-            height: size * 0.82,
-            width: size * 0.82,
+            borderWidth: Math.max(1.5, size * 0.045),
+            height: size * 0.9,
+            width: size * 0.9,
           },
         ]}
       >
@@ -178,9 +76,9 @@ function ResidueArtwork({
           style={[
             styles.residueInnerRing,
             {
-              backgroundColor: color,
+              backgroundColor: colorLight,
               borderRadius: size * 0.24,
-              opacity: 0.32,
+              opacity: 0.2,
             },
           ]}
         />
@@ -189,7 +87,7 @@ function ResidueArtwork({
             accessible={false}
             source={image}
             resizeMode="contain"
-            style={{ height: size * 0.72, width: size * 0.72 }}
+            style={{ height: size * 0.8, width: size * 0.8 }}
           />
         ) : (
           <Text
@@ -247,9 +145,12 @@ function TileIconBase({
           image={residueVisual?.image}
         />
       ) : role === 'lixeira' ? (
-        <BinArtwork {...artworkProps} />
+        <CollectionBinArtwork {...artworkProps} organic={kind === 'organico'} />
       ) : (
-        <RecycleSymbolArtwork {...artworkProps} />
+        <RecyclingSymbolArtwork
+          {...artworkProps}
+          organic={kind === 'organico'}
+        />
       )}
     </View>
   );

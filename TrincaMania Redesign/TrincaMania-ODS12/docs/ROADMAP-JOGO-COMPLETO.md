@@ -19,6 +19,13 @@ exigem aparelho, serviço externo ou revisão manual.
 
 **Auditoria local de 09/10/2026:** [relatório e evidências](AUDITORIA-ODS12-20261009.md). Correções locais e validação web; aceite Android BLOCKED por boot incompleto sem KVM. Issues humanas e dados BLOCKS mantêm seus critérios próprios.
 
+**L-27 — ícones de coleta seletiva (26/10/2026):** melhoria solicitada para
+lixeiras, reciclagem e resíduos. Implementação local em SVG, com geometria
+compartilhada com o site, cores existentes e identificação da compostagem.
+Prévia e verificações locais nesta entrega; aceite visual Android e integração
+continuam pendentes. Commit e push em branch própria foram autorizados em
+27/10/2026; nenhum APK ou aceite Android está incluído.
+
 ---
 
 ## Pausa de sessão — 2026-09-03 (retomar daqui)
