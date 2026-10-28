@@ -26,6 +26,64 @@ Prévia e verificações locais nesta entrega; aceite visual Android e integraç
 continuam pendentes. Commit e push em branch própria foram autorizados em
 27/10/2026; nenhum APK ou aceite Android está incluído.
 
+**Ajuste visual local de 27/10/2026 (L-26/L-27):** retirada do cartão creme
+dos três poderes e aplicação de bases nas cores dos materiais às peças,
+resíduos, lixeiras e símbolos. Legendas com sombra para leitura sobre o cenário. O box de fase e mundo/capítulo
+também teve fundo creme, borda e sombra externa removidos; os textos usam
+cor clara e sombra para contraste.
+Prévia web com alterações locais; aceite visual e integração pendentes.
+
+**Revisão visual solicitada em 27/10/2026 (L-27):** substituição das bases
+pastel por dourado intenso, mantendo as cores próprias dos ícones e maior
+contraste no metal. Essa revisão substitui as bases por material descritas
+acima. Prévia local para aceite visual.
+
+**Nova revisão de 27/10/2026 (L-27):** retirado o fundo amarelo/dourado
+das peças e das faces dos ícones para evitar confusão com o material metal.
+Superfícies cinza neutras compartilhadas entre tabuleiro, bandeja e animação
+de voo; as cores de cada material são preservadas. Esta revisão substitui
+o dourado descrito acima. Prévia local para aceite visual.
+
+**Identificação das trincas — revisão de 27/10/2026 (L-27):** moldura e faixa
+com o nome do material consistentes entre resíduo, lixeira e símbolo. Símbolos
+usam a cor principal do material, incluindo amarelo com glifo escuro no metal,
+para evitar a aproximação com o marrom do orgânico. Peças bloqueadas mantêm as
+cores da identificação e usam cadeado e base escura para indicar o bloqueio,
+sem véu sobre a arte. Mesma identificação na bandeja e no voo. Ajuste local;
+aceite visual do usuário e Android continuam pendentes.
+
+**L-28 — retirada do baú bônus (27/10/2026):** marcador e painel removidos
+dos mapas, junto da entrada em Prêmios. As fases bônus não liberam mais esse
+baú; pendências antigas são retiradas sem alterar moedas, chaves, itens ou
+recompensas já coletadas. Validação local; aceite visual e integração pendentes.
+
+**L-29 — apoio dos ícones do menu inferior (27/10/2026):** alinhamento pela
+borda inferior visível dos PNGs, com uma linha comum sobre os pedestais.
+Tamanhos, rótulos e áreas de toque preservados. Conferência local em desktop
+e celular; aceite visual e integração pendentes.
+
+**L-30 — painel de seleção da fase (27/10/2026):** apresentação adaptada do
+original `e32e5bd`, branch `feat/world2-campaign-polish`, confirmada com fetch.
+Cabeçalho com fase e título, objetivo completo, estrelas, possíveis materiais
+e botão verde Jogar fixo fora da rolagem. Área segura e barra inferior
+respeitadas; dados, bloqueios e regras do ODS12 preservados. Prévia local para
+aceite visual, sem publicação ou APK.
+
+**L-31 — retirada dos pontos de descanso (27/10/2026):** marcadores, seleção,
+modal e concessão de recompensa retirados da campanha. Capítulos deixam de
+exibir marcos de descanso; as mesmas fases continuam como mapas comuns.
+As 103 fases canônicas e os IDs, composição, dificuldade e tempos dos 1000
+mapas de capítulo foram preservados, assim como as passagens entre mundos,
+a loja e os registros de recompensas antigas. Prévia local para aceite.
+
+**L-32 — plano dos assets redesenhados e envio das correções (27/10/2026):**
+[plano de integração](arte/PLANO-INTEGRACAO-ASSETS-REDESENHADOS-20261027.md)
+baseado no ZIP de SHA-256 `655d462e…aac0aa8`. O usuário escolheu publicar agora
+as correções existentes e o plano, deixando a integração dos desenhos para
+outra etapa com a paleta por material do pacote. Commit e push nas branches
+próprias do jogo e site autorizados nesta conversa; exportar o simulador da
+fonte revisada. Sem merge, PR, GitHub Actions ou APK nesta entrega.
+
 ---
 
 ## Pausa de sessão — 2026-09-03 (retomar daqui)
@@ -569,6 +627,8 @@ curtos em `tests/soundEffects.test.cjs`; os dois testes reais de fundos continua
 | L-24 | Melhorar ícones de vidas, moedas e configurações no topo do mapa                                                                                                                                              | [CC]   | P2   | Solicitação de 21/10/2026: reutilizar coração, moeda e engrenagem ilustrados do TrincaMania original, com contadores legíveis, áreas de toque de 48 dp e leitura acessível. Mapa e progressão preservados; verificar desktop/mobile e versão estreita. Integração local; sem gerar arte, APK ou publicar.                                                                                                                                                                                                                                                                                                                                                                                | GPT-5.6 Terra |
 | L-25 | Cobrir a faixa vazia acima da arte ao rolar o mapa até o topo                                                                                                                                                 | [CC]   | P2   | Novo relato de 21/10/2026: a folga de 140 px antes da imagem aparecia como faixa escura. Preencher com continuação da borda da própria arte, sem esticar a imagem nem deslocar pedestais/placas. Sobreposição de 1 px elimina emenda de composição. Regressão com roda real, pixels renderizados, onze mapas e 103 apoios; validação web local, sem APK ou publicação.                                                                                                                                                                                                                                                                                                                   | GPT-5.6 Terra |
 | L-26 | Centralizar os três poderes na partida                                                                                                                                                                        | [CC]   | P2   | Solicitação de 21/10/2026: o status da bandeja dividia a linha com PowerDrawer e empurrava os controles para a direita, com corte do último botão. Organizar poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar alinhamento e áreas de toque em telas estreitas, desktop e tela cheia; exportação local, sem APK ou publicação. Ajustes solicitados em 23/10/2026: cabeçalho de fase compacto em creme/verde, poderes menores com nomes/preços legíveis e ações do tutorial fixas fora da rolagem. Alvos de toque preservados; revisão no simulador e aceite Android pendente. Evidências em docs/AJUSTES-TUTORIAL-PARTIDA-20261023.txt. | GPT-5.6 Terra |
+
+| L-32 | Planejar a integração dos assets redesenhados e publicar correções locais | [CC] | P2 | Plano em `docs/arte/PLANO-INTEGRACAO-ASSETS-REDESENHADOS-20261027.md`. Integração futura com paleta por material escolhida pelo usuário. Publicar correções e plano em branches próprias, atualizar export do simulador e validar localmente; sem merge, PR, CI remoto ou APK. | Codex |
 
 ---
 

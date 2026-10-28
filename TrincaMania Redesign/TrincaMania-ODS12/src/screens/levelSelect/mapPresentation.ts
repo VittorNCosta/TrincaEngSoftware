@@ -76,14 +76,6 @@ export const getPortalMarkerPosition = (
   };
 };
 
-export const getBonusChestMarkerPosition = (
-  mapHeight: number,
-  viewportWidth = MAP_WIDTH,
-) => ({
-  left: (viewportWidth - MAP_WIDTH) / 2 + 88,
-  top: Math.max(170, mapHeight - MAP_NODE_BOTTOM - MAP_NODE_STEP * 2 - 56),
-});
-
 export const MAP_OBJECTIVE_SNIPPETS = [
   'Forme trincas e limpe o tabuleiro.',
   'Libere peças e avance.',

@@ -303,7 +303,7 @@ test('a curva do capítulo é monotônica não-decrescente e realmente progride'
   assert.ok(lastChapter[0].tileCount > firstChapter[99].tileCount);
 });
 
-test('marcos caem de 10 em 10 e o mapa 100 é o guardião', () => {
+test('capítulos não exibem marcos de descanso e mantêm lojas e guardião', () => {
   CHAPTERS.forEach((chapter) => {
     const summaries = getChapterLevelSummaries(chapter.id);
     const milestones = summaries
@@ -311,24 +311,21 @@ test('marcos caem de 10 em 10 e o mapa 100 é o guardião', () => {
       .map(({ chapterMapNumber, milestone }) => [chapterMapNumber, milestone]);
 
     assert.deepEqual(milestones, [
-      [10, 'rest'],
       [20, 'shop'],
-      [30, 'rest'],
       [40, 'shop'],
-      [50, 'rest'],
       [60, 'shop'],
-      [70, 'rest'],
       [80, 'shop'],
-      [90, 'rest'],
       [100, 'guardian'],
     ]);
 
-    // O marco alivia pelo relógio, nunca derrubando a carga do tabuleiro.
-    const rest = summaries[9];
+    // A retirada do marco não altera o orçamento de tempo ou a carga da fase.
+    const map10 = summaries[9];
+    assert.equal(map10.milestone, undefined);
+    assert.ok(summaries.every(({ title }) => !title.startsWith('Descanso:')));
     assert.ok(
-      rest.starTimeLimits.threeStars > summaries[8].starTimeLimits.threeStars,
+      map10.starTimeLimits.threeStars > summaries[8].starTimeLimits.threeStars,
     );
-    assert.ok(rest.tileCount >= summaries[8].tileCount);
+    assert.ok(map10.tileCount >= summaries[8].tileCount);
   });
 });
 

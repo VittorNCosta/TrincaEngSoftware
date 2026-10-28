@@ -146,7 +146,6 @@ const TITLE_SUFFIXES = [
 
 const MILESTONE_TITLE_PREFIX: Record<ChapterMilestone, string> = {
   guardian: 'Guardião',
-  rest: 'Descanso',
   shop: 'Loja',
 };
 
@@ -477,12 +476,11 @@ const getMilestone = (mapNumber: number): ChapterMilestone | undefined => {
     return 'shop';
   }
 
-  return mapNumber % 10 === 0 ? 'rest' : undefined;
+  return undefined;
 };
 
 const MILESTONE_TIME_FACTOR: Record<ChapterMilestone, number> = {
   guardian: 0.9,
-  rest: 1.3,
   shop: 1.2,
 };
 
@@ -555,7 +553,12 @@ const createChapterLevelSummary = (
   // Segundos por peça caem de 7.2 a 4.2 conforme a carga sobe: é assim que o
   // limite de três estrelas aperta sem depender de número mágico por mapa.
   const secondsPerTile = 7.2 - score * 3;
-  const timeFactor = milestone ? MILESTONE_TIME_FACTOR[milestone] : 1;
+  // Preserva os tempos das fases existentes sem criar marcos de descanso.
+  const timeFactor = milestone
+    ? MILESTONE_TIME_FACTOR[milestone]
+    : mapNumber % 10 === 0
+      ? 1.3
+      : 1;
   const threeStars = Math.max(
     30,
     Math.round(tileCount * secondsPerTile * timeFactor),

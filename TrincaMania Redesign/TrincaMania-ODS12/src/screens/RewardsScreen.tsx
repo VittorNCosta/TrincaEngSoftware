@@ -24,10 +24,7 @@ import {
 import { PrimaryButton } from '../original/components/PrimaryButton';
 import { ScreenShell } from '../original/components/ScreenShell';
 import { TabScene } from '../original/components/TabScene';
-import {
-  CHEST_PHASES_REQUIRED,
-  getBonusWorldChestProgress,
-} from '../storage/progressStorage';
+import { CHEST_PHASES_REQUIRED } from '../storage/progressStorage';
 import {
   COIN_TRAY_SLOT_COST,
   MAX_TRAY_CAPACITY,
@@ -55,7 +52,6 @@ type RewardsScreenProps = {
   progress: ProgressState;
   trayBoostState: TrayBoostState;
   onOpenSettings: () => void;
-  onOpenWorldChest: (worldChestId?: string) => void;
   onPurchaseCoinTraySlot: () => Promise<TrayBoostPurchaseResult>;
   onShowTutorial: () => void;
   onClose?: () => void;
@@ -218,7 +214,6 @@ export function RewardsScreen({
   progress,
   trayBoostState,
   onOpenSettings,
-  onOpenWorldChest,
   onPurchaseCoinTraySlot,
   onShowTutorial,
   onClose,
@@ -238,10 +233,6 @@ export function RewardsScreen({
     COIN_TRAY_SLOT_COST - progress.coins,
   );
   const canBuyTrayPlus = missingTrayPlusCoins === 0;
-  const bonusWorldChest = getBonusWorldChestProgress(progress);
-  const pendingWorldChestId = bonusWorldChest.available
-    ? bonusWorldChest.id
-    : undefined;
   const chestProgressCount =
     progress.chestProgressLevelIds.length % CHEST_PHASES_REQUIRED;
   const chestProgressPercent =
@@ -261,11 +252,6 @@ export function RewardsScreen({
   }, [message]);
 
   const handleChestShortcut = () => {
-    if (pendingWorldChestId) {
-      onOpenWorldChest(pendingWorldChestId);
-      return;
-    }
-
     setMessage(`Baú comum: ${chestProgressCount}/${CHEST_PHASES_REQUIRED}.`);
   };
 
@@ -301,11 +287,6 @@ export function RewardsScreen({
     chestProgressCount > 0
       ? `Faltam ${chestRemainingCount} fase${chestRemainingCount === 1 ? '' : 's'}`
       : 'A cada 5 fases';
-  const specialChestStatus = pendingWorldChestId
-    ? `Disponível - ${progress.keys} chave${progress.keys === 1 ? '' : 's'}`
-    : bonusWorldChest.claimed
-      ? 'Recompensa coletada'
-      : `Jardim Renascido ${bonusWorldChest.completedCount}/${bonusWorldChest.totalCount}`;
   const bonusSlotStatus = bonusSlotActive
     ? `Ativo: ${formatTrayBoostRemaining(bonusTraySlotRemainingMs)}`
     : 'Bônus de bandeja';
@@ -367,19 +348,6 @@ export function RewardsScreen({
                 title="Baú Comum"
               />
               <RewardCard
-                actionLabel={pendingWorldChestId ? 'Abrir' : undefined}
-                disabled={!pendingWorldChestId}
-                iconName="specialChest"
-                iconTone="purple"
-                status={specialChestStatus}
-                title="Baú Especial"
-                onPress={
-                  pendingWorldChestId
-                    ? () => onOpenWorldChest(pendingWorldChestId)
-                    : undefined
-                }
-              />
-              <RewardCard
                 iconName="bonus"
                 iconTone="blue"
                 status={
@@ -407,7 +375,6 @@ export function RewardsScreen({
 
           <View style={styles.hubShortcutRow}>
             <HubShortcut
-              alert={Boolean(pendingWorldChestId)}
               iconName="chest"
               iconTone="gold"
               label="BAÚS"

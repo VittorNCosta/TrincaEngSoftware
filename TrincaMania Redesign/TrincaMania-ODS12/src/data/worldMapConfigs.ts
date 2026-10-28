@@ -59,26 +59,6 @@ export const PARQUE_MAP_CONFIG: SegmentedWorldMapConfig = {
   identityKey: 'parque-das-trincas',
   landmarks: [
     {
-      afterLevelId: 'w1-005',
-      id: 'parque-rest-05',
-      kind: 'rest',
-      origin: { x: 0.5, y: 1 },
-      point: { x: 82, y: 1705 },
-      site: 'clearing',
-      visualKey: 'collection-cart',
-      visualSize: { height: 96, width: 104 },
-    },
-    {
-      afterLevelId: 'w1-010',
-      id: 'parque-rest-10',
-      kind: 'rest',
-      origin: { x: 0.5, y: 1 },
-      point: { x: 72, y: 420 },
-      site: 'clearing',
-      visualKey: 'collection-cart',
-      visualSize: { height: 96, width: 104 },
-    },
-    {
       afterLevelId: 'w1-010',
       id: 'parque-portal-world-2',
       kind: 'portal',

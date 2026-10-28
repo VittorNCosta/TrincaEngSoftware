@@ -7,14 +7,6 @@ export type SelectedTarget =
     }
   | {
       afterLevelId: string;
-      comingSoon: boolean;
-      type: 'shop';
-    }
-  | {
-      afterLevelId: string;
       targetWorldId: WorldId;
       type: 'worldPortal';
-    }
-  | {
-      type: 'bonusChest';
     };

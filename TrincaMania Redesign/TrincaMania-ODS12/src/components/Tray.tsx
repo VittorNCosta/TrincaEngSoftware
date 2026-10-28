@@ -10,6 +10,7 @@ import {
 
 import { GameIcon } from './GameIcon';
 import { TileIcon } from './TileIcon';
+import { tilePalette } from '../styles/tilePalette';
 import { radii } from '../styles/theme';
 import { Tile } from '../types/game';
 import { WindowTarget } from '../types/ui';
@@ -284,10 +285,10 @@ const styles = StyleSheet.create({
   },
   // Encaixe ocupado: a mesma aparência das peças do tabuleiro.
   filledSlot: {
-    backgroundColor: '#FFE7A6',
-    borderBottomColor: '#C9922F',
+    backgroundColor: tilePalette.face,
+    borderBottomColor: tilePalette.edge,
     borderBottomWidth: 4,
-    borderColor: '#FFF5D3',
+    borderColor: tilePalette.border,
     borderWidth: 2,
     elevation: 2,
     shadowColor: '#000000',
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   slotInsetShade: {
-    backgroundColor: 'rgba(161, 99, 20, 0.22)',
+    backgroundColor: tilePalette.shade,
     borderBottomLeftRadius: 14,
     borderBottomRightRadius: 14,
     bottom: 0,

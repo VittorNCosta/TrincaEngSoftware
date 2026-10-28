@@ -1391,7 +1391,7 @@ mk open --title 'L-25 · Cobrir a faixa vazia acima da arte ao rolar o mapa até
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-26 · Centralizar os três poderes na partida' \
-  --body 'Solicitado em 21/10/2026. O status da bandeja dividia a linha com PowerDrawer e deslocava os controles para a direita, cortando o último botão. Poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar telas estreitas, desktop e tela cheia. Exportação local, sem APK ou publicação. Ajustes solicitados em 23/10/2026: cabeçalho de fase compacto em creme/verde, poderes menores com nomes/preços legíveis e ações do tutorial fixas fora da rolagem. Alvos de toque preservados; revisão no simulador e aceite Android pendente. Evidências em docs/AJUSTES-TUTORIAL-PARTIDA-20261023.txt.
+  --body 'Solicitado em 21/10/2026. O status da bandeja dividia a linha com PowerDrawer e deslocava os controles para a direita, cortando o último botão. Poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar telas estreitas, desktop e tela cheia. Exportação local, sem APK ou publicação. Ajustes solicitados em 23/10/2026: cabeçalho de fase compacto em creme/verde, poderes menores com nomes/preços legíveis e ações do tutorial fixas fora da rolagem. Alvos de toque preservados; revisão no simulador e aceite Android pendente. Evidências em docs/AJUSTES-TUTORIAL-PARTIDA-20261023.txt. Ajuste local solicitado em 27/10/2026: poderes sem cartão creme, legendas com sombra para leitura sobre o cenário e bases das peças na cor do material. Prévia web com alterações locais; aceite visual e integração pendentes. Solicitação adicional: remover o fundo branco do box de fase e mundo/capítulo, com texto claro e sombra para leitura sobre a arte.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1403,7 +1403,7 @@ mk open --title 'L-26 · Centralizar os três poderes na partida' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-27 · Melhorar ícones de lixeiras, reciclagem e resíduos' \
-  --body 'Solicitado em 26/10/2026. Evoluir os SVGs existentes com silhueta de lixeira reconhecível, setas separadas e marca de compostagem; ampliar os resíduos e seu contraste. Manter cores, rótulos acessíveis e regras. Mesma geometria no site e no jogo. Implementação e prévia locais; aceite visual Android e integração pendentes. Commit e push em branch própria autorizados em 27/10/2026; sem APK ou aceite Android.
+  --body 'Solicitado em 26/10/2026. Evoluir os SVGs existentes com silhueta de lixeira reconhecível, setas separadas e marca de compostagem; ampliar os resíduos e seu contraste. Manter cores, rótulos acessíveis e regras. Mesma geometria no site e no jogo. Implementação e prévia locais; aceite visual Android e integração pendentes. Commit e push em branch própria autorizados em 27/10/2026; sem APK ou aceite Android. Ajuste local solicitado em 27/10/2026: poderes sem cartão creme, legendas com sombra para leitura sobre o cenário e bases das peças na cor do material. Prévia web com alterações locais; aceite visual e integração pendentes. Revisão posterior solicitada: substituir as bases pastel por dourado intenso, mantendo as cores dos ícones e maior contraste no metal. Nova revisão: retirar o fundo amarelo/dourado para evitar confusão com o metal; superfícies cinza neutras compartilhadas no tabuleiro, bandeja, voo e faces dos ícones, preservando as cores dos materiais. A revisão neutra substitui o dourado. Revisão seguinte de legibilidade: moldura e faixa com nome do material iguais nos três papéis, símbolos com a cor principal e glifo contrastante, amarelo do metal distinto do marrom orgânico; peças bloqueadas preservam as cores da arte, com cadeado e base escura indicando bloqueio. Identificação compartilhada na bandeja e voo. Aguarda aceite visual local e Android.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -1414,6 +1414,66 @@ mk open --title 'L-27 · Melhorar ícones de lixeiras, reciclagem e resíduos' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-28 · Remover o baú do mundo bônus' \
+  --body 'Solicitado em 27/10/2026. Remover o marcador dos mapas ilustrado e legado, o painel de seleção e a entrada em Prêmios. Não liberar o baú ao concluir as fases bônus nem reoferecer pendências de saves antigos. Preservar as três fases, estrelas, moedas, chaves, itens e registros de recompensas já coletadas. Implementação local; validação web e testes de compatibilidade de saves. Aceite visual e integração pendentes, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-29 · Alinhar os ícones do menu inferior aos pedestais' \
+  --body 'Solicitado em 27/10/2026. Alinhar a borda inferior visível dos quatro PNGs à mesma linha de apoio na arte dos pedestais, descontando as margens transparentes de cada imagem. Preservar tamanhos, centralização horizontal, áreas de toque, legendas e estados das abas. Validar visualmente e medir no navegador em desktop/mobile, com cada aba selecionada. Implementação local; aceite visual e integração pendentes.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-30 · Atualizar o painel da fase conforme o TrincaMania original' \
+  --body 'Solicitado em 27/10/2026. Adaptar MapLevelDetails do original, branch feat/world2-campaign-polish, commit e32e5bd (24/10), confirmado via git fetch. Cabeçalho dourado, título e objetivo completos, estrelas, possíveis materiais e botão verde Jogar fixo fora da rolagem. Respeitar área segura e menu inferior. Preservar conteúdo ODS12, desbloqueios e navegação. Implementação e testes locais; aceite visual e integração pendentes, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-31 · Remover os pontos de descanso dos mapas e capítulos ODS12' \
+  --body 'Solicitado em 27/10/2026. Retirar marcadores, seleção, modal e concessão de recompensa dos pontos de descanso da campanha, incluindo mapas ilustrados e renderizações de reserva. Retirar os marcos e prefixos de descanso dos capítulos, mantendo as fases como mapas comuns. Preservar as 103 fases canônicas, IDs e parâmetros dos 1000 mapas de capítulo, passagens entre mundos, acesso normal à loja e registros de recompensas antigas. Validação local; aceite visual e integração pendentes, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-32 · Planejar a integração dos assets redesenhados e publicar correções locais' \
+  --body 'Solicitado e autorizado em 27/10/2026. Plano em docs/arte/PLANO-INTEGRACAO-ASSETS-REDESENHADOS-20261027.md, baseado no ZIP de SHA-256 655d462eb01807fb21f07cbd6dfc9bf0bcf76265b8785cdf56b4acdf8aac0aa8. Publicar agora as correções existentes e o plano; integração dos desenhos fica para etapa posterior, com a paleta por material escolhida pelo usuário. Atualizar export do simulador da fonte revisada e validar localmente. Envio às branches próprias autorizado; sem merge, PR, GitHub Actions ou APK. Aceites visuais pendentes.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2789,4 +2849,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 211 issues (132 já criadas fechadas) =="
+echo "== pronto: 216 issues (132 já criadas fechadas) =="

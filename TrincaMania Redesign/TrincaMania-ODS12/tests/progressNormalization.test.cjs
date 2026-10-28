@@ -22,6 +22,7 @@ const {
   applyLevelCompletion,
   createInitialProgress,
   normalizeProgress,
+  openWorldChest,
   purchasePowerUpTransaction,
 } = require('../src/storage/progressStorage.ts');
 const { POWER_UP_COSTS } = require('../src/utils/gameLogic.ts');
@@ -35,6 +36,8 @@ const { LEVELS } = require('../src/data/levels.ts');
  * Os valores de `GOLDEN` abaixo foram gerados executando o `progressStorage.ts`
  * ANTERIOR a otimizacao. Se qualquer assert aqui falhar, a otimizacao mudou
  * regra de negocio — nao e um teste desatualizado.
+ * Exceção intencional em 27/10/2026: o cenário bau-pendente deixa de gerar
+ * o baú bônus removido. Apenas seu campo pendente e hash foram atualizados.
  */
 const sha256 = (value) =>
   crypto.createHash('sha256').update(value).digest('hex');
@@ -294,9 +297,9 @@ const GOLDEN = {
     coins: 0,
     completedCount: 13,
     keys: 0,
-    pendingWorldChestIds: ['bonus-world-21'],
+    pendingWorldChestIds: [],
     restCount: 0,
-    sha256: 'd2a8ec14c546ce2c4f08f812a7e1de914fb6687c52f566ca1d983d8dbf133958',
+    sha256: 'd2d481beef13a603aac51e62c9556b23abf5a76fd42cfddd8f3e2be5461dc8b3',
     starsCount: 13,
     unlockedCount: 14,
   },
@@ -405,6 +408,44 @@ test('normalizeProgress preserva a saida byte-a-byte apos a troca por Set/Map', 
       `${name}: saida divergiu do golden pre-otimizacao`,
     );
   });
+});
+
+test('concluir as fases bônus não libera baú especial', () => {
+  let progress = normalizeProgress({
+    ...base,
+    completedLevelIds: world1LevelIds,
+    levelStars: starsFor(world1LevelIds, 3),
+  });
+  for (const levelId of bonusLevelIds) {
+    const completion = applyLevelCompletion(progress, levelId, 3);
+    assert.equal(completion.worldChest, undefined);
+    assert.deepEqual(completion.progress.pendingWorldChestIds, []);
+    progress = completion.progress;
+  }
+  assert.ok(
+    bonusLevelIds.every((id) => progress.completedLevelIds.includes(id)),
+  );
+});
+
+test('baú bônus pendente em save antigo não consome moedas ou chaves nem concede nova recompensa', () => {
+  for (const mode of ['key', 'buy-key']) {
+    const legacy = {
+      ...base,
+      completedLevelIds: [...world1LevelIds, ...bonusLevelIds],
+      levelStars: starsFor([...world1LevelIds, ...bonusLevelIds], 3),
+      coins: 1000,
+      keys: 2,
+      pendingWorldChestIds: ['bonus-world-21'],
+    };
+    const result = openWorldChest(legacy, 'bonus-world-21', mode, false);
+    assert.equal(result.status, 'unavailable');
+    assert.equal(result.keyPurchased, false);
+    assert.equal(result.reward, undefined);
+    assert.equal(result.progress.coins, legacy.coins);
+    assert.equal(result.progress.keys, legacy.keys);
+    assert.deepEqual(result.progress.itemCounts, legacy.itemCounts);
+    assert.deepEqual(result.progress.pendingWorldChestIds, []);
+  }
 });
 
 test('normalizeProgress e idempotente — encadear chamadas nao muda o estado', () => {

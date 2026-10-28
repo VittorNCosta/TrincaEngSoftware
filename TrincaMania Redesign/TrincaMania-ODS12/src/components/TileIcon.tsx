@@ -10,6 +10,7 @@ import {
 import { CardRole } from '../domain/recycling/value-objects/CardRole';
 import { getMaterial } from '../domain/recycling/value-objects/MaterialType';
 import { TileKind } from '../types/game';
+import { tilePalette } from '../styles/tilePalette';
 
 /**
  * Arte da peça na versão ODS 12.
@@ -34,17 +35,13 @@ type ArtworkProps = {
   color: string;
   colorDark: string;
   colorLight: string;
+  ink: string;
   size: number;
+  surface: string;
 };
 
-/**
- * Resíduo: o objeto descartado. O emoji vem da carta (garrafa PET, jornal…), e
- * a moldura carrega a cor do material para o jogador conseguir parear sem
- * precisar saber de cor a que lixeira aquele objeto pertence.
- */
+/** A arte mantém a aparência do resíduo; a moldura identifica o material. */
 function ResidueArtwork({
-  colorDark,
-  colorLight,
   emoji,
   image,
   size,
@@ -52,61 +49,21 @@ function ResidueArtwork({
   emoji: string;
   image?: import('react-native').ImageSourcePropType;
 }) {
-  return (
-    <>
-      <View
-        pointerEvents="none"
-        style={[styles.iconShadow, { bottom: size * 0.07, width: size * 0.6 }]}
-      />
-      <View
-        style={[
-          styles.residuePlate,
-          {
-            backgroundColor: '#FFFCF0',
-            borderColor: colorDark,
-            borderRadius: size * 0.3,
-            borderWidth: Math.max(1.5, size * 0.045),
-            height: size * 0.9,
-            width: size * 0.9,
-          },
-        ]}
-      >
-        <View
-          pointerEvents="none"
-          style={[
-            styles.residueInnerRing,
-            {
-              backgroundColor: colorLight,
-              borderRadius: size * 0.24,
-              opacity: 0.2,
-            },
-          ]}
-        />
-        {image ? (
-          <Image
-            accessible={false}
-            source={image}
-            resizeMode="contain"
-            style={{ height: size * 0.8, width: size * 0.8 }}
-          />
-        ) : (
-          <Text
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            style={[
-              styles.residueEmoji,
-              { fontSize: size * 0.5, lineHeight: size * 0.6 },
-            ]}
-          >
-            {emoji}
-          </Text>
-        )}
-      </View>
-      <View
-        pointerEvents="none"
-        style={[styles.iconShine, { height: size * 0.14, width: size * 0.3 }]}
-      />
-    </>
+  return image ? (
+    <Image
+      accessible={false}
+      source={image}
+      resizeMode="contain"
+      style={{ height: size * 0.94, width: size * 0.94 }}
+    />
+  ) : (
+    <Text
+      adjustsFontSizeToFit
+      numberOfLines={1}
+      style={[styles.residueEmoji, { fontSize: size * 0.76, lineHeight: size }]}
+    >
+      {emoji}
+    </Text>
   );
 }
 
@@ -122,36 +79,90 @@ function TileIconBase({
   const worldId = useContext(WorldArtContext);
   const residueVisual = getResidueVisual(cardId, worldId);
   const material = getMaterial(kind);
+  const showMaterialLabel = size >= 30;
+  const labelHeight = showMaterialLabel ? size * 0.22 : 0;
+  const artworkSize = size - labelHeight;
+  const label =
+    kind === 'plastico'
+      ? 'PLÁST.'
+      : kind === 'organico'
+        ? 'ORG.'
+        : material.label.toLocaleUpperCase('pt-BR');
+  const materialInk =
+    kind === 'metal' || kind === 'vidro' ? '#11252B' : '#FFFFFF';
   const artworkProps: ArtworkProps = {
     color: material.binColor,
     colorDark: material.binColorDark,
     colorLight: material.binColorLight,
-    size,
+    ink: materialInk,
+    size: artworkSize,
+    surface: tilePalette.iconFace,
   };
 
   return (
     <View
       style={[
         styles.root,
-        { borderRadius: size * 0.24, height: size, width: size },
+        { borderRadius: size * 0.2, height: size, width: size },
         dimmed ? styles.dimmed : null,
         highlighted ? styles.highlighted : null,
       ]}
     >
-      {role === 'residuo' ? (
-        <ResidueArtwork
-          {...artworkProps}
-          emoji={fallbackEmoji}
-          image={residueVisual?.image}
-        />
-      ) : role === 'lixeira' ? (
-        <CollectionBinArtwork {...artworkProps} organic={kind === 'organico'} />
-      ) : (
-        <RecyclingSymbolArtwork
-          {...artworkProps}
-          organic={kind === 'organico'}
-        />
-      )}
+      <View style={[styles.artwork, { height: artworkSize, width: size }]}>
+        {role === 'residuo' ? (
+          <ResidueArtwork
+            {...artworkProps}
+            emoji={fallbackEmoji}
+            image={residueVisual?.image}
+          />
+        ) : role === 'lixeira' ? (
+          <CollectionBinArtwork
+            {...artworkProps}
+            organic={kind === 'organico'}
+          />
+        ) : (
+          <RecyclingSymbolArtwork
+            {...artworkProps}
+            organic={kind === 'organico'}
+          />
+        )}
+      </View>
+      {showMaterialLabel ? (
+        <View
+          style={[
+            styles.materialBand,
+            { backgroundColor: material.binColor, height: labelHeight },
+          ]}
+        >
+          <Text
+            accessible={false}
+            adjustsFontSizeToFit
+            minimumFontScale={0.85}
+            numberOfLines={1}
+            style={[
+              styles.materialLabel,
+              {
+                color: materialInk,
+                fontSize: Math.max(6, size * 0.18),
+                lineHeight: labelHeight,
+              },
+            ]}
+          >
+            {label}
+          </Text>
+        </View>
+      ) : null}
+      <View
+        pointerEvents="none"
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            borderColor: material.binColor,
+            borderRadius: size * 0.2,
+            borderWidth: size >= 30 ? 2 : 1.5,
+          },
+        ]}
+      />
     </View>
   );
 }
@@ -163,25 +174,25 @@ const styles = StyleSheet.create({
     opacity: 0.62,
   },
   highlighted: {
-    shadowColor: '#FFD35A',
+    shadowColor: tilePalette.border,
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.88,
     shadowRadius: 8,
   },
-  iconShadow: {
-    alignSelf: 'center',
-    backgroundColor: 'rgba(116, 69, 13, 0.24)',
-    borderRadius: 999,
-    height: 5,
-    position: 'absolute',
+  artwork: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  iconShine: {
-    backgroundColor: 'rgba(255, 255, 255, 0.34)',
-    borderRadius: 999,
-    left: '18%',
-    position: 'absolute',
-    top: '9%',
-    transform: [{ rotate: '-16deg' }],
+  materialBand: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  materialLabel: {
+    fontWeight: '900',
+    includeFontPadding: false,
+    paddingHorizontal: 2,
+    textAlign: 'center',
   },
   residueEmoji: {
     textAlign: 'center',
@@ -189,22 +200,9 @@ const styles = StyleSheet.create({
     textShadowOffset: { height: 1, width: 0 },
     textShadowRadius: 2,
   },
-  residueInnerRing: {
-    bottom: '10%',
-    left: '10%',
-    position: 'absolute',
-    right: '10%',
-    top: '10%',
-  },
-  residuePlate: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
   root: {
     alignItems: 'center',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    overflow: 'visible',
+    backgroundColor: tilePalette.iconFace,
+    overflow: 'hidden',
   },
 });

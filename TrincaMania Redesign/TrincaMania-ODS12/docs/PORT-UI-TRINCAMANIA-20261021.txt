@@ -67,3 +67,19 @@ Exportação Expo Web e build Astro locais passaram. Playwright confirmou
 três imagens originais carregadas, animação/título e chegada automática ao
 tutorial/mapa, sem erros JavaScript. Captura no site:
 docs/auditoria/2026-10-21-intro-original.png.
+
+Painel de seleção da fase — revisão de 27/10/2026
+Fonte mais recente do painel consultada com git fetch em 27/10/2026:
+mateusHegeto10/TrincaMania, feat/world2-campaign-polish
+e32e5bd82c516ee2a8c2f86a5df95e2147d07e77 (24/10/2026).
+main continua em df882fb (08/10) e simulator/main em 7fdc7a3 (14/10);
+a revisão do painel de 24/10 é a referência desta adaptação.
+
+MapLevelDetails adaptado para o ODS12: fase e título fixos no cabeçalho,
+detalhes com rolagem, estrelas compartilhadas e CTA verde fixo. A faixa de
+possíveis peças usa as lixeiras dos cinco materiais da coleta seletiva,
+pois o gerador ODS12 sorteia os materiais de cada tentativa. Conteúdo e
+regras de chefes, receitas e campanha do original não foram importados.
+MapSelectionPanel mantém a seleção e a abertura da partida existentes e
+usa a folga real do menu inferior. Arte e paleta do original preservadas.
+Prévia local, sem commit, push ou APK; aceite visual pendente.

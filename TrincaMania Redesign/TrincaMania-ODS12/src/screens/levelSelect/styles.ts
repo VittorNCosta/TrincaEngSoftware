@@ -4,11 +4,6 @@ import { BOTTOM_NAV_HEIGHT } from '../../components/BottomNavBar';
 import { MAP_HEIGHT, MAP_WIDTH } from './mapPresentation';
 
 export const styles = StyleSheet.create({
-  bonusChestPosition: {
-    alignItems: 'center',
-    position: 'absolute',
-    zIndex: 6,
-  },
   // Fica acima do painel de seleção (bottom + minHeight dele), para nunca ficar
   // coberto quando o jogador toca numa fase.
   chaptersButton: {
@@ -63,14 +58,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: -spacing.md,
     marginTop: -spacing.md,
   },
-  difficultyBadge: {
-    backgroundColor: colors.surfaceWarm,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
+
   difficultyText: {
     color: colors.ink,
     fontSize: fontSizes.xs,
@@ -214,13 +202,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
   },
-  panelBottomRow: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    justifyContent: 'space-between',
-  },
+
   panelButton: {
     minWidth: 108,
   },
@@ -246,10 +228,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#3859A8',
     borderColor: '#E7F0FF',
   },
-  panelBannerSoon: {
-    backgroundColor: '#4A4C9C',
-    borderColor: '#DDE6FF',
-  },
+
   panelBannerText: {
     color: colors.inkOnDark,
     fontSize: fontSizes.xs,
@@ -271,21 +250,7 @@ export const styles = StyleSheet.create({
     gap: spacing.sm,
     justifyContent: 'space-between',
   },
-  panelDifficultyRow: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    marginTop: spacing.xs,
-  },
-  panelStarIcon: {
-    alignItems: 'center',
-    height: 24,
-    justifyContent: 'center',
-    width: 24,
-  },
-  panelStarsRow: {
-    flexDirection: 'row',
-    gap: 2,
-  },
+
   panelTitle: {
     color: colors.ink,
     fontSize: fontSizes.md,
@@ -338,50 +303,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
   },
-  rewardCard: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderBottomColor: colors.goldDark,
-    borderBottomWidth: 5,
-    borderColor: colors.primary,
-    borderRadius: radii.card,
-    borderWidth: 3,
-    gap: spacing.md,
-    maxWidth: 360,
-    padding: spacing.xl,
-    width: '88%',
-    ...shadows.card,
-  },
-  rewardKicker: {
-    color: colors.primaryDark,
-    fontSize: fontSizes.xs,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  rewardOverlay: {
-    alignItems: 'center',
-    backgroundColor: colors.overlay,
-    flex: 1,
-    justifyContent: 'center',
-    padding: spacing.lg,
-  },
-  rewardText: {
-    color: colors.muted,
-    fontSize: fontSizes.md,
-    fontWeight: '800',
-    lineHeight: 22,
-    textAlign: 'center',
-  },
-  rewardTitle: {
-    color: colors.ink,
-    fontSize: fontSizes.xl,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
+
+  levelSelectionPanel: { paddingRight: spacing.sm, paddingTop: 14 },
   selectionPanel: {
-    backgroundColor: '#FFF8E8',
-    borderColor: '#E8B64B',
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderColor: colors.borderStrong,
+    borderRadius: radii.menuCard,
     borderWidth: 3,
     // Sobe acima da barra de abas, senão o botão Jogar fica embaixo dela.
     bottom: BOTTOM_NAV_HEIGHT,
@@ -425,10 +352,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 44,
   },
-  shopPosition: {
-    alignItems: 'center',
-    position: 'absolute',
-  },
+
   toast: {
     alignSelf: 'center',
     backgroundColor: colors.surfaceWarm,

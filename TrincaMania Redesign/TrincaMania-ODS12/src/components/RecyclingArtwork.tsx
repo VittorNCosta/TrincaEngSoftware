@@ -15,11 +15,13 @@ type Props = {
   color: string;
   colorDark: string;
   colorLight: string;
+  ink: string;
   size: number;
+  surface: string;
   organic?: boolean;
 };
 
-const INK = '#183E35';
+const INK = '#24323B';
 const PAPER = '#FFFCF0';
 
 function RecyclingGlyph({ color }: { color: string }) {
@@ -56,6 +58,7 @@ export function CollectionBinArtwork({
   colorLight,
   organic = false,
   size,
+  surface,
 }: Props) {
   const gradient = `collection-bin-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const artSize = size * 0.98;
@@ -84,7 +87,7 @@ export function CollectionBinArtwork({
       <Path d={geometry.binShine} fill="#FFFFFF" opacity={0.3} />
       <Path d={geometry.binSide} fill={colorDark} opacity={0.55} />
       <Rect
-        fill={PAPER}
+        fill={surface}
         height={24}
         rx={5}
         stroke={colorDark}
@@ -142,10 +145,12 @@ export function RecyclingSymbolArtwork({
   color,
   colorDark,
   colorLight,
+  ink,
   organic = false,
   size,
 }: Props) {
   const artSize = size * 0.96;
+  // O amarelo continua amarelo: o glifo escuro dá contraste sem torná-lo marrom.
 
   return (
     <Svg height={artSize} viewBox={geometry.viewBox} width={artSize}>
@@ -154,25 +159,23 @@ export function RecyclingSymbolArtwork({
       <Circle
         cx={36}
         cy={34}
-        fill={PAPER}
+        fill={color}
         r={29}
-        stroke={color}
+        stroke={colorDark}
         strokeWidth={2}
       />
-      <Circle
-        cx={36}
-        cy={34}
+      <Path
+        d="M17 20a23 23 0 0 1 37 0"
         fill="none"
-        opacity={0.45}
-        r={25}
         stroke={colorLight}
-        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeWidth={3}
       />
       <G transform="translate(5, 3) scale(0.86)">
         {organic ? (
-          <CompostGlyph color={colorDark} />
+          <CompostGlyph color={ink} />
         ) : (
-          <RecyclingGlyph color={colorDark} />
+          <RecyclingGlyph color={ink} />
         )}
       </G>
     </Svg>

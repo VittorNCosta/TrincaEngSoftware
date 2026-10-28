@@ -263,24 +263,12 @@ test('fundos ODS 12 atuais existem e respeitam o orçamento de textura', () => {
   });
 });
 
-test('descansos e portal preservam checkpoints e usam posições distintas', () => {
-  const rests = PARQUE_MAP_CONFIG.landmarks.filter(
-    ({ kind }) => kind === 'rest',
-  );
-  const portal = PARQUE_MAP_CONFIG.landmarks.find(
-    ({ kind }) => kind === 'portal',
-  );
-  const positions = PARQUE_MAP_CONFIG.landmarks.map(
-    ({ point }) => `${point.x}:${point.y}`,
-  );
-
-  assert.deepEqual(
-    rests.map(({ afterLevelId }) => afterLevelId),
-    ['w1-005', 'w1-010'],
-  );
+test('o Parque mantém o portal após a última fase e remove os pontos de descanso', () => {
+  assert.equal(PARQUE_MAP_CONFIG.landmarks.length, 1);
+  const portal = PARQUE_MAP_CONFIG.landmarks[0];
+  assert.equal(portal.kind, 'portal');
   assert.equal(portal.afterLevelId, 'w1-010');
   assert.equal(portal.targetWorldId, 2);
-  assert.equal(new Set(positions).size, positions.length);
 });
 
 test('configuração válida do Parque não produz erros', () => {
@@ -300,7 +288,11 @@ test('validação inválida é determinística e denuncia a causa real', () => {
   invalid.levelAnchors = invalid.levelAnchors.slice(0, -1);
   invalid.levelAnchors[0].point = { ...invalid.levelAnchors[0].point, x: -1 };
   invalid.landmarks[0].afterLevelId = 'w1-999';
-  invalid.landmarks[1].visualKey = 'missing-rest-renderer';
+  invalid.landmarks.push({
+    ...invalid.landmarks[0],
+    id: 'invalid-visual',
+    visualKey: 'missing-portal-renderer',
+  });
   invalid.segments[0].layers[0].role = 'unknown-role';
 
   const first = validateWorldMapConfig(invalid, validationContext);
@@ -325,7 +317,7 @@ test('validação inválida é determinística e denuncia a causa real', () => {
 test('duplicatas e referências ausentes também são rejeitadas', () => {
   const invalid = structuredClone(PARQUE_MAP_CONFIG);
   invalid.levelAnchors[1].levelId = invalid.levelAnchors[0].levelId;
-  invalid.landmarks[1].id = invalid.landmarks[0].id;
+  invalid.landmarks.push(structuredClone(invalid.landmarks[0]));
   const portal = invalid.landmarks.find(({ kind }) => kind === 'portal');
   delete portal.targetWorldId;
 
@@ -333,7 +325,7 @@ test('duplicatas e referências ausentes também são rejeitadas', () => {
 
   assert.ok(errors.includes('levelAnchors[1].levelId:duplicate'));
   assert.ok(errors.includes('landmarks[1].id:duplicate'));
-  assert.ok(errors.includes('landmarks[2].targetWorldId:required-for-portal'));
+  assert.ok(errors.includes('landmarks[0].targetWorldId:required-for-portal'));
 });
 
 test('todos os mundos têm modo explícito e nenhum usa fallback visual do Parque', () => {

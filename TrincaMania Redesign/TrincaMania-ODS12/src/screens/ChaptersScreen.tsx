@@ -33,7 +33,6 @@ const SECTION_COUNT = 10;
 
 const MILESTONE_LABEL: Record<ChapterMilestone, string> = {
   guardian: 'Guardião',
-  rest: 'Descanso',
   shop: 'Loja',
 };
 

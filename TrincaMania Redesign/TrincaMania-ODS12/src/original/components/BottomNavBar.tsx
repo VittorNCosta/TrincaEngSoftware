@@ -47,47 +47,41 @@ export const NAV_ICONS: Record<MainTabKey, ImageSourcePropType> = {
 const NAV_BASE =
   require('../../../assets/original/ui/navigation/optimized/nav_base_forest.png') as ImageSourcePropType;
 
-// Medidas dos PNGs de runtime: bounds e centro ponderado pelo alpha > 8,
-// usando readImageMetadata(..., { includeAlphaCentroid: true }) do analyzer.
+// Medidas dos PNGs de runtime com alpha > 8. O centro de massa alinha a
+// horizontal; a borda inferior visível apoia todos na mesma linha do pedestal.
 // A compensação fica só na imagem; frames, labels e hitboxes são compartilhados.
-// O centro de massa não coincide com o apoio visual: loja, prancheta e perfil
-// mantêm compensações próprias para apoiar a ilustração sobre o pedestal.
 const NAV_ICON_METRICS = {
   map: {
     width: 256,
     height: 234,
     visibleHeight: 231,
     centerX: 128.922,
-    centerY: 117.589,
+    visibleBottom: 232,
     displayHeight: 40,
-    opticalOffsetY: 0,
   },
   shop: {
     width: 256,
     height: 256,
     visibleHeight: 236,
     centerX: 134.641,
-    centerY: 136.525,
+    visibleBottom: 246,
     displayHeight: 36,
-    opticalOffsetY: -3,
   },
   missions: {
     width: 256,
     height: 256,
     visibleHeight: 235,
     centerX: 129.314,
-    centerY: 133.73,
+    visibleBottom: 242,
     displayHeight: 36,
-    opticalOffsetY: -3,
   },
   profile: {
     width: 256,
     height: 256,
     visibleHeight: 221,
     centerX: 128.046,
-    centerY: 137.118,
+    visibleBottom: 237,
     displayHeight: 36,
-    opticalOffsetY: -4.5,
   },
 };
 // Centros das bases e placas na arte de 861 × 209. As posições usam a mesma
@@ -98,6 +92,7 @@ const NAV_ICON_LIFT = 12;
 const NAV_ART_CENTERS = [132, 329, 534, 731];
 const NAV_ITEM_WIDTH_PERCENT = 23;
 const NAV_ICON_CENTER_Y = (67 / 209) * NAV_ART_HEIGHT - NAV_ICON_LIFT;
+const NAV_ICON_BASELINE_Y = (76 / 209) * NAV_ART_HEIGHT;
 const NAV_LABEL_CENTER_Y = (145 / 209) * NAV_ART_HEIGHT;
 const NAV_IMAGE_SIZES: Record<MainTabKey, ImageStyle> = Object.fromEntries(
   MAIN_TAB_ITEMS.map(({ key }): [MainTabKey, ImageStyle] => {
@@ -112,8 +107,9 @@ const NAV_IMAGE_SIZES: Record<MainTabKey, ImageStyle> = Object.fromEntries(
           { translateX: (metrics.width / 2 - metrics.centerX) * scale },
           {
             translateY:
-              (metrics.height / 2 - metrics.centerY) * scale +
-              metrics.opticalOffsetY,
+              NAV_ICON_BASELINE_Y -
+              NAV_ICON_CENTER_Y +
+              (metrics.height / 2 - metrics.visibleBottom) * scale,
           },
         ],
       },

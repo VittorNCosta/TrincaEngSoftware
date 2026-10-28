@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
 import { TileIcon } from './TileIcon';
+import { tilePalette } from '../styles/tilePalette';
 import { CardRole } from '../domain/recycling/value-objects/CardRole';
 import { radii, shadows } from '../styles/theme';
 import { Tile, TileKind } from '../types/game';
@@ -57,7 +58,7 @@ function FlyingTileBody({
         highlighted
         kind={kind}
         role={role}
-        size={38}
+        size={42}
       />
     </Animated.View>
   );
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     zIndex: 40,
   },
   glow: {
-    backgroundColor: 'rgba(255, 226, 122, 0.62)',
+    backgroundColor: tilePalette.glow,
     borderRadius: radii.pill,
     bottom: -10,
     left: -10,
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   innerBottomShade: {
-    backgroundColor: 'rgba(161, 99, 20, 0.24)',
+    backgroundColor: tilePalette.shade,
     borderBottomLeftRadius: 19,
     borderBottomRightRadius: 19,
     bottom: 0,
@@ -237,10 +238,10 @@ const styles = StyleSheet.create({
   },
   tile: {
     alignItems: 'center',
-    backgroundColor: '#FFE7A6',
-    borderBottomColor: '#C9922F',
+    backgroundColor: tilePalette.face,
+    borderBottomColor: tilePalette.edge,
     borderBottomWidth: 5,
-    borderColor: '#FFF5D3',
+    borderColor: tilePalette.border,
     borderRadius: 19,
     borderWidth: 2,
     height: TILE_SIZE,
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     ...shadows.tile,
   },
   trail: {
-    backgroundColor: 'rgba(255, 244, 184, 0.58)',
+    backgroundColor: tilePalette.trail,
     borderRadius: radii.pill,
     height: 18,
     left: -18,
