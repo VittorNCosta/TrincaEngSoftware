@@ -1,7 +1,7 @@
 import { View, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { msg } from '../messages';
 import { memo } from 'react';
-import Svg, { Path } from '../../components/svgPrimitives';
+import { RedesignedIcon } from '../../components/RedesignedIcon';
 
 import { colors } from '../styles/theme';
 
@@ -40,10 +40,6 @@ function RatingStarBase({
   size = 24,
   style,
 }: RatingStarProps) {
-  const palette = earned
-    ? RATING_STAR_COLORS.earned
-    : RATING_STAR_COLORS.inactive;
-
   return (
     <View
       pointerEvents="none"
@@ -54,20 +50,11 @@ function RatingStarBase({
         style,
       ]}
     >
-      <Svg height={size} viewBox="0 0 64 64" width={size}>
-        <Path
-          d={RATING_STAR_PATH}
-          fill={palette.fill}
-          stroke={palette.outline}
-          strokeLinejoin="round"
-          strokeWidth={5}
-        />
-        <Path
-          d="M22.5 25.2 28 16l2.4 5.1-3.2 6.5z"
-          fill={palette.shine}
-          opacity={earned ? 0.95 : 0.42}
-        />
-      </Svg>
+      <RedesignedIcon
+        family="ESTRELAS"
+        name={earned ? 'estrela-conquistada' : 'estrela-nao-conquistada'}
+        size={size}
+      />
     </View>
   );
 }

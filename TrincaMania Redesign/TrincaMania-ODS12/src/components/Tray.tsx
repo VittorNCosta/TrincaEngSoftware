@@ -1,3 +1,7 @@
+import {
+  getMaterialTileBaseStyle,
+  getMaterialTilePalette,
+} from '../styles/materialTilePalette';
 import { useCallback, useEffect, useRef } from 'react';
 import {
   Animated,
@@ -112,7 +116,13 @@ function TraySlot({
   const slotContent =
     isFilled && tile ? (
       <>
-        <View pointerEvents="none" style={styles.slotInsetShade} />
+        <View
+          pointerEvents="none"
+          style={[
+            styles.slotInsetShade,
+            { backgroundColor: getMaterialTilePalette(tile.kind).innerShade },
+          ]}
+        />
         <View pointerEvents="none" style={styles.slotSpecular} />
         <TileIcon
           cardId={tile.cardId}
@@ -193,6 +203,7 @@ function TraySlot({
           isCoinSlot && !isActiveSlot ? styles.coinLockedSlot : null,
           isBonusSlot && !isActiveSlot ? styles.bonusLockedSlot : null,
           isFilled ? styles.filledSlot : null,
+          isFilled && tile ? getMaterialTileBaseStyle(tile.kind) : null,
           pressed && slotIsActionable ? styles.slotPressed : null,
         ]}
       >

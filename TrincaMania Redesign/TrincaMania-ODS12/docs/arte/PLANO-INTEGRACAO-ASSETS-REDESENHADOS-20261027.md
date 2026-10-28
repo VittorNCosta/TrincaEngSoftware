@@ -2,6 +2,8 @@
 
 Data: 27/10/2026. A integração descrita neste documento é futura. A entrega atual publica as correções locais do jogo e do site, o simulador web atualizado e este plano. Os novos desenhos do ZIP ainda não foram aplicados.
 
+**Retomada em 28/10/2026:** integração implementada localmente a pedido do usuário. Estado, inventário, prévia, verificações e pendências em [ENTREGA-ASSETS-20261028.md](ENTREGA-ASSETS-20261028.md). As seções abaixo preservam o planejamento e a autorização da rodada original; a integração atual não inclui publicação.
+
 ## 1. Origem, decisões e escopo
 
 - Pacote escolhido: `TrincaMania_ODS12_Icones_Redesenhados(1).zip`, na pasta Downloads do Windows.

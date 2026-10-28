@@ -1474,6 +1474,18 @@ mk open --title 'L-32 · Planejar a integração dos assets redesenhados e publi
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-33 · Integrar os assets redesenhados no jogo e na prévia do simulador' \
+  --body 'Implementação local 28/10/2026; inventário docs/arte/integracao-assets-20261028.json e evidências docs/arte/ENTREGA-ASSETS-20261028.md. Prévia local com fonte não commitada; exportação oficial limpa, aceite visual e merge pendentes. Sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2849,4 +2861,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 216 issues (132 já criadas fechadas) =="
+echo "== pronto: 217 issues (132 já criadas fechadas) =="

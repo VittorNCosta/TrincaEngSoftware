@@ -2,10 +2,11 @@ import { memo, useContext } from 'react';
 import { WorldArtContext } from './WorldArtContext';
 import { getResidueVisual } from '../data/residueVisualAssets';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { RECYCLING_ASSETS } from '../data/recyclingVisualAssets';
 import {
-  CollectionBinArtwork,
-  RecyclingSymbolArtwork,
-} from './RecyclingArtwork';
+  getMaterialTilePalette,
+  getMaterialTileInk,
+} from '../styles/materialTilePalette';
 
 import { CardRole } from '../domain/recycling/value-objects/CardRole';
 import { getMaterial } from '../domain/recycling/value-objects/MaterialType';
@@ -31,21 +32,13 @@ type TileIconProps = {
   size?: number;
 };
 
-type ArtworkProps = {
-  color: string;
-  colorDark: string;
-  colorLight: string;
-  ink: string;
-  size: number;
-  surface: string;
-};
-
 /** A arte mantém a aparência do resíduo; a moldura identifica o material. */
 function ResidueArtwork({
   emoji,
   image,
   size,
-}: ArtworkProps & {
+}: {
+  size: number;
   emoji: string;
   image?: import('react-native').ImageSourcePropType;
 }) {
@@ -88,22 +81,19 @@ function TileIconBase({
       : kind === 'organico'
         ? 'ORG.'
         : material.label.toLocaleUpperCase('pt-BR');
-  const materialInk =
-    kind === 'metal' || kind === 'vidro' ? '#11252B' : '#FFFFFF';
-  const artworkProps: ArtworkProps = {
-    color: material.binColor,
-    colorDark: material.binColorDark,
-    colorLight: material.binColorLight,
-    ink: materialInk,
-    size: artworkSize,
-    surface: tilePalette.iconFace,
-  };
+  const palette = getMaterialTilePalette(kind);
+  const materialInk = getMaterialTileInk(kind);
 
   return (
     <View
       style={[
         styles.root,
-        { borderRadius: size * 0.2, height: size, width: size },
+        {
+          backgroundColor: palette.surface,
+          borderRadius: size * 0.2,
+          height: size,
+          width: size,
+        },
         dimmed ? styles.dimmed : null,
         highlighted ? styles.highlighted : null,
       ]}
@@ -111,19 +101,16 @@ function TileIconBase({
       <View style={[styles.artwork, { height: artworkSize, width: size }]}>
         {role === 'residuo' ? (
           <ResidueArtwork
-            {...artworkProps}
+            size={artworkSize}
             emoji={fallbackEmoji}
             image={residueVisual?.image}
           />
-        ) : role === 'lixeira' ? (
-          <CollectionBinArtwork
-            {...artworkProps}
-            organic={kind === 'organico'}
-          />
         ) : (
-          <RecyclingSymbolArtwork
-            {...artworkProps}
-            organic={kind === 'organico'}
+          <Image
+            accessible={false}
+            source={RECYCLING_ASSETS[kind][role]}
+            resizeMode="contain"
+            style={{ height: artworkSize * 0.94, width: artworkSize * 0.94 }}
           />
         )}
       </View>
@@ -131,7 +118,7 @@ function TileIconBase({
         <View
           style={[
             styles.materialBand,
-            { backgroundColor: material.binColor, height: labelHeight },
+            { backgroundColor: palette.material, height: labelHeight },
           ]}
         >
           <Text
@@ -157,7 +144,7 @@ function TileIconBase({
         style={[
           StyleSheet.absoluteFill,
           {
-            borderColor: material.binColor,
+            borderColor: palette.border,
             borderRadius: size * 0.2,
             borderWidth: size >= 30 ? 2 : 1.5,
           },

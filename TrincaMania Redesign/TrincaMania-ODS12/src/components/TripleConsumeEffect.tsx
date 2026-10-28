@@ -1,3 +1,4 @@
+import { getMaterialTileBaseStyle } from '../styles/materialTilePalette';
 import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
@@ -106,6 +107,7 @@ function TripleConsumeAnimation({
           key={`${event.id}-consume-${item.tile.id}`}
           style={[
             styles.tile,
+            getMaterialTileBaseStyle(item.tile.kind),
             {
               left: x - TILE_SIZE / 2,
               opacity,

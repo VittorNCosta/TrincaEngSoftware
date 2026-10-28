@@ -1,3 +1,7 @@
+import {
+  getMaterialTileBaseStyle,
+  getMaterialTilePalette,
+} from '../styles/materialTilePalette';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { memo, useCallback, useContext, useEffect, useRef } from 'react';
 import { WorldArtContext } from './WorldArtContext';
@@ -249,6 +253,7 @@ function BoardTileBase({
       style={[
         styles.tile,
         blocked ? styles.blocked : styles.available,
+        !isMysteryHidden ? getMaterialTileBaseStyle(tile.kind) : null,
         isMysteryHidden ? styles.mysteryTile : null,
         isMysteryHidden && blocked ? styles.mysteryTileBlocked : null,
         highlighted && !blocked ? styles.highlighted : null,
@@ -280,7 +285,15 @@ function BoardTileBase({
           <View style={styles.blockedVeilShade} />
         </View>
       ) : null}
-      <View pointerEvents="none" style={styles.innerBottomShade} />
+      <View
+        pointerEvents="none"
+        style={[
+          styles.innerBottomShade,
+          !isMysteryHidden
+            ? { backgroundColor: getMaterialTilePalette(tile.kind).innerShade }
+            : null,
+        ]}
+      />
       <View pointerEvents="none" style={styles.specular} />
       {isMysteryHidden ? (
         <View
@@ -457,7 +470,7 @@ const styles = StyleSheet.create({
   },
   // Corpo único da peça, sem face aninhada.
   tutorialTarget: { overflow: 'visible', zIndex: 100 },
-  // Base neutra, com sombra e contorno para separar as peças.
+  // A paleta do material é aplicada sobre esta base; mistério usa sua própria cor.
   tile: {
     alignItems: 'center',
     backgroundColor: tilePalette.face,

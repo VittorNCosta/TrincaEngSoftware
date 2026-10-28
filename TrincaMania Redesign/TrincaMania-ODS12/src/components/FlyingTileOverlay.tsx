@@ -1,3 +1,7 @@
+import {
+  getMaterialTileBaseStyle,
+  getMaterialTilePalette,
+} from '../styles/materialTilePalette';
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
@@ -48,9 +52,19 @@ function FlyingTileBody({
 }) {
   return (
     <Animated.View
-      style={[styles.tile, { transform: scale ? [{ scale }] : undefined }]}
+      style={[
+        styles.tile,
+        getMaterialTileBaseStyle(kind),
+        { transform: scale ? [{ scale }] : undefined },
+      ]}
     >
-      <View pointerEvents="none" style={styles.innerBottomShade} />
+      <View
+        pointerEvents="none"
+        style={[
+          styles.innerBottomShade,
+          { backgroundColor: getMaterialTilePalette(kind).innerShade },
+        ]}
+      />
       <View pointerEvents="none" style={styles.specular} />
       <TileIcon
         cardId={cardId}
