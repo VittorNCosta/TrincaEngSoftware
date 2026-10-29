@@ -319,7 +319,7 @@ function BoardTileBase({
           </Text>
         </View>
       ) : (
-        <View pointerEvents="none">
+        <View pointerEvents="none" style={blocked ? styles.blockedIcon : null}>
           <TileIcon
             cardId={tile.cardId}
             fallbackEmoji={tile.emoji}
@@ -373,6 +373,9 @@ const styles = StyleSheet.create({
     width: 16,
     zIndex: 7,
   },
+  blockedIcon: {
+    opacity: 0.76,
+  },
   blockedVeil: {
     backgroundColor: 'rgba(24, 31, 38, 0.14)',
     borderRadius: 19,
@@ -383,7 +386,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
-    zIndex: 0,
+    zIndex: 4,
   },
   // Sombra interna na base do véu: dá o mesmo assentamento do inset do kit.
   blockedVeilShade: {

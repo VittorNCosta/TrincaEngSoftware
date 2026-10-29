@@ -1510,6 +1510,18 @@ mk open --title 'L-35 · Aproximar os preços dos ícones de poder' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-36 · Restaurar o aspecto apagado das peças cobertas' \
+  --body 'Solicitado em 28/10/2026: restaurar a aparência apagada das peças cobertas por outra peça. Reutilizar a opacidade de 0,76 do desenho e o véu acima da arte (zIndex 4), como em 007ea3d. Preservar peças livres, cores atuais, mistério, cadeado, bloqueio, poderes, áreas de toque e regras. Validação e simulador locais; sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2885,4 +2897,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 219 issues (132 já criadas fechadas) =="
+echo "== pronto: 220 issues (132 já criadas fechadas) =="
