@@ -2,7 +2,8 @@ import {
   getMaterialTileBaseStyle,
   getMaterialTilePalette,
 } from '../styles/materialTilePalette';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+import { GameplayTileContext } from './TileAppearanceContext';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
 import { TileIcon } from './TileIcon';
@@ -50,11 +51,12 @@ function FlyingTileBody({
   role: CardRole;
   scale?: Animated.AnimatedInterpolation<number>;
 }) {
+  const duringGame = useContext(GameplayTileContext);
   return (
     <Animated.View
       style={[
         styles.tile,
-        getMaterialTileBaseStyle(kind),
+        getMaterialTileBaseStyle(kind, duringGame),
         { transform: scale ? [{ scale }] : undefined },
       ]}
     >
@@ -62,7 +64,10 @@ function FlyingTileBody({
         pointerEvents="none"
         style={[
           styles.innerBottomShade,
-          { backgroundColor: getMaterialTilePalette(kind).innerShade },
+          {
+            backgroundColor: getMaterialTilePalette(kind, duringGame)
+              .innerShade,
+          },
         ]}
       />
       <View pointerEvents="none" style={styles.specular} />

@@ -5,6 +5,7 @@ import {
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { memo, useCallback, useContext, useEffect, useRef } from 'react';
 import { WorldArtContext } from './WorldArtContext';
+import { GameplayTileContext } from './TileAppearanceContext';
 import { getResidueVisual } from '../data/residueVisualAssets';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -49,6 +50,7 @@ function BoardTileBase({
 }: BoardTileProps) {
   const reducedMotion = useReducedMotion();
   const worldId = useContext(WorldArtContext);
+  const duringGame = useContext(GameplayTileContext);
   const residueVisual = getResidueVisual(tile.cardId, worldId);
   const isDisabled = disabled;
   const isMysteryHidden = tile.mystery === true && tile.revealed !== true;
@@ -253,7 +255,9 @@ function BoardTileBase({
       style={[
         styles.tile,
         blocked ? styles.blocked : styles.available,
-        !isMysteryHidden ? getMaterialTileBaseStyle(tile.kind) : null,
+        !isMysteryHidden
+          ? getMaterialTileBaseStyle(tile.kind, duringGame)
+          : null,
         isMysteryHidden ? styles.mysteryTile : null,
         isMysteryHidden && blocked ? styles.mysteryTileBlocked : null,
         highlighted && !blocked ? styles.highlighted : null,
@@ -290,7 +294,10 @@ function BoardTileBase({
         style={[
           styles.innerBottomShade,
           !isMysteryHidden
-            ? { backgroundColor: getMaterialTilePalette(tile.kind).innerShade }
+            ? {
+                backgroundColor: getMaterialTilePalette(tile.kind, duringGame)
+                  .innerShade,
+              }
             : null,
         ]}
       />

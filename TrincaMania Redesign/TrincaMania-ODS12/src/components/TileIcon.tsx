@@ -1,5 +1,6 @@
 import { memo, useContext } from 'react';
 import { WorldArtContext } from './WorldArtContext';
+import { GameplayTileContext } from './TileAppearanceContext';
 import { getResidueVisual } from '../data/residueVisualAssets';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { RECYCLING_ASSETS } from '../data/recyclingVisualAssets';
@@ -70,9 +71,10 @@ function TileIconBase({
   size = 42,
 }: TileIconProps) {
   const worldId = useContext(WorldArtContext);
+  const duringGame = useContext(GameplayTileContext);
   const residueVisual = getResidueVisual(cardId, worldId);
   const material = getMaterial(kind);
-  const showMaterialLabel = size >= 30;
+  const showMaterialLabel = !duringGame && size >= 30;
   const labelHeight = showMaterialLabel ? size * 0.22 : 0;
   const artworkSize = size - labelHeight;
   const label =
@@ -81,7 +83,7 @@ function TileIconBase({
       : kind === 'organico'
         ? 'ORG.'
         : material.label.toLocaleUpperCase('pt-BR');
-  const palette = getMaterialTilePalette(kind);
+  const palette = getMaterialTilePalette(kind, duringGame);
   const materialInk = getMaterialTileInk(kind);
 
   return (

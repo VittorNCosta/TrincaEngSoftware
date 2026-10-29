@@ -2,7 +2,8 @@ import {
   getMaterialTileBaseStyle,
   getMaterialTilePalette,
 } from '../styles/materialTilePalette';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
+import { GameplayTileContext } from './TileAppearanceContext';
 import {
   Animated,
   Easing,
@@ -58,6 +59,7 @@ function TraySlot({
   onSlotLayoutInWindow,
   onSlotPress,
 }: TraySlotProps) {
+  const duringGame = useContext(GameplayTileContext);
   const slotRef = useRef<View>(null);
   const activation = useRef(new Animated.Value(0)).current;
   const wasActiveRef = useRef(isActiveSlot);
@@ -120,7 +122,10 @@ function TraySlot({
           pointerEvents="none"
           style={[
             styles.slotInsetShade,
-            { backgroundColor: getMaterialTilePalette(tile.kind).innerShade },
+            {
+              backgroundColor: getMaterialTilePalette(tile.kind, duringGame)
+                .innerShade,
+            },
           ]}
         />
         <View pointerEvents="none" style={styles.slotSpecular} />
@@ -203,7 +208,9 @@ function TraySlot({
           isCoinSlot && !isActiveSlot ? styles.coinLockedSlot : null,
           isBonusSlot && !isActiveSlot ? styles.bonusLockedSlot : null,
           isFilled ? styles.filledSlot : null,
-          isFilled && tile ? getMaterialTileBaseStyle(tile.kind) : null,
+          isFilled && tile
+            ? getMaterialTileBaseStyle(tile.kind, duringGame)
+            : null,
           pressed && slotIsActionable ? styles.slotPressed : null,
         ]}
       >

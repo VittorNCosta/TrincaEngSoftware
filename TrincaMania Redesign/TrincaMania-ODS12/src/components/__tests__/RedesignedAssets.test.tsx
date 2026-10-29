@@ -1,11 +1,15 @@
-import { render } from '@testing-library/react-native';
-import { Image, StyleSheet } from 'react-native';
+import { render, within } from '@testing-library/react-native';
+import { Image, StyleSheet, View } from 'react-native';
+import { GameplayTileContext } from '../TileAppearanceContext';
 import { TileIcon } from '../TileIcon';
 import { BoardTile } from '../BoardTile';
 import { RedesignedIcon } from '../RedesignedIcon';
 import geometry from '../../data/redesignedIconGeometry.json';
 import { RECYCLING_ASSETS } from '../../data/recyclingVisualAssets';
-import { MATERIAL_TILE_PALETTE } from '../../styles/materialTilePalette';
+import {
+  MATERIAL_TILE_PALETTE,
+  getMaterialTilePalette,
+} from '../../styles/materialTilePalette';
 import { MaterialType } from '../../domain/recycling/value-objects/MaterialType';
 
 const materials = Object.keys(MATERIAL_TILE_PALETTE) as MaterialType[];
@@ -84,3 +88,39 @@ test('todos os vetores são aceitos pelo renderizador nativo sem avisos de gradi
     warn.mockRestore();
   }
 });
+
+const materialLabels = {
+  plastico: 'PLÁST.',
+  papel: 'PAPEL',
+  vidro: 'VIDRO',
+  metal: 'METAL',
+  organico: 'ORG.',
+};
+
+test.each(materials)(
+  'simplifica %s somente na partida e preserva a imagem e os demais consumidores',
+  (kind) => {
+    const icon = (
+      <TileIcon fallbackEmoji="♻" kind={kind} role="lixeira" size={40} />
+    );
+    const screen = render(
+      <>
+        <View testID="outside-game">{icon}</View>
+        <GameplayTileContext.Provider value>
+          <View testID="inside-game">{icon}</View>
+        </GameplayTileContext.Provider>
+      </>,
+    );
+    const outside = within(screen.getByTestId('outside-game'));
+    const inside = within(screen.getByTestId('inside-game'));
+    expect(outside.getByText(materialLabels[kind])).toBeTruthy();
+    expect(inside.queryByText(materialLabels[kind])).toBeNull();
+    expect(inside.UNSAFE_getByType(Image).props.source).toBe(
+      outside.UNSAFE_getByType(Image).props.source,
+    );
+    expect(inside.UNSAFE_getByType(Image).props.style.height).toBeGreaterThan(
+      outside.UNSAFE_getByType(Image).props.style.height,
+    );
+    expect(getMaterialTilePalette(kind)).toBe(MATERIAL_TILE_PALETTE[kind]);
+  },
+);

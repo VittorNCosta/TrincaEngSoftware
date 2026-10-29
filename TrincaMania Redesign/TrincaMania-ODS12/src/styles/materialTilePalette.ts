@@ -46,12 +46,30 @@ export const MATERIAL_TILE_PALETTE: Record<MaterialType, MaterialTileColors> = {
   },
 };
 
-export function getMaterialTilePalette(kind: MaterialType): MaterialTileColors {
-  return MATERIAL_TILE_PALETTE[kind];
+// Tons exclusivos da partida: preservam a família do material com mais luz.
+const GAMEPLAY_TILE_SURFACES: Record<MaterialType, string> = {
+  plastico: '#F09B8F',
+  papel: '#88B8E5',
+  vidro: '#8DD1A0',
+  metal: '#F4D782',
+  organico: '#C6A17D',
+};
+
+export function getMaterialTilePalette(
+  kind: MaterialType,
+  duringGame = false,
+): MaterialTileColors {
+  const palette = MATERIAL_TILE_PALETTE[kind];
+  return duringGame
+    ? { ...palette, surface: GAMEPLAY_TILE_SURFACES[kind] }
+    : palette;
 }
 
-export function getMaterialTileBaseStyle(kind: MaterialType) {
-  const palette = getMaterialTilePalette(kind);
+export function getMaterialTileBaseStyle(
+  kind: MaterialType,
+  duringGame = false,
+) {
+  const palette = getMaterialTilePalette(kind, duringGame);
   return {
     backgroundColor: palette.surface,
     borderColor: palette.border,
