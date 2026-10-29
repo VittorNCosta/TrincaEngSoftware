@@ -481,77 +481,72 @@ export function ShopScreen({
                               <RewardAssetIcon name="coin" size={24} />
                               <Text style={styles.price}>{product.price}</Text>
                             </View>
-                            <Pressable
-                              accessibilityRole="button"
-                              accessibilityLabel={msg(
-                                'Comprar {param1} por {param2} moedas. Você possui {param3}. {param4}',
-                                {
-                                  param1: String(product.title),
-                                  param2: String(product.price),
-                                  param3: String(product.quantity),
-                                  param4: String(
-                                    !product.unlocked
-                                      ? msg(
-                                          'Bloqueado. Avance na campanha para liberar.',
-                                        )
-                                      : shortfall > 0
-                                        ? msg('Faltam {param1} moedas.', {
-                                            param1: String(shortfall),
-                                          })
-                                        : msg('Disponível.'),
-                                  ),
-                                },
-                              )}
-                              accessibilityState={{
-                                disabled: pending || !product.unlocked,
-                                busy: pendingPower === product.power,
-                              }}
-                              disabled={pending || !product.unlocked}
-                              onPress={() => {
-                                void buyProduct(product.power);
-                              }}
-                              style={({ pressed }) => [
-                                styles.buy,
-                                { minHeight: layout.buyTargetHeight },
-                                stackedOffers || featured
-                                  ? [styles.checkoutCell, styles.checkoutAction]
-                                  : null,
-                                pending || !product.unlocked
-                                  ? styles.disabled
-                                  : null,
-                                shortfall > 0 && !pending && product.unlocked
-                                  ? styles.buyShortfall
-                                  : null,
-                                pressed ? styles.pressed : null,
-                              ]}
-                              testID={`shop-buy-${product.power}`}
-                            >
-                              <View
-                                pointerEvents="none"
-                                style={styles.buttonHighlight}
-                              />
-                              <Text
-                                adjustsFontSizeToFit
-                                minimumFontScale={0.8}
-                                numberOfLines={1}
-                                style={[
-                                  styles.buyLabel,
-                                  shortfall > 0 && !pending && product.unlocked
-                                    ? styles.buyLabelShortfall
+                            {shortfall === 0 ||
+                            !product.unlocked ||
+                            pendingPower === product.power ? (
+                              <Pressable
+                                accessibilityRole="button"
+                                accessibilityLabel={msg(
+                                  'Comprar {param1} por {param2} moedas. Você possui {param3}. {param4}',
+                                  {
+                                    param1: String(product.title),
+                                    param2: String(product.price),
+                                    param3: String(product.quantity),
+                                    param4: String(
+                                      !product.unlocked
+                                        ? msg(
+                                            'Bloqueado. Avance na campanha para liberar.',
+                                          )
+                                        : shortfall > 0
+                                          ? msg('Faltam {param1} moedas.', {
+                                              param1: String(shortfall),
+                                            })
+                                          : msg('Disponível.'),
+                                    ),
+                                  },
+                                )}
+                                accessibilityState={{
+                                  disabled: pending || !product.unlocked,
+                                  busy: pendingPower === product.power,
+                                }}
+                                disabled={pending || !product.unlocked}
+                                onPress={() => {
+                                  void buyProduct(product.power);
+                                }}
+                                style={({ pressed }) => [
+                                  styles.buy,
+                                  { minHeight: layout.buyTargetHeight },
+                                  stackedOffers || featured
+                                    ? [
+                                        styles.checkoutCell,
+                                        styles.checkoutAction,
+                                      ]
                                     : null,
+                                  pending || !product.unlocked
+                                    ? styles.disabled
+                                    : null,
+                                  pressed ? styles.pressed : null,
                                 ]}
+                                testID={`shop-buy-${product.power}`}
                               >
-                                {!product.unlocked
-                                  ? msg('BLOQUEADO')
-                                  : pendingPower === product.power
-                                    ? msg('AGUARDE…')
-                                    : shortfall > 0
-                                      ? msg('FALTAM {param1}', {
-                                          param1: String(shortfall),
-                                        })
+                                <View
+                                  pointerEvents="none"
+                                  style={styles.buttonHighlight}
+                                />
+                                <Text
+                                  adjustsFontSizeToFit
+                                  minimumFontScale={0.8}
+                                  numberOfLines={1}
+                                  style={styles.buyLabel}
+                                >
+                                  {!product.unlocked
+                                    ? msg('BLOQUEADO')
+                                    : pendingPower === product.power
+                                      ? msg('AGUARDE…')
                                       : msg('COMPRAR')}
-                              </Text>
-                            </Pressable>
+                                </Text>
+                              </Pressable>
+                            ) : null}
                           </View>
                           {selected && !pending && reaction.feedbackTone ? (
                             <Text
@@ -863,11 +858,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
     paddingVertical: spacing.sm,
   },
-  buyShortfall: {
-    backgroundColor: '#F2DFB3',
-    borderBottomColor: '#9B713E',
-    borderColor: '#D1AB6C',
-  },
   buttonHighlight: {
     position: 'absolute',
     left: spacing.xs,
@@ -884,7 +874,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     textAlign: 'center',
   },
-  buyLabelShortfall: { color: forestPolish.woodDark },
   disabled: { opacity: 0.6 },
   pressed: { opacity: 0.85 },
   plusOne: {

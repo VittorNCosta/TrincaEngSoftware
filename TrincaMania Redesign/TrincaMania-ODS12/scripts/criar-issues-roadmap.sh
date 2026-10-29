@@ -1522,6 +1522,18 @@ mk open --title 'L-36 · Restaurar o aspecto apagado das peças cobertas' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-37 · Remover o box de moedas faltantes da loja' \
+  --body 'Solicitado em 28/10/2026: remover o box FALTAM dos produtos sem saldo suficiente na loja, mantendo o preço visível. Preservar COMPRAR quando houver saldo, AGUARDE durante a compra, estados bloqueados, acessibilidade, preços, inventário e proteção contra cobrança duplicada. Validar e atualizar o simulador local, sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2897,4 +2909,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 220 issues (132 já criadas fechadas) =="
+echo "== pronto: 221 issues (132 já criadas fechadas) =="
