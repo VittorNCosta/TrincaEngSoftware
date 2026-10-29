@@ -1,17 +1,9 @@
 import { Image, View } from 'react-native';
 import { MapLevelPedestal } from '../../components/MapLevelPedestal';
 import { MapTrailSign } from '../../components/MapTrailSign';
-import { RestStopMapMarker } from '../../components/RestStopMapMarker';
-import { BonusWorldChestMarker } from '../../components/BonusWorldChestMarker';
 import { getWorldVisualAssets } from '../../data/worldVisualAssets';
 import { WORLDS } from '../../data/worlds';
 import type { Level, ProgressState, WorldId } from '../../types/game';
-import {
-  isShopUnlockedAfterLevel,
-  shouldShowShopAfterLevel,
-} from '../../utils/shop';
-import { getLevelDisplayLabel } from '../../utils/levelDisplay';
-import { getBonusWorldChestProgress } from '../../storage/progressStorage';
 import {
   MAP_ART_TOP_INSET,
   type IllustratedMapLayout,
@@ -30,8 +22,6 @@ type Props = {
   selectLevel: (id: string) => void;
   selectWorld: (id: WorldId) => void;
   selectWorldPortal: (afterLevelId: string, targetWorldId: WorldId) => void;
-  selectShop: (id: string, comingSoon: boolean, locked: boolean) => void;
-  selectBonusChest: () => void;
 };
 
 /** Pinta também a folga de rolagem e a área sob a barra de navegação. */
@@ -92,14 +82,11 @@ export function IllustratedCampaignMap({
   selectLevel,
   selectWorld,
   selectWorldPortal,
-  selectShop,
-  selectBonusChest,
 }: Props) {
   const { scale } = layout;
   const index = WORLDS.findIndex(({ id }) => id === worldId);
   const previous = WORLDS[index - 1];
   const next = WORLDS[index + 1];
-  const chest = getBonusWorldChestProgress(progress);
   const mapArtwork = getWorldVisualAssets(worldId).map;
   return (
     <View
@@ -187,37 +174,6 @@ export function IllustratedCampaignMap({
           </View>
         );
       })}
-      {levels
-        .filter((level) => shouldShowShopAfterLevel(level.id))
-        .map((level) => {
-          const point = layout.groundPoints[level.worldLevelNumber - 1];
-          if (!point) return null;
-          const locked = !isShopUnlockedAfterLevel(level.id, progress);
-          return (
-            <View
-              key={`rest-${level.id}`}
-              style={{
-                position: 'absolute',
-                left: point.x + 48 * scale,
-                top: point.y - 80 * scale,
-                width: 104,
-                height: 96,
-                transformOrigin: 'top left',
-                transform: [{ scale }],
-              }}
-            >
-              <RestStopMapMarker
-                afterLevelLabel={getLevelDisplayLabel(level)}
-                locked={locked}
-                selected={
-                  selectedTarget?.type === 'shop' &&
-                  selectedTarget.afterLevelId === level.id
-                }
-                onPress={() => selectShop(level.id, false, locked)}
-              />
-            </View>
-          );
-        })}
       {previous ? (
         <View
           style={{
@@ -251,31 +207,6 @@ export function IllustratedCampaignMap({
             onPress={() =>
               selectWorldPortal(levels[levels.length - 1].id, next.id)
             }
-          />
-        </View>
-      ) : null}
-      {worldId === 21 ? (
-        <View
-          style={{
-            position: 'absolute',
-            left: 400 * scale,
-            top: MAP_ART_TOP_INSET + 280 * scale,
-            transformOrigin: 'top left',
-            transform: [{ scale }],
-          }}
-        >
-          <BonusWorldChestMarker
-            completedCount={chest.completedCount}
-            totalCount={chest.totalCount}
-            selected={selectedTarget?.type === 'bonusChest'}
-            state={
-              chest.available
-                ? 'available'
-                : chest.claimed
-                  ? 'claimed'
-                  : 'locked'
-            }
-            onPress={selectBonusChest}
           />
         </View>
       ) : null}

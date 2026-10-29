@@ -6,7 +6,6 @@ import { useProgressPersistence } from './src/hooks/useProgressPersistence';
 import {
   checkBoardSize,
   checkCanonicalCampaign,
-  checkRewardUnclaimed,
   checkTrayCapacity,
 } from './src/observability/runtimeInvariants';
 import { isChapterModeUnlocked } from './src/utils/chapterAvailability';
@@ -42,7 +41,6 @@ import { colors } from './src/styles/theme';
 import {
   CHEST_COIN_REWARD,
   applyLevelCompletion,
-  collectRestCheckpoint,
   consumePowerUpItem,
   createChestProgressSummary,
   createInitialProgress,
@@ -93,7 +91,6 @@ import {
   ChestRewardSummary,
   PowerUpType,
   ProgressState,
-  RestCheckpointRewardResult,
   WorldId,
 } from './src/types/game';
 import { WindowTarget } from './src/types/ui';
@@ -158,7 +155,6 @@ import {
   purchaseCoinTraySlot,
   resetTrayBoostState,
 } from './src/storage/trayBoostStorage';
-import { getRestCheckpointCoinReward } from './src/utils/shop';
 import { getCurrentWorldId } from './src/utils/worldProgress';
 
 type AppScreen = 'splash' | 'levels' | 'game' | 'shop' | 'chapters';
@@ -257,7 +253,6 @@ export default function App() {
   const isProgressMutationInFlightRef = useRef(false);
   const isPurchasingPowerUpRef = useRef(false);
   const isPurchasingTraySlotRef = useRef(false);
-  const isCollectingCheckpointRef = useRef(false);
   const bonusTraySlotActivationPromiseRef = useRef<
     Promise<BonusTraySlotActivationResult> | undefined
   >(undefined);
@@ -631,7 +626,6 @@ export default function App() {
     activeWorldChestId,
     worldChestResult,
     isOpeningWorldChest,
-    showWorldChest,
     closeWorldChest,
     handleOpenWorldChest,
   } = useWorldChestController({
@@ -1088,76 +1082,6 @@ export default function App() {
       return activationPromise;
     };
 
-  const handleOpenRestCheckpoint = async (
-    afterLevelId: string,
-  ): Promise<RestCheckpointRewardResult> => {
-    const checkpointLevel = LEVELS.find((level) => level.id === afterLevelId);
-    const worldId = checkpointLevel?.worldId ?? getCurrentWorldId(progress);
-
-    if (
-      isCollectingCheckpointRef.current ||
-      !progress.completedLevelIds.includes(afterLevelId) ||
-      progress.collectedRestCheckpointIds.includes(afterLevelId)
-    ) {
-      return {
-        granted: false,
-        worldId,
-      };
-    }
-
-    isCollectingCheckpointRef.current = true;
-
-    try {
-      const currentLivesState = await refreshLivesState();
-      // O `progress` fechado por esta invocação é anterior aos awaits acima; a
-      // guarda que vale é a do snapshot mais recente, senão dois toques seguidos
-      // premiam o mesmo ponto de descanso duas vezes.
-      const latestProgress = progressRef.current;
-
-      if (
-        !checkRewardUnclaimed(
-          latestProgress.collectedRestCheckpointIds.includes(afterLevelId),
-        )
-      ) {
-        return {
-          granted: false,
-          worldId,
-        };
-      }
-
-      if (currentLivesState.currentLives < currentLivesState.maxLives) {
-        const nextLivesState = await addLife();
-
-        setLivesState(nextLivesState);
-        setLivesNow(Date.now());
-        void commitProgress(
-          collectRestCheckpoint(latestProgress, afterLevelId),
-        ).catch(() => undefined);
-
-        return {
-          granted: true,
-          rewardType: 'life',
-          worldId,
-        };
-      }
-
-      const coinsEarned = getRestCheckpointCoinReward(afterLevelId);
-
-      void commitProgress(
-        collectRestCheckpoint(latestProgress, afterLevelId, coinsEarned),
-      ).catch(() => undefined);
-
-      return {
-        coinsEarned,
-        granted: true,
-        rewardType: 'coins',
-        worldId,
-      };
-    } finally {
-      isCollectingCheckpointRef.current = false;
-    }
-  };
-
   const handleSelectLevel = async (levelId: string) => {
     if (!devMode && !progress.unlockedLevelIds.includes(levelId)) {
       return;
@@ -1414,7 +1338,6 @@ export default function App() {
             trayBoostState={trayBoostState}
             timeUntilNextLifeMs={timeUntilNextLifeMs}
             onCoinCounterLayout={setCoinCollectTarget}
-            onOpenRestCheckpoint={handleOpenRestCheckpoint}
             onOpenSettings={openSettings}
             onOpenRoutine={handleOpenRoutine}
             onOpenShop={openShop}
@@ -1422,7 +1345,6 @@ export default function App() {
               if (devMode || isChapterModeUnlocked(progressRef.current))
                 setScreen('chapters');
             }}
-            onOpenWorldChest={showWorldChest}
             onPurchaseCoinTraySlot={handlePurchaseCoinTraySlot}
             onResetProgress={handleResetProgress}
             onSelectLevel={handleSelectLevel}

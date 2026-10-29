@@ -37,20 +37,15 @@ export const CHEST_COIN_REWARD = 50;
 export const KEY_COST = 100;
 export const WORLD_CHEST_COINS_WITH_LIFE = 100;
 export const WORLD_CHEST_COINS_FULL_LIVES = 150;
-const BONUS_WORLD_ID: WorldId = 21;
 const BONUS_WORLD_CHEST_ID = 'bonus-world-21';
-const BONUS_WORLD_CHEST_SUMMARY: WorldChestSummary = {
-  id: BONUS_WORLD_CHEST_ID,
-  isNew: true,
-  worldId: BONUS_WORLD_ID,
-};
 const LEVEL_IDS = LEVELS.map((level) => level.id);
 const LEVEL_ID_SET = new Set(LEVEL_IDS);
 const LEVEL_INDEX_BY_ID = new Map(
   LEVEL_IDS.map((levelId, index) => [levelId, index]),
 );
 const POWER_UP_TYPES: PowerUpType[] = ['hint', 'shuffle', 'undo'];
-const WORLD_CHEST_IDS = [BONUS_WORLD_CHEST_SUMMARY.id];
+// Identidade histórica preservada para não apagar o registro de baús já coletados.
+const WORLD_CHEST_IDS = [BONUS_WORLD_CHEST_ID];
 
 export type LevelCompletionResult = {
   bonusWorldAchievementUnlocked: boolean;
@@ -139,31 +134,6 @@ const hasThreeStarsInWorldByStars = (
   return (
     worldLevels.length > 0 &&
     worldLevels.every((level) => levelStars[level.id] === 3)
-  );
-};
-
-const getBonusLevels = () =>
-  LEVELS.filter((level) => level.worldId === BONUS_WORLD_ID);
-
-const getCompletedBonusLevelCount = (
-  completedLevelIds: string[],
-  levelStars: Record<string, number>,
-) =>
-  getBonusLevels().filter(
-    (level) =>
-      completedLevelIds.includes(level.id) || (levelStars[level.id] ?? 0) > 0,
-  ).length;
-
-const isBonusWorldChestUnlockedByProgress = (
-  completedLevelIds: string[],
-  levelStars: Record<string, number>,
-) => {
-  const bonusLevels = getBonusLevels();
-
-  return (
-    bonusLevels.length > 0 &&
-    getCompletedBonusLevelCount(completedLevelIds, levelStars) ===
-      bonusLevels.length
   );
 };
 
@@ -287,14 +257,8 @@ export const normalizeProgress = (
     }
   });
 
-  if (
-    isBonusWorldChestUnlockedByProgress(completedLevelIds, levelStars) &&
-    !claimedWorldChestIds.includes(BONUS_WORLD_CHEST_ID)
-  ) {
-    pendingWorldChestSet.add(BONUS_WORLD_CHEST_ID);
-  } else {
-    pendingWorldChestSet.delete(BONUS_WORLD_CHEST_ID);
-  }
+  // O baú do bônus foi retirado; saves antigos não devem oferecê-lo novamente.
+  pendingWorldChestSet.delete(BONUS_WORLD_CHEST_ID);
 
   return {
     ...copyChapterRewardLedger(progress),
@@ -487,27 +451,6 @@ export const grantChestCoinReward = (
 
 export const getBonusWorldChestId = () => BONUS_WORLD_CHEST_ID;
 
-export const getBonusWorldChestProgress = (progress: ProgressState) => {
-  const normalizedProgress = normalizeProgress(progress);
-  const bonusLevels = getBonusLevels();
-  const completedCount = getCompletedBonusLevelCount(
-    normalizedProgress.completedLevelIds,
-    normalizedProgress.levelStars,
-  );
-  const claimed =
-    normalizedProgress.claimedWorldChestIds.includes(BONUS_WORLD_CHEST_ID);
-  const available =
-    bonusLevels.length > 0 && completedCount === bonusLevels.length && !claimed;
-
-  return {
-    available,
-    claimed,
-    completedCount,
-    id: BONUS_WORLD_CHEST_ID,
-    totalCount: bonusLevels.length,
-  };
-};
-
 export const getWorldChestIdForLevel = (_levelId: string) => undefined;
 
 export const getWorldChestLabel = (worldChestId: string) => {
@@ -669,27 +612,6 @@ export const spendCoins = (
     ...progress,
     coins: Math.max(0, progress.coins - cost),
   });
-
-export const collectRestCheckpoint = (
-  progress: ProgressState,
-  afterLevelId: string,
-  coinReward = 0,
-): ProgressState => {
-  if (!LEVEL_IDS.includes(afterLevelId)) {
-    return normalizeProgress(progress);
-  }
-
-  const collectedSet = new Set(progress.collectedRestCheckpointIds);
-  collectedSet.add(afterLevelId);
-
-  return normalizeProgress({
-    ...progress,
-    collectedRestCheckpointIds: LEVEL_IDS.filter((levelId) =>
-      collectedSet.has(levelId),
-    ),
-    coins: progress.coins + Math.max(0, Math.floor(coinReward)),
-  });
-};
 
 export const markBonusWorldAchievementShown = (
   progress: ProgressState,

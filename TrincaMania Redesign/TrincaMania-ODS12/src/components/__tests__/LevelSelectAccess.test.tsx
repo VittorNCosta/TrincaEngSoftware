@@ -14,8 +14,6 @@ const baseProps = () => ({
   onOpenProfile: jest.fn(),
   onOpenShop: jest.fn(),
   onOpenSettings: jest.fn(),
-  onOpenWorldChest: jest.fn(),
-  onOpenRestCheckpoint: jest.fn(),
   onResetProgress: jest.fn(),
   onSelectLevel: jest.fn(),
 });
@@ -55,6 +53,40 @@ test('dev mode lets a new save select a late-world stage without persisting unlo
   expect(props.onSelectLevel).toHaveBeenCalledWith('w9-010');
   expect(JSON.stringify(props.progress)).toBe(original);
 });
+
+test('o mapa bônus mantém as três fases sem oferecer o baú removido', () => {
+  const screen = render(
+    <LevelSelectScreen {...baseProps()} devMode initialWorldId={21} />,
+  );
+  for (const position of ['001', '002', '003']) {
+    expect(screen.getByTestId(`map-level-bonus-w1-${position}`)).toBeTruthy();
+  }
+  expect(screen.queryByText(/BAÚ/)).toBeNull();
+  expect(screen.queryByRole('button', { name: /baú/i })).toBeNull();
+  fireEvent.press(screen.getByTestId('map-level-bonus-w1-001'));
+  expect(screen.getByTestId('jogar-fase')).toBeTruthy();
+});
+
+test.each([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21] as const)(
+  'o mundo %s mantém suas fases sem pontos de descanso',
+  (worldId) => {
+    const screen = render(
+      <LevelSelectScreen {...baseProps()} devMode initialWorldId={worldId} />,
+    );
+    fireEvent(screen.UNSAFE_getByType(ScrollView), 'layout', {
+      nativeEvent: { layout: { x: 0, y: 0, width: 360, height: 600 } },
+    });
+    const first = LEVELS.find((level) => level.worldId === worldId)!;
+    expect(screen.getByTestId(`map-level-${first.id}`)).toBeTruthy();
+    expect(
+      screen.queryByRole('button', { name: /^Ponto de descanso/i }),
+    ).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Loja, /i })).toBeNull();
+    expect(
+      screen.queryByLabelText('Recompensa do ponto de descanso'),
+    ).toBeNull();
+  },
+);
 
 const controlFrames = () => {
   const frames = new Map<number, FrameRequestCallback>();

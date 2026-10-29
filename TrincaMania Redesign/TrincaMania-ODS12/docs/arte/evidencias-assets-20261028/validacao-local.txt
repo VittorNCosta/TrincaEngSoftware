@@ -1,0 +1,190 @@
+ods-typecheck-final.log
+
+> trincamania@1.1.0 typecheck
+> tsc --noEmit
+
+
+ods-domain.log
+  ...
+# Subtest: all residue cards resolve valid artwork across campaign and chapters, leaving other roles unchanged
+ok 395 - all residue cards resolve valid artwork across campaign and chapters, leaving other roles unchanged
+  ---
+  duration_ms: 1.717565
+  type: 'test'
+  ...
+1..395
+# tests 395
+# suites 0
+# pass 395
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8612.053651
+
+ods-ui-final.log
+PASS src/components/__tests__/RecyclingMarkerArt.test.tsx
+PASS src/components/__tests__/useAppSettings.test.tsx
+PASS src/components/__tests__/ScreenShell.test.tsx
+PASS src/components/__tests__/ActiveGameClock.test.tsx
+PASS src/components/__tests__/MysteryTutorialModal.test.tsx
+PASS src/components/__tests__/SoundLifecycle.test.tsx
+PASS src/components/__tests__/RoundAction.test.tsx
+PASS src/components/__tests__/PrimaryButton.test.tsx
+PASS src/components/__tests__/NativeErrors.test.tsx
+PASS src/components/__tests__/SettingsInteractions.test.tsx
+
+Test Suites: 30 passed, 30 total
+Tests:       143 passed, 143 total
+Snapshots:   0 total
+Time:        18.135 s, estimated 25 s
+Ran all test suites.
+
+ods-playthrough.log
+  ...
+# Subtest: todos os 1000 mapas de capítulo são vencíveis por um jogador simulado, bandeja base (aberto + retry)
+ok 2 - todos os 1000 mapas de capítulo são vencíveis por um jogador simulado, bandeja base (aberto + retry)
+  ---
+  duration_ms: 8297.549365
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8903.843766
+
+ods-lint-final.log
+
+> trincamania@1.1.0 lint
+> eslint .
+
+
+/home/vitto/igrion/validacao-20261026/jogo-ods/TrincaMania Redesign/TrincaMania-ODS12/src/screens/GameScreen.tsx
+   862:52  warning  The ref value 'tileMoveQueueRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'tileMoveQueueRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+   892:6   warning  React Hook useEffect has a missing dependency: 'resetRoundState'. Either include it or remove the dependency array                                                                                                                                                               react-hooks/exhaustive-deps
+  2225:6   warning  React Hook useEffect has a missing dependency: 'cancelPendingMoveAnimations'. Either include it or remove the dependency array                                                                                                                                                   react-hooks/exhaustive-deps
+
+✖ 3 problems (0 errors, 3 warnings)
+
+
+ods-guard.log
+
+> trincamania@1.1.0 guarda:ods12
+> node scripts/guarda-ods12.js
+
+✔ guarda ODS 12: nenhuma regressão. 0 pendência(s) conhecida(s).
+
+ods-assets-final.log
+
+> trincamania@1.1.0 valida:assets
+> node scripts/valida-assets.js
+
+✔ assets: 265 arquivos, 51.4 MB. Dívida conhecida: 0 acima de 400 KB, 0 órfãos.
+
+ods-final-format.log
+
+> trincamania@1.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+ods-site-config.log
+  ...
+# Subtest: successful transaction publishes complete state
+ok 9 - successful transaction publishes complete state
+  ---
+  duration_ms: 4.04494
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 324.851658
+
+ods-site-build-final.log
+
+ generating static routes 
+20:43:32   ├─ /baixar/index.html (+20ms) 
+20:43:32   ├─ /icones/index.html (+3ms) 
+20:43:32   ├─ /igrion/index.html (+2ms) 
+20:43:32   ├─ /jogar/original/index.html (+3ms) 
+20:43:32   ├─ /jogar/index.html (+2ms) 
+20:43:32   ├─ /index.html (+4ms) 
+20:43:32 ✓ Completed in 44ms.
+
+20:43:32 [build] ✓ Completed in 824ms.
+20:43:32 [build] 6 page(s) built in 935ms
+20:43:32 [build] Complete!
+Site e pacote offline prontos: /home/vitto/igrion/validacao-20261026/site-ods/dist
+APK SHA-256: 9c27502e22d6b8d4ea1591d090042a1febd9ccd86a7b0ae29d9bb3cc50452bfb
+Pacote local/offline: QR público sem configuração.
+
+ods-preview-site-e2e.log
+  ✓   7 [mobile] › tests/host.spec.ts:4:1 › jogo confirma inicialização, recebe foco e protege troca de modo (3.1s)
+  ✓   8 [desktop] › tests/site.spec.ts:119:1 › instalação oferece APK íntegro e não inventa QR público (1.5s)
+  ✓   9 [mobile] › tests/host.spec.ts:26:1 › HTML sem inicializar JS apresenta timeout e permite recuperação real (1.5s)
+  ✓  10 [desktop] › tests/site.spec.ts:162:1 › simulador no site original e versão local têm destinos distintos (1.4s)
+  ✓  12 [desktop] › tests/site.spec.ts:212:1 › servidor local atende assets e recusa caminhos ou métodos inválidos (29ms)
+(node:4459) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [mobile] › tests/host.spec.ts:47:1 › tela cheia em paisagem conserva área jogável e controles acessíveis (2.2s)
+  ✓  13 [mobile] › tests/site.spec.ts:10:1 › explorar mundo abre o mapa correspondente no simulador (3.7s)
+  ✓  14 [mobile] › tests/host.spec.ts:72:1 › mapa e tutorial prático passam auditoria automática interna (4.6s)
+  ✓  15 [mobile] › tests/site.spec.ts:32:1 › site ODS 12, ciclo em qualquer ordem e layout acessível (10.1s)
+  ✓  16 [mobile] › tests/site.spec.ts:119:1 › instalação oferece APK íntegro e não inventa QR público (3.1s)
+  ✓  17 [mobile] › tests/site.spec.ts:162:1 › simulador no site original e versão local têm destinos distintos (2.2s)
+  ✓  18 [mobile] › tests/site.spec.ts:212:1 › servidor local atende assets e recusa caminhos ou métodos inválidos (32ms)
+
+  18 passed (34.8s)
+
+ods-preview-dev-final.log
+
+Running 2 tests using 2 workers
+
+(node:8353) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › tests/game.spec.ts:423:1 › modo dev acessa o fim da campanha, bônus e o milésimo mapa sem tocar no save de testes (7.5s)
+  ✓  2 [desktop] › tests/game.spec.ts:423:1 › modo dev acessa o fim da campanha, bônus e o milésimo mapa sem tocar no save de testes (7.5s)
+
+  2 passed (8.4s)
+
+Comparação de áudio: quatro casos falham na prévia (dois testes × desktop/celular).
+Os mesmos dois testes foram executados também no desktop da base anterior, exportada de 0c7a2a35fee68ce1e37ae1cf0fabff77276a5e8a, na porta 4334. Ambos falham nas mesmas asserções de reprodução HTMLMediaElement, antes das interações com peças. Não foi alterado código ou asset de áudio nesta integração.
+
+        npx playwright show-trace .cache/assets-baseline-tests/game-troca-a-música-só-após-a-escolha-do-mapa-estabilizar-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/game.spec.ts:88:1 › partida real offline, tutorial, confirmação e próximo visitante 
+    [desktop] › tests/game.spec.ts:341:1 › troca a música só após a escolha do mapa estabilizar ────
+
+Fronteiras completas (nova exportação local):
+  ✓  37 [desktop] › tests/acceptance.spec.ts:82:3 › fronteiras do capítulo 9: mapas 1 e 100 abrem no storage separado (2.4s)
+  ✓  38 [mobile] › tests/acceptance.spec.ts:82:3 › fronteiras do capítulo 9: mapas 1 e 100 abrem no storage separado (2.3s)
+  ✓  39 [desktop] › tests/acceptance.spec.ts:82:3 › fronteiras do capítulo 10: mapas 1 e 100 abrem no storage separado (2.4s)
+  ✓  40 [mobile] › tests/acceptance.spec.ts:82:3 › fronteiras do capítulo 10: mapas 1 e 100 abrem no storage separado (2.3s)
+
+  40 passed (54.4s)
+
+UI direcionada após ajustes finais de tipos:
+  ✓ todos os vetores são aceitos pelo renderizador nativo sem avisos de gradiente (345 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        1.551 s, estimated 2 s
+Ran all test suites matching /RedesignedAssets/i.

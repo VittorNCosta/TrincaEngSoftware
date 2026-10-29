@@ -90,12 +90,11 @@ export type ChapterId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 /**
  * Marco de ritmo dentro de um capítulo.
  *
- * `rest` e `shop` caem de 10 em 10 mapas e `guardian` fecha o capítulo no mapa
- * 100. O marco nunca reduz a carga do mapa (peças, materiais, mistério seguem
- * subindo) — o alívio vem pelo orçamento de tempo das estrelas, que afrouxa no
- * descanso e na loja e aperta no guardião.
+ * `shop` aparece a cada 20 mapas e `guardian` fecha o capítulo no mapa 100.
+ * Os antigos marcos de descanso foram retirados da apresentação; o orçamento
+ * de tempo e a carga das fases existentes são preservados.
  */
-export type ChapterMilestone = 'guardian' | 'rest' | 'shop';
+export type ChapterMilestone = 'guardian' | 'shop';
 
 export type ChapterTheme =
   | 'aterro'
@@ -228,13 +227,6 @@ export type PlayerProgress = {
 export type ProgressState = PlayerProgress;
 
 export type PowerUpType = 'hint' | 'shuffle' | 'undo';
-
-export type RestCheckpointRewardResult = {
-  coinsEarned?: number;
-  granted: boolean;
-  rewardType?: 'life' | 'coins';
-  worldId: WorldId;
-};
 
 export type MoveHistoryItem = {
   board: Tile[];

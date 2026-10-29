@@ -22,12 +22,7 @@ import { BottomNavBar, MAIN_TAB_ITEMS } from '../components/BottomNavBar';
 import { LevelSelectScreen } from '../screens/LevelSelectScreen';
 import { ShopScreen } from '../screens/ShopScreen';
 import { MissionsScreen } from '../original/screens/MissionsScreen';
-import {
-  PowerUpType,
-  ProgressState,
-  RestCheckpointRewardResult,
-  WorldId,
-} from '../types/game';
+import { PowerUpType, ProgressState, WorldId } from '../types/game';
 import { PowersScreen } from '../screens/PowersScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { RewardsScreen } from '../screens/RewardsScreen';
@@ -95,12 +90,8 @@ type MainTabsProps = {
   timeUntilNextLifeMs: number;
   onCoinCounterLayout?: (target: WindowTarget) => void;
   onOpenChapters: () => void;
-  onOpenRestCheckpoint: (
-    afterLevelId: string,
-  ) => Promise<RestCheckpointRewardResult>;
   onOpenSettings: () => void;
   onOpenShop: (worldId?: WorldId) => void;
-  onOpenWorldChest: (worldChestId?: string) => void;
   onPurchaseCoinTraySlot: () => Promise<TrayBoostPurchaseResult>;
   onResetProgress: () => void;
   onSelectLevel: (levelId: string) => void;
@@ -132,10 +123,8 @@ export function MainTabs({
   timeUntilNextLifeMs,
   onCoinCounterLayout,
   onOpenChapters,
-  onOpenRestCheckpoint,
   onOpenSettings,
   onOpenShop,
-  onOpenWorldChest,
   onPurchaseCoinTraySlot,
   onResetProgress,
   onSelectLevel,
@@ -229,10 +218,8 @@ export function MainTabs({
           onCoinCounterLayout={onCoinCounterLayout}
           onOpenChapters={onOpenChapters}
           onOpenProfile={() => goToTab(PROFILE_TAB_INDEX)}
-          onOpenRestCheckpoint={onOpenRestCheckpoint}
           onOpenSettings={onOpenSettings}
           onOpenShop={onOpenShop}
-          onOpenWorldChest={onOpenWorldChest}
           onResetProgress={onResetProgress}
           onSelectLevel={onSelectLevel}
         />
@@ -283,7 +270,6 @@ export function MainTabs({
             progress={progress}
             trayBoostState={trayBoostState}
             onOpenSettings={onOpenSettings}
-            onOpenWorldChest={onOpenWorldChest}
             onPurchaseCoinTraySlot={onPurchaseCoinTraySlot}
             onShowTutorial={onShowTutorial}
             onClose={() => setProfilePanel('hub')}

@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { getMaterialTileBaseStyle } from '../styles/materialTilePalette';
+import { useContext, useEffect, useMemo, useRef } from 'react';
+import { GameplayTileContext } from './TileAppearanceContext';
 import { Animated, Easing, StyleSheet, View } from 'react-native';
 
 import { TileIcon } from './TileIcon';
@@ -40,6 +42,7 @@ function TripleConsumeAnimation({
   onSettled,
 }: Required<Pick<TripleConsumeEffectProps, 'event'>> &
   Pick<TripleConsumeEffectProps, 'containerTarget' | 'onSettled'>) {
+  const duringGame = useContext(GameplayTileContext);
   const consume = useRef(new Animated.Value(0)).current;
   const onSettledRef = useRef(onSettled);
 
@@ -106,6 +109,7 @@ function TripleConsumeAnimation({
           key={`${event.id}-consume-${item.tile.id}`}
           style={[
             styles.tile,
+            getMaterialTileBaseStyle(item.tile.kind, duringGame),
             {
               left: x - TILE_SIZE / 2,
               opacity,

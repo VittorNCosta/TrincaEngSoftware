@@ -1,13 +1,5 @@
 import { LEVELS } from '../data/levels';
 import { WORLDS, getWorldById } from '../data/worlds';
-import { ProgressState } from '../types/game';
-
-export const SHOP_INTERVAL = 5;
-
-export const REST_CHECKPOINT_COIN_REWARDS: Record<number, number> = {
-  5: 15,
-  10: 40,
-};
 
 const getLevelById = (levelId: string) =>
   LEVELS.find((knownLevel) => knownLevel.id === levelId);
@@ -26,47 +18,6 @@ const getWorldLevelIds = (levelId: string) => {
     : LEVELS.filter((knownLevel) => knownLevel.worldId === level.worldId).map(
         (knownLevel) => knownLevel.id,
       );
-};
-
-const getLocalLevelNumber = (levelId: string) => {
-  const level = getLevelById(levelId);
-
-  if (!level) {
-    return undefined;
-  }
-
-  if (level.worldLevelNumber > 0) {
-    return level.worldLevelNumber;
-  }
-
-  const worldLevelIds = getWorldLevelIds(levelId);
-  const index = worldLevelIds.indexOf(levelId);
-
-  return index >= 0 ? index + 1 : undefined;
-};
-
-export const shouldShowShopAfterLevel = (levelId: string) => {
-  const level = getLevelById(levelId);
-  const localLevelNumber = getLocalLevelNumber(levelId);
-
-  if (!level || !localLevelNumber || getWorldById(level.worldId).isBonus) {
-    return false;
-  }
-
-  return localLevelNumber % SHOP_INTERVAL === 0;
-};
-
-export const isShopUnlockedAfterLevel = (
-  levelId: string,
-  progress: ProgressState,
-) => progress.completedLevelIds.includes(levelId);
-
-export const getRestCheckpointCoinReward = (levelId: string) => {
-  const localLevelNumber = getLocalLevelNumber(levelId);
-
-  return localLevelNumber
-    ? (REST_CHECKPOINT_COIN_REWARDS[localLevelNumber] ?? 0)
-    : 0;
 };
 
 const isLastLevelInWorld = (levelId: string) => {
@@ -103,19 +54,3 @@ export const getNextWorldLevelAfterLevel = (levelId: string) => {
 
 export const shouldShowWorldPortalAfterLevel = (levelId: string) =>
   getNextWorldLevelAfterLevel(levelId) !== undefined;
-
-export const isLastKnownShopMarker = (levelId: string) => {
-  const level = getLevelById(levelId);
-
-  if (!level || !isLastLevelInWorld(levelId)) {
-    return false;
-  }
-
-  const world = getWorldById(level.worldId);
-
-  if (world.isBonus || getNextWorldLevelAfterLevel(levelId)) {
-    return false;
-  }
-
-  return true;
-};

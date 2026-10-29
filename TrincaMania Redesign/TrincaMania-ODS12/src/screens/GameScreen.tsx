@@ -4,6 +4,7 @@ import { useActiveGameClock } from '../hooks/useActiveGameClock';
 import { useRoundAction } from '../hooks/useRoundAction';
 import { GameDialogs } from './game/GameDialogs';
 import { WorldArtContext } from '../components/WorldArtContext';
+import { GameplayTileContext } from '../components/TileAppearanceContext';
 import { getWorldVisualAssets } from '../data/worldVisualAssets';
 import { IS_E2E_BUILD, E2E_BOARD_SEED } from '../testing/e2eProfile';
 import { updateDiagnosticContext } from '../utils/log';
@@ -266,7 +267,9 @@ const getGameBackground = (worldId: WorldId) =>
 export function GameScreen(props: GameScreenProps) {
   return (
     <WorldArtContext.Provider value={props.level.worldId}>
-      <GameScreenContent {...props} />
+      <GameplayTileContext.Provider value>
+        <GameScreenContent {...props} />
+      </GameplayTileContext.Provider>
     </WorldArtContext.Provider>
   );
 }

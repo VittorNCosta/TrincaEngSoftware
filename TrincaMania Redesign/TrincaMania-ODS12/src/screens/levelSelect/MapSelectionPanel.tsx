@@ -1,11 +1,10 @@
 import { Animated, Pressable, Text, View } from 'react-native';
 import { GameIcon } from '../../components/GameIcon';
 import { PrimaryButton } from '../../components/PrimaryButton';
+import { MapLevelDetails } from '../../components/MapLevelDetails';
+import { useBottomNavClearance } from '../../components/BottomNavBar';
 import type { getWorldById } from '../../data/worlds';
-import type { getBonusWorldChestProgress } from '../../storage/progressStorage';
 import type { Level, WorldId } from '../../types/game';
-import { getLevelDisplayLabel } from '../../utils/levelDisplay';
-import { getDifficultyLabel, getShortObjective } from './mapPresentation';
 import { styles } from './styles';
 import type { SelectedTarget } from './types';
 
@@ -14,20 +13,10 @@ type MapSelectionPanelProps = {
   panelAnim: Animated.Value;
   panelTranslateY: Animated.AnimatedInterpolation<number>;
   closePanel: () => void;
-  bonusWorldChest: ReturnType<typeof getBonusWorldChestProgress>;
-  bonusWorldChestPendingId: string | undefined;
   selectedLevel: Level | undefined;
   selectedLevelLocked: boolean;
   selectedLevelStars: number;
   playSelectedLevel: (levelId: string, locked: boolean) => void;
-  selectedShopLevel: Level | undefined;
-  selectedShopLocked: boolean;
-  isOpeningRestCheckpoint: boolean;
-  openSelectedShop: (
-    afterLevelId: string,
-    comingSoon: boolean,
-    locked: boolean,
-  ) => void;
   selectedPortalLevel: Level | undefined;
   selectedPortalWorld: ReturnType<typeof getWorldById> | undefined;
   selectedPortalLocked: boolean;
@@ -39,28 +28,25 @@ export function MapSelectionPanel({
   panelAnim,
   panelTranslateY,
   closePanel,
-  bonusWorldChest,
-  bonusWorldChestPendingId,
   selectedLevel,
   selectedLevelLocked,
   selectedLevelStars,
   playSelectedLevel,
-  selectedShopLevel,
-  selectedShopLocked,
-  isOpeningRestCheckpoint,
-  openSelectedShop,
   selectedPortalLevel,
   selectedPortalWorld,
   selectedPortalLocked,
   openSelectedWorld,
 }: MapSelectionPanelProps) {
+  const bottomNavClearance = useBottomNavClearance();
   return (
     <>
       {selectedTarget ? (
         <Animated.View
           style={[
             styles.selectionPanel,
+            selectedTarget.type === 'level' ? styles.levelSelectionPanel : null,
             {
+              bottom: bottomNavClearance,
               opacity: panelAnim,
               transform: [{ translateY: panelTranslateY }],
             },
@@ -69,6 +55,7 @@ export function MapSelectionPanel({
           <Pressable
             accessibilityLabel="Fechar painel de seleção"
             accessibilityRole="button"
+            hitSlop={8}
             onPress={closePanel}
             style={({ pressed }) => [
               styles.closeButton,
@@ -78,203 +65,15 @@ export function MapSelectionPanel({
             <GameIcon name="close" size={30} tone="danger" />
           </Pressable>
 
-          {selectedTarget.type === 'bonusChest' ? (
-            <>
-              <View
-                style={[
-                  styles.panelBanner,
-                  bonusWorldChestPendingId
-                    ? styles.panelBannerPortal
-                    : styles.panelBannerLocked,
-                ]}
-              >
-                <Text style={styles.panelBannerText}>
-                  {bonusWorldChestPendingId
-                    ? 'Disponível'
-                    : bonusWorldChest.claimed
-                      ? 'Coletado'
-                      : 'Bloqueado'}
-                </Text>
-              </View>
-              <View style={styles.lockedPanelBody}>
-                <GameIcon
-                  muted={!bonusWorldChestPendingId}
-                  name={bonusWorldChestPendingId ? 'specialChest' : 'lock'}
-                  size={42}
-                  tone={bonusWorldChestPendingId ? 'purple' : 'neutral'}
-                />
-                <View style={styles.panelCopy}>
-                  <Text numberOfLines={1} style={styles.panelTitle}>
-                    {bonusWorldChest.claimed
-                      ? 'Baú Especial coletado'
-                      : 'Baú Especial Bloqueado'}
-                  </Text>
-                  <Text numberOfLines={2} style={styles.panelDescription}>
-                    {bonusWorldChest.claimed
-                      ? 'A recompensa do Jardim Renascido já foi coletada.'
-                      : 'Conclua as 3 fases do Jardim Renascido para liberar.'}
-                  </Text>
-                </View>
-                <View style={styles.panelButton}>
-                  <PrimaryButton
-                    disabled
-                    size="small"
-                    title={bonusWorldChest.claimed ? 'Coletado' : 'Bloqueado'}
-                    onPress={() => undefined}
-                  />
-                </View>
-              </View>
-            </>
-          ) : null}
-
-          {selectedTarget.type === 'level' &&
-          selectedLevel &&
-          selectedLevelLocked ? (
-            <>
-              <View style={[styles.panelBanner, styles.panelBannerLocked]}>
-                <Text style={styles.panelBannerText}>Bloqueada</Text>
-              </View>
-              <View style={styles.lockedPanelBody}>
-                <GameIcon muted name="lock" size={42} tone="neutral" />
-                <View style={styles.panelCopy}>
-                  <Text numberOfLines={1} style={styles.panelTitle}>
-                    Fase bloqueada
-                  </Text>
-                  <Text numberOfLines={2} style={styles.panelDescription}>
-                    Complete a fase anterior para desbloquear.
-                  </Text>
-                </View>
-                <View style={styles.panelButton}>
-                  <PrimaryButton
-                    disabled
-                    size="small"
-                    title="Bloqueada"
-                    onPress={() => undefined}
-                  />
-                </View>
-              </View>
-            </>
-          ) : null}
-
-          {selectedTarget.type === 'level' &&
-          selectedLevel &&
-          !selectedLevelLocked ? (
-            <>
-              <View style={styles.panelBanner}>
-                <Text style={styles.panelBannerText}>
-                  Fase {getLevelDisplayLabel(selectedLevel)}
-                </Text>
-              </View>
-              <View style={styles.panelHeader}>
-                <View style={styles.panelTitleBlock}>
-                  <Text numberOfLines={2} style={styles.panelTitle}>
-                    {selectedLevel.title}
-                  </Text>
-                  <View style={styles.panelDifficultyRow}>
-                    <View style={styles.difficultyBadge}>
-                      <Text style={styles.difficultyText}>
-                        {getDifficultyLabel(selectedLevel.difficulty)}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.panelBottomRow}>
-                <View style={styles.panelCopy}>
-                  <View style={styles.panelStarsRow}>
-                    {Array.from({ length: 3 }).map((_, index) => {
-                      const isEarned = index < selectedLevelStars;
-
-                      return (
-                        <View
-                          key={`panel-star-${selectedLevel.id}-${index}`}
-                          style={styles.panelStarIcon}
-                        >
-                          <GameIcon
-                            muted={!isEarned}
-                            name="star"
-                            size={isEarned ? 22 : 19}
-                            tone={isEarned ? 'gold' : 'neutral'}
-                            variant="plain"
-                          />
-                        </View>
-                      );
-                    })}
-                  </View>
-                  <Text numberOfLines={2} style={styles.panelDescription}>
-                    {getShortObjective(selectedLevel)}
-                  </Text>
-                </View>
-                <View style={styles.panelButton}>
-                  <PrimaryButton
-                    size="small"
-                    // Existe outro "Jogar" na tela: a fita do nó da fase
-                    // atual. Buscar por texto acharia os dois, e o fluxo de
-                    // teste tocaria no errado.
-                    testID="jogar-fase"
-                    title="Jogar"
-                    onPress={() => playSelectedLevel(selectedLevel.id, false)}
-                  />
-                </View>
-              </View>
-            </>
-          ) : null}
-
-          {selectedTarget.type === 'shop' && selectedShopLevel ? (
-            <>
-              <View
-                style={[
-                  styles.panelBanner,
-                  selectedTarget.comingSoon ? styles.panelBannerSoon : null,
-                ]}
-              >
-                <Text style={styles.panelBannerText}>
-                  {selectedTarget.comingSoon ? 'Em breve' : 'Descanso'}
-                </Text>
-              </View>
-              <View style={styles.panelHeader}>
-                <View style={styles.panelTitleBlock}>
-                  <Text numberOfLines={1} style={styles.panelTitle}>
-                    {selectedTarget.comingSoon
-                      ? 'Novo mundo em breve'
-                      : 'Ponto de descanso'}
-                  </Text>
-                  <Text numberOfLines={1} style={styles.panelDescription}>
-                    {selectedTarget.comingSoon
-                      ? selectedShopLocked
-                        ? 'Complete para continuar.'
-                        : 'Novo capitulo em breve.'
-                      : selectedShopLocked
-                        ? `Libera apos fase ${getLevelDisplayLabel(selectedShopLevel)}`
-                        : 'Recupere fôlego e abra a loja da campanha.'}
-                  </Text>
-                </View>
-                <View style={styles.panelButton}>
-                  <PrimaryButton
-                    disabled={
-                      selectedTarget.comingSoon ||
-                      selectedShopLocked ||
-                      isOpeningRestCheckpoint
-                    }
-                    size="small"
-                    title={
-                      selectedTarget.comingSoon
-                        ? 'Em breve'
-                        : selectedShopLocked
-                          ? 'Fechada'
-                          : 'Abrir loja'
-                    }
-                    onPress={() =>
-                      openSelectedShop(
-                        selectedShopLevel.id,
-                        selectedTarget.comingSoon,
-                        selectedShopLocked,
-                      )
-                    }
-                  />
-                </View>
-              </View>
-            </>
+          {selectedTarget.type === 'level' && selectedLevel ? (
+            <MapLevelDetails
+              level={selectedLevel}
+              stars={selectedLevelStars}
+              locked={selectedLevelLocked}
+              onPlay={() =>
+                playSelectedLevel(selectedLevel.id, selectedLevelLocked)
+              }
+            />
           ) : null}
 
           {selectedTarget.type === 'worldPortal' &&

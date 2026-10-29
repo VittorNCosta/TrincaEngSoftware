@@ -1,5 +1,5 @@
 import { Image } from 'react-native';
-import Svg, { Circle, Path } from './svgPrimitives';
+import { RedesignedIcon } from './RedesignedIcon';
 import { PowerUpType } from '../types/game';
 export type PowerIconName = PowerUpType | 'star';
 type PowerIconProps = {
@@ -14,15 +14,7 @@ const POWER_ASSETS = {
   shuffle: require('../../assets/ui/powers/shuffle.png'),
   undo: require('../../assets/ui/powers/undo.png'),
 };
-const CREAM = '#FFF7E8';
-const STAR_PATH =
-  'M32 8c0 13.3-10.7 24-24 24 13.3 0 24 10.7 24 24 0-13.3 10.7-24 24-24-13.3 0-24-10.7-24-24z';
-export function PowerIcon({
-  name,
-  size = 64,
-  fill = CREAM,
-  outline,
-}: PowerIconProps) {
+export function PowerIcon({ name, size = 64, fill, outline }: PowerIconProps) {
   if (name !== 'star')
     return (
       <Image
@@ -39,25 +31,13 @@ export function PowerIcon({
         }}
       />
     );
-  const ink = outline ?? '#80501C';
   return (
-    <Svg height={size} viewBox="0 0 64 64" width={size}>
-      <Path
-        d={STAR_PATH}
-        fill={ink}
-        stroke={ink}
-        strokeLinejoin="round"
-        strokeWidth={7}
-      />
-      <Path d={STAR_PATH} fill={fill} />
-      <Circle
-        cx={46}
-        cy={18}
-        fill={outline ? fill : '#FFD35A'}
-        r={4}
-        stroke={ink}
-        strokeWidth={3}
-      />
-    </Svg>
+    <RedesignedIcon
+      family="PODERES"
+      name="estrela-poder"
+      size={size}
+      fill={fill}
+      outline={outline}
+    />
   );
 }

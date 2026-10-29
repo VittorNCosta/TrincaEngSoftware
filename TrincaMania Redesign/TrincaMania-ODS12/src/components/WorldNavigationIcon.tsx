@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import Svg, { Path } from './svgPrimitives';
+import { RedesignedIcon } from './RedesignedIcon';
 import { radii, shadows } from '../styles/theme';
 /** Seta e acabamento do botão de troca de mundo do TrincaMania original. */
 export function WorldNavigationIcon({
@@ -9,10 +9,6 @@ export function WorldNavigationIcon({
   direction: 'back' | 'next';
   disabled?: boolean;
 }) {
-  const ink = disabled ? '#16203F' : '#7A4A0C';
-  const fill = disabled ? '#DCE5E7' : '#FFFDF2';
-  const path =
-    direction === 'back' ? 'M39 14 21 32l18 18' : 'M25 14l18 18-18 18';
   return (
     <View
       pointerEvents="none"
@@ -20,24 +16,12 @@ export function WorldNavigationIcon({
     >
       <View style={styles.innerGlow} />
       <View style={styles.shine} />
-      <Svg height={17} viewBox="0 0 64 64" width={17}>
-        <Path
-          d={path}
-          fill="none"
-          stroke={ink}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={16}
-        />
-        <Path
-          d={path}
-          fill="none"
-          stroke={fill}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={9}
-        />
-      </Svg>
+      <RedesignedIcon
+        family="NAVEGACAO"
+        name={`seta-${direction}`}
+        muted={disabled}
+        size={17}
+      />
     </View>
   );
 }

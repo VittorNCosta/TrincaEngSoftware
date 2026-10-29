@@ -115,7 +115,6 @@ const mapProps = (unlocked: boolean) => ({
   onOpenShop: jest.fn(),
   onOpenSettings: jest.fn(),
   onOpenWorldChest: jest.fn(),
-  onOpenRestCheckpoint: jest.fn(),
   onResetProgress: jest.fn(),
   onSelectLevel: jest.fn(),
 });

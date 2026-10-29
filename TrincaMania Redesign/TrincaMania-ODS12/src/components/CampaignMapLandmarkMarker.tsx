@@ -1,9 +1,7 @@
-import { RestStopMapMarker } from './RestStopMapMarker';
 import { WorldPortalMapMarker } from './WorldPortalMapMarker';
 import type { CampaignMapLandmarkKind } from '../types/campaignMap';
 
 type CampaignMapLandmarkMarkerProps = Readonly<{
-  afterLevelLabel?: string;
   kind: CampaignMapLandmarkKind;
   locked: boolean;
   selected: boolean;
@@ -13,7 +11,6 @@ type CampaignMapLandmarkMarkerProps = Readonly<{
 }>;
 
 export function CampaignMapLandmarkMarker({
-  afterLevelLabel,
   kind,
   locked,
   selected,
@@ -21,21 +18,6 @@ export function CampaignMapLandmarkMarker({
   worldLabel,
   onPress,
 }: CampaignMapLandmarkMarkerProps) {
-  if ((kind === 'rest' || kind === 'shop') && visualKey === 'collection-cart') {
-    if (!afterLevelLabel) {
-      return null;
-    }
-
-    return (
-      <RestStopMapMarker
-        afterLevelLabel={afterLevelLabel}
-        locked={locked}
-        selected={selected}
-        onPress={onPress}
-      />
-    );
-  }
-
   if (kind === 'portal' && visualKey === 'recycling-cycle') {
     if (!worldLabel) {
       return null;

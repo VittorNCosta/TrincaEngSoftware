@@ -18,18 +18,6 @@ import { WindowTarget } from '../../types/ui';
 import { gamePowerTestId } from '../utils/e2eSelectors';
 import { getPowerToolPresentation } from '../utils/powerToolPresentation';
 
-type PowerTone = {
-  border: string;
-  face: string;
-  label: string;
-};
-
-const POWER_TONES: Record<PowerUpType, PowerTone> = {
-  hint: { border: '#BE9B58', face: '#254335', label: '#254B39' },
-  shuffle: { border: '#BE9B58', face: '#254335', label: '#254B39' },
-  undo: { border: '#BE9B58', face: '#254335', label: '#254B39' },
-};
-
 type PowerDrawerProps = {
   bossSilenced?: boolean;
   forest?: boolean;
@@ -82,7 +70,6 @@ function PowerDrawerBase({
   );
 
   const renderPower = (power: PowerUpType) => {
-    const tone = POWER_TONES[power];
     const isLockedByProgress = lockedPowers[power] === true;
     const isGuidedPower = guidedPower === power;
     const presentation = getPowerToolPresentation(
@@ -143,7 +130,6 @@ function PowerDrawerBase({
           <View
             style={[
               styles.medallion,
-              { backgroundColor: tone.face, borderColor: tone.border },
               forest ? styles.medallionForest : null,
               isPurchasable ? styles.powerButtonPurchasable : null,
               isTemporarilyUnavailable && !isPurchasable
@@ -210,7 +196,6 @@ function PowerDrawerBase({
             numberOfLines={2}
             style={[
               styles.powerLabel,
-              { color: tone.label },
               isLocked ? styles.powerLabelLocked : null,
             ]}
           >
@@ -297,12 +282,11 @@ const styles = StyleSheet.create({
   powerButton: {
     alignItems: 'center',
     minHeight: 74,
-    backgroundColor: '#FFF7E5',
-    borderColor: '#C5D3AF',
-    borderWidth: 1,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
     borderRadius: 13,
     justifyContent: 'flex-start',
-    paddingHorizontal: 6,
+    paddingHorizontal: 2,
     paddingVertical: 5,
     gap: 3,
     position: 'relative',
@@ -312,13 +296,16 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   medallion: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    gap: 2,
     backgroundColor: 'transparent',
     borderWidth: 0,
     height: 34,
     justifyContent: 'center',
     position: 'relative',
-    width: '100%',
+    width: 'auto',
   },
   medallionForest: { backgroundColor: 'transparent' },
   medallionDisabled: {
@@ -344,15 +331,13 @@ const styles = StyleSheet.create({
   },
   silenceSealText: { color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   powerButtonLocked: {
-    backgroundColor: '#354039',
-    borderColor: '#87927A',
+    opacity: 0.65,
   },
   powerButtonPurchasable: {
     borderColor: '#FFE7A0',
   },
   powerButtonUnavailable: {
-    backgroundColor: '#354039',
-    borderColor: '#87927A',
+    opacity: 0.65,
   },
   powerButtonHighlighted: {
     borderColor: '#FFF7B8',
@@ -361,18 +346,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
   },
   powerLabel: {
+    color: '#FFF3D6',
     fontSize: 11,
     fontWeight: '800',
     lineHeight: 13,
     minHeight: 26,
     textAlignVertical: 'center',
     textAlign: 'center',
+    textShadowColor: '#183E35',
+    textShadowOffset: { height: 1, width: 0 },
+    textShadowRadius: 4,
     width: '100%',
     zIndex: 50,
   },
-  powerLabelLocked: { color: '#53634B' },
+  powerLabelLocked: { color: '#DCE4D5' },
   contextLabel: {
-    color: '#53634B',
+    color: '#FFF3D6',
+    textShadowColor: '#183E35',
+    textShadowOffset: { height: 1, width: 0 },
+    textShadowRadius: 4,
     borderRadius: 6,
     paddingHorizontal: 3,
     fontSize: 9,
@@ -402,9 +394,6 @@ const styles = StyleSheet.create({
     minHeight: 20,
     minWidth: 24,
     paddingHorizontal: 4,
-    position: 'absolute',
-    right: 0,
-    top: 8,
     zIndex: 51,
   },
   statusBadgeDisabled: {

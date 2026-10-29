@@ -1,6 +1,11 @@
+import {
+  getMaterialTileBaseStyle,
+  getMaterialTilePalette,
+} from '../styles/materialTilePalette';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { memo, useCallback, useContext, useEffect, useRef } from 'react';
 import { WorldArtContext } from './WorldArtContext';
+import { GameplayTileContext } from './TileAppearanceContext';
 import { getResidueVisual } from '../data/residueVisualAssets';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -10,6 +15,7 @@ import { TileIcon } from './TileIcon';
 import { TutorialTarget } from './TutorialVisuals';
 import { IS_E2E_BUILD } from '../testing/e2eProfile';
 import { radii } from '../styles/theme';
+import { tilePalette } from '../styles/tilePalette';
 import { Tile } from '../types/game';
 import { WindowTarget } from '../types/ui';
 import { TILE_SIZE } from '../utils/gameLogic';
@@ -44,6 +50,7 @@ function BoardTileBase({
 }: BoardTileProps) {
   const reducedMotion = useReducedMotion();
   const worldId = useContext(WorldArtContext);
+  const duringGame = useContext(GameplayTileContext);
   const residueVisual = getResidueVisual(tile.cardId, worldId);
   const isDisabled = disabled;
   const isMysteryHidden = tile.mystery === true && tile.revealed !== true;
@@ -248,6 +255,9 @@ function BoardTileBase({
       style={[
         styles.tile,
         blocked ? styles.blocked : styles.available,
+        !isMysteryHidden
+          ? getMaterialTileBaseStyle(tile.kind, duringGame)
+          : null,
         isMysteryHidden ? styles.mysteryTile : null,
         isMysteryHidden && blocked ? styles.mysteryTileBlocked : null,
         highlighted && !blocked ? styles.highlighted : null,
@@ -274,7 +284,23 @@ function BoardTileBase({
         pointerEvents="none"
         style={[styles.revealFlash, { opacity: revealFlash }]}
       />
-      <View pointerEvents="none" style={styles.innerBottomShade} />
+      {blocked && !isMysteryHidden ? (
+        <View pointerEvents="none" style={styles.blockedVeil}>
+          <View style={styles.blockedVeilShade} />
+        </View>
+      ) : null}
+      <View
+        pointerEvents="none"
+        style={[
+          styles.innerBottomShade,
+          !isMysteryHidden
+            ? {
+                backgroundColor: getMaterialTilePalette(tile.kind, duringGame)
+                  .innerShade,
+              }
+            : null,
+        ]}
+      />
       <View pointerEvents="none" style={styles.specular} />
       {isMysteryHidden ? (
         <View
@@ -300,22 +326,17 @@ function BoardTileBase({
             highlighted={highlighted && !blocked}
             kind={tile.kind}
             role={tile.role}
-            size={38}
+            size={42}
           />
         </View>
       )}
       {blocked && !isMysteryHidden ? (
-        <>
-          <View pointerEvents="none" style={styles.blockedVeil}>
-            <View style={styles.blockedVeilShade} />
+        <View pointerEvents="none" style={styles.blockedBadge}>
+          <View style={styles.lockShackle} />
+          <View style={styles.lockBody}>
+            <View style={styles.lockKeyhole} />
           </View>
-          <View pointerEvents="none" style={styles.blockedBadge}>
-            <View style={styles.lockShackle} />
-            <View style={styles.lockBody}>
-              <View style={styles.lockKeyhole} />
-            </View>
-          </View>
-        </>
+        </View>
       ) : null}
       {highlighted && !blocked ? (
         <View pointerEvents="none" style={styles.hintGlow} />
@@ -332,9 +353,9 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   blocked: {
-    backgroundColor: '#C7C0AF',
-    borderBottomColor: '#706958',
-    borderColor: '#918A78',
+    backgroundColor: '#AAB4B8',
+    borderBottomColor: '#59666B',
+    borderColor: '#7D898E',
     opacity: 1,
     shadowOpacity: 0.16,
   },
@@ -391,8 +412,7 @@ const styles = StyleSheet.create({
     opacity: 0.64,
   },
   highlighted: {
-    backgroundColor: '#FFF6C8',
-    shadowColor: '#FFD35A',
+    shadowColor: tilePalette.border,
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.58,
     shadowRadius: 8,
@@ -448,7 +468,7 @@ const styles = StyleSheet.create({
     zIndex: 6,
   },
   hintGlow: {
-    backgroundColor: 'rgba(255, 211, 90, 0.34)',
+    backgroundColor: tilePalette.flash,
     borderColor: '#FFFFFF',
     borderRadius: 16,
     borderWidth: 3,
@@ -460,13 +480,13 @@ const styles = StyleSheet.create({
   },
   // Corpo único da peça, sem face aninhada.
   tutorialTarget: { overflow: 'visible', zIndex: 100 },
-  // Faces com a mesma cor de fundo reduziam o contraste do resíduo.
+  // A paleta do material é aplicada sobre esta base; mistério usa sua própria cor.
   tile: {
     alignItems: 'center',
-    backgroundColor: '#FFE7A6',
-    borderBottomColor: '#C9922F',
+    backgroundColor: tilePalette.face,
+    borderBottomColor: tilePalette.edge,
     borderBottomWidth: 5,
-    borderColor: '#FFF5D3',
+    borderColor: tilePalette.border,
     borderRadius: 19,
     borderWidth: 2,
     height: TILE_SIZE,
@@ -481,7 +501,7 @@ const styles = StyleSheet.create({
   },
   // Sombra interna na base para dar profundidade à peça.
   innerBottomShade: {
-    backgroundColor: 'rgba(161, 99, 20, 0.24)',
+    backgroundColor: tilePalette.shade,
     borderBottomLeftRadius: 19,
     borderBottomRightRadius: 19,
     bottom: 0,
@@ -525,8 +545,8 @@ const styles = StyleSheet.create({
     width: 21,
   },
   tapFlash: {
-    backgroundColor: 'rgba(255, 211, 90, 0.28)',
-    borderColor: '#FFD35A',
+    backgroundColor: tilePalette.flash,
+    borderColor: tilePalette.border,
     borderRadius: 16,
     borderWidth: 2,
     bottom: 0,

@@ -15,7 +15,6 @@ import {
   LEGACY_MAP_OPENING_TOP_INSET,
   getWorldMapHeight,
   getLevelNodePosition,
-  getBonusChestMarkerPosition,
   getWorldSelectorSubtitle,
 } from './levelSelect/mapPresentation';
 import { styles } from './levelSelect/styles';
@@ -24,7 +23,6 @@ import {
   Animated,
   ImageBackground,
   type LayoutChangeEvent,
-  Modal,
   Pressable,
   ScrollView,
   Text,
@@ -35,7 +33,6 @@ import { BOTTOM_NAV_HEIGHT } from '../components/BottomNavBar';
 import { MapHud } from '../components/MapHud';
 import { GameIcon } from '../components/GameIcon';
 import type { TrailPoint } from '../components/MapStoneTrail';
-import { PrimaryButton } from '../components/PrimaryButton';
 import { ScreenShell } from '../components/ScreenShell';
 import {
   resolveLegacyCampaignMapAsset,
@@ -45,14 +42,8 @@ import { LEVELS } from '../data/levels';
 import { getWorldMapConfig } from '../data/worldMapConfigs';
 import { WORLDS, getWorldById } from '../data/worlds';
 import { LivesState, formatLifeTimer } from '../storage/livesStorage';
-import { getBonusWorldChestProgress } from '../storage/progressStorage';
-import {
-  ProgressState,
-  RestCheckpointRewardResult,
-  WorldId,
-} from '../types/game';
+import { ProgressState, WorldId } from '../types/game';
 import { WindowTarget } from '../types/ui';
-import { isShopUnlockedAfterLevel } from '../utils/shop';
 import {
   getCurrentLevelForWorld,
   getCurrentWorldId,
@@ -80,10 +71,6 @@ type LevelSelectScreenProps = {
   onOpenProfile: () => void;
   onOpenShop: (worldId?: WorldId) => void;
   onOpenSettings: () => void;
-  onOpenWorldChest: (worldChestId?: string) => void;
-  onOpenRestCheckpoint: (
-    afterLevelId: string,
-  ) => Promise<RestCheckpointRewardResult>;
   onResetProgress: () => void;
   onSelectLevel: (levelId: string) => void;
 };
@@ -106,8 +93,6 @@ export function LevelSelectScreen({
   onOpenProfile,
   onOpenShop,
   onOpenSettings,
-  onOpenWorldChest,
-  onOpenRestCheckpoint,
   onSelectLevel,
 }: LevelSelectScreenProps) {
   const isWorldUnlocked = useCallback(
@@ -169,19 +154,9 @@ export function LevelSelectScreen({
     : selectedMapConfig?.mode === 'legacy'
       ? resolveLegacyCampaignMapAsset(selectedMapConfig.rendererKey)
       : undefined;
-  const bonusWorldChest = getBonusWorldChestProgress(progress);
-  const bonusWorldChestPendingId = bonusWorldChest.available
-    ? bonusWorldChest.id
-    : undefined;
-  const bonusChestMarkerPosition =
-    getBonusChestMarkerPosition(selectedMapHeight);
   const [selectedTarget, setSelectedTarget] = useState<
     SelectedTarget | undefined
   >();
-  const [restCheckpointReward, setRestCheckpointReward] = useState<
-    RestCheckpointRewardResult | undefined
-  >();
-  const [isOpeningRestCheckpoint, setIsOpeningRestCheckpoint] = useState(false);
   const [toast, setToast] = useState<MapToastState | undefined>();
   const panelAnim = useRef(new Animated.Value(0)).current;
   const mapFade = useRef(new Animated.Value(0)).current;
@@ -472,33 +447,8 @@ export function LevelSelectScreen({
     setSelectedTarget({ levelId, type: 'level' });
   }, []);
 
-  const selectShop = (
-    afterLevelId: string,
-    comingSoon: boolean,
-    locked: boolean,
-  ) => {
-    if (locked) {
-      showToast(
-        'Complete as fases anteriores para liberar este ponto de descanso.',
-      );
-      return;
-    }
-
-    setSelectedTarget({ afterLevelId, comingSoon, type: 'shop' });
-  };
-
   const selectWorldPortal = (afterLevelId: string, targetWorldId: WorldId) => {
     setSelectedTarget({ afterLevelId, targetWorldId, type: 'worldPortal' });
-  };
-
-  const selectBonusChest = () => {
-    if (bonusWorldChestPendingId) {
-      setSelectedTarget(undefined);
-      onOpenWorldChest(bonusWorldChestPendingId);
-      return;
-    }
-
-    setSelectedTarget({ type: 'bonusChest' });
   };
 
   const closePanel = () => {
@@ -520,45 +470,6 @@ export function LevelSelectScreen({
     onSelectLevel(levelId);
   };
 
-  const openSelectedShop = (
-    afterLevelId: string,
-    comingSoon: boolean,
-    locked: boolean,
-  ) => {
-    if (comingSoon) {
-      showToast('Próximo capítulo em breve.');
-      return;
-    }
-
-    if (locked) {
-      showToast(
-        'Complete as fases anteriores para liberar este ponto de descanso.',
-      );
-      return;
-    }
-
-    const shopLevel = LEVELS.find((level) => level.id === afterLevelId);
-
-    setIsOpeningRestCheckpoint(true);
-    onOpenRestCheckpoint(afterLevelId)
-      .then((reward) => {
-        if (reward.granted) {
-          setRestCheckpointReward(reward);
-          return;
-        }
-
-        setSelectedTarget(undefined);
-        onOpenShop(shopLevel?.worldId ?? reward.worldId ?? selectedWorldId);
-      })
-      .catch(() => {
-        setSelectedTarget(undefined);
-        onOpenShop(shopLevel?.worldId ?? selectedWorldId);
-      })
-      .finally(() => {
-        setIsOpeningRestCheckpoint(false);
-      });
-  };
-
   const openSelectedWorld = (targetWorldId: WorldId, locked: boolean) => {
     const targetWorld = getWorldById(targetWorldId);
 
@@ -575,10 +486,6 @@ export function LevelSelectScreen({
     selectedTarget?.type === 'level'
       ? LEVELS.find((level) => level.id === selectedTarget.levelId)
       : undefined;
-  const selectedShopLevel =
-    selectedTarget?.type === 'shop'
-      ? LEVELS.find((level) => level.id === selectedTarget.afterLevelId)
-      : undefined;
   const selectedPortalLevel =
     selectedTarget?.type === 'worldPortal'
       ? LEVELS.find((level) => level.id === selectedTarget.afterLevelId)
@@ -593,10 +500,6 @@ export function LevelSelectScreen({
   const selectedLevelStars = selectedLevel
     ? (progress.levelStars[selectedLevel.id] ?? 0)
     : 0;
-  const selectedShopLocked =
-    selectedTarget?.type === 'shop'
-      ? !isShopUnlockedAfterLevel(selectedTarget.afterLevelId, progress)
-      : false;
   const selectedPortalLocked =
     selectedTarget?.type === 'worldPortal'
       ? !isWorldUnlocked(selectedTarget.targetWorldId, progress)
@@ -619,12 +522,6 @@ export function LevelSelectScreen({
     selectedWorldIndex >= 0 && selectedWorldIndex < unlockedWorlds.length - 1
       ? unlockedWorlds[selectedWorldIndex + 1]
       : undefined;
-  const bonusChestState = bonusWorldChestPendingId
-    ? 'available'
-    : bonusWorldChest.claimed
-      ? 'claimed'
-      : 'locked';
-
   const trailPoints: TrailPoint[] = useMemo(
     () =>
       worldLevels.map((level) => {
@@ -750,8 +647,6 @@ export function LevelSelectScreen({
                 selectLevel={selectLevel}
                 selectWorld={selectWorld}
                 selectWorldPortal={selectWorldPortal}
-                selectShop={selectShop}
-                selectBonusChest={selectBonusChest}
               />
             ) : (
               <CampaignMapLayers
@@ -765,18 +660,12 @@ export function LevelSelectScreen({
                 devMode={devMode}
                 selectedTarget={selectedTarget}
                 selectLevel={selectLevel}
-                selectShop={selectShop}
                 selectWorldPortal={selectWorldPortal}
                 isWorldUnlocked={isWorldUnlocked}
                 trailPoints={trailPoints}
                 worldLevels={worldLevels}
                 completedLevelIdSet={completedLevelIdSet}
                 unlockedLevelIdSet={unlockedLevelIdSet}
-                selectedWorldId={selectedWorldId}
-                bonusChestMarkerPosition={bonusChestMarkerPosition}
-                bonusWorldChest={bonusWorldChest}
-                bonusChestState={bonusChestState}
-                selectBonusChest={selectBonusChest}
               />
             )}
           </Animated.ScrollView>
@@ -838,52 +727,15 @@ export function LevelSelectScreen({
           panelAnim={panelAnim}
           panelTranslateY={panelTranslateY}
           closePanel={closePanel}
-          bonusWorldChest={bonusWorldChest}
-          bonusWorldChestPendingId={bonusWorldChestPendingId}
           selectedLevel={selectedLevel}
           selectedLevelLocked={selectedLevelLocked}
           selectedLevelStars={selectedLevelStars}
           playSelectedLevel={playSelectedLevel}
-          selectedShopLevel={selectedShopLevel}
-          selectedShopLocked={selectedShopLocked}
-          isOpeningRestCheckpoint={isOpeningRestCheckpoint}
-          openSelectedShop={openSelectedShop}
           selectedPortalLevel={selectedPortalLevel}
           selectedPortalWorld={selectedPortalWorld}
           selectedPortalLocked={selectedPortalLocked}
           openSelectedWorld={openSelectedWorld}
         />
-
-        <Modal
-          accessibilityLabel="Recompensa do ponto de descanso"
-          animationType="fade"
-          transparent
-          visible={restCheckpointReward !== undefined}
-
-          onRequestClose={() => setRestCheckpointReward(undefined)}
-        >
-          <View style={styles.rewardOverlay}>
-            <View style={styles.rewardCard}>
-              <Text style={styles.rewardKicker}>Ponto de descanso</Text>
-              <Text style={styles.rewardTitle}>Ponto de descanso</Text>
-              <Text style={styles.rewardText}>
-                {restCheckpointReward?.rewardType === 'life'
-                  ? 'Você recuperou 1 vida para continuar a jornada.'
-                  : `Vidas cheias! Você recebeu ${restCheckpointReward?.coinsEarned ?? 0} moedas.`}
-              </Text>
-              <PrimaryButton
-                title="Abrir loja"
-                onPress={() => {
-                  const worldId =
-                    restCheckpointReward?.worldId ?? selectedWorldId;
-                  setRestCheckpointReward(undefined);
-                  setSelectedTarget(undefined);
-                  onOpenShop(worldId);
-                }}
-              />
-            </View>
-          </View>
-        </Modal>
 
         <View style={styles.toastSlot} pointerEvents="none">
           {toast ? (

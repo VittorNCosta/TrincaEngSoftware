@@ -415,44 +415,29 @@ test('apagar progresso não é desfeito pela compra pendente e segundo toque é 
   );
 });
 
-test('duplo toque no ponto de descanso premia uma vida só', async () => {
+test('retirar pontos de descanso preserva coletas antigas, saldo e vidas sem oferecer nova recompensa', async () => {
   store.clear();
   seedLives(2);
-
-  const seededProgress = [
-    'w1-001',
-    'w1-002',
-    'w1-003',
-    'w1-004',
-    'w1-005',
-  ].reduce(
+  const completed = ['w1-001', 'w1-002', 'w1-003', 'w1-004', 'w1-005'].reduce(
     (progress, levelId) => applyLevelCompletion(progress, levelId, 3).progress,
     createInitialProgress(),
   );
-  await saveProgress(seededProgress);
-
+  const seeded = {
+    ...completed,
+    coins: 200,
+    keys: 2,
+    collectedRestCheckpointIds: ['w1-005'],
+  };
+  await saveProgress(seeded);
+  const before = await loadProgress();
   const app = await bootApp();
-  const mapProps = app.props('MainTabs');
-
-  assert.equal(mapProps.progress.completedLevelIds.includes('w1-005'), true);
-  assert.equal(mapProps.livesState.currentLives, 2);
-
-  // Dois toques em "Abrir loja" sem re-render entre eles: as duas invocações
-  // fecham sobre o mesmo `progress`.
-  const [first, second] = await Promise.all([
-    mapProps.onOpenRestCheckpoint('w1-005'),
-    mapProps.onOpenRestCheckpoint('w1-005'),
-  ]);
-  app.flush();
-  await app.settle(300);
-
-  assert.deepEqual([first.granted, second.granted].sort(), [false, true]);
-
-  const lives = await getLivesState();
-  assert.equal(lives.currentLives, 3);
-
-  const persisted = await loadProgress();
-  assert.deepEqual(persisted.collectedRestCheckpointIds, ['w1-005']);
+  assert.equal(app.props('MainTabs').onOpenRestCheckpoint, undefined);
+  assert.deepEqual(app.props('MainTabs').progress, before);
+  assert.equal((await getLivesState()).currentLives, 2);
+  const reopened = await bootApp();
+  assert.deepEqual(reopened.props('MainTabs').progress, before);
+  assert.deepEqual(await loadProgress(), before);
+  assert.equal((await getLivesState()).currentLives, 2);
 });
 
 test('trocar de tela limpa a semente e o retry do diagnóstico anterior', async () => {
@@ -516,7 +501,7 @@ const chestProgress = {
   levelStars: Object.fromEntries(chestLevelIds.map((id) => [id, 3])),
 };
 
-test('controlador de baú preserva a guarda de duplo toque e a recompensa após remontar', async () => {
+test('save antigo não volta a oferecer o baú bônus removido nem altera saldo ou vidas', async () => {
   store.clear();
   seedLives(MAX_LIVES - 1);
   const initial = {
@@ -526,55 +511,41 @@ test('controlador de baú preserva a guarda de duplo toque e a recompensa após 
     pendingWorldChestIds: ['bonus-world-21'],
     ...chestProgress,
   };
-  await saveProgress(initial);
+  store.set('@trinca-mania/progress-v2', JSON.stringify(initial));
   const app = await bootApp();
-  app.props('MainTabs').onOpenWorldChest('bonus-world-21');
-  app.flush();
-  const modal = app.props('WorldChestModal');
-  modal.onOpenWithKey();
-  modal.onOpenWithKey();
-  await app.waitFor(
-    () => app.props('WorldChestModal').result?.status === 'opened',
-  );
-  const persisted = await loadProgress();
-  assert.equal(persisted.keys, 1);
-  assert.deepEqual(persisted.claimedWorldChestIds, ['bonus-world-21']);
-  assert.deepEqual(persisted.pendingWorldChestIds, []);
-  for (const power of ['hint', 'shuffle', 'undo'])
-    assert.equal(persisted.itemCounts[power], initial.itemCounts[power] + 1);
-  assert.equal((await getLivesState()).currentLives, MAX_LIVES);
-  const afterReward = await loadProgress();
-  app.props('WorldChestModal').onOpenWithKey();
-  await app.settle(100);
-  assert.equal(app.props('WorldChestModal').result.status, 'already-opened');
-  assert.deepEqual(await loadProgress(), afterReward);
-  assert.equal((await getLivesState()).currentLives, MAX_LIVES);
+  assert.equal(app.props('MainTabs').onOpenWorldChest, undefined);
+  assert.equal(app.props('WorldChestModal').visible, false);
+  const loaded = await loadProgress();
+  assert.deepEqual(loaded.pendingWorldChestIds, []);
+  assert.equal(loaded.coins, initial.coins);
+  assert.equal(loaded.keys, initial.keys);
+  assert.deepEqual(loaded.itemCounts, initial.itemCounts);
+  assert.deepEqual(loaded.completedLevelIds, initial.completedLevelIds);
+  assert.equal((await getLivesState()).currentLives, MAX_LIVES - 1);
   const reopened = await bootApp();
-  assert.deepEqual(reopened.props('MainTabs').progress, persisted);
+  assert.deepEqual(reopened.props('MainTabs').progress, loaded);
 });
 
-test('controlador de baú mantém saldo e chave quando a abertura não pode premiar', async () => {
+test('retirar o baú bônus preserva recompensas já coletadas em saves antigos', async () => {
   store.clear();
-  await saveProgress({
+  const initial = {
     ...createInitialProgress(),
-    coins: 0,
-    keys: 0,
-    pendingWorldChestIds: ['bonus-world-21'],
+    coins: 150,
+    keys: 1,
+    itemCounts: { hint: 2, shuffle: 3, undo: 4 },
+    claimedWorldChestIds: ['bonus-world-21'],
     ...chestProgress,
-  });
+  };
+  store.set('@trinca-mania/progress-v2', JSON.stringify(initial));
   const app = await bootApp();
-  app.props('MainTabs').onOpenWorldChest('bonus-world-21');
-  app.flush();
-  const before = await loadProgress();
-  app.props('WorldChestModal').onBuyAndOpen();
-  await app.waitFor(
-    () => app.props('WorldChestModal').result?.status === 'insufficient-coins',
-  );
-  assert.deepEqual(await loadProgress(), before);
-  assert.equal(app.props('WorldChestModal').isOpening, false);
-  app.props('WorldChestModal').onClose();
-  app.flush();
+  assert.equal(app.props('MainTabs').onOpenWorldChest, undefined);
   assert.equal(app.props('WorldChestModal').visible, false);
+  const loaded = await loadProgress();
+  assert.deepEqual(loaded.claimedWorldChestIds, initial.claimedWorldChestIds);
+  assert.deepEqual(loaded.pendingWorldChestIds, []);
+  assert.equal(loaded.coins, initial.coins);
+  assert.equal(loaded.keys, initial.keys);
+  assert.deepEqual(loaded.itemCounts, initial.itemCounts);
 });
 
 const CAMPAIGN_KEY = '@trinca-mania/progress-v2';

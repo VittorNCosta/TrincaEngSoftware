@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useRef } from 'react';
+import {
+  getMaterialTileBaseStyle,
+  getMaterialTilePalette,
+} from '../styles/materialTilePalette';
+import { useCallback, useContext, useEffect, useRef } from 'react';
+import { GameplayTileContext } from './TileAppearanceContext';
 import {
   Animated,
   Easing,
@@ -10,6 +15,7 @@ import {
 
 import { GameIcon } from './GameIcon';
 import { TileIcon } from './TileIcon';
+import { tilePalette } from '../styles/tilePalette';
 import { radii } from '../styles/theme';
 import { Tile } from '../types/game';
 import { WindowTarget } from '../types/ui';
@@ -53,6 +59,7 @@ function TraySlot({
   onSlotLayoutInWindow,
   onSlotPress,
 }: TraySlotProps) {
+  const duringGame = useContext(GameplayTileContext);
   const slotRef = useRef<View>(null);
   const activation = useRef(new Animated.Value(0)).current;
   const wasActiveRef = useRef(isActiveSlot);
@@ -111,7 +118,16 @@ function TraySlot({
   const slotContent =
     isFilled && tile ? (
       <>
-        <View pointerEvents="none" style={styles.slotInsetShade} />
+        <View
+          pointerEvents="none"
+          style={[
+            styles.slotInsetShade,
+            {
+              backgroundColor: getMaterialTilePalette(tile.kind, duringGame)
+                .innerShade,
+            },
+          ]}
+        />
         <View pointerEvents="none" style={styles.slotSpecular} />
         <TileIcon
           cardId={tile.cardId}
@@ -192,6 +208,9 @@ function TraySlot({
           isCoinSlot && !isActiveSlot ? styles.coinLockedSlot : null,
           isBonusSlot && !isActiveSlot ? styles.bonusLockedSlot : null,
           isFilled ? styles.filledSlot : null,
+          isFilled && tile
+            ? getMaterialTileBaseStyle(tile.kind, duringGame)
+            : null,
           pressed && slotIsActionable ? styles.slotPressed : null,
         ]}
       >
@@ -284,10 +303,10 @@ const styles = StyleSheet.create({
   },
   // Encaixe ocupado: a mesma aparência das peças do tabuleiro.
   filledSlot: {
-    backgroundColor: '#FFE7A6',
-    borderBottomColor: '#C9922F',
+    backgroundColor: tilePalette.face,
+    borderBottomColor: tilePalette.edge,
     borderBottomWidth: 4,
-    borderColor: '#FFF5D3',
+    borderColor: tilePalette.border,
     borderWidth: 2,
     elevation: 2,
     shadowColor: '#000000',
@@ -348,7 +367,7 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   slotInsetShade: {
-    backgroundColor: 'rgba(161, 99, 20, 0.22)',
+    backgroundColor: tilePalette.shade,
     borderBottomLeftRadius: 14,
     borderBottomRightRadius: 14,
     bottom: 0,

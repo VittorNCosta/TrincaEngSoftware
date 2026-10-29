@@ -1331,7 +1331,151 @@ mk open --title 'L-25 · Cobrir a faixa vazia acima da arte ao rolar o mapa até
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-26 · Centralizar os três poderes na partida' \
-  --body 'Solicitado em 21/10/2026. O status da bandeja dividia a linha com PowerDrawer e deslocava os controles para a direita, cortando o último botão. Poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar telas estreitas, desktop e tela cheia. Exportação local, sem APK ou publicação. Ajustes solicitados em 23/10/2026: cabeçalho de fase compacto em creme/verde, poderes menores com nomes/preços legíveis e ações do tutorial fixas fora da rolagem. Alvos de toque preservados; revisão no simulador e aceite Android pendente. Evidências em docs/AJUSTES-TUTORIAL-PARTIDA-20261023.txt.
+  --body 'Solicitado em 21/10/2026. O status da bandeja dividia a linha com PowerDrawer e deslocava os controles para a direita, cortando o último botão. Poderes em linha centralizada e status abaixo. Preservar artes, preços, handlers e regras. Validar telas estreitas, desktop e tela cheia. Exportação local, sem APK ou publicação. Ajustes solicitados em 23/10/2026: cabeçalho de fase compacto em creme/verde, poderes menores com nomes/preços legíveis e ações do tutorial fixas fora da rolagem. Alvos de toque preservados; revisão no simulador e aceite Android pendente. Evidências em docs/AJUSTES-TUTORIAL-PARTIDA-20261023.txt. Ajuste local solicitado em 27/10/2026: poderes sem cartão creme, legendas com sombra para leitura sobre o cenário e bases das peças na cor do material. Prévia web com alterações locais; aceite visual e integração pendentes. Solicitação adicional: remover o fundo branco do box de fase e mundo/capítulo, com texto claro e sombra para leitura sobre a arte.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-27 · Melhorar ícones de lixeiras, reciclagem e resíduos' \
+  --body 'Solicitado em 26/10/2026. Evoluir os SVGs existentes com silhueta de lixeira reconhecível, setas separadas e marca de compostagem; ampliar os resíduos e seu contraste. Manter cores, rótulos acessíveis e regras. Mesma geometria no site e no jogo. Implementação e prévia locais; aceite visual Android e integração pendentes. Commit e push em branch própria autorizados em 27/10/2026; sem APK ou aceite Android. Ajuste local solicitado em 27/10/2026: poderes sem cartão creme, legendas com sombra para leitura sobre o cenário e bases das peças na cor do material. Prévia web com alterações locais; aceite visual e integração pendentes. Revisão posterior solicitada: substituir as bases pastel por dourado intenso, mantendo as cores dos ícones e maior contraste no metal. Nova revisão: retirar o fundo amarelo/dourado para evitar confusão com o metal; superfícies cinza neutras compartilhadas no tabuleiro, bandeja, voo e faces dos ícones, preservando as cores dos materiais. A revisão neutra substitui o dourado. Revisão seguinte de legibilidade: moldura e faixa com nome do material iguais nos três papéis, símbolos com a cor principal e glifo contrastante, amarelo do metal distinto do marrom orgânico; peças bloqueadas preservam as cores da arte, com cadeado e base escura indicando bloqueio. Identificação compartilhada na bandeja e voo. Aguarda aceite visual local e Android.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Sonnet 5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P1
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-28 · Remover o baú do mundo bônus' \
+  --body 'Solicitado em 27/10/2026. Remover o marcador dos mapas ilustrado e legado, o painel de seleção e a entrada em Prêmios. Não liberar o baú ao concluir as fases bônus nem reoferecer pendências de saves antigos. Preservar as três fases, estrelas, moedas, chaves, itens e registros de recompensas já coletadas. Implementação local; validação web e testes de compatibilidade de saves. Aceite visual e integração pendentes, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-29 · Alinhar os ícones do menu inferior aos pedestais' \
+  --body 'Solicitado em 27/10/2026. Alinhar a borda inferior visível dos quatro PNGs à mesma linha de apoio na arte dos pedestais, descontando as margens transparentes de cada imagem. Preservar tamanhos, centralização horizontal, áreas de toque, legendas e estados das abas. Validar visualmente e medir no navegador em desktop/mobile, com cada aba selecionada. Implementação local; aceite visual e integração pendentes.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-30 · Atualizar o painel da fase conforme o TrincaMania original' \
+  --body 'Solicitado em 27/10/2026. Adaptar MapLevelDetails do original, branch feat/world2-campaign-polish, commit e32e5bd (24/10), confirmado via git fetch. Cabeçalho dourado, título e objetivo completos, estrelas, possíveis materiais e botão verde Jogar fixo fora da rolagem. Respeitar área segura e menu inferior. Preservar conteúdo ODS12, desbloqueios e navegação. Implementação e testes locais; aceite visual e integração pendentes, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-31 · Remover os pontos de descanso dos mapas e capítulos ODS12' \
+  --body 'Solicitado em 27/10/2026. Retirar marcadores, seleção, modal e concessão de recompensa dos pontos de descanso da campanha, incluindo mapas ilustrados e renderizações de reserva. Retirar os marcos e prefixos de descanso dos capítulos, mantendo as fases como mapas comuns. Preservar as 103 fases canônicas, IDs e parâmetros dos 1000 mapas de capítulo, passagens entre mundos, acesso normal à loja e registros de recompensas antigas. Validação local; aceite visual e integração pendentes, sem APK ou publicação.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-32 · Planejar a integração dos assets redesenhados e publicar correções locais' \
+  --body 'Solicitado e autorizado em 27/10/2026. Plano em docs/arte/PLANO-INTEGRACAO-ASSETS-REDESENHADOS-20261027.md, baseado no ZIP de SHA-256 655d462eb01807fb21f07cbd6dfc9bf0bcf76265b8785cdf56b4acdf8aac0aa8. Publicar agora as correções existentes e o plano; integração dos desenhos fica para etapa posterior, com a paleta por material escolhida pelo usuário. Atualizar export do simulador da fonte revisada e validar localmente. Envio às branches próprias autorizado; sem merge, PR, GitHub Actions ou APK. Aceites visuais pendentes.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-33 · Integrar os assets redesenhados no jogo e na prévia do simulador' \
+  --body 'Implementação local 28/10/2026; inventário docs/arte/integracao-assets-20261028.json e evidências docs/arte/ENTREGA-ASSETS-20261028.md. Prévia local com fonte não commitada; exportação oficial limpa, aceite visual e merge pendentes. Sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-34 · Simplificar as peças durante a partida' \
+  --body 'Solicitado em 28/10/2026: retirar legendas das peças somente durante a partida e clarear a superfície por material. Escopo compartilhado por tabuleiro, bandeja, voo e fechamento; preservar mapas, tutorial fora da partida, outros ícones, acessibilidade e mistério. Validação local e exportação do simulador; sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-35 · Aproximar os preços dos ícones de poder' \
+  --body 'Solicitado em 28/10/2026: aproximar a cápsula de moedas de seu respectivo ícone de poder na partida. Grupo centralizado em linha com intervalo de 2 px, sem ancorar o preço à borda do botão. Preservar artes, preços, contagens, bloqueios, ações e áreas de toque. Validação e exportação locais, sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-36 · Restaurar o aspecto apagado das peças cobertas' \
+  --body 'Solicitado em 28/10/2026: restaurar a aparência apagada das peças cobertas por outra peça. Reutilizar a opacidade de 0,76 do desenho e o véu acima da arte (zIndex 4), como em 007ea3d. Preservar peças livres, cores atuais, mistério, cadeado, bloqueio, poderes, áreas de toque e regras. Validação e simulador locais; sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-37 · Remover o box de moedas faltantes da loja' \
+  --body 'Solicitado em 28/10/2026: remover o box FALTAM dos produtos sem saldo suficiente na loja, mantendo o preço visível. Preservar COMPRAR quando houver saldo, AGUARDE durante a compra, estados bloqueados, acessibilidade, preços, inventário e proteção contra cobrança duplicada. Validar e atualizar o simulador local, sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-38 · Corrigir o layout do terceiro poder da loja' \
+  --body 'Solicitado em 28/10/2026: corrigir o card do terceiro poder (Trinca automática) na loja. A linha horizontal com flex: 0 tinha altura de apenas 20 px no navegador, cortando ícone, título e quantidade e antecipando o rodapé. Usar altura intrínseca com flexBasis auto e impedir redução da linha. Validar conteúdo dentro do card, rodapé após o conteúdo e ausência de espaço excedente em telas estreitas e largas; preservar preços, compra e remoção do box FALTAM. Sem APK ou CI remoto.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -2684,4 +2828,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 210 issues (166 já criadas fechadas) =="
+echo "== pronto: 222 issues (166 já criadas fechadas) =="

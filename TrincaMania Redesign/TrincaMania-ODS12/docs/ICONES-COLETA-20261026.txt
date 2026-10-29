@@ -1,0 +1,62 @@
+Ícones de coleta seletiva — 26/10/2026
+
+Base: 06b7d91cc7b8bc44f4fdad6d30570b6793cbee55.
+Branch local: feat/icones-coleta-ods12-20261026.
+Solicitação: melhorar lixeiras e demais ícones do TrincaMania ODS 12.
+Roadmap: L-27. Implementação local; integração e aceite Android pendentes.
+
+Mudanças:
+- Lixeiras vetoriais com tampa, abertura, rodas e emblema da coleta.
+- Três setas separadas para reconhecer o ciclo da reciclagem.
+- Broto para identificar compostagem nas peças orgânicas.
+- Resíduos ampliados, com fundo claro e moldura na cor do material.
+- Cores existentes dos materiais e rótulos acessíveis preservados.
+- Geometria em src/data/recyclingIconGeometry.json; SVGs do site gerados
+  pelo helper scripts/sync-recycling-icons.mjs no projeto site-ods.
+- Regras, composição das fases, economia e persistência não alteradas.
+
+Verificações locais:
+- Typecheck: passou.
+- Domínio/storage/dados: 396/396 testes passaram.
+- Interface: 28 suítes, 109/109 testes passaram.
+- Playthrough de campanha/capítulos: 2/2 passaram.
+- Lint: zero erros; três avisos em GameScreen.tsx, fora dos arquivos editados.
+- Prettier: todos os arquivos conferidos passaram.
+- Guarda ODS12: nenhuma regressão.
+- Assets: 255 arquivos, zero órfãos e zero acima do orçamento.
+- Site Astro: 19 arquivos verificados sem erros, avisos ou hints; build passou.
+- Chromium desktop e 375 x 812: os 20 exemplos da galeria carregam;
+  sem rolagem horizontal. Mapa, seleção de fase e tabuleiro abriram.
+- Jogada por toque na fase w1-002: tabuleiro de 12 para 11 peças e
+  Bandeja 1/7. Nenhuma exceção JavaScript na sessão mobile isolada.
+- Fase w5-001: lixeira orgânica renderizada e símbolos com as três setas.
+
+Prévia local:
+http://localhost:4322/icones/
+http://localhost:4322/jogar/?modo=feira
+
+Esta prévia usa Astro e Expo Web a partir do fonte local. A página identifica
+o SHA base e os ajustes locais. O export versionado e o APK histórico não
+foram substituídos; o build estático continua validando esses artefatos.
+Nenhum commit, push, GitHub Actions, APK ou instalação foi realizado.
+Nenhuma alteração foi publicada no site do TrincaMania Original.
+
+Reiniciar servidores:
+bash /home/vitto/igrion/validacao-20261026/iniciar.sh
+
+Capturas e logs:
+/home/vitto/igrion/validacao-20261026/ods-icons-gallery.png
+/home/vitto/igrion/validacao-20261026/ods-icons-after.png
+/home/vitto/igrion/validacao-20261026/ods-icons-mobile-gallery.png
+/home/vitto/igrion/validacao-20261026/ods-icons-mobile-game.png
+/home/vitto/igrion/validacao-20261026/icons-*.log
+
+RTK indisponível; foram usados comandos locais equivalentes. A instalação
+opcional está descrita no README.md da raiz do repositório.
+
+Envio remoto autorizado — 27/10/2026
+O usuário solicitou o envio de todas as alterações ao remoto. O conjunto será
+commitado e publicado na branch feat/icones-coleta-ods12-20261026, com
+[skip ci] e sem alterar o bloqueio de GitHub Actions. Integração em develop
+e aceite visual Android continuam pendentes. Typecheck, 396 testes de domínio,
+109 testes de UI, lint e formatação foram reconferidos localmente no envio.

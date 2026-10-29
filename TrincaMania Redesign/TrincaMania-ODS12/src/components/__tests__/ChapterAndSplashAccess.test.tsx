@@ -44,6 +44,31 @@ test('chapter dev access changes availability without adding completed stars', (
   );
 });
 
+test.each(CHAPTERS.map((chapter) => chapter.id))(
+  'o capítulo %s trata o antigo descanso como fase comum sem alterar o save',
+  (chapterId) => {
+    const progress = createInitialChapterProgress();
+    const before = JSON.stringify(progress);
+    const selected = jest.fn();
+    const screen = render(
+      <ChaptersScreen
+        chapterProgress={progress}
+        onBack={jest.fn()}
+        onSelectChapterLevel={selected}
+        devMode
+      />,
+    );
+    const chapter = CHAPTERS.find(({ id }) => id === chapterId)!;
+    fireEvent.press(screen.getByText(chapter.name));
+    const map = getChapterLevelSummaries(chapterId)[9];
+    expect(screen.queryByText('Descanso')).toBeNull();
+    expect(map.milestone).toBeUndefined();
+    fireEvent.press(screen.getByLabelText(`Mapa 10: ${map.title}`));
+    expect(selected).toHaveBeenCalledWith(map.id);
+    expect(JSON.stringify(progress)).toBe(before);
+  },
+);
+
 test('Android Back leaves chapter detail before returning to the campaign map', () => {
   const originalPlatform = Object.getOwnPropertyDescriptor(Platform, 'OS');
   Object.defineProperty(Platform, 'OS', {
