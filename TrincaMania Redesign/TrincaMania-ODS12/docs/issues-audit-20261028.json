@@ -705,5 +705,522 @@
       "title": "A-03 · Escolher a ferramenta de geração e travar seed/estilo",
       "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/41"
     }
-  ]
+  ],
+  "application_result": {
+    "repository": "VittorNCosta/TrincaEngSoftware",
+    "closed_completed": 32,
+    "closed_not_planned": 2,
+    "open_count": 18,
+    "open_issues": [
+      {
+        "number": 285,
+        "title": "PR #280: chore(deps): bump @sentry/react-native from 7.2.0 to 8.27.0 in /TrincaMania Redesign/TrincaMania-ODS12",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/285"
+      },
+      {
+        "number": 245,
+        "title": "PR #243: chore(deps): bump react-test-renderer from 19.1.0 to 19.3.0 in /TrincaMania Redesign/TrincaMania-ODS12 in the desenvolvimento group",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/245"
+      },
+      {
+        "number": 236,
+        "title": "Q-17 · Testar recuperação e migração de progresso no Android instalado",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/236"
+      },
+      {
+        "number": 224,
+        "title": "CI-33 · Validar o fluxo Codex em um piloto controlado",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/224"
+      },
+      {
+        "number": 212,
+        "title": "O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/212"
+      },
+      {
+        "number": 205,
+        "title": "A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/205"
+      },
+      {
+        "number": 204,
+        "title": "A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/204"
+      },
+      {
+        "number": 193,
+        "title": "R-15 · Jogar as 100 fases manualmente",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/193"
+      },
+      {
+        "number": 174,
+        "title": "Q-11 · Perfilar performance em aparelho de entrada",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/174"
+      },
+      {
+        "number": 172,
+        "title": "Q-09 · Quebrar `App.tsx`",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/172"
+      },
+      {
+        "number": 170,
+        "title": "Q-07 · Quebrar `GameScreen.tsx`",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/170"
+      },
+      {
+        "number": 163,
+        "title": "SEC-17 · Revisar os dados coletados (LGPD)",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/163"
+      },
+      {
+        "number": 151,
+        "title": "SEC-05 · Avaliar Renovate no lugar do Dependabot",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/151"
+      },
+      {
+        "number": 149,
+        "title": "SEC-03 · Habilitar Dependabot alerts e security updates",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/149"
+      },
+      {
+        "number": 136,
+        "title": "CI-14 · Criar o secret `EXPO_TOKEN`",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/136"
+      },
+      {
+        "number": 121,
+        "title": "G-16 · Decidir sobre Git LFS para os PNGs",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/121"
+      },
+      {
+        "number": 115,
+        "title": "G-10 · Branch protection em `main` e `develop`",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/115"
+      },
+      {
+        "number": 42,
+        "title": "A-04 · Gerar e validar a imagem-piloto no aparelho",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/42"
+      }
+    ],
+    "actions_enabled": false,
+    "application": [
+      {
+        "number": 42,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/42",
+        "updated_at": "2026-10-29T00:05:34Z"
+      },
+      {
+        "number": 41,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "not_planned",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/41",
+        "updated_at": "2026-10-29T00:05:35Z"
+      },
+      {
+        "number": 43,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/43",
+        "updated_at": "2026-10-29T00:05:37Z"
+      },
+      {
+        "number": 44,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/44",
+        "updated_at": "2026-10-29T00:05:39Z"
+      },
+      {
+        "number": 45,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/45",
+        "updated_at": "2026-10-29T00:05:41Z"
+      },
+      {
+        "number": 46,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/46",
+        "updated_at": "2026-10-29T00:05:43Z"
+      },
+      {
+        "number": 47,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/47",
+        "updated_at": "2026-10-29T00:05:44Z"
+      },
+      {
+        "number": 48,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/48",
+        "updated_at": "2026-10-29T00:05:46Z"
+      },
+      {
+        "number": 49,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/49",
+        "updated_at": "2026-10-29T00:05:48Z"
+      },
+      {
+        "number": 50,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/50",
+        "updated_at": "2026-10-29T00:05:49Z"
+      },
+      {
+        "number": 51,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/51",
+        "updated_at": "2026-10-29T00:05:51Z"
+      },
+      {
+        "number": 52,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/52",
+        "updated_at": "2026-10-29T00:05:53Z"
+      },
+      {
+        "number": 53,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/53",
+        "updated_at": "2026-10-29T00:05:55Z"
+      },
+      {
+        "number": 54,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/54",
+        "updated_at": "2026-10-29T00:05:57Z"
+      },
+      {
+        "number": 55,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/55",
+        "updated_at": "2026-10-29T00:05:59Z"
+      },
+      {
+        "number": 56,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/56",
+        "updated_at": "2026-10-29T00:06:00Z"
+      },
+      {
+        "number": 57,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/57",
+        "updated_at": "2026-10-29T00:06:03Z"
+      },
+      {
+        "number": 58,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/58",
+        "updated_at": "2026-10-29T00:06:05Z"
+      },
+      {
+        "number": 59,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/59",
+        "updated_at": "2026-10-29T00:06:06Z"
+      },
+      {
+        "number": 60,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/60",
+        "updated_at": "2026-10-29T00:06:08Z"
+      },
+      {
+        "number": 61,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/61",
+        "updated_at": "2026-10-29T00:06:10Z"
+      },
+      {
+        "number": 62,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/62",
+        "updated_at": "2026-10-29T00:06:11Z"
+      },
+      {
+        "number": 63,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/63",
+        "updated_at": "2026-10-29T00:06:13Z"
+      },
+      {
+        "number": 64,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/64",
+        "updated_at": "2026-10-29T00:06:14Z"
+      },
+      {
+        "number": 65,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/65",
+        "updated_at": "2026-10-29T00:06:16Z"
+      },
+      {
+        "number": 66,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "not_planned",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/66",
+        "updated_at": "2026-10-29T00:06:18Z"
+      },
+      {
+        "number": 67,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/67",
+        "updated_at": "2026-10-29T00:06:20Z"
+      },
+      {
+        "number": 68,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/68",
+        "updated_at": "2026-10-29T00:06:21Z"
+      },
+      {
+        "number": 69,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/69",
+        "updated_at": "2026-10-29T00:06:23Z"
+      },
+      {
+        "number": 70,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/70",
+        "updated_at": "2026-10-29T00:06:25Z"
+      },
+      {
+        "number": 71,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/71",
+        "updated_at": "2026-10-29T00:06:26Z"
+      },
+      {
+        "number": 74,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/74",
+        "updated_at": "2026-10-29T00:06:28Z"
+      },
+      {
+        "number": 114,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/114",
+        "updated_at": "2026-10-29T00:06:30Z"
+      },
+      {
+        "number": 115,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/115",
+        "updated_at": "2026-10-29T00:06:32Z"
+      },
+      {
+        "number": 121,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/121",
+        "updated_at": "2026-10-29T00:06:33Z"
+      },
+      {
+        "number": 136,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/136",
+        "updated_at": "2026-10-29T00:06:35Z"
+      },
+      {
+        "number": 149,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/149",
+        "updated_at": "2026-10-29T00:06:36Z"
+      },
+      {
+        "number": 151,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/151",
+        "updated_at": "2026-10-29T00:06:37Z"
+      },
+      {
+        "number": 163,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/163",
+        "updated_at": "2026-10-29T00:06:38Z"
+      },
+      {
+        "number": 170,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/170",
+        "updated_at": "2026-10-29T00:06:40Z"
+      },
+      {
+        "number": 171,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/171",
+        "updated_at": "2026-10-29T00:06:42Z"
+      },
+      {
+        "number": 172,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/172",
+        "updated_at": "2026-10-29T00:06:43Z"
+      },
+      {
+        "number": 174,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/174",
+        "updated_at": "2026-10-29T00:06:44Z"
+      },
+      {
+        "number": 193,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/193",
+        "updated_at": "2026-10-29T00:06:46Z"
+      },
+      {
+        "number": 204,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/204",
+        "updated_at": "2026-10-29T00:06:47Z"
+      },
+      {
+        "number": 205,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/205",
+        "updated_at": "2026-10-29T00:06:48Z"
+      },
+      {
+        "number": 212,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/212",
+        "updated_at": "2026-10-29T00:06:50Z"
+      },
+      {
+        "number": 224,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/224",
+        "updated_at": "2026-10-29T00:06:51Z"
+      },
+      {
+        "number": 229,
+        "result": "updated",
+        "state": "closed",
+        "state_reason": "completed",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/229",
+        "updated_at": "2026-10-29T00:06:53Z"
+      },
+      {
+        "number": 236,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/236",
+        "updated_at": "2026-10-29T00:06:55Z"
+      },
+      {
+        "number": 245,
+        "result": "updated",
+        "state": "open",
+        "state_reason": "reopened",
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/245",
+        "updated_at": "2026-10-29T00:06:56Z"
+      },
+      {
+        "number": 285,
+        "result": "updated",
+        "state": "open",
+        "state_reason": null,
+        "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/285",
+        "updated_at": "2026-10-29T00:06:59Z"
+      }
+    ]
+  }
 }

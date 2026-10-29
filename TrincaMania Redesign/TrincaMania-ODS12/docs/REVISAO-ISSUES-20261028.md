@@ -2,9 +2,9 @@
 
 Repositório: VittorNCosta/TrincaEngSoftware. Base integrada auditada: `917a33948221479fa7086c698d7f6c0776820a85` (`develop`). Entrega recente também consultada: `d9780e6` do jogo e `ba0e028` do site, em branches próprias; não foram tratadas como merged em develop.
 
-O usuário pediu revisar as pendências e encerrar as que já foram feitas. Confirmou que os fundos atuais dos mundos 1–10 são definitivos. Fechamento preserva histórico; nenhuma issue será apagada permanentemente. Foram verificadas 52 issues abertas do jogo; a busca no repositório ODS do site não retornou issues abertas.
+O usuário pediu revisar as pendências e encerrar as que já foram feitas. Confirmou que os fundos atuais dos mundos 1–10 são definitivos. Fechamento preserva histórico; nenhuma issue foi apagada permanentemente. Foram verificadas 52 issues abertas do jogo; a busca no repositório ODS do site não retornou issues abertas.
 
-Decisão preparada: **32 concluídas, duas fora do escopo e 18 mantidas abertas**. A produção de arte já entregue é encerrada; o aceite visual Android é concentrado explicitamente em #42, sem declarar que ocorreu. As duas artes inéditas do bônus continuam abertas. Nenhum código de jogo, save, dependência, token, proteção ou configuração de Actions foi alterado.
+Resultado aplicado e confirmado no GitHub: **32 concluídas, duas fora do escopo e 18 mantidas abertas**, de um total inicial de 52. A produção de arte já entregue é encerrada; o aceite visual Android é concentrado explicitamente em #42, sem declarar que ocorreu. As duas artes inéditas do bônus continuam abertas. Nenhum código de jogo, save, dependência, token, proteção ou configuração de Actions foi alterado.
 
 ## Evidências técnicas
 
@@ -76,4 +76,27 @@ Decisão preparada: **32 concluídas, duas fora do escopo e 18 mantidas abertas*
 
 ## Aplicação
 
-Os dois espelhos do roadmap foram reconciliados antes da escrita nas issues. O script inicial de criação de issues será apenas regenerado, sem executá-lo. A aplicação remota usa a lista explícita desta auditoria, sem reabrir issues antigas, criar tarefas ou fazer alterações cegas em todo o backlog. O resultado efetivo da aplicação será registrado após a conferência remota.
+Os dois espelhos do roadmap foram reconciliados antes da escrita nas issues. O script inicial de criação de issues foi apenas regenerado, sem executá-lo. A aplicação remota usa a lista explícita desta auditoria, sem reabrir issues antigas, criar tarefas ou fazer alterações cegas em todo o backlog. A aplicação atualizou as 52 descrições com evidências, encerrou 34 issues e preservou as 18 abaixo. A API confirmou todos os estados e o bloqueio de Actions. Metadados de aplicação, motivos de encerramento e lista remota estão em `issues-audit-20261028.json`. Nenhum comentário, mensagem, token ou execução de CI foi criado.
+
+## Pendências que continuam abertas
+
+- [#42](https://github.com/VittorNCosta/TrincaEngSoftware/issues/42) — A-04 · Gerar e validar a imagem-piloto no aparelho
+- [#115](https://github.com/VittorNCosta/TrincaEngSoftware/issues/115) — G-10 · Branch protection em `main` e `develop`
+- [#121](https://github.com/VittorNCosta/TrincaEngSoftware/issues/121) — G-16 · Decidir sobre Git LFS para os PNGs
+- [#136](https://github.com/VittorNCosta/TrincaEngSoftware/issues/136) — CI-14 · Criar o secret `EXPO_TOKEN`
+- [#149](https://github.com/VittorNCosta/TrincaEngSoftware/issues/149) — SEC-03 · Habilitar Dependabot alerts e security updates
+- [#151](https://github.com/VittorNCosta/TrincaEngSoftware/issues/151) — SEC-05 · Avaliar Renovate no lugar do Dependabot
+- [#163](https://github.com/VittorNCosta/TrincaEngSoftware/issues/163) — SEC-17 · Revisar os dados coletados (LGPD)
+- [#170](https://github.com/VittorNCosta/TrincaEngSoftware/issues/170) — Q-07 · Quebrar `GameScreen.tsx`
+- [#172](https://github.com/VittorNCosta/TrincaEngSoftware/issues/172) — Q-09 · Quebrar `App.tsx`
+- [#174](https://github.com/VittorNCosta/TrincaEngSoftware/issues/174) — Q-11 · Perfilar performance em aparelho de entrada
+- [#193](https://github.com/VittorNCosta/TrincaEngSoftware/issues/193) — R-15 · Jogar as 100 fases manualmente
+- [#204](https://github.com/VittorNCosta/TrincaEngSoftware/issues/204) — A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa
+- [#205](https://github.com/VittorNCosta/TrincaEngSoftware/issues/205) — A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo
+- [#212](https://github.com/VittorNCosta/TrincaEngSoftware/issues/212) — O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime
+- [#224](https://github.com/VittorNCosta/TrincaEngSoftware/issues/224) — CI-33 · Validar o fluxo Codex em um piloto controlado
+- [#236](https://github.com/VittorNCosta/TrincaEngSoftware/issues/236) — Q-17 · Testar recuperação e migração de progresso no Android instalado
+- [#245](https://github.com/VittorNCosta/TrincaEngSoftware/issues/245) — PR #243: chore(deps): bump react-test-renderer from 19.1.0 to 19.3.0 in /TrincaMania Redesign/TrincaMania-ODS12 in the desenvolvimento group
+- [#285](https://github.com/VittorNCosta/TrincaEngSoftware/issues/285) — PR #280: chore(deps): bump @sentry/react-native from 7.2.0 to 8.27.0 in /TrincaMania Redesign/TrincaMania-ODS12
+
+Verificações desta revisão: 23 testes de registro visual/observabilidade/storage, nove testes de roadmap/sincronização, validador HTML/Markdown, formatação e `git diff --check` aprovados. Nenhum teste de aparelho foi inferido a partir deles. A documentação foi publicada em branch própria; a branch principal e o simulador em uso não foram alterados por esta auditoria.
