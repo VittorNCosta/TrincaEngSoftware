@@ -1,0 +1,709 @@
+{
+  "repository": "VittorNCosta/TrincaEngSoftware",
+  "base_sha": "917a33948221479fa7086c698d7f6c0776820a85",
+  "user_decision": "Considerar os fundos atuais definitivos",
+  "summary": {
+    "completed": 32,
+    "not_planned": 2,
+    "open": 18
+  },
+  "images": [
+    {
+      "file": "assets/map/worlds/w01_parque_game.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 365598
+    },
+    {
+      "file": "assets/map/worlds/w01_parque_map.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 375817
+    },
+    {
+      "file": "assets/map/worlds/w02_vale_game.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 405481
+    },
+    {
+      "file": "assets/map/worlds/w02_vale_map.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 374590
+    },
+    {
+      "file": "assets/map/worlds/w03_central_game.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 379117
+    },
+    {
+      "file": "assets/map/worlds/w03_central_map.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 369587
+    },
+    {
+      "file": "assets/map/worlds/w04_viveiro_game.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 366253
+    },
+    {
+      "file": "assets/map/worlds/w04_viveiro_map.png",
+      "width": 512,
+      "height": 910,
+      "bytes": 334354
+    },
+    {
+      "file": "assets/map/worlds/w05_usina_game.png",
+      "width": 512,
+      "height": 910,
+      "bytes": 357016
+    },
+    {
+      "file": "assets/map/worlds/w05_usina_map.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 401681
+    },
+    {
+      "file": "assets/map/worlds/w06_cooperativa_game.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 366471
+    },
+    {
+      "file": "assets/map/worlds/w06_cooperativa_map.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 363684
+    },
+    {
+      "file": "assets/map/worlds/w07_rota_game.png",
+      "width": 640,
+      "height": 1138,
+      "bytes": 367774
+    },
+    {
+      "file": "assets/map/worlds/w07_rota_map.png",
+      "width": 640,
+      "height": 1138,
+      "bytes": 401781
+    },
+    {
+      "file": "assets/map/worlds/w08_forum_game.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 370835
+    },
+    {
+      "file": "assets/map/worlds/w08_forum_map.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 379122
+    },
+    {
+      "file": "assets/map/worlds/w09_distrito_game.png",
+      "width": 512,
+      "height": 910,
+      "bytes": 343839
+    },
+    {
+      "file": "assets/map/worlds/w09_distrito_map.png",
+      "width": 576,
+      "height": 1024,
+      "bytes": 405452
+    },
+    {
+      "file": "assets/map/worlds/w10_cupula_game.png",
+      "width": 640,
+      "height": 1138,
+      "bytes": 398460
+    },
+    {
+      "file": "assets/map/worlds/w10_cupula_map.png",
+      "width": 640,
+      "height": 1138,
+      "bytes": 389852
+    },
+    {
+      "file": "assets/icon.png",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 319028
+    },
+    {
+      "file": "assets/adaptive-icon.png",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 149775,
+      "bbox": [346, 351, 661, 674]
+    },
+    {
+      "file": "assets/ui/visuais/shop.png",
+      "width": 320,
+      "height": 320,
+      "bytes": 109314
+    },
+    {
+      "file": "assets/ui/visuais/shop_locked.png",
+      "width": 300,
+      "height": 300,
+      "bytes": 125353
+    },
+    {
+      "file": "assets/ui/visuais/guardian.png",
+      "width": 320,
+      "height": 320,
+      "bytes": 115804
+    },
+    {
+      "file": "assets/ui/visuais/world_transition.png",
+      "width": 320,
+      "height": 320,
+      "bytes": 90248
+    },
+    {
+      "file": "assets/ui/visuais/level_locked.png",
+      "width": 320,
+      "height": 320,
+      "bytes": 94827
+    },
+    {
+      "file": "assets/ui/visuais/level_current.png",
+      "width": 320,
+      "height": 320,
+      "bytes": 80686
+    },
+    {
+      "file": "assets/ui/visuais/level_complete_base.png",
+      "width": 320,
+      "height": 320,
+      "bytes": 65162
+    }
+  ],
+  "issues": [
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "A PR #280 foi fechada sem merge. Sentry continua na família 7.2, e a migração precisa acompanhar a matriz Expo. PR abandonada não conclui a pendência.",
+      "remaining": "Reavaliar migração coordenada de SDK/dependências; não atualizar Sentry isoladamente nesta auditoria.",
+      "number": 285,
+      "id": null,
+      "title": "PR #280: chore(deps): bump @sentry/react-native from 7.2.0 to 8.27.0 in /TrincaMania Redesign/TrincaMania-ODS12",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/285"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "A PR #243 foi integrada, mas a atualização foi revertida pela #271. O comentário do responsável em #245 reabre a pendência para migração coordenada React/Expo; o projeto continua em React e renderer 19.1.0.",
+      "remaining": "Não encerrar só porque a primeira PR foi merged. Planejar migração coordenada compatível.",
+      "number": 245,
+      "id": null,
+      "title": "PR #243: chore(deps): bump react-test-renderer from 19.1.0 to 19.3.0 in /TrincaMania Redesign/TrincaMania-ODS12 in the desenvolvimento group",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/245"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Existem fluxos Maestro preparados e isolamento E2E, mas não há prova nesta revisão de upgrade sobre save antigo e interrupção durante escrita no Android.",
+      "remaining": "Executar a recuperação/migração em dispositivo isolado sem acessar save real.",
+      "number": 236,
+      "id": "Q-17",
+      "title": "Q-17 · Testar recuperação e migração de progresso no Android instalado",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/236"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "Workflows e Dependabot estão em develop. Há execução agendada Seguranca bem-sucedida em 21/09/2026 (run 35600301890) e execução manual E2E Android bem-sucedida em develop em 24/09/2026 (run 36028204534); ambos os SHAs são ancestrais da base atual.",
+      "remaining": "O bloqueio posterior por orçamento não desfaz a entrega histórica: Actions continua enabled:false. Nenhum workflow foi disparado ou reativado.",
+      "number": 229,
+      "id": "CI-35",
+      "title": "CI-35 · Consolidar e ativar as automações na branch padrão",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/229"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "docs/PILOTO-CODEX.md registra explicitamente piloto parcial, sem invocação comprovada dos perfis no cliente.",
+      "remaining": "Faltam os cenários e metadados de execução real; nenhuma delegação foi lançada para fabricar evidência.",
+      "number": 224,
+      "id": "CI-33",
+      "title": "CI-33 · Validar o fluxo Codex em um piloto controlado",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/224"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "A instrumentação de storage e capacidade está em uso, mas checkBoardSize, checkCanonicalCampaign e checkRewardUnclaimed aparecem apenas como definições em src/, sem ligação aos consumidores de produção. Testar helpers não comprova sua execução na partida.",
+      "remaining": "Ligar as verificações aos pontos de execução adequados e comprovar os sete invariantes, sem lançar erros contra o jogador.",
+      "number": 212,
+      "id": "O-05",
+      "title": "O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/212"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Não existe w21_jardim_game.png. getVisualWorldId(21) retorna 4, reutilizando o Viveiro.",
+      "remaining": "Produzir e integrar arte própria do bônus; a aceitação dos 20 fundos refere-se somente aos mundos 1–10.",
+      "number": 205,
+      "id": "A-24b",
+      "title": "A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/205"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Não existe w21_jardim_map.png. getVisualWorldId(21) retorna 4, reutilizando o Viveiro.",
+      "remaining": "Produzir e integrar arte própria do bônus; a aceitação dos 20 fundos refere-se somente aos mundos 1–10.",
+      "number": 204,
+      "id": "A-24a",
+      "title": "A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/204"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Simulações e testes de fronteiras não comprovam que uma pessoa jogou manualmente as 100 fases.",
+      "remaining": "Registrar a campanha manual; não substituir por test:playthrough.",
+      "number": 193,
+      "id": "R-15",
+      "title": "R-15 · Jogar as 100 fases manualmente",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/193"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Não foi encontrada medição em aparelho de entrada. Testes de navegador e simulações não medem memória/jank no dispositivo.",
+      "remaining": "Perfilar no aparelho alvo e registrar ambiente e resultados.",
+      "number": 174,
+      "id": "Q-11",
+      "title": "Q-11 · Perfilar performance em aparelho de entrada",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/174"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "App.tsx tem 1621 linhas na base integrada; hooks de persistência, preferências e baús existem, mas navegação e handlers continuam concentrados.",
+      "remaining": "Concluir a separação com testes de filas e montagem; não classificar extração parcial como conclusão.",
+      "number": 172,
+      "id": "Q-09",
+      "title": "Q-09 · Quebrar `App.tsx`",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/172"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "LevelSelectScreen.tsx caiu de 1879 para 898 linhas na base integrada; estilos, tipos, geometria, apresentação e camadas/painel estão em src/screens/levelSelect/. A entrega mais recente tem 750 linhas. Extrações f679d06/9aea3b0 são ancestrais de develop.",
+      "remaining": "A redução é evidência de decomposição, não um aceite visual Android. A tela continua responsável pela coordenação.",
+      "number": 171,
+      "id": "Q-08",
+      "title": "Q-08 · Quebrar `LevelSelectScreen.tsx`",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/171"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "GameScreen.tsx ainda possui 2607 linhas na base integrada. Houve extração de estilos, tutorial e diálogos, mas não há decomposição completa do controlador.",
+      "remaining": "Continuar a separação de responsabilidades com regressões de jogo/save.",
+      "number": 170,
+      "id": "Q-07",
+      "title": "Q-07 · Quebrar `GameScreen.tsx`",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/170"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "O inventário técnico existe, mas a premissa de “tudo AsyncStorage local” é falsa: existem Sentry opcional e Expo Updates. A revisão humana/operacional dos dados e serviços não está comprovada.",
+      "remaining": "Revisar configuração efetiva, política e práticas reais; não alegar conformidade jurídica a partir de testes.",
+      "number": 163,
+      "id": "SEC-17",
+      "title": "SEC-17 · Revisar os dados coletados (LGPD)",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/163"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "A comparação Renovate/Dependabot foi documentada, mas o roadmap exige decisão do responsável e ela não foi confirmada. O projeto usa Dependabot com grupos e versões coordenadas de Expo.",
+      "remaining": "Confirmar a decisão antes de alterar bots; nenhuma instalação ou reativação nesta revisão.",
+      "number": 151,
+      "id": "SEC-05",
+      "title": "SEC-05 · Avaliar Renovate no lugar do Dependabot",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/151"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Dependabot alerts estão habilitados (204), mas automated-security-fixes retorna enabled:false.",
+      "remaining": "Ativação das atualizações automáticas continua pendente. Nenhuma configuração de segurança/Actions alterada.",
+      "number": 149,
+      "id": "SEC-03",
+      "title": "SEC-03 · Habilitar Dependabot alerts e security updates",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/149"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "A API de secrets do repositório retornou zero secrets: EXPO_TOKEN não está cadastrado. Foram lidos apenas nomes/metadados, nunca valores.",
+      "remaining": "Credencial real e configuração pelo responsável; nenhum token criado ou exposto.",
+      "number": 136,
+      "id": "CI-14",
+      "title": "CI-14 · Criar o secret `EXPO_TOKEN`",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/136"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Há recomendação documentada por manter Git comum, mas a decisão formal sobre LFS e eventual histórico continua pendente. Não há migração executada.",
+      "remaining": "Registrar decisão do responsável; não reescrever o histórico nesta revisão.",
+      "number": 121,
+      "id": "G-16",
+      "title": "G-16 · Decidir sobre Git LFS para os PNGs",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/121"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "A API confirmou develop sem proteção (404 Branch not protected); main não existe.",
+      "remaining": "Configurar regras de PR/checks/force-push quando autorizado, preservando o bloqueio de Actions.",
+      "number": 115,
+      "id": "G-10",
+      "title": "G-10 · Branch protection em `main` e `develop`",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/115"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "A estratégia em vigor está documentada em AGENTS.md: branches próprias de trabalho, integração por PR em develop. develop é a branch padrão e a PR #320 foi integrada nela. main não precisa ser criada para cumprir essa decisão.",
+      "remaining": "Proteção de branch segue como tarefa distinta em #115; não foi alterada nesta revisão.",
+      "number": 114,
+      "id": "G-09",
+      "title": "G-09 · Definir a estratégia de branch",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/114"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "Os 20 fundos, 90 resíduos e artes globais já entregues têm registros/consumidores em develop. worldVisualRegistry e a guarda de assets confirmam pareamento e ausência de órfãos. Os dois fundos bônus ainda não foram entregues, portanto não são assets omitidos na integração.",
+      "remaining": "QA de arte consolidado em #42; arte inédita do bônus em #204/#205. O redesenho posterior d9780e6 está na branch própria e não é apresentado como integrado em develop.",
+      "number": 74,
+      "id": "A-36",
+      "title": "A-36 · Integrar cada asset entregue no código",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/74"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "A guarda real da base integrada passou: 255 assets, 48,3 MB, zero excessos acima de 400 KiB e zero órfãos. A entrega recente d9780e6 também passou com 265 assets e baseline sem excessos. Nenhum teto foi aumentado.",
+      "remaining": "Aprovação visual da quantização/compressão permanece em #42; o orçamento técnico está cumprido.",
+      "number": 71,
+      "id": "A-33",
+      "title": "A-33 · Comprimir todos os PNGs para ≤ 400 KB",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/71"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "Os recursos level_locked.png, level_current.png e level_complete_base.png são 320×320; há componentes, acessibilidade e testes de estados de fase.",
+      "remaining": "QA visual dos estados consolidado em #42.",
+      "number": 70,
+      "id": "A-32",
+      "title": "A-32 · Nós de fase: bloqueado, atual, completo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/70"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/ui/visuais/world_transition.png é 320×320 e está vinculado a WorldPortalMapMarker por RecyclingMarkerArt; o portal de runa foi substituído por arte de reciclagem.",
+      "remaining": "QA dos estados do portal consolidado em #42, sem avançar VIS-03/VIS-04.",
+      "number": 69,
+      "id": "A-31",
+      "title": "A-31 · Marcador de portal entre mundos 320×320",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/69"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/ui/visuais/guardian.png é 320×320 e possui consumidor real em RecyclingMarkerArt/ChaptersScreen. A afirmação “Não existe hoje” está desatualizada.",
+      "remaining": "QA visual dos capítulos consolidado em #42.",
+      "number": 68,
+      "id": "A-30",
+      "title": "A-30 · Selo de marco “Guardião” 320×320",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/68"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/ui/visuais/shop.png é 320×320; RecyclingMarkerArt e ShopMapMarker consomem a arte de coleta. A premissa de arte inexistente/legada está superada.",
+      "remaining": "QA da loja aberta/bloqueada em #42; shop_locked.png mede 300×300 na base e o novo pacote usa variantes otimizadas, sem alegar 320×320 para todos os irmãos.",
+      "number": 67,
+      "id": "A-29",
+      "title": "A-29 · Selo de marco “Loja” 320×320",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/67"
+    },
+    {
+      "action": "close",
+      "state_reason": "not_planned",
+      "evidence": "O usuário já retirou os pontos de descanso do escopo; o plano de assets proíbe reintroduzi-los. A remoção foi entregue em d9780e6 na branch de assets, ainda não integrada em develop. Não faz sentido produzir outro selo para esse recurso.",
+      "remaining": "Não alegar que a remoção já está em develop. Integração da branch de assets segue pendente.",
+      "number": 66,
+      "id": "A-28",
+      "title": "A-28 · Selo de marco “Descanso” 320×320",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/66"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "SplashIntroScreen.tsx exporta o componente real startup/TrincaManiaIntro.tsx; abertura, carregamento/falha de imagens, progresso e botão Pular têm testes de interface. A tela antiga de 537 linhas foi substituída.",
+      "remaining": "Aceite visual do início no aparelho consolidado em #42; preservada a direção de abertura vigente.",
+      "number": 65,
+      "id": "A-27",
+      "title": "A-27 · Splash screen",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/65"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/adaptive-icon.png é 1024×1024, transparente; bbox alpha>8 = [346,351,661,674], dentro do círculo central de 66%. app.json usa foreground, backgroundImage e fundo #EDF5E8, sem o roxo antigo.",
+      "remaining": "Conferência dos recortes Android consolidada em #42, ainda pendente.",
+      "number": 64,
+      "id": "A-26",
+      "title": "A-26 · Adaptive icon Android 1024×1024",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/64"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/icon.png é 1024×1024, contém reciclagem e três peças sem texto; app.json aponta para esse arquivo. Implementação integrada em develop.",
+      "remaining": "Conferência visual instalada consolidada em #42; não foi alegado aceite Android.",
+      "number": 63,
+      "id": "A-25",
+      "title": "A-25 · Ícone do app 1024×1024",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/63"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w10_cupula_game.png: 640×1138, 398460 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 62,
+      "id": "A-24",
+      "title": "A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/62"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w10_cupula_map.png: 640×1138, 389852 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 61,
+      "id": "A-23",
+      "title": "A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/61"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w09_distrito_game.png: 512×910, 343839 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 60,
+      "id": "A-22",
+      "title": "A-22 · Mundo 9 · Distrito da Reindustrialização — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/60"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w09_distrito_map.png: 576×1024, 405452 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 59,
+      "id": "A-21",
+      "title": "A-21 · Mundo 9 · Distrito da Reindustrialização — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/59"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w08_forum_game.png: 576×1024, 370835 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 58,
+      "id": "A-20",
+      "title": "A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/58"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w08_forum_map.png: 576×1024, 379122 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 57,
+      "id": "A-19",
+      "title": "A-19 · Mundo 8 · Fórum da Economia Circular — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/57"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w07_rota_game.png: 640×1138, 367774 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 56,
+      "id": "A-18",
+      "title": "A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/56"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w07_rota_map.png: 640×1138, 401781 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 55,
+      "id": "A-17",
+      "title": "A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/55"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w06_cooperativa_game.png: 576×1024, 366471 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 54,
+      "id": "A-16",
+      "title": "A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/54"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w06_cooperativa_map.png: 576×1024, 363684 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 53,
+      "id": "A-15",
+      "title": "A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/53"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w05_usina_game.png: 512×910, 357016 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 52,
+      "id": "A-14",
+      "title": "A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/52"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w05_usina_map.png: 576×1024, 401681 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 51,
+      "id": "A-13",
+      "title": "A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/51"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w04_viveiro_game.png: 576×1024, 366253 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 50,
+      "id": "A-12",
+      "title": "A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/50"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w04_viveiro_map.png: 512×910, 334354 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 49,
+      "id": "A-11",
+      "title": "A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/49"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w03_central_game.png: 576×1024, 379117 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 48,
+      "id": "A-10",
+      "title": "A-10 · Mundo 3 · Central de Materiais — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/48"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w03_central_map.png: 576×1024, 369587 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 47,
+      "id": "A-09",
+      "title": "A-09 · Mundo 3 · Central de Materiais — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/47"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w02_vale_game.png: 576×1024, 405481 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 46,
+      "id": "A-08",
+      "title": "A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/46"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w02_vale_map.png: 576×1024, 374590 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 45,
+      "id": "A-07",
+      "title": "A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/45"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w01_parque_game.png: 576×1024, 365598 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 44,
+      "id": "A-06",
+      "title": "A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/44"
+    },
+    {
+      "action": "close",
+      "state_reason": "completed",
+      "evidence": "assets/map/worlds/w01_parque_map.png: 576×1024, 375817 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos.",
+      "remaining": "Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205.",
+      "number": 43,
+      "id": "A-05",
+      "title": "A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/43"
+    },
+    {
+      "action": "keep",
+      "state_reason": null,
+      "evidence": "Os fundos dos mundos 1–10 foram aceitos como definitivos, incluindo as resoluções atuais. Não há aprovação visual Android nesta sessão.",
+      "remaining": "Concentrar aqui o aceite Android das artes já produzidas: fundo-piloto, ícones, splash, marcadores, estados, recortes e compressão. Isso consolida o QA antes repetido nas issues de produção, sem marcá-lo como executado.",
+      "number": 42,
+      "id": "A-04",
+      "title": "A-04 · Gerar e validar a imagem-piloto no aparelho",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/42"
+    },
+    {
+      "action": "close",
+      "state_reason": "not_planned",
+      "evidence": "A escolha de ferramenta/seed antes do lote ficou superada: os 20 fundos existentes foram aceitos como definitivos pelo usuário nesta revisão. Nenhuma seed nova foi criada.",
+      "remaining": "Estilo documentado em docs/ART-BIBLE.md; QA Android permanece em #42.",
+      "number": 41,
+      "id": "A-03",
+      "title": "A-03 · Escolher a ferramenta de geração e travar seed/estilo",
+      "url": "https://github.com/VittorNCosta/TrincaEngSoftware/issues/41"
+    }
+  ]
+}

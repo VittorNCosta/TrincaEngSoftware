@@ -13,6 +13,10 @@ _aparência_; o `CONTEXT.md` manda em _nome_.
 
 ---
 
+## Decisão de revisão — 28/10/2026
+
+O usuário confirmou **“Considerar os fundos atuais definitivos”** para os 20 fundos dos mundos 1–10. Esses arquivos, já integrados em `develop`, são aceitos nas resoluções reais de 512×910, 576×1024 e 640×1138. A especificação de 1080×1920 abaixo fica como referência para produções futuras, sem exigir regeneração ou ampliação artificial dos fundos aceitos. A decisão não aprova testes Android nem entrega arte inédita do bônus 21: esses trabalhos seguem em #42 e #204/#205. O aceite Android dos ícones, abertura, marcadores e compressão já implementados também fica concentrado em #42, evitando duplicar produção concluída como se ainda faltasse criar os arquivos.
+
 ## 1. A regra que não se negocia
 
 O jogo é sobre coleta seletiva e consumo responsável (ODS 12). Isso não é um

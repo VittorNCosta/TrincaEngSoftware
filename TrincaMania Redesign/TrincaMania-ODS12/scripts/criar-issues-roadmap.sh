@@ -552,8 +552,8 @@ mk done --title 'A-02 · Criar `assets/map/worlds/` e a convenção de nome' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,modelo-opus,modelo-codex-luna' --milestone 'Arte'
-mk open --title 'A-03 · Escolher a ferramenta de geração e travar seed/estilo' \
-  --body '_Sem detalhe adicional no roadmap._
+mk done --title 'A-03 · Cancelada — Escolher a ferramenta de geração e travar seed/estilo' \
+  --body 'Revisão 28/10/2026, base 917a339. A escolha de ferramenta/seed antes do lote ficou superada: os 20 fundos existentes foram aceitos como definitivos pelo usuário nesta revisão. Nenhuma seed nova foi criada. Estilo documentado em docs/ART-BIBLE.md; QA Android permanece em #42. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #41.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -564,7 +564,7 @@ mk open --title 'A-03 · Escolher a ferramenta de geração e travar seed/estilo
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,humano' --milestone 'Arte'
 mk open --title 'A-04 · Gerar e validar a imagem-piloto no aparelho' \
-  --body 'Mundo 1, fundo de jogo. **Portão** — nada em lote antes disso.
+  --body 'Revisão 28/10/2026, base 917a339. Os fundos dos mundos 1–10 foram aceitos como definitivos, incluindo as resoluções atuais. Não há aprovação visual Android nesta sessão. Concentrar aqui o aceite Android das artes já produzidas: fundo-piloto, ícones, splash, marcadores, estados, recortes e compressão. Isso consolida o QA antes repetido nas issues de produção, sem marcá-lo como executado. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #42.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -574,10 +574,8 @@ mk open --title 'A-04 · Gerar e validar a imagem-piloto no aparelho' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,humano' --milestone 'Arte'
-mk open --title 'A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w01_parque_map.png: 576×1024, 375817 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #43.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -588,10 +586,8 @@ mk open --title 'A-05 · Mundo 1 · Parque da Coleta Seletiva — fundo de mapa'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Piloto 1080×1920, 364.398 bytes, integrado no Mundo 1. A-04 exige validação no aparelho antes do restante do lote. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w01_parque_game.png: 576×1024, 365598 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #44.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -602,10 +598,8 @@ mk open --title 'A-06 · Mundo 1 · Parque da Coleta Seletiva — fundo de jogo'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w02_vale_map.png: 576×1024, 374590 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #45.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -616,10 +610,8 @@ mk open --title 'A-07 · Mundo 2 · Vale da Reciclagem — fundo de mapa' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w02_vale_game.png: 576×1024, 405481 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #46.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -630,10 +622,8 @@ mk open --title 'A-08 · Mundo 2 · Vale da Reciclagem — fundo de jogo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-09 · Mundo 3 · Central de Materiais — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-09 · Mundo 3 · Central de Materiais — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w03_central_map.png: 576×1024, 369587 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #47.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -644,10 +634,8 @@ mk open --title 'A-09 · Mundo 3 · Central de Materiais — fundo de mapa' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-10 · Mundo 3 · Central de Materiais — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-10 · Mundo 3 · Central de Materiais — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w03_central_game.png: 576×1024, 379117 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #48.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -658,10 +646,8 @@ mk open --title 'A-10 · Mundo 3 · Central de Materiais — fundo de jogo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w04_viveiro_map.png: 512×910, 334354 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #49.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -672,10 +658,8 @@ mk open --title 'A-11 · Mundo 4 · Viveiro Comunitário — fundo de mapa' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w04_viveiro_game.png: 576×1024, 366253 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #50.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -686,10 +670,8 @@ mk open --title 'A-12 · Mundo 4 · Viveiro Comunitário — fundo de jogo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w05_usina_map.png: 576×1024, 401681 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #51.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -700,10 +682,8 @@ mk open --title 'A-13 · Mundo 5 · Usina de Compostagem — fundo de mapa' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w05_usina_game.png: 512×910, 357016 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #52.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -714,10 +694,8 @@ mk open --title 'A-14 · Mundo 5 · Usina de Compostagem — fundo de jogo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w06_cooperativa_map.png: 576×1024, 363684 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #53.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -728,10 +706,8 @@ mk open --title 'A-15 · Mundo 6 · Cooperativa dos Catadores — fundo de mapa'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w06_cooperativa_game.png: 576×1024, 366471 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #54.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -742,10 +718,8 @@ mk open --title 'A-16 · Mundo 6 · Cooperativa dos Catadores — fundo de jogo'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w07_rota_map.png: 640×1138, 401781 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #55.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -756,10 +730,8 @@ mk open --title 'A-17 · Mundo 7 · Rota da Logística Reversa — fundo de mapa
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w07_rota_game.png: 640×1138, 367774 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #56.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -770,10 +742,8 @@ mk open --title 'A-18 · Mundo 7 · Rota da Logística Reversa — fundo de jogo
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-19 · Mundo 8 · Fórum da Economia Circular — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-19 · Mundo 8 · Fórum da Economia Circular — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w08_forum_map.png: 576×1024, 379122 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #57.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -784,10 +754,8 @@ mk open --title 'A-19 · Mundo 8 · Fórum da Economia Circular — fundo de map
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w08_forum_game.png: 576×1024, 370835 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #58.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -798,10 +766,8 @@ mk open --title 'A-20 · Mundo 8 · Fórum da Economia Circular — fundo de jog
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-21 · Mundo 9 · Distrito da Reindustrialização — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-21 · Mundo 9 · Distrito da Reindustrialização — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w09_distrito_map.png: 576×1024, 405452 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #59.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -812,10 +778,8 @@ mk open --title 'A-21 · Mundo 9 · Distrito da Reindustrialização — fundo d
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-22 · Mundo 9 · Distrito da Reindustrialização — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-22 · Mundo 9 · Distrito da Reindustrialização — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w09_distrito_game.png: 512×910, 343839 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #60.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -826,10 +790,8 @@ mk open --title 'A-22 · Mundo 9 · Distrito da Reindustrialização — fundo d
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de mapa' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w10_cupula_map.png: 640×1138, 389852 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #61.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -840,10 +802,8 @@ mk open --title 'A-23 · Mundo 10 · Cúpula da Reciclagem Global — fundo de m
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de jogo' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/map/worlds/w10_cupula_game.png: 640×1138, 398460 bytes; decodifica e está registrado em src/data/worldVisualAssets.ts, integrado em develop. O usuário confirmou os fundos atuais como definitivos em 28/10/2026; a exigência anterior de regeneração em 1080×1920 foi dispensada para estes 20 arquivos. Aceite visual Android consolidado em #42. Bônus 21 permanece separado em #204/#205. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #62.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -855,9 +815,7 @@ mk open --title 'A-24 · Mundo 10 · Cúpula da Reciclagem Global — fundo de j
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa' \
-  --body 'Fora do lote crítico A-05…A-24: o mundo bônus é conteúdo opcional (destrava com 3 estrelas no Mundo 1). P1 por isso, não P0. Hoje cai no `map_bonus_bg.png`, que **não** é exclusivo dele — o capítulo 10 usa o mesmo arquivo, então este par não libera peso nenhum; é arte própria, não faxina.
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Revisão 28/10/2026, base 917a339. Não existe w21_jardim_map.png. getVisualWorldId(21) retorna 4, reutilizando o Viveiro. Produzir e integrar arte própria do bônus; a aceitação dos 20 fundos refere-se somente aos mundos 1–10. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #204.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -869,9 +827,7 @@ mk open --title 'A-24a · Mundo bônus 21 · Jardim Renascido — fundo de mapa'
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
 mk open --title 'A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Aguarda aceite in-game do piloto A-04 antes de gerar este fundo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Revisão 28/10/2026, base 917a339. Não existe w21_jardim_game.png. getVisualWorldId(21) retorna 4, reutilizando o Viveiro. Produzir e integrar arte própria do bônus; a aceitação dos 20 fundos refere-se somente aos mundos 1–10. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #205.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -882,10 +838,8 @@ mk open --title 'A-24b · Mundo bônus 21 · Jardim Renascido — fundo de jogo'
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-25 · Ícone do app 1024×1024' \
-  --body 'Hoje 1254×1254, fora do padrão Expo. Símbolo de reciclagem + trinca, sem texto.
-
-**Entrega Astra low 18/09/2026:** Ícone 1024×1024 substituído com ciclo de reciclagem. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-25 · Ícone do app 1024×1024' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/icon.png é 1024×1024, contém reciclagem e três peças sem texto; app.json aponta para esse arquivo. Implementação integrada em develop. Conferência visual instalada consolidada em #42; não foi alegado aceite Android. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #63.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -896,10 +850,8 @@ mk open --title 'A-25 · Ícone do app 1024×1024' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-26 · Adaptive icon Android 1024×1024' \
-  --body 'Elemento dentro do círculo de 66%. O `backgroundColor` hoje é `#4B148C` — roxo, fora da paleta CONAMA.
-
-**Entrega Astra low 18/09/2026:** Foreground transparente 1024×1024 dentro da área central; fundo verde CONAMA. Recorte Android ainda a conferir. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-26 · Adaptive icon Android 1024×1024' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/adaptive-icon.png é 1024×1024, transparente; bbox alpha&gt;8 = [346,351,661,674], dentro do círculo central de 66%. app.json usa foreground, backgroundImage e fundo #EDF5E8, sem o roxo antigo. Conferência dos recortes Android consolidada em #42, ainda pendente. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #64.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -910,10 +862,8 @@ mk open --title 'A-26 · Adaptive icon Android 1024×1024' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P0,claude-code,humano,modelo-opus,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-27 · Splash screen' \
-  --body '`SplashIntroScreen.tsx` tem 537 linhas — conferir o que já é desenhado em código.
-
-**Entrega Astra low 18/09/2026:** Intro reutiliza nova marca e cores da coleta; mantém botão de pular e logo do responsável. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-27 · Splash screen' \
+  --body 'Revisão 28/10/2026, base 917a339. SplashIntroScreen.tsx exporta o componente real startup/TrincaManiaIntro.tsx; abertura, carregamento/falha de imagens, progresso e botão Pular têm testes de interface. A tela antiga de 537 linhas foi substituída. Aceite visual do início no aparelho consolidado em #42; preservada a direção de abertura vigente. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #65.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -924,10 +874,8 @@ mk open --title 'A-27 · Splash screen' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-28 · Selo de marco “Descanso” 320×320' \
-  --body 'Substitui `forest_rest_cart.png`, que é carrinho de floresta do tema antigo. Proposta: carrinho de catador.
-
-**Entrega Astra low 18/09/2026:** Carrinho de coleta SVG substitui PNG antigo em RestStopMapMarker. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-28 · Cancelada — Selo de marco “Descanso” 320×320' \
+  --body 'Revisão 28/10/2026, base 917a339. O usuário já retirou os pontos de descanso do escopo; o plano de assets proíbe reintroduzi-los. A remoção foi entregue em d9780e6 na branch de assets, ainda não integrada em develop. Não faz sentido produzir outro selo para esse recurso. Não alegar que a remoção já está em develop. Integração da branch de assets segue pendente. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #66.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -938,10 +886,8 @@ mk open --title 'A-28 · Selo de marco “Descanso” 320×320' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-29 · Selo de marco “Loja” 320×320' \
-  --body '
-
-**Entrega Astra low 18/09/2026:** Loja usa carrinho SVG; mesma base no marco de capítulo. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-29 · Selo de marco “Loja” 320×320' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/ui/visuais/shop.png é 320×320; RecyclingMarkerArt e ShopMapMarker consomem a arte de coleta. A premissa de arte inexistente/legada está superada. QA da loja aberta/bloqueada em #42; shop_locked.png mede 300×300 na base e o novo pacote usa variantes otimizadas, sem alegar 320×320 para todos os irmãos. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #67.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -952,10 +898,8 @@ mk open --title 'A-29 · Selo de marco “Loja” 320×320' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-30 · Selo de marco “Guardião” 320×320' \
-  --body 'Não existe hoje.
-
-**Entrega Astra low 18/09/2026:** Selo Guardião SVG integrado ao marco final dos capítulos. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-30 · Selo de marco “Guardião” 320×320' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/ui/visuais/guardian.png é 320×320 e possui consumidor real em RecyclingMarkerArt/ChaptersScreen. A afirmação “Não existe hoje” está desatualizada. QA visual dos capítulos consolidado em #42. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #68.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -966,10 +910,8 @@ mk open --title 'A-30 · Selo de marco “Guardião” 320×320' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-31 · Marcador de portal entre mundos 320×320' \
-  --body 'Hoje é `forest-portal-rune` — runa é fantasia. Proposta: seta de ciclo.
-
-**Entrega Astra low 18/09/2026:** Setas de reciclagem substituem runa; chaves de layout atualizadas. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-31 · Marcador de portal entre mundos 320×320' \
+  --body 'Revisão 28/10/2026, base 917a339. assets/ui/visuais/world_transition.png é 320×320 e está vinculado a WorldPortalMapMarker por RecyclingMarkerArt; o portal de runa foi substituído por arte de reciclagem. QA dos estados do portal consolidado em #42, sem avançar VIS-03/VIS-04. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #69.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -980,10 +922,8 @@ mk open --title 'A-31 · Marcador de portal entre mundos 320×320' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-32 · Nós de fase: bloqueado, atual, completo' \
-  --body 'Avaliar se vira SVG em código, como as peças já são.
-
-**Entrega Astra low 18/09/2026:** Nós já desenhados em código com estados e labels acessíveis; testes dos estados preservados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+mk done --title 'A-32 · Nós de fase: bloqueado, atual, completo' \
+  --body 'Revisão 28/10/2026, base 917a339. Os recursos level_locked.png, level_current.png e level_complete_base.png são 320×320; há componentes, acessibilidade e testes de estados de fase. QA visual dos estados consolidado em #42. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #70.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Sonnet 5
@@ -994,8 +934,8 @@ mk open --title 'A-32 · Nós de fase: bloqueado, atual, completo' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P2,claude-code,humano,modelo-sonnet,modelo-codex-terra' --milestone 'Arte'
-mk open --title 'A-33 · Comprimir todos os PNGs para ≤ 400 KB' \
-  --body 'Implementação local 06/10/2026: seis PNGs comprimidos com pngquant, dimensões preservadas; economia de 12.272.257 bytes. 149 assets (~17,08 MiB), zero excessos acima de 400 KiB e zero órfãos. Quantização de cores; revisão Android e merge pendentes. Evidências em docs/arte/inventario-20261006.json e backup/rodada-2/compressao-png.json. Pós-merge 23/10/2026 (base 6c3f0a6): mais 18 PNGs convertidos para WebP, dimensões e alpha preservados; 31.348.103 → 6.064.838 bytes. Gate de 400 KiB atendido sem alterar baseline. Compressão RGB com perdas; aceite Android pendente. Manifesto em docs/arte/compressao-pos-merge-20261023.json e relatório em docs/CORRECOES-POS-MERGE-20261023.txt.
+mk done --title 'A-33 · Comprimir todos os PNGs para ≤ 400 KB' \
+  --body 'Revisão 28/10/2026, base 917a339. A guarda real da base integrada passou: 255 assets, 48,3 MB, zero excessos acima de 400 KiB e zero órfãos. A entrega recente d9780e6 também passou com 265 assets e baseline sem excessos. Nenhum teto foi aumentado. Aprovação visual da quantização/compressão permanece em #42; o orçamento técnico está cumprido. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #71.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1029,8 +969,8 @@ mk done --title 'A-35 · Remover os 6 arquivos `.png.png`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'arte,P1,claude-code,modelo-sonnet,modelo-codex-luna' --milestone 'Arte'
-mk open --title 'A-36 · Integrar cada asset entregue no código' \
-  --body 'Validação local 06/10/2026: 20 fundos próprios dos mundos 1–10 e 90 PNGs de resíduos registrados; todos decodificam e têm referências válidas. Teste getGameBackground atualizado para executar a função real, exigir fundo distinto e cobrir capítulos/bônus. Os 20 fundos estão abaixo de 1080×1920; bônus 21 reutiliza o Viveiro. Galeria/inventário em docs/arte/. Aceite Android e merge pendentes; VIS-03/VIS-04 dependem de aprovação explícita.
+mk done --title 'A-36 · Integrar cada asset entregue no código' \
+  --body 'Revisão 28/10/2026, base 917a339. Os 20 fundos, 90 resíduos e artes globais já entregues têm registros/consumidores em develop. worldVisualRegistry e a guarda de assets confirmam pareamento e ausência de órfãos. Os dois fundos bônus ainda não foram entregues, portanto não são assets omitidos na integração. QA de arte consolidado em #42; arte inédita do bônus em #204/#205. O redesenho posterior d9780e6 está na branch própria e não é apresentado como integrado em develop. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #74.
 
 **Responsável:** Claude Code + Você
 **Modelo recomendado:** Claude Opus 5
@@ -1500,8 +1440,8 @@ mk done --title 'G-08 · Versão num lugar só' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Git e versionamento'
-mk open --title 'G-09 · Definir a estratégia de branch' \
-  --body 'Decisão do usuário em 06/10/2026: manter apenas develop no WSL. Worktrees e branches locais antigas removidas após backup verificável; trabalho recente preservado na develop. GitHub usa develop como branch padrão; branches remotas não foram removidas. A estratégia de publicação continua sujeita às regras do repositório.
+mk done --title 'G-09 · Definir a estratégia de branch' \
+  --body 'Revisão 28/10/2026, base 917a339. A estratégia em vigor está documentada em AGENTS.md: branches próprias de trabalho, integração por PR em develop. develop é a branch padrão e a PR #320 foi integrada nela. main não precisa ser criada para cumprir essa decisão. Proteção de branch segue como tarefa distinta em #115; não foi alterada nesta revisão. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #114.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1512,7 +1452,7 @@ mk open --title 'G-09 · Definir a estratégia de branch' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P1,humano' --milestone 'Git e versionamento'
 mk open --title 'G-10 · Branch protection em `main` e `develop`' \
-  --body 'Leitura da API em 06/10/2026: develop existe e não possui proteção de branch; main não existe. Exigir PR, checks verdes e impedir force-push ainda depende da configuração remota e de definir checks executáveis enquanto Actions estiver bloqueado. Nenhuma configuração alterada.
+  --body 'Revisão 28/10/2026, base 917a339. A API confirmou develop sem proteção (404 Branch not protected); main não existe. Configurar regras de PR/checks/force-push quando autorizado, preservando o bloqueio de Actions. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #115.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1583,7 +1523,7 @@ mk done --title 'G-15 · Revisar o `.gitattributes`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'git,P2,claude-code,modelo-haiku,modelo-codex-luna' --milestone 'Git e versionamento'
 mk open --title 'G-16 · Decidir sobre Git LFS para os PNGs' \
-  --body 'Avaliação local 06/10/2026: recomendar Git comum para os assets atuais, todos abaixo de 400 KiB (~17,08 MiB no conjunto). Histórico ainda contém blobs antigos; nenhuma migração ou reescrita executada. Evidência e condições de reavaliação em docs/PENDENCIAS-LOCAIS-20261006.txt; decisão do responsável pendente.
+  --body 'Revisão 28/10/2026, base 917a339. Há recomendação documentada por manter Git comum, mas a decisão formal sobre LFS e eventual histórico continua pendente. Não há migração executada. Registrar decisão do responsável; não reescrever o histórico nesta revisão. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #121.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -1848,7 +1788,7 @@ mk done --title 'CI-13 · Job de guarda ODS12' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-14 · Criar o secret `EXPO_TOKEN`' \
-  --body 'expo.dev → Access Tokens.
+  --body 'Revisão 28/10/2026, base 917a339. A API de secrets do repositório retornou zero secrets: EXPO_TOKEN não está cadastrado. Foram lidos apenas nomes/metadados, nunca valores. Credencial real e configuração pelo responsável; nenhum token criado ou exposto. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #136.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2108,28 +2048,7 @@ https://learn.chatgpt.com/docs/build-skills
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
 mk open --title 'CI-33 · Validar o fluxo Codex em um piloto controlado' \
-  --body '**Problema e benefício**
-Arquivos de agentes e skills válidos não comprovam ganho de qualidade ou adequação ao ambiente. É necessário exercitar o fluxo antes de expandi-lo.
-
-**Escopo**
-Executar um piloto em branch/worktree isolado: revisão de um diff concluído, reprodução de uma regressão histórica e uma alteração pequena com critério verificável. Documentar resultados e limitações sem modificar configurações globais.
-
-**Critérios de aceite**
-- [ ] Registrar os três cenários, commits de referência, resultado esperado, agente/skill usado e evidência observada.
-- [ ] Confirmar que a revisão não altera arquivos e que agentes não editam simultaneamente os mesmos arquivos.
-- [ ] Confirmar que a regressão é detectada antes da correção e que a alteração pequena passa nas verificações aplicáveis.
-- [ ] Registrar tempo, intervenções humanas e consumo quando disponível, marcando métricas indisponíveis sem estimá-las.
-- [ ] Documentar limitações do cliente/ambiente e como desativar ou remover as configurações locais.
-- [ ] Concluir com recomendação fundamentada de manter, ajustar ou desativar cada componente; não instalar OMX nem ampliar o catálogo nesta tarefa.
-
-**Dependências**
-CI-31 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/222) e CI-32 (https://github.com/VittorNCosta/TrincaEngSoftware/issues/223).
-
-**Fontes**
-https://github.com/VoltAgent/awesome-codex-subagents/tree/70d930a14f58f06d00abdd854ebce82a52a7d857
-https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797
-
-**Entrega Astra low 18/09/2026:** Piloto local isolado realizado; descoberta/invocação dos perfis no cliente requer nova sessão. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
+  --body 'Revisão 28/10/2026, base 917a339. docs/PILOTO-CODEX.md registra explicitamente piloto parcial, sem invocação comprovada dos perfis no cliente. Faltam os cenários e metadados de execução real; nenhuma delegação foi lançada para fabricar evidência. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #224.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2152,8 +2071,8 @@ mk done --title 'CI-34 · Automatizar validação de PR e corrigir checks de ent
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'ci-cd,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'CI/CD'
-mk open --title 'CI-35 · Consolidar e ativar as automações na branch padrão' \
-  --body 'Leitura em 06/10/2026: develop é a branch padrão e já contém workflows de CI, segurança, E2E, release e dependabot.yml. O contexto de automações exclusivas na feat/campanha-10x10 ficou histórico. Execuções manuais/agendadas adicionais e alterações de workflows permanecem bloqueadas pela instrução permanente do usuário de 30/09; nenhuma execução remota nesta sessão.
+mk done --title 'CI-35 · Consolidar e ativar as automações na branch padrão' \
+  --body 'Revisão 28/10/2026, base 917a339. Workflows e Dependabot estão em develop. Há execução agendada Seguranca bem-sucedida em 21/09/2026 (run 35600301890) e execução manual E2E Android bem-sucedida em develop em 24/09/2026 (run 36028204534); ambos os SHAs são ancestrais da base atual. O bloqueio posterior por orçamento não desfaz a entrega histórica: Actions continua enabled:false. Nenhum workflow foi disparado ou reativado. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #229.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2250,7 +2169,7 @@ mk done --title 'SEC-02 · Habilitar Secret Scanning e Push Protection' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P0,humano' --milestone 'DevSecOps'
 mk open --title 'SEC-03 · Habilitar Dependabot alerts e security updates' \
-  --body 'API do GitHub em 06/10/2026: alertas de vulnerabilidade habilitados; automated-security-fixes desabilitado. Atualizações automáticas continuam pendentes, pois podem abrir PRs e acionar workflows bloqueados. Nenhuma configuração remota alterada.
+  --body 'Revisão 28/10/2026, base 917a339. Dependabot alerts estão habilitados (204), mas automated-security-fixes retorna enabled:false. Ativação das atualizações automáticas continua pendente. Nenhuma configuração de segurança/Actions alterada. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #149.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2273,7 +2192,7 @@ mk done --title 'SEC-04 · `dependabot.yml` para npm e github-actions' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P1,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-05 · Avaliar Renovate no lugar do Dependabot' \
-  --body 'Avaliação local 06/10/2026: recomendar manter Dependabot, que já agrupa minor/patch e protege a matriz Expo. Presets Renovate não comprovam compatibilidade automática com SDK 54. Comparação com fontes primárias em docs/PENDENCIAS-LOCAIS-20261006.txt; decisão do responsável pendente; nenhuma automação alterada.
+  --body 'Revisão 28/10/2026, base 917a339. A comparação Renovate/Dependabot foi documentada, mas o roadmap exige decisão do responsável e ela não foi confirmada. O projeto usa Dependabot com grupos e versões coordenadas de Expo. Confirmar a decisão antes de alterar bots; nenhuma instalação ou reativação nesta revisão. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #151.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2392,7 +2311,7 @@ mk done --title 'SEC-14 · Escrever o `SECURITY.md`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'devsecops,P2,claude-code,modelo-opus,modelo-codex-sol' --milestone 'DevSecOps'
 mk open --title 'SEC-17 · Revisar os dados coletados (LGPD)' \
-  --body 'Inventário técnico local 06/10/2026: AsyncStorage, diagnóstico compartilhado pelo usuário, Sentry opcional com sanitização e expo-updates. Política já descreve serviços externos; configuração efetiva/tráfego no APK e revisão jurídica/aceite do responsável pendentes. Evidência em docs/PENDENCIAS-LOCAIS-20261006.txt; nenhuma publicação realizada.
+  --body 'Revisão 28/10/2026, base 917a339. O inventário técnico existe, mas a premissa de “tudo AsyncStorage local” é falsa: existem Sentry opcional e Expo Updates. A revisão humana/operacional dos dados e serviços não está comprovada. Revisar configuração efetiva, política e práticas reais; não alegar conformidade jurídica a partir de testes. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #163.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2477,11 +2396,7 @@ mk done --title 'Q-06 · Teste de acessibilidade' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-07 · Quebrar `GameScreen.tsx`' \
-  --body '3166 linhas. O `CLAUDE.md` já avisa para não deixar crescer.
-
-**Entrega Astra low 18/09/2026:** Estilos, tutorial e montagem do tabuleiro extraídos em módulos; seeds reais registrados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Validação local 06/10/2026: os quatro diálogos foram separados em GameDialogs, mantendo handlers e guardas por ref na tela; 2778 → 2579 linhas. Três testes novos cobrem tutorial, compra e fechamento nativo durante operações. Aceite Android e integração pendentes.**
+  --body 'Revisão 28/10/2026, base 917a339. GameScreen.tsx ainda possui 2607 linhas na base integrada. Houve extração de estilos, tutorial e diálogos, mas não há decomposição completa do controlador. Continuar a separação de responsabilidades com regressões de jogo/save. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #170.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2492,12 +2407,8 @@ mk open --title 'Q-07 · Quebrar `GameScreen.tsx`' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Qualidade'
-mk open --title 'Q-08 · Quebrar `LevelSelectScreen.tsx`' \
-  --body '1879 linhas.
-
-**Entrega Astra low 18/09/2026:** Estilos e geometria/apresentação do mapa separados; acesso Dev e pós-campanha testados. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Validação local 06/10/2026: renderização do mapa e painel de seleção separados em CampaignMapLayers/MapSelectionPanel; 1457 → 818 linhas. Controle de seleção, animação, rolagem e progresso permanece na tela; testes de acesso e regressão visual preservados. Aceite Android e integração pendentes.**
+mk done --title 'Q-08 · Quebrar `LevelSelectScreen.tsx`' \
+  --body 'Revisão 28/10/2026, base 917a339. LevelSelectScreen.tsx caiu de 1879 para 898 linhas na base integrada; estilos, tipos, geometria, apresentação e camadas/painel estão em src/screens/levelSelect/. A entrega mais recente tem 750 linhas. Extrações f679d06/9aea3b0 são ancestrais de develop. A redução é evidência de decomposição, não um aceite visual Android. A tela continua responsável pela coordenação. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #171.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2509,11 +2420,7 @@ mk open --title 'Q-08 · Quebrar `LevelSelectScreen.tsx`' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-sol' --milestone 'Qualidade'
 mk open --title 'Q-09 · Quebrar `App.tsx`' \
-  --body '1169 linhas.
-
-**Entrega Astra low 18/09/2026:** Fila de persistência extraída para hook, preservando geração e serialização. Outros handlers continuam em App. Ver docs/ENTREGA-TERRA-SOL.md; sem marcar conclusão antes dos aceites.
-
-**Validação local 06/10/2026: preferências e baús separados em useAppSettings/useWorldChestController; 1318 → 1188 linhas. Fila e geração de save preservadas; dois testes novos verificam duplo toque, remontagem e abertura sem saldo. Navegação e outros handlers continuam em App; integração pendente.**
+  --body 'Revisão 28/10/2026, base 917a339. App.tsx tem 1621 linhas na base integrada; hooks de persistência, preferências e baús existem, mas navegação e handlers continuam concentrados. Concluir a separação com testes de filas e montagem; não classificar extração parcial como conclusão. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #172.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2537,7 +2444,7 @@ mk done --title 'Q-10 · Orçamento de tamanho de bundle no CI' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P2,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-11 · Perfilar performance em aparelho de entrada' \
-  --body 'Depois da arte nova — 20 PNGs mudam o consumo de memória.
+  --body 'Revisão 28/10/2026, base 917a339. Não foi encontrada medição em aparelho de entrada. Testes de navegador e simulações não medem memória/jank no dispositivo. Perfilar no aparelho alvo e registrar ambiente e resultados. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #174.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2608,7 +2515,7 @@ mk done --title 'Q-16 · Medir cobertura de produção separada por domínio e i
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'qualidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Qualidade'
 mk open --title 'Q-17 · Testar recuperação e migração de progresso no Android instalado' \
-  --body 'Preparação local 06/10/2026: todos os fluxos Maestro fixam o pacote E2E; runner recusa pacote normal antes de ADB, com dois testes de isolamento. Seis sequências reais verificadas pelo gerador. Fluxos 03/04/manual-05 já cobrem reinício; manual/06 combina vitória/derrota e dois reinícios, conferindo conclusão, desbloqueio, saldo e 4/5 vidas sem repetir recompensa (roteiro preparado, execução Android pendente). Upgrade de fixture antiga, interrupção durante escrita e evidência em Android continuam pendentes; CI remoto bloqueado. Ver docs/PENDENCIAS-LOCAIS-20261006.txt.
+  --body 'Revisão 28/10/2026, base 917a339. Existem fluxos Maestro preparados e isolamento E2E, mas não há prova nesta revisão de upgrade sobre save antigo e interrupção durante escrita no Android. Executar a recuperação/migração em dispositivo isolado sem acessar save real. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #236.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Sonnet 5
@@ -2705,7 +2612,7 @@ mk open --title 'O-04 · Tela de Diagnóstico com os últimos logs' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'observabilidade,P1,claude-code,modelo-sonnet,modelo-codex-terra' --milestone 'Observabilidade'
 mk open --title 'O-05 · Transformar os invariantes do `CLAUDE.md` em assert de runtime' \
-  --body 'Implementação local 06/10/2026: diagnósticos para origem e sobreposição de gravações de campanha/capítulo/vidas; IDs cruzados antes da normalização; contagem e fingerprint das 103 fases; tileCount; capacidade de bandeja; guarda de recompensa após await. Somente logs, preservando filas, payloads, erros de storage e hash SHA-256 canônico. Cinco testes novos cobrem corrupção, concorrência, isolamento e falhas. Marcadores de origem são diagnósticos; não provam arquitetura, geração ou todas as guardas async. Validação do conjunto registra falha anterior do teste estrutural getGameBackground e alertas de segurança sem correção; publicação/merge pendentes.
+  --body 'Revisão 28/10/2026, base 917a339. A instrumentação de storage e capacidade está em uso, mas checkBoardSize, checkCanonicalCampaign e checkRewardUnclaimed aparecem apenas como definições em src/, sem ligação aos consumidores de produção. Testar helpers não comprova sua execução na partida. Ligar as verificações aos pontos de execução adequados e comprovar os sete invariantes, sem lançar erros contra o jogador. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #212.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Opus 5
@@ -2766,7 +2673,7 @@ mk done --title 'R-09 · Hospedar a política de privacidade' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,claude-code,humano,modelo-opus,modelo-codex-sol' --milestone 'Release'
 mk open --title 'R-15 · Jogar as 100 fases manualmente' \
-  --body 'Jogar no APK Android de demonstração; o `test:playthrough` simula, mas não substitui jogar no aparelho.
+  --body 'Revisão 28/10/2026, base 917a339. Simulações e testes de fronteiras não comprovam que uma pessoa jogou manualmente as 100 fases. Registrar a campanha manual; não substituir por test:playthrough. Relatório: docs/REVISAO-ISSUES-20261028.md; issue #193.
 
 **Responsável:** Você
 **Modelo Codex recomendado:** Manual — sem modelo executor
@@ -2777,4 +2684,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 210 issues (132 já criadas fechadas) =="
+echo "== pronto: 210 issues (166 já criadas fechadas) =="
