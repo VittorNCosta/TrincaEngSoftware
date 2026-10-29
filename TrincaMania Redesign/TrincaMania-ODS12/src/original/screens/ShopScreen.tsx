@@ -785,7 +785,13 @@ const styles = StyleSheet.create({
     width: 4,
   },
   offerMain: { alignItems: 'center', flex: 1, gap: spacing.sm, padding: 10 },
-  offerMainHorizontal: { flexDirection: 'row', flex: 0 },
+  // Keep intrinsic height: flex: 0 alone collapses the row to its padding on web.
+  offerMainHorizontal: {
+    flexDirection: 'row',
+    flex: 0,
+    flexBasis: 'auto',
+    flexShrink: 0,
+  },
   productArtwork: {
     alignItems: 'center',
     justifyContent: 'center',

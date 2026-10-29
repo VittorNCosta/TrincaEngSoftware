@@ -1534,6 +1534,18 @@ mk open --title 'L-37 · Remover o box de moedas faltantes da loja' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-38 · Corrigir o layout do terceiro poder da loja' \
+  --body 'Solicitado em 28/10/2026: corrigir o card do terceiro poder (Trinca automática) na loja. A linha horizontal com flex: 0 tinha altura de apenas 20 px no navegador, cortando ícone, título e quantidade e antecipando o rodapé. Usar altura intrínseca com flexBasis auto e impedir redução da linha. Validar conteúdo dentro do card, rodapé após o conteúdo e ausência de espaço excedente em telas estreitas e largas; preservar preços, compra e remoção do box FALTAM. Sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2909,4 +2921,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 221 issues (132 já criadas fechadas) =="
+echo "== pronto: 222 issues (132 já criadas fechadas) =="
