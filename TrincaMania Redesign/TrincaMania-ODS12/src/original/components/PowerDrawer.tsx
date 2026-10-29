@@ -296,13 +296,16 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   medallion: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    gap: 2,
     backgroundColor: 'transparent',
     borderWidth: 0,
     height: 34,
     justifyContent: 'center',
     position: 'relative',
-    width: '100%',
+    width: 'auto',
   },
   medallionForest: { backgroundColor: 'transparent' },
   medallionDisabled: {
@@ -391,9 +394,6 @@ const styles = StyleSheet.create({
     minHeight: 20,
     minWidth: 24,
     paddingHorizontal: 4,
-    position: 'absolute',
-    right: 0,
-    top: 8,
     zIndex: 51,
   },
   statusBadgeDisabled: {

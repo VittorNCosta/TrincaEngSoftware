@@ -1498,6 +1498,18 @@ mk open --title 'L-34 · Simplificar as peças durante a partida' \
 
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-35 · Aproximar os preços dos ícones de poder' \
+  --body 'Solicitado em 28/10/2026: aproximar a cápsula de moedas de seu respectivo ícone de poder na partida. Grupo centralizado em linha com intervalo de 2 px, sem ancorar o preço à borda do botão. Preservar artes, preços, contagens, bloqueios, ações e áreas de toque. Validação e exportação locais, sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 
 # --- Git e versionamento ---
 mk done --title 'G-01 · Adotar Conventional Commits formalmente' \
@@ -2873,4 +2885,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 218 issues (132 já criadas fechadas) =="
+echo "== pronto: 219 issues (132 já criadas fechadas) =="
