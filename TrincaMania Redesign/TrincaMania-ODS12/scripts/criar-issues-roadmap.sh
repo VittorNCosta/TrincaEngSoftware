@@ -1427,7 +1427,7 @@ mk open --title 'L-33 · Integrar os assets redesenhados no jogo e na prévia do
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-34 · Simplificar as peças durante a partida' \
-  --body 'Solicitado em 28/10/2026: retirar legendas das peças somente durante a partida e clarear a superfície por material. Escopo compartilhado por tabuleiro, bandeja, voo e fechamento; preservar mapas, tutorial fora da partida, outros ícones, acessibilidade e mistério. Validação local e exportação do simulador; sem APK ou CI remoto.
+  --body 'Solicitado em 28/10/2026: retirar legendas das peças somente durante a partida e clarear a superfície por material. Escopo compartilhado por tabuleiro, bandeja, voo e fechamento; preservar mapas, tutorial fora da partida, outros ícones, acessibilidade e mistério. Validação local e exportação do simulador; sem APK ou CI remoto. Revisão local de 03/11/2026: retirar também a moldura e o preenchimento internos de TileIcon na partida, mantendo somente a base externa com bordas no tabuleiro, bandeja, voo e fechamento. Prévia local para validação do usuário.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1451,7 +1451,7 @@ mk open --title 'L-35 · Aproximar os preços dos ícones de poder' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-36 · Restaurar o aspecto apagado das peças cobertas' \
-  --body 'Solicitado em 28/10/2026: restaurar a aparência apagada das peças cobertas por outra peça. Reutilizar a opacidade de 0,76 do desenho e o véu acima da arte (zIndex 4), como em 007ea3d. Preservar peças livres, cores atuais, mistério, cadeado, bloqueio, poderes, áreas de toque e regras. Validação e simulador locais; sem APK ou CI remoto.
+  --body 'Solicitado em 28/10/2026: restaurar a aparência apagada das peças cobertas por outra peça. Reutilizar a opacidade de 0,76 do desenho e o véu acima da arte (zIndex 4), como em 007ea3d. Preservar peças livres, cores atuais, mistério, cadeado, bloqueio, poderes, áreas de toque e regras. Validação e simulador locais; sem APK ou CI remoto. Revisão local de 03/11/2026: clarear as peças cobertas com véu branco de 45% no lugar do véu escuro. Manter o pictograma identificável, o cadeado e o bloqueio de seleção; as peças disponíveis mantêm suas cores.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -1476,6 +1476,18 @@ Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
 mk open --title 'L-38 · Corrigir o layout do terceiro poder da loja' \
   --body 'Solicitado em 28/10/2026: corrigir o card do terceiro poder (Trinca automática) na loja. A linha horizontal com flex: 0 tinha altura de apenas 20 px no navegador, cortando ícone, título e quantidade e antecipando o rodapé. Usar altura intrínseca com flexBasis auto e impedir redução da linha. Validar conteúdo dentro do card, rodapé após o conteúdo e ausência de espaço excedente em telas estreitas e largas; preservar preços, compra e remoção do box FALTAM. Sem APK ou CI remoto.
+
+**Responsável:** Claude Code
+**Modelo recomendado:** Claude Haiku 4.5
+**Modelo Codex recomendado:** GPT-5.6 Terra (gpt-5.6-terra)
+**Critério Codex:** Implementação, conteúdo, configuração ou teste de complexidade moderada.
+**Prioridade:** P2
+**Fluxo:** Limpeza ODS12
+
+Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
+  --label 'limpeza-ods12,P2,claude-code,modelo-haiku,modelo-codex-terra' --milestone 'Limpeza ODS12'
+mk open --title 'L-39 · Corrigir tamanho do coração e da moeda no HUD do mapa' \
+  --body 'Solicitado em 03/11/2026: normalizar o coração e a moeda do HUD do mapa para a área de 34 x 34 px. As imagens de 76 x 50,7 px excediam essa área. Usar cover para remover somente a folga transparente lateral dos PNGs, preservando a proporção e a arte visível dentro dos indicadores. Prévia e validação locais; preservar os ajustes anteriores das peças. Sem APK ou CI remoto.
 
 **Responsável:** Claude Code
 **Modelo recomendado:** Claude Haiku 4.5
@@ -2828,4 +2840,4 @@ mk open --title 'R-15 · Jogar as 100 fases manualmente' \
 Contexto completo em `docs/ROADMAP-JOGO-COMPLETO.md`.' \
   --label 'release,P0,humano' --milestone 'Release'
 
-echo "== pronto: 222 issues (166 já criadas fechadas) =="
+echo "== pronto: 223 issues (166 já criadas fechadas) =="

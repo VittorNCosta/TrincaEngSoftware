@@ -142,7 +142,7 @@ export function MapHud({
                 <Image
                   testID="map-hud-lives-art"
                   accessible={false}
-                  resizeMode="contain"
+                  resizeMode="cover"
                   source={require('../../assets/original/ui/rewards/optimized/reward_life.png')}
                   style={styles.resourceArtwork}
                 />
@@ -186,7 +186,7 @@ export function MapHud({
                 <Image
                   testID="map-hud-coin-art"
                   accessible={false}
-                  resizeMode="contain"
+                  resizeMode="cover"
                   source={require('../../assets/original/ui/rewards/optimized/reward_coin.png')}
                   style={styles.resourceArtwork}
                 />
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     height: 34,
     overflow: 'hidden',
   },
-  resourceArtwork: { width: 76, height: 76 / 1.5, flexShrink: 0 },
+  resourceArtwork: { width: 34, height: 34, flexShrink: 0 },
   livesCopy: { flex: 1, alignItems: 'center', minWidth: 0 },
   pillFooter: {
     fontSize: 8,

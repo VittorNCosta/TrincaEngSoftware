@@ -91,13 +91,13 @@ function TileIconBase({
       style={[
         styles.root,
         {
-          backgroundColor: palette.surface,
+          backgroundColor: duringGame ? 'transparent' : palette.surface,
           borderRadius: size * 0.2,
           height: size,
           width: size,
         },
         dimmed ? styles.dimmed : null,
-        highlighted ? styles.highlighted : null,
+        highlighted && !duringGame ? styles.highlighted : null,
       ]}
     >
       <View style={[styles.artwork, { height: artworkSize, width: size }]}>
@@ -141,17 +141,19 @@ function TileIconBase({
           </Text>
         </View>
       ) : null}
-      <View
-        pointerEvents="none"
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            borderColor: palette.border,
-            borderRadius: size * 0.2,
-            borderWidth: size >= 30 ? 2 : 1.5,
-          },
-        ]}
-      />
+      {!duringGame ? (
+        <View
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              borderColor: palette.border,
+              borderRadius: size * 0.2,
+              borderWidth: size >= 30 ? 2 : 1.5,
+            },
+          ]}
+        />
+      ) : null}
     </View>
   );
 }

@@ -284,7 +284,7 @@ function BoardTileBase({
         pointerEvents="none"
         style={[styles.revealFlash, { opacity: revealFlash }]}
       />
-      {blocked && !isMysteryHidden ? (
+      {blocked ? (
         <View pointerEvents="none" style={styles.blockedVeil}>
           <View style={styles.blockedVeilShade} />
         </View>
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     opacity: 0.76,
   },
   blockedVeil: {
-    backgroundColor: 'rgba(24, 31, 38, 0.14)',
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
     borderRadius: 19,
     bottom: 0,
     justifyContent: 'flex-end',
